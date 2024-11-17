@@ -24,12 +24,7 @@ class ArtifactsImpl extends ArtifactsClient {
     }
     api.setBearerAuth("JWTBearer", token);
     _characterStream = characterController.stream.asBroadcastStream();
-    _updateCharacter(Character(
-      name: '',
-      level: 0,
-      location: Location(x: 0, y: 0),
-      cooldownEnd: DateTime.now(),
-    ));
+    _updateCharacter(Character.empty());
   }
 
   @override

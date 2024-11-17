@@ -62,7 +62,10 @@ class StatusView extends StatelessWidget {
               child: Text(model.character.name),
             ),
             Center(
-              child: Text('Level: ${model.character.level}'),
+              child: Text('Level: ${model.character.overall.level}'),
+            ),
+            Center(
+              child: LinearProgressIndicator(value: model.character.overall.xp / model.character.overall.nextLevelTargetXp),
             ),
             Center(
                 child: Text(
