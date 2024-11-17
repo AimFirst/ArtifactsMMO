@@ -1,3 +1,4 @@
+import 'package:artifacts_mmo/infrastructure/api/dto/inventory_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart';
 import 'package:equatable/equatable.dart';
@@ -18,6 +19,8 @@ class Character with EquatableMixin {
   final Skill jewelryCrafting;
   final Skill cooking;
   final Skill alchemy;
+  final int inventoryMaxItems;
+  final List<InventoryItem> inventoryItems;
 
   Character({
     required this.hp,
@@ -35,6 +38,8 @@ class Character with EquatableMixin {
     required this.gold,
     required this.location,
     required this.cooldownEnd,
+    required this.inventoryMaxItems,
+    required this.inventoryItems,
   });
 
   Character.empty()
@@ -52,7 +57,9 @@ class Character with EquatableMixin {
         name = '',
         gold = 0,
         location = Location.empty(),
-        cooldownEnd = DateTime.now();
+        cooldownEnd = DateTime.now(),
+        inventoryMaxItems = 1,
+        inventoryItems = [];
 
   @override
   List<Object?> get props => [name];

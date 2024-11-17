@@ -1,5 +1,6 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/inventory_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart' as sk;
 import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart';
@@ -60,7 +61,15 @@ class Conversions {
           xp: schema.alchemyXp,
           nextLevelTargetXp: schema.alchemyMaxXp),
       gold: schema.gold,
+      inventoryMaxItems: schema.inventoryMaxItems,
+      inventoryItems:
+          schema.inventory?.map((i) => inventorySlotToItem(i)).toList() ?? [],
     );
+  }
+
+  InventoryItem inventorySlotToItem(InventorySlot slot) {
+    return InventoryItem(
+        slot: slot.slot, code: slot.code, quantity: slot.quantity);
   }
 
   Character movementResponseToCharacter(CharacterMovementDataSchema schema) {

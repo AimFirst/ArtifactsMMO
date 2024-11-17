@@ -65,11 +65,17 @@ class StatusView extends StatelessWidget {
               child: Text('Level: ${model.character.overall.level}'),
             ),
             Center(
-              child: LinearProgressIndicator(value: model.character.overall.xp / model.character.overall.nextLevelTargetXp),
+              child: LinearProgressIndicator(
+                  value: model.character.overall.xp /
+                      model.character.overall.nextLevelTargetXp),
             ),
             Center(
                 child: Text(
                     'Location: ${model.character.location.x}, ${model.character.location.y}')),
+            Center(
+              child: Text(
+                  'Inventory: ${model.character.inventoryItems.fold(0, (prev, newEl) => newEl.quantity + prev)} / ${model.character.inventoryMaxItems}'),
+            ),
           ],
         ),
         Align(
@@ -81,11 +87,13 @@ class StatusView extends StatelessWidget {
   }
 
   Widget _directionPad() {
-    return Column(children: [
-      TextButton(onPressed: viewModel.moveLeft, child: const Text("Left")),
-      TextButton(onPressed: viewModel.moveUp, child: const Text("Up")),
-      TextButton(onPressed: viewModel.moveRight, child: const Text("Right")),
-      TextButton(onPressed: viewModel.moveDown, child: const Text("Down")),
-    ],);
+    return Column(
+      children: [
+        TextButton(onPressed: viewModel.moveLeft, child: const Text("Left")),
+        TextButton(onPressed: viewModel.moveUp, child: const Text("Up")),
+        TextButton(onPressed: viewModel.moveRight, child: const Text("Right")),
+        TextButton(onPressed: viewModel.moveDown, child: const Text("Down")),
+      ],
+    );
   }
 }
