@@ -1,11 +1,20 @@
-import 'dart:developer';
+import 'dart:async';
+import 'package:dio/dio.dart';
 
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/artifacts_exception.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/character.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
+import 'package:artifacts_mmo/infrastructure/api/impl/conversions.dart';
 
 class ArtifactsImpl extends ArtifactsClient {
   final api = ArtifactsApi(basePathOverride: "https://api.artifactsmmo.com");
-  static const characterName = "Aimlater";
+  final StreamController<Character> characterController =
+      StreamController.broadcast();
+  late final Stream<Character> _characterStream;
+  final conversions = const Conversions();
+  static const characterName = "AimLater";
 
   ArtifactsImpl() {
     const token = String.fromEnvironment('ARTIFACTS_TOKEN');
@@ -14,14 +23,62 @@ class ArtifactsImpl extends ArtifactsClient {
           'Use --dart-define-from-file=api_keys.json to load it');
     }
     api.setBearerAuth("JWTBearer", token);
+    _characterStream = characterController.stream.asBroadcastStream();
+    characterController.add(Character(
+      name: '',
+      level: 0,
+      location: Location(x: 0, y: 0),
+      cooldownEnd: DateTime.now(),
+    ));
   }
 
   @override
-  Future<void> moveTo({required int x, required int y}) {
-    return api.getMyCharactersApi().actionMoveMyNameActionMovePost(
-        name: characterName,
-        destinationSchema: DestinationSchema((b) => b
-          ..x = x
-          ..y = y));
+  Stream<Character> get character => _characterStream;
+
+  void _updateCharacter(Character character) {
+    characterController.add(character);
+  }
+
+  void _throwIfError(Response<dynamic> response) {
+    if (response.statusCode != 200 || response.data == null) {
+      throw ArtifactsExceptions(
+          errorMessage:
+              'Failed to move: ${response.statusCode} - ${response.statusMessage}');
+    }
+  }
+
+  @override
+  Future<Character> moveTo({required Location location}) async {
+    final response =
+        await api.getMyCharactersApi().actionMoveMyNameActionMovePost(
+            name: characterName,
+            destinationSchema: DestinationSchema(
+              (b) => b
+                ..x = location.x
+                ..y = location.y,
+            ));
+
+    _throwIfError(response);
+
+    final character =
+        conversions.movementResponseToCharacter(response.data!.data);
+    _updateCharacter(character);
+    return character;
+  }
+
+  @override
+  Future<List<Character>> getCharacters() async {
+    final response =
+        await api.getMyCharactersApi().getMyCharactersMyCharactersGet();
+
+    _throwIfError(response);
+
+    final characters = response.data!.data
+        .map((c) => conversions.characterSchemaToCharacter(c))
+        .toList();
+    if (characters.isNotEmpty) {
+      characterController.add(characters.first);
+    }
+    return characters;
   }
 }

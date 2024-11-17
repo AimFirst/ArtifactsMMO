@@ -1,3 +1,9 @@
+import 'package:artifacts_mmo/infrastructure/api/dto/character.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
+
 abstract class ArtifactsClient {
-  Future<void> moveTo({required int x, required int y});
+
+  Future<Character> moveTo({required Location location});
+  Future<List<Character>> getCharacters();
+  Stream<Character> get character;
 }

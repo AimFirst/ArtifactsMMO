@@ -38,6 +38,10 @@ dependencies:
   openapi_generator_annotations: ^6.0.0
   artifacts_api:
     path: artifacts/openapi
+  provider: ^6.1.2
+  equatable: ^2.0.5
+  get_it: ^8.0.2
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:

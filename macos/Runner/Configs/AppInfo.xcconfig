@@ -8,7 +8,7 @@
 PRODUCT_NAME = artifacts_mmo
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.roshar.artifacts.artifactsMmo
+PRODUCT_BUNDLE_IDENTIFIER = com.example.artifactsMmo
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.roshar.artifacts. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 com.example. All rights reserved.
