@@ -14,7 +14,7 @@ class ArtifactsImpl extends ArtifactsClient {
       StreamController.broadcast();
   late final Stream<Character> _characterStream;
   final conversions = const Conversions();
-  static const characterName = "AimLater";
+  String characterName = "";
 
   ArtifactsImpl() {
     const token = String.fromEnvironment('ARTIFACTS_TOKEN');
@@ -24,7 +24,7 @@ class ArtifactsImpl extends ArtifactsClient {
     }
     api.setBearerAuth("JWTBearer", token);
     _characterStream = characterController.stream.asBroadcastStream();
-    characterController.add(Character(
+    _updateCharacter(Character(
       name: '',
       level: 0,
       location: Location(x: 0, y: 0),
@@ -36,6 +36,7 @@ class ArtifactsImpl extends ArtifactsClient {
   Stream<Character> get character => _characterStream;
 
   void _updateCharacter(Character character) {
+    characterName = character.name;
     characterController.add(character);
   }
 
@@ -77,7 +78,7 @@ class ArtifactsImpl extends ArtifactsClient {
         .map((c) => conversions.characterSchemaToCharacter(c))
         .toList();
     if (characters.isNotEmpty) {
-      characterController.add(characters.first);
+      _updateCharacter(characters.first);
     }
     return characters;
   }
