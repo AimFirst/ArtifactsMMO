@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'infrastructure/api/artifacts_api.dart';
 
-final ArtifactsAPI2 artifactsApi = ArtifactsImpl();
+final ArtifactsClient artifactsClient = ArtifactsImpl();
 
 void main() {
   runApp(const MyApp());
@@ -122,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async => {
-          await artifactsApi.moveTo(x: 1, y: 2)
+          await artifactsClient.moveTo(x: 1, y: 2)
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
