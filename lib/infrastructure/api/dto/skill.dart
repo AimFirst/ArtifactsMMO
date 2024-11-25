@@ -16,7 +16,7 @@ class Skill with EquatableMixin {
   Skill.empty({required this.skillType}) : level = 0, xp = 0, nextLevelTargetXp = 1;
 
   @override
-  List<Object?> get props => [skillType];
+  List<Object?> get props => [skillType, level, xp, nextLevelTargetXp];
 
   int get xpUntilNextLevel => nextLevelTargetXp - xp;
 }

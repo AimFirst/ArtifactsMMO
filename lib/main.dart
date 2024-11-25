@@ -1,6 +1,8 @@
 import 'package:artifacts_mmo/infrastructure/api/impl/artifacts_impl.dart';
+import 'package:artifacts_mmo/presentation/map/map_view_model.dart';
 import 'package:artifacts_mmo/presentation/inventory/inventory_view.dart';
 import 'package:artifacts_mmo/presentation/inventory/inventory_view_model.dart';
+import 'package:artifacts_mmo/presentation/map/map_view.dart';
 import 'package:artifacts_mmo/presentation/resources/resources_view.dart';
 import 'package:artifacts_mmo/presentation/resources/resources_view_model.dart';
 import 'package:artifacts_mmo/presentation/skill/skills_overview_view.dart';
@@ -30,11 +32,14 @@ Future<void> main() async {
     ChangeNotifierProvider(create: (_) =>
         InventoryViewModel(artifactsClient: GetIt.I<ArtifactsClient>()),
     ),
+    ChangeNotifierProvider(create: (_) =>
+        MapViewModel(artifactsClient: GetIt.I<ArtifactsClient>()),
+    ),
   ], child: const MyApp()));
 }
 
 void _registerDependencies() {
-  GetIt.I.registerFactory<ArtifactsClient>(() => ArtifactsImpl());
+  GetIt.I.registerLazySingleton<ArtifactsClient>(() => ArtifactsImpl());
 }
 
 class MyApp extends StatefulWidget {
@@ -86,6 +91,11 @@ class _MyAppState extends State<MyApp> {
               label: 'Resources',
               selectedIcon: Icon(Icons.account_tree),
             ),
+            NavigationDestination(
+              icon: Icon(Icons.maps_home_work_outlined),
+              label: 'Maps',
+              selectedIcon: Icon(Icons.maps_home_work),
+            ),
           ],
         ),
         body: _widgetForIndex(currentPageIndex),
@@ -103,6 +113,8 @@ class _MyAppState extends State<MyApp> {
         return InventoryView(context: context);
       case 3:
         return ResourcesView(context: context);
+      case 4:
+        return MapView(context: context);
       default:
         return Text('tab $index');
     }

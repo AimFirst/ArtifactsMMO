@@ -1,9 +1,11 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_exception.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/drop.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/inventory_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/map_location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/resource.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart' as sk;
 import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart';
@@ -54,12 +56,12 @@ class Conversions {
           xp: schema.jewelrycraftingXp,
           nextLevelTargetXp: schema.jewelrycraftingMaxXp),
       cooking: sk.Skill(
-          skillType: SkillType.overall,
+          skillType: SkillType.cooking,
           level: schema.cookingLevel,
           xp: schema.cookingXp,
           nextLevelTargetXp: schema.cookingMaxXp),
       alchemy: sk.Skill(
-          skillType: SkillType.overall,
+          skillType: SkillType.alchemy,
           level: schema.alchemyLevel,
           xp: schema.alchemyXp,
           nextLevelTargetXp: schema.alchemyMaxXp),
@@ -79,6 +81,10 @@ class Conversions {
     return characterSchemaToCharacter(schema.character);
   }
 
+  Character skillResponseToCharacter(SkillDataSchema schema) {
+    return characterSchemaToCharacter(schema.character);
+  }
+
   Resource resourceSchemaToResource(ResourceSchema schema) {
     return Resource(
       name: schema.name,
@@ -95,6 +101,11 @@ class Conversions {
         rate: schema.rate,
         minQuantity: schema.minQuantity,
         maxQuantity: schema.maxQuantity);
+  }
+
+  MapLocation mapToMapLocation(MapSchema r) {
+    return MapLocation(location: Location(x: r.x, y: r.y
+    ), content: Content(type: r.content?.type ?? '', code: r.content?.code ?? ''));
   }
 }
 

@@ -2,6 +2,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/inventory_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 class Character with EquatableMixin {
   final String name;
@@ -62,7 +63,7 @@ class Character with EquatableMixin {
         inventoryItems = [];
 
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [hp, maxHp, overall, mining, woodcutting, fishing, weaponCrafting, gearCrafting, jewelryCrafting, cooking, alchemy, name, gold, location, cooldownEnd, inventoryMaxItems, inventoryItems];
 
   List<Skill> get allSkills => [mining, woodcutting, fishing, weaponCrafting, gearCrafting, jewelryCrafting, cooking, alchemy];
 

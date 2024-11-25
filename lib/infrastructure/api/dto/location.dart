@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 
 class Location with EquatableMixin {
@@ -9,4 +11,13 @@ class Location with EquatableMixin {
 
   @override
   List<Object?> get props => [x, y];
+
+  @override
+  String toString() {
+    return '$x , $y';
+  }
+
+  double distance(Location other) {
+    return sqrt(pow(other.x - x, 2) + pow(other.y -y, 2));
+  }
 }

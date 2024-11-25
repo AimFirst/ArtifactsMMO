@@ -8,5 +8,5 @@ class InventoryItem with EquatableMixin {
   InventoryItem({required this.slot, required this.code, required this.quantity,});
 
   @override
-  List<Object?> get props => [slot];
+  List<Object?> get props => [slot, code, quantity];
 }

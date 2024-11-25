@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:artifacts_mmo/infrastructure/api/dto/map_location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/resource.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart';
 import 'package:dio/dio.dart';
@@ -58,6 +59,32 @@ class ArtifactsImpl extends ArtifactsClient {
   }
 
   @override
+  Future<List<MapLocation>> getLocationsForContent(
+      {required String contentCode}) async {
+    final response =
+        await api.getMapsApi().getAllMapsMapsGet(contentCode: contentCode);
+
+    _throwIfError(response);
+
+    return response.data?.data
+            .map((r) => conversions.mapToMapLocation(r))
+            .toList() ??
+        [];
+  }
+
+  @override
+  Future<MapLocation> getLocationInfo({required Location location}) async {
+    final response =
+        await api.getMapsApi().getMapMapsXYGet(x: location.x, y: location.y);
+
+    _throwIfError(response);
+
+    return response.data == null
+        ? MapLocation.empty()
+        : conversions.mapToMapLocation(response.data!.data);
+  }
+
+  @override
   Future<List<Character>> getCharacters() async {
     final response =
         await api.getMyCharactersApi().getMyCharactersMyCharactersGet();
@@ -88,6 +115,19 @@ class ArtifactsImpl extends ArtifactsClient {
 
     final character =
         conversions.movementResponseToCharacter(response.data!.data);
+    _updateCharacter(character);
+    return character;
+  }
+
+  @override
+  Future<Character> gather() async {
+    final response = await api
+        .getMyCharactersApi()
+        .actionGatheringMyNameActionGatheringPost(name: characterName);
+
+    _throwIfError(response);
+
+    final character = conversions.skillResponseToCharacter(response.data!.data);
     _updateCharacter(character);
     return character;
   }

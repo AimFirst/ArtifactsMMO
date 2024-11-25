@@ -54,6 +54,9 @@ class StatusView extends BaseView<StatusModel, StatusViewModel> {
               child: Text(
                   'Inventory: ${model.character.inventoryItems.fold(0, (prev, newEl) => newEl.quantity + prev)} / ${model.character.inventoryMaxItems}'),
             ),
+            Center(
+              child: OutlinedButton(onPressed: viewModel.gather, child: const Text('Gather')),
+            )
           ],
         ),
         Align(

@@ -53,6 +53,14 @@ class StatusViewModel extends BaseViewModel<StatusModel> {
     }
   }
 
+  Future<void> gather() async {
+    try {
+      await artifactsClient.gather();
+    } catch (error) {
+      value = StatusModelError(error: error.toString());
+    }
+  }
+
   @override
   StatusModelError errorModel(Error err) {
     return StatusModelError(error: err.toString());

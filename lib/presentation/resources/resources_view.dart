@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ResourcesView extends BaseView<ResourcesModel, ResourcesViewModel> {
-
   const ResourcesView._({required super.viewModel, super.key});
 
   factory ResourcesView({required BuildContext context, Key? key}) {
@@ -42,7 +41,14 @@ class ResourcesView extends BaseView<ResourcesModel, ResourcesViewModel> {
     return ListView.builder(
         itemCount: model.resources.length,
         itemBuilder: (BuildContext context, int index) {
-          return ResourceView(resource: model.resources[index]);
+          return ResourceView(
+              resource: model.resources[index],
+              characterLevelInSkill: model.gatheringSkills
+                      .where((t) =>
+                          t.skillType == model.resources[index].skillType)
+                      .firstOrNull
+                      ?.level ??
+                  0);
         });
   }
 }

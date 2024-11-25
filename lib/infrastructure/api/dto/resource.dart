@@ -12,5 +12,5 @@ class Resource with EquatableMixin {
   Resource({required this.name, required this.code, required this.skillType, required this.skillLevel, required this.drops});
 
   @override
-  List<Object?> get props => [name, code, skillType, skillLevel];
+  List<Object?> get props => [name, code, skillType, skillLevel, drops];
 }
