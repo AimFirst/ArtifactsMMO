@@ -1,33 +1,16 @@
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:artifacts_mmo/presentation/base_view_model.dart';
 
 import 'status_model.dart';
 
-class StatusViewModel with ChangeNotifier {
+class StatusViewModel extends BaseViewModel<StatusModel> {
   final ArtifactsClient artifactsClient;
 
-  StatusViewModel({required this.artifactsClient});
-
-  StatusModel _model = StatusModelLoading();
-
-  StatusModel get model => _model;
-
-  Future<void> viewInit() async {
-    artifactsClient.character.listen((character) {
-      _model = StatusModelLoaded(character: character);
-      notifyListeners();
-    });
-    try {
-      await artifactsClient.getCharacters();
-    } catch (error) {
-      _model = StatusModelError(error: error.toString());
-      notifyListeners();
-    }
-  }
+  StatusViewModel({required this.artifactsClient}) : super(StatusModelLoading());
 
   Location currentLocation() {
-      return (_model as StatusModelLoaded).character.location;
+      return (value as StatusModelLoaded).character.location;
   }
 
   Future<void> moveLeft() async {
@@ -36,8 +19,7 @@ class StatusViewModel with ChangeNotifier {
       final newLocation = Location(x: current.x - 1, y: current.y);
       await artifactsClient.moveTo(location: newLocation);
     } catch (error) {
-      _model = StatusModelError(error: error.toString());
-      notifyListeners();
+      value = StatusModelError(error: error.toString());
     }
   }
 
@@ -47,8 +29,7 @@ class StatusViewModel with ChangeNotifier {
       final newLocation = Location(x: current.x, y: current.y - 1);
       await artifactsClient.moveTo(location: newLocation);
     } catch (error) {
-      _model = StatusModelError(error: error.toString());
-      notifyListeners();
+      value = StatusModelError(error: error.toString());
     }
   }
 
@@ -58,8 +39,7 @@ class StatusViewModel with ChangeNotifier {
       final newLocation = Location(x: current.x + 1, y: current.y);
       await artifactsClient.moveTo(location: newLocation);
     } catch (error) {
-      _model = StatusModelError(error: error.toString());
-      notifyListeners();
+      value = StatusModelError(error: error.toString());
     }
   }
 
@@ -69,8 +49,20 @@ class StatusViewModel with ChangeNotifier {
       final newLocation = Location(x: current.x, y: current.y + 1);
       await artifactsClient.moveTo(location: newLocation);
     } catch (error) {
-      _model = StatusModelError(error: error.toString());
-      notifyListeners();
+      value = StatusModelError(error: error.toString());
     }
+  }
+
+  @override
+  StatusModelError errorModel(Error err) {
+    return StatusModelError(error: err.toString());
+  }
+
+  @override
+  Future<void> loadAsync() async {
+    artifactsClient.character.listen((character) {
+      value = StatusModelLoaded(character: character);
+    });
+    await artifactsClient.getCharacters();
   }
 }

@@ -1,7 +1,8 @@
 import 'package:artifacts_mmo/infrastructure/api/dto/character.dart';
+import 'package:artifacts_mmo/presentation/base_model.dart';
 import 'package:equatable/equatable.dart';
 
-sealed class StatusModel implements Equatable {}
+sealed class StatusModel implements BaseModel {}
 
 class StatusModelLoading with EquatableMixin implements StatusModel {
   @override

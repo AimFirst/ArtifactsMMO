@@ -63,4 +63,10 @@ class Character with EquatableMixin {
 
   @override
   List<Object?> get props => [name];
+
+  List<Skill> get allSkills => [mining, woodcutting, fishing, weaponCrafting, gearCrafting, jewelryCrafting, cooking, alchemy];
+
+  List<Skill> get gatheringSkills => [mining, woodcutting, fishing, alchemy];
+
+  List<Skill> get craftingSkills => [weaponCrafting, gearCrafting, jewelryCrafting, cooking];
 }

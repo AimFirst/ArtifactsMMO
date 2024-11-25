@@ -1,37 +1,22 @@
-import 'package:artifacts_mmo/status/status_model.dart';
-import 'package:artifacts_mmo/status/status_view_model.dart';
+import 'package:artifacts_mmo/presentation/base_view.dart';
+import 'package:artifacts_mmo/presentation/skill/skill_view.dart';
+import 'package:artifacts_mmo/presentation/status/status_model.dart';
+import 'package:artifacts_mmo/presentation/status/status_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class StatusView extends StatelessWidget {
-  final StatusViewModel viewModel;
-
-  const StatusView._({required this.viewModel, super.key});
+class StatusView extends BaseView<StatusModel, StatusViewModel> {
+  const StatusView._({required super.viewModel, super.key});
 
   factory StatusView({required BuildContext context, Key? key}) {
-    final view = StatusView._(
+    return StatusView._(
       viewModel: Provider.of<StatusViewModel>(context, listen: false),
       key: key,
     );
-    view.init(context: context);
-    return view;
-  }
-
-  void init({required BuildContext context}) {
-    viewModel.viewInit();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<StatusViewModel>(builder:
-          (BuildContext context, StatusViewModel value, Widget? child) {
-        return _widgetForState(value.model);
-      }),
-    );
-  }
-
-  Widget _widgetForState(StatusModel value) {
+  Widget widgetForState(StatusModel value) {
     switch (value) {
       case StatusModelLoading a:
         return _widgetLoading(a);
@@ -61,14 +46,7 @@ class StatusView extends StatelessWidget {
             Center(
               child: Text(model.character.name),
             ),
-            Center(
-              child: Text('Level: ${model.character.overall.level}'),
-            ),
-            Center(
-              child: LinearProgressIndicator(
-                  value: model.character.overall.xp /
-                      model.character.overall.nextLevelTargetXp),
-            ),
+            SkillView(skill: model.character.overall),
             Center(
                 child: Text(
                     'Location: ${model.character.location.x}, ${model.character.location.y}')),
@@ -82,6 +60,7 @@ class StatusView extends StatelessWidget {
           alignment: Alignment.bottomRight,
           child: _directionPad(),
         ),
+        const Row(children: [],),
       ],
     );
   }
