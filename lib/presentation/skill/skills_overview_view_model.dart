@@ -17,6 +17,6 @@ class SkillsOverviewViewModel extends BaseViewModel<SkillsOverviewModel> {
 
   @override
   SkillsOverviewModel errorModel(Error err) {
-    return new SkillsOverviewModelError(error: err.toString());
+    return SkillsOverviewModelError(error: err.toString());
   }
 }

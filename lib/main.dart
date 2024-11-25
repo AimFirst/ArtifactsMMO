@@ -1,4 +1,6 @@
 import 'package:artifacts_mmo/infrastructure/api/impl/artifacts_impl.dart';
+import 'package:artifacts_mmo/presentation/inventory/inventory_view.dart';
+import 'package:artifacts_mmo/presentation/inventory/inventory_view_model.dart';
 import 'package:artifacts_mmo/presentation/resources/resources_view.dart';
 import 'package:artifacts_mmo/presentation/resources/resources_view_model.dart';
 import 'package:artifacts_mmo/presentation/skill/skills_overview_view.dart';
@@ -24,6 +26,9 @@ Future<void> main() async {
     ),
     ChangeNotifierProvider(create: (_) =>
         ResourcesViewModel(artifactsClient: GetIt.I<ArtifactsClient>()),
+    ),
+    ChangeNotifierProvider(create: (_) =>
+        InventoryViewModel(artifactsClient: GetIt.I<ArtifactsClient>()),
     ),
   ], child: const MyApp()));
 }
@@ -94,6 +99,8 @@ class _MyAppState extends State<MyApp> {
         return StatusView(context: context);
       case 1:
         return SkillsOverviewView(context: context);
+      case 2:
+        return InventoryView(context: context);
       case 3:
         return ResourcesView(context: context);
       default:
