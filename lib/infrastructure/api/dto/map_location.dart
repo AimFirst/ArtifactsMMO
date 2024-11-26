@@ -5,9 +5,10 @@ import 'package:equatable/equatable.dart';
 class MapLocation with EquatableMixin {
   final Location location;
   final Content content;
-  MapLocation({required this.location, required this.content});
+  final String skin;
+  MapLocation({required this.location, required this.content, required this.skin});
 
-  MapLocation.empty() : location = Location.empty(), content = Content.empty();
+  MapLocation.empty() : location = Location.empty(), content = Content.empty(), skin = '';
 
   @override
   List<Object?> get props => [location, content];

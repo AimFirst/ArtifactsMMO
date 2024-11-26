@@ -13,6 +13,8 @@ class MapItemView extends StatelessWidget {
       children: [
         Text('$mapLocation'),
         const Spacer(),
+        Text(mapLocation.skin),
+        const Spacer(),
         Text(mapLocation.content.type),
         const Spacer(),
         Text(mapLocation.content.code),

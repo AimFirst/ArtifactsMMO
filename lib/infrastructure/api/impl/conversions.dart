@@ -104,8 +104,12 @@ class Conversions {
   }
 
   MapLocation mapToMapLocation(MapSchema r) {
-    return MapLocation(location: Location(x: r.x, y: r.y
-    ), content: Content(type: r.content?.type ?? '', code: r.content?.code ?? ''));
+    return MapLocation(
+      skin: r.skin,
+      location: Location(x: r.x, y: r.y),
+      content:
+          Content(type: r.content?.type ?? '', code: r.content?.code ?? ''),
+    );
   }
 }
 
