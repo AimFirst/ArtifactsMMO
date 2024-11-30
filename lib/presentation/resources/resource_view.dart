@@ -1,4 +1,4 @@
-import 'package:artifacts_mmo/infrastructure/api/dto/resource.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/resource/resource.dart';
 import 'package:flutter/material.dart';
 
 class ResourceView extends StatelessWidget {

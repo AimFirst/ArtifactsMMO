@@ -1,5 +1,5 @@
-import 'package:artifacts_mmo/infrastructure/api/dto/drop.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/drop/drop.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:equatable/equatable.dart';
 
 class Resource with EquatableMixin {

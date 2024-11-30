@@ -1,4 +1,4 @@
-import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:flutter/material.dart';
 
 class SkillView extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/map_location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:artifacts_mmo/presentation/base_view_model.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -29,7 +29,7 @@ class MapViewModel extends BaseViewModel<MapModel> {
   Future<void> searchMap() async {
     final text = textEditingController.text;
     final locations = await artifactsClient.getLocationsForContent(contentCode: text);
-    value = MapModelLoaded(locations: locations, characterLocation: location);
+    value = MapModelLoaded(locations: locations.data, characterLocation: location);
   }
 
   Future<void> moveTo(MapLocation mapLocation) async {

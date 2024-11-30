@@ -5,6 +5,7 @@ class Content with EquatableMixin {
   final String code;
 
   Content({required this.type, required this.code});
+  Content.item({required this.code}) : type = 'item';
 
   Content.empty() : type = '', code ='';
 

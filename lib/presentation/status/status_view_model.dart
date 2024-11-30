@@ -1,5 +1,5 @@
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/presentation/base_view_model.dart';
 
 import 'status_model.dart';

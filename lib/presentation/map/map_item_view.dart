@@ -1,5 +1,5 @@
-import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/map_location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:flutter/cupertino.dart';
 
 class MapItemView extends StatelessWidget {
@@ -15,9 +15,9 @@ class MapItemView extends StatelessWidget {
         const Spacer(),
         Text(mapLocation.skin),
         const Spacer(),
-        Text(mapLocation.content.type),
+        Text(mapLocation.content?.type ?? ''),
         const Spacer(),
-        Text(mapLocation.content.code),
+        Text(mapLocation.content?.code ?? ''),
         const Spacer(),
         Text('${mapLocation.location.distance(characterLocation)}')
       ],

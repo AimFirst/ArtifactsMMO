@@ -1,4 +1,4 @@
-import 'package:artifacts_mmo/infrastructure/api/dto/inventory_item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/inventory_item.dart';
 import 'package:flutter/material.dart';
 
 class InventoryItemView extends StatelessWidget {
@@ -9,8 +9,8 @@ class InventoryItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(item.code),
-        Text('${item.quantity}'),
+        Text(item.itemQuantity.code),
+        Text('${item.itemQuantity.quantity}'),
       ],
     );
   }

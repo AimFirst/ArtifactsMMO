@@ -1,5 +1,5 @@
-import 'package:artifacts_mmo/infrastructure/api/dto/resource.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/resource/resource.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/presentation/base_model.dart';
 import 'package:equatable/equatable.dart';
 

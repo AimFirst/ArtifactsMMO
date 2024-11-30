@@ -1,5 +1,5 @@
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/character.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/presentation/base_view_model.dart';
 
 import 'resources_model.dart';
@@ -20,7 +20,7 @@ class ResourcesViewModel extends BaseViewModel<ResourcesModel> {
     artifactsClient.character.listen((c) async {
       final result = await artifactsClient.getResources();
       value = ResourcesModelLoaded(
-          resources: result, gatheringSkills: c.gatheringSkills);
+          resources: result.data, gatheringSkills: c.gatheringSkills);
     });
   }
 }

@@ -1,8 +1,7 @@
-import 'package:artifacts_mmo/infrastructure/api/dto/inventory_item.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/skill.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/inventory_item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 class Character with EquatableMixin {
   final String name;

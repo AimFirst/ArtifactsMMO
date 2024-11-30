@@ -1,5 +1,5 @@
-import 'package:artifacts_mmo/infrastructure/api/dto/location.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/map_location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:artifacts_mmo/presentation/base_model.dart';
 import 'package:equatable/equatable.dart';
 

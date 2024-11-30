@@ -52,7 +52,7 @@ class StatusView extends BaseView<StatusModel, StatusViewModel> {
                     'Location: ${model.character.location.x}, ${model.character.location.y}')),
             Center(
               child: Text(
-                  'Inventory: ${model.character.inventoryItems.fold(0, (prev, newEl) => newEl.quantity + prev)} / ${model.character.inventoryMaxItems}'),
+                  'Inventory: ${model.character.inventoryItems.fold(0, (prev, newEl) => newEl.itemQuantity.quantity + prev)} / ${model.character.inventoryMaxItems}'),
             ),
             Center(
               child: OutlinedButton(onPressed: viewModel.gather, child: const Text('Gather')),

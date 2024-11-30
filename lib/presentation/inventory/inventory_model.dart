@@ -1,4 +1,4 @@
-import 'package:artifacts_mmo/infrastructure/api/dto/inventory_item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/inventory_item.dart';
 import 'package:artifacts_mmo/presentation/base_model.dart';
 import 'package:equatable/equatable.dart';
 
