@@ -1,0 +1,16 @@
+enum EquipmentSlot {
+  weapon,
+  shield,
+  helmet,
+  bodyArmor,
+  legArmor,
+  boots,
+  ring1,
+  ring2,
+  amulet,
+  artifact1,
+  artifact2,
+  artifact3,
+  utility1,
+  utility2,
+}
