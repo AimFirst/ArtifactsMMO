@@ -1,4 +1,5 @@
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/target/move_to_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_exception.dart';
@@ -27,7 +28,7 @@ class GatheringSkillTarget extends Target {
     
     // If we are already at or above the desired level, we are done.
     if (currentSkill.level >= targetLevel) {
-      return TargetProcessResult(progress: currentProgress, action: null);
+      return TargetProcessResult(progress: currentProgress, action: null, description: 'Reached target level');
     }
 
     // Get highest item for skill.
@@ -43,13 +44,14 @@ class GatheringSkillTarget extends Target {
     locations.sort((a, b) => a.distance(character.location).round() - b.distance(character.location).round());
     final closest = locations.first;
 
-    // Are we there?
-    if (closest.distance(character.location).round() != 0) {
-      return TargetProcessResult(progress: currentProgress, action: artifactsClient.moveTo(action: ActionMove(location: closest)));
+    // Are we there yet?
+    final moveUpdate = MoveToTarget(targetLocation: closest).update(character: character, boardState: boardState, artifactsClient: artifactsClient);
+    if (!moveUpdate.progress.finished) {
+      return moveUpdate;
     }
 
     // Start gathering.
-    return TargetProcessResult(progress: currentProgress, action: artifactsClient.gather(action: ActionGathering()));
+    return TargetProcessResult(progress: currentProgress, action: artifactsClient.gather(action: ActionGathering()), description: 'Gathering $targetResource');
   }
 
   Progress getProgress({required Character character, required Skill currentSkill}) {

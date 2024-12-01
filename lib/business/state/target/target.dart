@@ -17,8 +17,9 @@ abstract class Target {
 class TargetProcessResult with EquatableMixin {
   final Progress progress;
   final Future<ActionResponse>? action;
+  final String description;
 
-  TargetProcessResult({required this.progress, required this.action});
+  TargetProcessResult({required this.progress, required this.action, required this.description});
 
   @override
   List<Object?> get props => [
