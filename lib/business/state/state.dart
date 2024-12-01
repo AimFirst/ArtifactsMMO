@@ -14,11 +14,13 @@ class State {
   final BoardState boardState;
   final Character character;
   final Target target;
+  final TargetProcessResult processResult;
 
   State({
     required this.boardState,
     required this.character,
     required this.target,
+    required this.processResult,
   });
 }
 

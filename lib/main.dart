@@ -1,3 +1,4 @@
+import 'package:artifacts_mmo/business/state/state_manager.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/artifacts_impl.dart';
 import 'package:artifacts_mmo/presentation/map/map_view_model.dart';
 import 'package:artifacts_mmo/presentation/inventory/inventory_view.dart';
@@ -9,6 +10,8 @@ import 'package:artifacts_mmo/presentation/skill/skills_overview_view.dart';
 import 'package:artifacts_mmo/presentation/skill/skills_overview_view_model.dart';
 import 'package:artifacts_mmo/presentation/status/status_view.dart';
 import 'package:artifacts_mmo/presentation/status/status_view_model.dart';
+import 'package:artifacts_mmo/presentation/target/target_based_upa_view.dart';
+import 'package:artifacts_mmo/presentation/target/target_based_upa_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -35,11 +38,13 @@ Future<void> main() async {
     ChangeNotifierProvider(create: (_) =>
         MapViewModel(artifactsClient: GetIt.I<ArtifactsClient>()),
     ),
+    ChangeNotifierProvider(create: (_) => TargetBasedUpaViewModel(artifactsClient: GetIt.I(), stateManager: GetIt.I()))
   ], child: const MyApp()));
 }
 
 void _registerDependencies() {
   GetIt.I.registerLazySingleton<ArtifactsClient>(() => ArtifactsImpl());
+  GetIt.I.registerLazySingleton(() => StateManager(artifactsClient: GetIt.I()));
 }
 
 class MyApp extends StatefulWidget {
@@ -96,6 +101,11 @@ class _MyAppState extends State<MyApp> {
               label: 'Maps',
               selectedIcon: Icon(Icons.maps_home_work),
             ),
+            NavigationDestination(
+              icon: Icon(Icons.smart_toy_outlined),
+              label: 'UPA',
+              selectedIcon: Icon(Icons.smart_toy),
+            ),
           ],
         ),
         body: _widgetForIndex(currentPageIndex),
@@ -115,6 +125,8 @@ class _MyAppState extends State<MyApp> {
         return ResourcesView(context: context);
       case 4:
         return MapView(context: context);
+      case 5:
+        return TargetBasedUpaView(context: context);
       default:
         return Text('tab $index');
     }

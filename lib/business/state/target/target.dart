@@ -21,6 +21,8 @@ class TargetProcessResult with EquatableMixin {
 
   TargetProcessResult({required this.progress, required this.action, required this.description});
 
+  TargetProcessResult.empty() : progress = Progress.empty(), action = null, description = '';
+
   @override
   List<Object?> get props => [
         progress,
@@ -33,6 +35,7 @@ class Progress {
   final double target;
 
   Progress({required this.current, required this.target});
+  Progress.empty() : current = 0, target = 1;
 
   bool get finished => current >= target;
 

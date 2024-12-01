@@ -32,7 +32,7 @@ class GatheringSkillTarget extends Target {
     }
 
     // Get highest item for skill.
-    final resources = boardState.resources.where((r) => r.skillType == skillType).toList();
+    final resources = boardState.resources.where((r) => r.skillType == skillType && r.skillLevel <= currentSkill.level).toList();
     resources.sort((a, b) => b.skillLevel - a.skillLevel);
     final targetResource = resources.first;
 

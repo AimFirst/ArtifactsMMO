@@ -13,6 +13,7 @@ class StateManager {
 
   final ArtifactsClient artifactsClient;
   final BehaviorSubject<State> _stateSubject = BehaviorSubject();
+  Character character = Character.empty();
 
   Stream<State> get stateStream => _stateSubject.stream;
 
@@ -29,7 +30,8 @@ class StateManager {
       _fetchResources(),
     ]);
     final characters = await artifactsClient.getCharacters();
-    _stateSubject.value = State(boardState: boardState, character: characters.first, target: getNextTarget(character: characters.first));
+    character = characters.first;
+    _stateSubject.value = State(boardState: boardState, character: characters.first, target: getNextTarget(character: character), processResult: TargetProcessResult.empty());
   }
 
   Target getNextTarget({required Character character}) {
@@ -94,5 +96,31 @@ class StateManager {
       totalPages = response.pages ?? 1;
     } while (nextPage++ < totalPages);
     return result;
+  }
+
+  Future<void> startTargetBasedUpa() async {
+    final target = getNextTarget(character: character);
+    while (true) {
+      // Wait for cooldown.
+      final now = DateTime.now();
+      if (character.cooldownEnd.isAfter(now)) {
+        await Future.delayed(character.cooldownEnd.difference(now));
+      }
+
+      // Process an update.
+      final update = target.update(character: character,
+          boardState: boardState,
+          artifactsClient: artifactsClient);
+      _stateSubject.value = State(boardState: boardState, character: character, target: target, processResult: update);
+
+      // Target reached?
+      if (update.progress.finished) {
+        return;
+      }
+
+      // Update the character after this action.
+      final result = await update.action;
+      character = result?.character ?? character;
+    }
   }
 }
