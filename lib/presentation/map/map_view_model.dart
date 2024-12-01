@@ -1,4 +1,5 @@
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_move.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:artifacts_mmo/presentation/base_view_model.dart';
@@ -33,6 +34,6 @@ class MapViewModel extends BaseViewModel<MapModel> {
   }
 
   Future<void> moveTo(MapLocation mapLocation) async {
-    await artifactsClient.moveTo(location: mapLocation.location);
+    await artifactsClient.moveTo(action: ActionMove(location: mapLocation.location),);
   }
 }

@@ -1,4 +1,6 @@
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_gathering.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_move.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/presentation/base_view_model.dart';
 
@@ -7,17 +9,18 @@ import 'status_model.dart';
 class StatusViewModel extends BaseViewModel<StatusModel> {
   final ArtifactsClient artifactsClient;
 
-  StatusViewModel({required this.artifactsClient}) : super(StatusModelLoading());
+  StatusViewModel({required this.artifactsClient})
+      : super(StatusModelLoading());
 
   Location currentLocation() {
-      return (value as StatusModelLoaded).character.location;
+    return (value as StatusModelLoaded).character.location;
   }
 
   Future<void> moveLeft() async {
     try {
       final current = currentLocation();
       final newLocation = Location(x: current.x - 1, y: current.y);
-      await artifactsClient.moveTo(location: newLocation);
+      await artifactsClient.moveTo(action: ActionMove(location: newLocation));
     } catch (error) {
       value = StatusModelError(error: error.toString());
     }
@@ -27,7 +30,7 @@ class StatusViewModel extends BaseViewModel<StatusModel> {
     try {
       final current = currentLocation();
       final newLocation = Location(x: current.x, y: current.y - 1);
-      await artifactsClient.moveTo(location: newLocation);
+      await artifactsClient.moveTo(action: ActionMove(location: newLocation));
     } catch (error) {
       value = StatusModelError(error: error.toString());
     }
@@ -37,7 +40,7 @@ class StatusViewModel extends BaseViewModel<StatusModel> {
     try {
       final current = currentLocation();
       final newLocation = Location(x: current.x + 1, y: current.y);
-      await artifactsClient.moveTo(location: newLocation);
+      await artifactsClient.moveTo(action: ActionMove(location: newLocation));
     } catch (error) {
       value = StatusModelError(error: error.toString());
     }
@@ -47,7 +50,7 @@ class StatusViewModel extends BaseViewModel<StatusModel> {
     try {
       final current = currentLocation();
       final newLocation = Location(x: current.x, y: current.y + 1);
-      await artifactsClient.moveTo(location: newLocation);
+      await artifactsClient.moveTo(action: ActionMove(location: newLocation));
     } catch (error) {
       value = StatusModelError(error: error.toString());
     }
@@ -55,7 +58,7 @@ class StatusViewModel extends BaseViewModel<StatusModel> {
 
   Future<void> gather() async {
     try {
-      await artifactsClient.gather();
+      await artifactsClient.gather(action: ActionGathering());
     } catch (error) {
       value = StatusModelError(error: error.toString());
     }

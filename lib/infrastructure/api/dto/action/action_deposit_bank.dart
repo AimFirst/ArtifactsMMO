@@ -4,7 +4,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 
 class ActionDepositBankResponse extends ActionResponse {
   final Item item;
-  final ItemQuantity bank;
+  final List<ItemQuantity> bank;
 
   ActionDepositBankResponse({
     required super.cooldown,

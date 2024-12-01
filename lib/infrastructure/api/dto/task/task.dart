@@ -4,31 +4,40 @@ import 'package:equatable/equatable.dart';
 
 class Task with EquatableMixin {
   final String code;
-  final int level;
   final TaskType type;
-  final int minQuantity;
-  final int maxQuantity;
-  final SkillType? skill;
+  final int total;
   final TaskReward rewards;
 
   Task(
-      {required this.code,
-      required this.level,
-      required this.type,
-      required this.minQuantity,
-      required this.maxQuantity,
-      required this.skill,
-      required this.rewards});
+      {required this.code, required this.type, required this.total, required this.rewards,});
 
   @override
-  List<Object?> get props => [
-        code,
+  List<Object?> get props => [code, type, total, rewards];
+}
+
+class TaskFull extends Task {
+  final int level;
+  final int minQuantity;
+  final int maxQuantity;
+  final SkillType? skill;
+
+  TaskFull({required super.code,
+    required super.type,
+    required super.total,
+    required super.rewards,
+    required this.level,
+    required this.minQuantity,
+    required this.maxQuantity,
+    required this.skill,});
+
+  @override
+  List<Object?> get props =>
+      [
+        ...super.props,
         level,
-        type,
         minQuantity,
         maxQuantity,
         skill,
-        rewards,
       ];
 }
 

@@ -1,4 +1,27 @@
 import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_accept_new_task.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_buy_bank_expansion.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_complete_task.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_crafting.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_delete_item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_deposit_bank.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_deposit_bank_gold.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_equip_item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_fight.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_gathering.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_ge_buy_item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_ge_cancel_sell_order.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_ge_create_sell_order.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_move.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_recycling.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_rest.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_task_cancel.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_task_exchange.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_task_trade.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_unequip_item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_use_item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_withdraw_bank.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_withdraw_bank_gold.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/active_event.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/event.dart';
@@ -60,7 +83,27 @@ abstract class ArtifactsClient {
   });
 
   // Actions
-  Future<Character> moveTo({required Location location});
-
-  Future<Character> gather();
+  Future<ActionMoveResponse> moveTo({required ActionMove action});
+  Future<ActionRestResponse> rest({required ActionRest action});
+  Future<ActionEquipItemResponse> equipItem({required ActionEquipItem action});
+  Future<ActionUnequipItemResponse> unequipItem({required ActionUnequipItem action});
+  Future<ActionUseItemResponse> useItem({required ActionUseItem action});
+  Future<ActionFightResponse> fight({required ActionFight action});
+  Future<ActionGatheringResponse> gather({required ActionGathering action});
+  Future<ActionCraftingResponse> craft({required ActionCrafting action});
+  Future<ActionDepositBankGoldResponse> depositBankGold({required ActionDepositBankGold action});
+  Future<ActionDepositBankResponse> depositBank({required ActionDepositBank action});
+  Future<ActionWithdrawBankResponse> withdrawBank({required ActionWithdrawBank action});
+  Future<ActionWithdrawBankGoldResponse> withdrawBankGold({required ActionWithdrawBankGold action});
+  Future<ActionBuyBankExpansionResponse> buyBankExpansion({required ActionBuyBankExpansion action});
+  Future<ActionRecyclingResponse> recycle({required ActionRecycling action});
+  Future<ActionGEBuyItemResponse> geBuyItem({required ActionGEBuyItem action});
+  Future<ActionGECreateSellOrderResponse> geCreateSellOrder({required ActionGECreateSellOrder action});
+  Future<ActionGECancelSellOrderResponse> geCancelSellOrder({required ActionGECancelSellOrder action});
+  Future<ActionCompleteTaskResponse> completeTask({required ActionCompleteTask action});
+  Future<ActionTaskExchangeResponse> taskExchange({required ActionTaskExchange action});
+  Future<ActionAcceptNewTaskResponse> acceptNewTask({required ActionAcceptNewTask action});
+  Future<ActionTaskTradeResponse> taskTrade({required ActionTaskTrade action});
+  Future<ActionTaskCancelResponse> taskCancel({required ActionTaskCancel action});
+  Future<ActionDeleteItemResponse> deleteItem({required ActionDeleteItem action});
 }

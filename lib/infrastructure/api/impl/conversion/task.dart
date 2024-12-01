@@ -6,11 +6,12 @@ import 'package:artifacts_mmo/infrastructure/api/impl/conversion/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/skill.dart';
 
 extension TaskConversion on TaskFullSchema {
-  dto.Task convert() {
-    return dto.Task(
+  dto.TaskFull convert() {
+    return dto.TaskFull(
       code: code,
       level: level,
       type: type.convert(),
+      total: 1,
       minQuantity: minQuantity,
       maxQuantity: maxQuantity,
       skill: skillTypeFromStringNullable(skill),
