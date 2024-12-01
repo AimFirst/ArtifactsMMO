@@ -1,50 +1,84 @@
+import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/target/gathering_skill_target.dart';
+import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/paged_response.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/resource/resource.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
+import 'package:rxdart/rxdart.dart';
 
 class StateManager {
-  late final Map<Location, MapLocation> map;
-  late final List<Resource> resources;
-  late final Map<Content, List<Location>> contentLocations;
-  late final Map<Content, List<Resource>> dropsFromResources;
+  final BoardState boardState = BoardState();
 
   final ArtifactsClient artifactsClient;
+  final BehaviorSubject<State> _stateSubject = BehaviorSubject();
+
+  Stream<State> get stateStream => _stateSubject.stream;
 
   StateManager({required this.artifactsClient});
 
   Future<void> init() async {
     await Future.wait([
       _fetchMap(),
+      _fetchItems(),
+      _fetchMonsters(),
+      _fetchActiveEvents(),
+      _fetchTasks(),
+      _fetchAchievements(),
       _fetchResources(),
     ]);
+    final characters = await artifactsClient.getCharacters();
+    _stateSubject.value = State(boardState: boardState, character: characters.first, target: getNextTarget(character: characters.first));
+  }
+
+  Target getNextTarget({required Character character}) {
+    return GatheringSkillTarget(skillType: SkillType.woodcutting, targetLevel: 5);
   }
 
   Future<void> _fetchMap() async {
     final results = await _loadAllPaged(
         (int page) => artifactsClient.getMap(pageNumber: page));
     for (final mapLocation in results) {
-      map[mapLocation.location] = mapLocation;
+      boardState.map[mapLocation.location] = mapLocation;
       final content = mapLocation.content;
       if (content != null) {
-        final existingContentList = contentLocations[content] ?? [];
+        final existingContentList = boardState.contentLocations[content] ?? [];
         existingContentList.add(mapLocation.location);
-        contentLocations[content] = existingContentList;
+        boardState.contentLocations[content] = existingContentList;
       }
     }
+  }
+
+  Future<void> _fetchItems() async {
+    boardState.items = await _loadAllPaged((int page) => artifactsClient.getItems(pageNumber: page),);
+  }
+
+  Future<void> _fetchMonsters() async {
+    boardState.monsters = await _loadAllPaged((int page) => artifactsClient.getMonsters(pageNumber: page),);
+  }
+
+  Future<void> _fetchActiveEvents() async {
+    boardState.activeEvents = await _loadAllPaged((int page) => artifactsClient.getActiveEvents(pageNumber: page),);
+  }
+
+  Future<void> _fetchTasks() async {
+    boardState.tasks = await _loadAllPaged((int page) => artifactsClient.getTasks(pageNumber: page),);
+  }
+
+  Future<void> _fetchAchievements() async {
+    boardState.achievements = await _loadAllPaged((int page) => artifactsClient.getAchievements(pageNumber: page),);
   }
 
   Future<void> _fetchResources() async {
     final results = await _loadAllPaged(
         (int page) => artifactsClient.getResources(pageNumber: page));
-    resources = results;
+    boardState.resources = results;
     for (final resource in results) {
       final content = Content.item(code: resource.code);
-      final existingEntry = dropsFromResources[content] ?? [];
+      final existingEntry = boardState.dropsFromResources[content] ?? [];
       existingEntry.add(resource);
-      dropsFromResources[content] = existingEntry;
+      boardState.dropsFromResources[content] = existingEntry;
     }
   }
 
