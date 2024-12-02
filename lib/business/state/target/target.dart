@@ -18,10 +18,11 @@ class TargetProcessResult with EquatableMixin {
   final Progress progress;
   final Future<ActionResponse>? action;
   final String description;
+  final String? imageUrl;
 
-  TargetProcessResult({required this.progress, required this.action, required this.description});
+  TargetProcessResult({required this.progress, required this.action, required this.description, required this.imageUrl});
 
-  TargetProcessResult.empty() : progress = Progress.empty(), action = null, description = '';
+  TargetProcessResult.empty() : progress = Progress.empty(), action = null, description = '', imageUrl = null;
 
   @override
   List<Object?> get props => [

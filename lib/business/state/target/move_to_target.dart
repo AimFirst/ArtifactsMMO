@@ -18,10 +18,10 @@ class MoveToTarget extends Target {
   TargetProcessResult update({required Character character, required BoardState boardState, required ArtifactsClient artifactsClient}) {
     final progress = getProgress(character: character);
     if (progress.finished) {
-      return TargetProcessResult(progress: progress, action: null, description: 'At destination $targetLocation');
+      return TargetProcessResult(progress: progress, action: null, description: 'At destination $targetLocation', imageUrl: null);
     }
 
-    return TargetProcessResult(progress: progress, action: artifactsClient.moveTo(action: ActionMove(location: targetLocation)), description: 'Moving to $targetLocation');
+    return TargetProcessResult(progress: progress, action: artifactsClient.moveTo(action: ActionMove(location: targetLocation)), description: 'Moving to $targetLocation', imageUrl: null);
   }
 
   Progress getProgress({required Character character}) {

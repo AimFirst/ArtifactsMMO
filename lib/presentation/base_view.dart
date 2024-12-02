@@ -13,9 +13,9 @@ abstract class BaseView<M extends BaseModel, V extends BaseViewModel<M>> extends
         valueListenable: viewModel,
         builder:
             (BuildContext context, M value, Widget? child) {
-          return widgetForState(value);
+          return widgetForState(context, value);
         });
   }
 
-  Widget widgetForState(M value);
+  Widget widgetForState(BuildContext context, M value);
 }

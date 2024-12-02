@@ -17,7 +17,7 @@ class SkillsOverviewView
   }
 
   @override
-  Widget widgetForState(SkillsOverviewModel value) {
+  Widget widgetForState(BuildContext context, SkillsOverviewModel value) {
     switch (value) {
       case SkillsOverviewModelLoading a:
         return _widgetLoading(a);

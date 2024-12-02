@@ -16,7 +16,7 @@ class ResourcesView extends BaseView<ResourcesModel, ResourcesViewModel> {
   }
 
   @override
-  Widget widgetForState(ResourcesModel value) {
+  Widget widgetForState(BuildContext context, ResourcesModel value) {
     switch (value) {
       case ResourcesModelLoading a:
         return _widgetLoading(a);

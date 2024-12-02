@@ -16,7 +16,7 @@ class InventoryView extends BaseView<InventoryModel, InventoryViewModel> {
   }
 
   @override
-  Widget widgetForState(InventoryModel value) {
+  Widget widgetForState(BuildContext context, InventoryModel value) {
     switch (value) {
       case InventoryModelLoading a:
         return _widgetLoading(a);

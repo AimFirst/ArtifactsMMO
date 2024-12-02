@@ -16,7 +16,7 @@ class MapView extends BaseView<MapModel, MapViewModel> {
   }
 
   @override
-  Widget widgetForState(MapModel value) {
+  Widget widgetForState(BuildContext context, MapModel value) {
     switch (value) {
       case MapModelLoading a:
         return _widgetLoading(a);

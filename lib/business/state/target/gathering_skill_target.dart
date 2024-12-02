@@ -1,10 +1,10 @@
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/target/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/move_to_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_exception.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_gathering.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/action/action_move.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
@@ -28,7 +28,13 @@ class GatheringSkillTarget extends Target {
     
     // If we are already at or above the desired level, we are done.
     if (currentSkill.level >= targetLevel) {
-      return TargetProcessResult(progress: currentProgress, action: null, description: 'Reached target level');
+      return TargetProcessResult(progress: currentProgress, action: null, description: 'Reached target level', imageUrl: skillType.image);
+    }
+
+    // Check our inventory to make sure we have room/etc.
+    final inventoryUpdate = ManageInventoryTarget().update(character: character, boardState: boardState, artifactsClient: artifactsClient);
+    if (!inventoryUpdate.progress.finished) {
+      return inventoryUpdate;
     }
 
     // Get highest item for skill.
@@ -51,7 +57,7 @@ class GatheringSkillTarget extends Target {
     }
 
     // Start gathering.
-    return TargetProcessResult(progress: currentProgress, action: artifactsClient.gather(action: ActionGathering()), description: 'Gathering $targetResource');
+    return TargetProcessResult(progress: currentProgress, action: artifactsClient.gather(action: ActionGathering()), description: 'Gathering $targetResource', imageUrl: skillType.image,);
   }
 
   Progress getProgress({required Character character, required Skill currentSkill}) {

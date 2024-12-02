@@ -16,7 +16,7 @@ class StatusView extends BaseView<StatusModel, StatusViewModel> {
   }
 
   @override
-  Widget widgetForState(StatusModel value) {
+  Widget widgetForState(BuildContext context, StatusModel value) {
     switch (value) {
       case StatusModelLoading a:
         return _widgetLoading(a);
@@ -56,6 +56,9 @@ class StatusView extends BaseView<StatusModel, StatusViewModel> {
             ),
             Center(
               child: OutlinedButton(onPressed: viewModel.gather, child: const Text('Gather')),
+            ),
+            Center(
+              child: OutlinedButton(onPressed: viewModel.deleteTrees, child: const Text('Delete trees')),
             )
           ],
         ),

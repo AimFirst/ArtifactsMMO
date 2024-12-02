@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 
 class Character with EquatableMixin {
   final String name;
+  final String skin;
   final int gold;
   final int hp;
   final int maxHp;
@@ -35,6 +36,7 @@ class Character with EquatableMixin {
     required this.cooking,
     required this.alchemy,
     required this.name,
+    required this.skin,
     required this.gold,
     required this.location,
     required this.cooldownEnd,
@@ -55,6 +57,7 @@ class Character with EquatableMixin {
         cooking = Skill.empty(skillType: SkillType.cooking),
         alchemy = Skill.empty(skillType: SkillType.alchemy),
         name = '',
+        skin = '',
         gold = 0,
         location = Location.empty(),
         cooldownEnd = DateTime.now(),

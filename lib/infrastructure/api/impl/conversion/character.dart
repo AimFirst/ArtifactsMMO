@@ -9,6 +9,7 @@ extension CharacterExtension on CharacterSchema {
   Character convert() {
     return Character(
       name: name,
+      skin: skin.name,
       location: Location(x: x, y: y),
       cooldownEnd: DateTime.now().add(Duration(seconds: cooldown)),
       hp: hp,

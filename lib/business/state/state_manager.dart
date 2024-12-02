@@ -22,11 +22,11 @@ class StateManager {
   Future<void> init() async {
     await Future.wait([
       _fetchMap(),
-      _fetchItems(),
-      _fetchMonsters(),
-      _fetchActiveEvents(),
-      _fetchTasks(),
-      _fetchAchievements(),
+      // _fetchItems(),
+      // _fetchMonsters(),
+      // _fetchActiveEvents(),
+      // _fetchTasks(),
+      // _fetchAchievements(),
       _fetchResources(),
     ]);
     final characters = await artifactsClient.getCharacters();
@@ -35,7 +35,7 @@ class StateManager {
   }
 
   Target getNextTarget({required Character character}) {
-    return GatheringSkillTarget(skillType: SkillType.woodcutting, targetLevel: 5);
+    return GatheringSkillTarget(skillType: SkillType.woodcutting, targetLevel: 7);
   }
 
   Future<void> _fetchMap() async {

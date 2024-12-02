@@ -1,6 +1,8 @@
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_delete_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_gathering.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_move.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/presentation/base_view_model.dart';
 
@@ -59,6 +61,14 @@ class StatusViewModel extends BaseViewModel<StatusModel> {
   Future<void> gather() async {
     try {
       await artifactsClient.gather(action: ActionGathering());
+    } catch (error) {
+      value = StatusModelError(error: error.toString());
+    }
+  }
+
+  Future<void> deleteTrees() async {
+    try {
+      await artifactsClient.deleteItem(action: ActionDeleteItem(itemQuantity: ItemQuantity(code: 'ash_wood', quantity: 20)));
     } catch (error) {
       value = StatusModelError(error: error.toString());
     }
