@@ -42,7 +42,7 @@ extension EventMapsConversion on EventMapSchema {
 extension EventContentConversion on EventContentSchema {
   Content convert() {
     return Content(
-      type: type,
+      type: ContentType.values.byName(type),
       code: code,
     );
   }

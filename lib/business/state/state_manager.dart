@@ -1,5 +1,5 @@
 import 'package:artifacts_mmo/business/state/state.dart';
-import 'package:artifacts_mmo/business/state/target/gathering_skill_target.dart';
+import 'package:artifacts_mmo/business/state/target/gathering/gathering_skill_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
@@ -22,8 +22,8 @@ class StateManager {
   Future<void> init() async {
     await Future.wait([
       _fetchMap(),
-      // _fetchItems(),
-      // _fetchMonsters(),
+      _fetchItems(),
+      _fetchMonsters(),
       // _fetchActiveEvents(),
       // _fetchTasks(),
       // _fetchAchievements(),
@@ -53,7 +53,12 @@ class StateManager {
   }
 
   Future<void> _fetchItems() async {
-    boardState.items = await _loadAllPaged((int page) => artifactsClient.getItems(pageNumber: page),);
+    final items = await _loadAllPaged((int page) => artifactsClient.getItems(pageNumber: page),);
+    boardState.items = items;
+    for (final skillType in SkillType.values) {
+      final itemsForType = items.where((i) => i.craft?.skill == skillType).toList();
+      boardState.itemsByCraftType[skillType] = itemsForType;
+    }
   }
 
   Future<void> _fetchMonsters() async {

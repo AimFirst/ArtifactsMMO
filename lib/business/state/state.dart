@@ -8,6 +8,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/resource/resource.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
 
 class State {
@@ -29,6 +30,7 @@ class BoardState {
   List<Resource> resources = [];
   Map<Content, List<Location>> contentLocations = {};
   Map<Content, List<Resource>> dropsFromResources = {};
+  Map<SkillType, List<Item>> itemsByCraftType = {};
   List<Item> items = [];
   List<Monster> monsters = [];
   List<ActiveEvent> activeEvents = [];

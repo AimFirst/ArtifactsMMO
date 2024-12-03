@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 
 class DropRate with EquatableMixin {
@@ -11,4 +13,6 @@ class DropRate with EquatableMixin {
 
   @override
   List<Object?> get props => [code, rate, minQuantity, maxQuantity];
+
+  double get averageQuantity => ((maxQuantity - minQuantity) / 2) + minQuantity;
 }
