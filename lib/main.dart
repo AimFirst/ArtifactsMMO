@@ -8,8 +8,6 @@ import 'package:artifacts_mmo/presentation/resources/resources_view.dart';
 import 'package:artifacts_mmo/presentation/resources/resources_view_model.dart';
 import 'package:artifacts_mmo/presentation/skill/skills_overview_view.dart';
 import 'package:artifacts_mmo/presentation/skill/skills_overview_view_model.dart';
-import 'package:artifacts_mmo/presentation/status/status_view.dart';
-import 'package:artifacts_mmo/presentation/status/status_view_model.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_view.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_view_model.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +20,6 @@ Future<void> main() async {
   _registerDependencies();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
-      create: (_) =>
-          StatusViewModel(artifactsClient: GetIt.I<ArtifactsClient>()),
-    ),
     ChangeNotifierProvider(create: (_) =>
       SkillsOverviewViewModel(artifactsClient: GetIt.I<ArtifactsClient>()),
     ),
@@ -76,10 +70,11 @@ class _MyAppState extends State<MyApp> {
           indicatorColor: Colors.purpleAccent,
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[
+
             NavigationDestination(
-              selectedIcon: Icon(Icons.home),
-              icon: Icon(Icons.home_outlined),
-              label: 'Home',
+              icon: Icon(Icons.smart_toy_outlined),
+              label: 'UPA',
+              selectedIcon: Icon(Icons.smart_toy),
             ),
             NavigationDestination(
               icon: Icon(Icons.person_outline),
@@ -101,11 +96,6 @@ class _MyAppState extends State<MyApp> {
               label: 'Maps',
               selectedIcon: Icon(Icons.maps_home_work),
             ),
-            NavigationDestination(
-              icon: Icon(Icons.smart_toy_outlined),
-              label: 'UPA',
-              selectedIcon: Icon(Icons.smart_toy),
-            ),
           ],
         ),
         body: _widgetForIndex(currentPageIndex),
@@ -116,7 +106,7 @@ class _MyAppState extends State<MyApp> {
   Widget _widgetForIndex(int index) {
     switch (index) {
       case 0:
-        return StatusView(context: context);
+        return TargetBasedUpaView(context: context);
       case 1:
         return SkillsOverviewView(context: context);
       case 2:
@@ -125,8 +115,6 @@ class _MyAppState extends State<MyApp> {
         return ResourcesView(context: context);
       case 4:
         return MapView(context: context);
-      case 5:
-        return TargetBasedUpaView(context: context);
       default:
         return Text('tab $index');
     }
