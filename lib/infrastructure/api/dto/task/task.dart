@@ -8,8 +8,12 @@ class Task with EquatableMixin {
   final int total;
   final TaskReward rewards;
 
-  Task(
-      {required this.code, required this.type, required this.total, required this.rewards,});
+  Task({
+    required this.code,
+    required this.type,
+    required this.total,
+    required this.rewards,
+  });
 
   @override
   List<Object?> get props => [code, type, total, rewards];
@@ -21,18 +25,19 @@ class TaskFull extends Task {
   final int maxQuantity;
   final SkillType? skill;
 
-  TaskFull({required super.code,
+  TaskFull({
+    required super.code,
     required super.type,
     required super.total,
     required super.rewards,
     required this.level,
     required this.minQuantity,
     required this.maxQuantity,
-    required this.skill,});
+    required this.skill,
+  });
 
   @override
-  List<Object?> get props =>
-      [
+  List<Object?> get props => [
         ...super.props,
         level,
         minQuantity,
@@ -41,7 +46,4 @@ class TaskFull extends Task {
       ];
 }
 
-enum TaskType {
-  monsters,
-  items
-}
+enum TaskType { monsters, items }

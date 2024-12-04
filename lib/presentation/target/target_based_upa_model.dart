@@ -56,4 +56,5 @@ enum MenuItemType {
   inventory,
   skills,
   items,
+  tasks,
 }

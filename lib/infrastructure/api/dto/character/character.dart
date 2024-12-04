@@ -1,6 +1,8 @@
+import 'package:artifacts_mmo/infrastructure/api/dto/character/equipment.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/inventory_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/task/task_progress.dart';
 import 'package:equatable/equatable.dart';
 
 class Character with EquatableMixin {
@@ -22,6 +24,8 @@ class Character with EquatableMixin {
   final Skill alchemy;
   final int inventoryMaxItems;
   final List<InventoryItem> inventoryItems;
+  final EquipmentLoadout equipmentLoadout;
+  final TaskProgress? taskProgress;
 
   Character({
     required this.hp,
@@ -42,6 +46,8 @@ class Character with EquatableMixin {
     required this.cooldownEnd,
     required this.inventoryMaxItems,
     required this.inventoryItems,
+    required this.equipmentLoadout,
+    required this.taskProgress,
   });
 
   Character.empty()
@@ -62,14 +68,44 @@ class Character with EquatableMixin {
         location = Location.empty(),
         cooldownEnd = DateTime.now(),
         inventoryMaxItems = 1,
-        inventoryItems = [];
+        inventoryItems = [],
+        equipmentLoadout = EquipmentLoadout.empty(),
+        taskProgress = null;
 
   @override
-  List<Object?> get props => [hp, maxHp, overall, mining, woodcutting, fishing, weaponCrafting, gearCrafting, jewelryCrafting, cooking, alchemy, name, gold, location, cooldownEnd, inventoryMaxItems, inventoryItems];
+  List<Object?> get props => [
+        hp,
+        maxHp,
+        overall,
+        mining,
+        woodcutting,
+        fishing,
+        weaponCrafting,
+        gearCrafting,
+        jewelryCrafting,
+        cooking,
+        alchemy,
+        name,
+        gold,
+        location,
+        cooldownEnd,
+        inventoryMaxItems,
+        inventoryItems
+      ];
 
-  List<Skill> get allSkills => [mining, woodcutting, fishing, weaponCrafting, gearCrafting, jewelryCrafting, cooking, alchemy];
+  List<Skill> get allSkills => [
+        mining,
+        woodcutting,
+        fishing,
+        weaponCrafting,
+        gearCrafting,
+        jewelryCrafting,
+        cooking,
+        alchemy
+      ];
 
   List<Skill> get gatheringSkills => [mining, woodcutting, fishing, alchemy];
 
-  List<Skill> get craftingSkills => [weaponCrafting, gearCrafting, jewelryCrafting, cooking];
+  List<Skill> get craftingSkills =>
+      [weaponCrafting, gearCrafting, jewelryCrafting, cooking];
 }

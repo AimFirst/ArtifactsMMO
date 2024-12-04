@@ -15,6 +15,11 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
       url: 'https://artifactsmmo.com/images/items/iron_sword.png',
       name: 'Skills',
     ),
+    MenuItemType.tasks: MenuOption(
+      type: MenuItemType.tasks,
+      url: 'https://artifactsmmo.com/images/items/forest_whip.png',
+      name: 'Tasks',
+    ),
     MenuItemType.inventory: MenuOption(
       type: MenuItemType.inventory,
       url: 'https://artifactsmmo.com/images/items/backpack.png',

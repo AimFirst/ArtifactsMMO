@@ -1,11 +1,13 @@
+import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/task/task_progress.dart';
 import 'package:artifacts_mmo/presentation/base_view.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_model.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class TargetBasedUpaView
@@ -240,11 +242,18 @@ class TargetBasedUpaView
         return _menuForInventory(model, viewModel);
       case MenuItemType.skills:
         return _menuForSkills(model, viewModel);
+      case MenuItemType.tasks:
+        return _menuForTasks(model, viewModel);
     }
   }
 
-  Widget _menuForInventory(TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel,) {
-    final items = model.state.character.inventoryItems.where((i) => i.itemQuantity.quantity > 0).toList();
+  Widget _menuForInventory(
+    TargetBasedUpaModelLoaded model,
+    TargetBasedUpaViewModel viewModel,
+  ) {
+    final items = model.state.character.inventoryItems
+        .where((i) => i.itemQuantity.quantity > 0)
+        .toList();
     return GridView.builder(
         itemCount: items.length,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -255,11 +264,13 @@ class TargetBasedUpaView
         ),
         itemBuilder: (BuildContext context, int index) {
           final inventoryItem = items[index];
-          final item = model.state.boardState.items.firstWhere((i) => i.code == inventoryItem.itemQuantity.code);
+          final item = model.state.boardState.items
+              .firstWhere((i) => i.code == inventoryItem.itemQuantity.code);
           return InkWell(
             onTap: null,
             child: Container(
-              decoration: const BoxDecoration(color: Color.fromARGB(230, 255, 255, 255)),
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(230, 255, 255, 255)),
               child: Column(
                 children: [
                   Text(item.name),
@@ -268,7 +279,7 @@ class TargetBasedUpaView
                     height: 80,
                     child: CachedNetworkImage(
                       imageUrl:
-                      'https://artifactsmmo.com/images/items/${item.code}.png',
+                          'https://artifactsmmo.com/images/items/${item.code}.png',
                     ),
                   ),
                   Text('${inventoryItem.itemQuantity.quantity}'),
@@ -279,7 +290,10 @@ class TargetBasedUpaView
         });
   }
 
-  Widget _menuForItems(TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel,) {
+  Widget _menuForItems(
+    TargetBasedUpaModelLoaded model,
+    TargetBasedUpaViewModel viewModel,
+  ) {
     return GridView.builder(
         itemCount: model.state.boardState.items.length,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -293,7 +307,8 @@ class TargetBasedUpaView
           return InkWell(
             onTap: () => viewModel.onItemTap(item),
             child: Container(
-              decoration: const BoxDecoration(color: Color.fromARGB(230, 255, 255, 255)),
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(230, 255, 255, 255)),
               child: Column(
                 children: [
                   Text(item.name),
@@ -305,7 +320,8 @@ class TargetBasedUpaView
                           'https://artifactsmmo.com/images/items/${item.code}.png',
                     ),
                   ),
-                  Text('${item.craft?.skill?.name ?? ''} - ${item.craft?.level ?? ''}'),
+                  Text(
+                      '${item.craft?.skill?.name ?? ''} - ${item.craft?.level ?? ''}'),
                 ],
               ),
             ),
@@ -313,17 +329,24 @@ class TargetBasedUpaView
         });
   }
 
-  Widget _menuForSkills(TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel,) {
+  Widget _menuForSkills(
+    TargetBasedUpaModelLoaded model,
+    TargetBasedUpaViewModel viewModel,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView.separated(
         itemCount: model.state.character.allSkills.length,
         shrinkWrap: true,
-        separatorBuilder: (context, index) => SizedBox(width: 1, height: 15,),
+        separatorBuilder: (context, index) => const SizedBox(
+          width: 1,
+          height: 15,
+        ),
         itemBuilder: (context, index) {
-        final skill = model.state.character.allSkills[index];
-        return _skillWidget(skill);
-      },),
+          final skill = model.state.character.allSkills[index];
+          return _skillWidget(skill);
+        },
+      ),
     );
   }
 
@@ -336,15 +359,22 @@ class TargetBasedUpaView
           child: Row(
             children: [
               CachedNetworkImage(imageUrl: skill.skillType.image),
-              const SizedBox(width: 20, height: 1,),
+              const SizedBox(
+                width: 20,
+                height: 1,
+              ),
               Flexible(
                 fit: FlexFit.tight,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('${skill.skillType.name} (Level ${skill.level})'),
-                    const SizedBox(width: 1, height: 4,),
-                    _progressBarWithText(0, skill.nextLevelTargetXp, skill.xp, 'XP', Colors.blue),
+                    const SizedBox(
+                      width: 1,
+                      height: 4,
+                    ),
+                    _progressBarWithText(0, skill.nextLevelTargetXp, skill.xp,
+                        'XP', Colors.blue),
                   ],
                 ),
               ),
@@ -353,6 +383,60 @@ class TargetBasedUpaView
         ),
       ),
     );
+  }
+
+  Widget _menuForTasks(
+    TargetBasedUpaModelLoaded model,
+    TargetBasedUpaViewModel viewModel,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          if (model.state.character.taskProgress != null)
+            _inProgressTask(
+              model.state.character.taskProgress!,
+              model.state.boardState,
+            ),
+          Expanded(
+            child: ListView.separated(
+              itemCount: model.state.boardState.tasks.length,
+              shrinkWrap: true,
+              separatorBuilder: (context, index) => const SizedBox(
+                width: 1,
+                height: 15,
+              ),
+              itemBuilder: (context, index) {
+                final task = model.state.boardState.tasks[index];
+                return _taskWidget(task);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _inProgressTask(
+    TaskProgress taskProgress,
+    BoardState boardState,
+  ) {
+    final task =
+        boardState.tasks.where((t) => t.code == taskProgress.taskCode).first;
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text('${task.type}: ${task.code}'),
+          _progressBarWithText(
+              0, taskProgress.total, taskProgress.progress, '', Colors.blue),
+        ],
+      ),
+    );
+  }
+
+  Widget _taskWidget(Task task) {
+    return Card(child: Text('$task'));
   }
 
   Widget _menuOption({

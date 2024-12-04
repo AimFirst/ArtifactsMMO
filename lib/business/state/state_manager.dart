@@ -30,7 +30,7 @@ class StateManager {
       _fetchItems(),
       _fetchMonsters(),
       // _fetchActiveEvents(),
-      // _fetchTasks(),
+      _fetchTasks(),
       // _fetchAchievements(),
       _fetchResources(),
     ]);
