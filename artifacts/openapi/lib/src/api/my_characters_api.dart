@@ -30,12 +30,12 @@ import 'package:artifacts_api/src/model/ge_transaction_response_schema.dart';
 import 'package:artifacts_api/src/model/my_characters_list_schema.dart';
 import 'package:artifacts_api/src/model/recycling_response_schema.dart';
 import 'package:artifacts_api/src/model/recycling_schema.dart';
+import 'package:artifacts_api/src/model/reward_data_response_schema.dart';
 import 'package:artifacts_api/src/model/simple_item_schema.dart';
 import 'package:artifacts_api/src/model/skill_response_schema.dart';
 import 'package:artifacts_api/src/model/task_cancelled_response_schema.dart';
 import 'package:artifacts_api/src/model/task_response_schema.dart';
 import 'package:artifacts_api/src/model/task_trade_response_schema.dart';
-import 'package:artifacts_api/src/model/tasks_reward_data_response_schema.dart';
 import 'package:artifacts_api/src/model/unequip_schema.dart';
 import 'package:artifacts_api/src/model/use_item_response_schema.dart';
 
@@ -219,6 +219,92 @@ class MyCharactersApi {
     );
   }
 
+  /// Action Christmas Exchange
+  /// Exchange 1 gift for a random reward.
+  ///
+  /// Parameters:
+  /// * [name] - Name of your character.
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [RewardDataResponseSchema] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<RewardDataResponseSchema>>
+      actionChristmasExchangeMyNameActionChristmasExchangePost({
+    required String name,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/my/{name}/action/christmas/exchange'.replaceAll(
+        '{' r'name' '}',
+        encodeQueryParameter(_serializers, name, const FullType(String))
+            .toString());
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'JWTBearer',
+          },
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    RewardDataResponseSchema? _responseData;
+
+    try {
+      final rawResponse = _response.data;
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(RewardDataResponseSchema),
+            ) as RewardDataResponseSchema;
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<RewardDataResponseSchema>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
   /// Action Complete Task
   /// Complete a task.
   ///
@@ -231,9 +317,9 @@ class MyCharactersApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [TasksRewardDataResponseSchema] as data
+  /// Returns a [Future] containing a [Response] with a [RewardDataResponseSchema] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TasksRewardDataResponseSchema>>
+  Future<Response<RewardDataResponseSchema>>
       actionCompleteTaskMyNameActionTaskCompletePost({
     required String name,
     CancelToken? cancelToken,
@@ -273,7 +359,7 @@ class MyCharactersApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    TasksRewardDataResponseSchema? _responseData;
+    RewardDataResponseSchema? _responseData;
 
     try {
       final rawResponse = _response.data;
@@ -281,8 +367,8 @@ class MyCharactersApi {
           ? null
           : _serializers.deserialize(
               rawResponse,
-              specifiedType: const FullType(TasksRewardDataResponseSchema),
-            ) as TasksRewardDataResponseSchema;
+              specifiedType: const FullType(RewardDataResponseSchema),
+            ) as RewardDataResponseSchema;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -293,7 +379,7 @@ class MyCharactersApi {
       );
     }
 
-    return Response<TasksRewardDataResponseSchema>(
+    return Response<RewardDataResponseSchema>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -1737,9 +1823,9 @@ class MyCharactersApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [TasksRewardDataResponseSchema] as data
+  /// Returns a [Future] containing a [Response] with a [RewardDataResponseSchema] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TasksRewardDataResponseSchema>>
+  Future<Response<RewardDataResponseSchema>>
       actionTaskExchangeMyNameActionTaskExchangePost({
     required String name,
     CancelToken? cancelToken,
@@ -1779,7 +1865,7 @@ class MyCharactersApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    TasksRewardDataResponseSchema? _responseData;
+    RewardDataResponseSchema? _responseData;
 
     try {
       final rawResponse = _response.data;
@@ -1787,8 +1873,8 @@ class MyCharactersApi {
           ? null
           : _serializers.deserialize(
               rawResponse,
-              specifiedType: const FullType(TasksRewardDataResponseSchema),
-            ) as TasksRewardDataResponseSchema;
+              specifiedType: const FullType(RewardDataResponseSchema),
+            ) as RewardDataResponseSchema;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1799,7 +1885,7 @@ class MyCharactersApi {
       );
     }
 
-    return Response<TasksRewardDataResponseSchema>(
+    return Response<RewardDataResponseSchema>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

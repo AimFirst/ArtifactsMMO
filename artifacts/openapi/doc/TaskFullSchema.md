@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **minQuantity** | **int** | Minimum amount of task. | 
 **maxQuantity** | **int** | Maximum amount of task. | 
 **skill** | **String** |  | 
-**rewards** | [**TaskRewardsSchema**](TaskRewardsSchema.md) | Rewards. | 
+**rewards** | [**RewardsSchema**](RewardsSchema.md) | Rewards. | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

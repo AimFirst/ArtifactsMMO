@@ -26,6 +26,7 @@ const LogType _$taskExchange = const LogType._('taskExchange');
 const LogType _$taskCancelled = const LogType._('taskCancelled');
 const LogType _$taskCompleted = const LogType._('taskCompleted');
 const LogType _$taskTrade = const LogType._('taskTrade');
+const LogType _$christmasExchange = const LogType._('christmasExchange');
 const LogType _$recycling = const LogType._('recycling');
 const LogType _$rest = const LogType._('rest');
 const LogType _$use = const LogType._('use');
@@ -74,6 +75,8 @@ LogType _$valueOf(String name) {
       return _$taskCompleted;
     case 'taskTrade':
       return _$taskTrade;
+    case 'christmasExchange':
+      return _$christmasExchange;
     case 'recycling':
       return _$recycling;
     case 'rest':
@@ -110,6 +113,7 @@ final BuiltSet<LogType> _$values = new BuiltSet<LogType>(const <LogType>[
   _$taskCancelled,
   _$taskCompleted,
   _$taskTrade,
+  _$christmasExchange,
   _$recycling,
   _$rest,
   _$use,
@@ -139,6 +143,7 @@ class _$LogTypeMeta {
   LogType get taskCancelled => _$taskCancelled;
   LogType get taskCompleted => _$taskCompleted;
   LogType get taskTrade => _$taskTrade;
+  LogType get christmasExchange => _$christmasExchange;
   LogType get recycling => _$recycling;
   LogType get rest => _$rest;
   LogType get use => _$use;
@@ -177,6 +182,7 @@ class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
     'taskCancelled': 'task_cancelled',
     'taskCompleted': 'task_completed',
     'taskTrade': 'task_trade',
+    'christmasExchange': 'christmas_exchange',
     'recycling': 'recycling',
     'rest': 'rest',
     'use': 'use',
@@ -204,6 +210,7 @@ class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
     'task_cancelled': 'taskCancelled',
     'task_completed': 'taskCompleted',
     'task_trade': 'taskTrade',
+    'christmas_exchange': 'christmasExchange',
     'recycling': 'recycling',
     'rest': 'rest',
     'use': 'use',

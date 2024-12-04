@@ -20,7 +20,7 @@ class _$TaskFullSchema extends TaskFullSchema {
   @override
   final String? skill;
   @override
-  final TaskRewardsSchema rewards;
+  final RewardsSchema rewards;
 
   factory _$TaskFullSchema([void Function(TaskFullSchemaBuilder)? updates]) =>
       (new TaskFullSchemaBuilder()..update(updates))._build();
@@ -122,10 +122,10 @@ class TaskFullSchemaBuilder
   String? get skill => _$this._skill;
   set skill(String? skill) => _$this._skill = skill;
 
-  TaskRewardsSchemaBuilder? _rewards;
-  TaskRewardsSchemaBuilder get rewards =>
-      _$this._rewards ??= new TaskRewardsSchemaBuilder();
-  set rewards(TaskRewardsSchemaBuilder? rewards) => _$this._rewards = rewards;
+  RewardsSchemaBuilder? _rewards;
+  RewardsSchemaBuilder get rewards =>
+      _$this._rewards ??= new RewardsSchemaBuilder();
+  set rewards(RewardsSchemaBuilder? rewards) => _$this._rewards = rewards;
 
   TaskFullSchemaBuilder() {
     TaskFullSchema._defaults(this);

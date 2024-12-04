@@ -14,7 +14,7 @@ class _$TaskSchema extends TaskSchema {
   @override
   final int total;
   @override
-  final TaskRewardsSchema rewards;
+  final RewardsSchema rewards;
 
   factory _$TaskSchema([void Function(TaskSchemaBuilder)? updates]) =>
       (new TaskSchemaBuilder()..update(updates))._build();
@@ -85,10 +85,10 @@ class TaskSchemaBuilder implements Builder<TaskSchema, TaskSchemaBuilder> {
   int? get total => _$this._total;
   set total(int? total) => _$this._total = total;
 
-  TaskRewardsSchemaBuilder? _rewards;
-  TaskRewardsSchemaBuilder get rewards =>
-      _$this._rewards ??= new TaskRewardsSchemaBuilder();
-  set rewards(TaskRewardsSchemaBuilder? rewards) => _$this._rewards = rewards;
+  RewardsSchemaBuilder? _rewards;
+  RewardsSchemaBuilder get rewards =>
+      _$this._rewards ??= new RewardsSchemaBuilder();
+  set rewards(RewardsSchemaBuilder? rewards) => _$this._rewards = rewards;
 
   TaskSchemaBuilder() {
     TaskSchema._defaults(this);

@@ -11,10 +11,10 @@ import 'package:dio/dio.dart';
 import 'package:artifacts_api/src/api_util.dart';
 import 'package:artifacts_api/src/model/data_page_drop_rate_schema.dart';
 import 'package:artifacts_api/src/model/data_page_task_full_schema.dart';
+import 'package:artifacts_api/src/model/reward_response_schema.dart';
 import 'package:artifacts_api/src/model/skill.dart';
 import 'package:artifacts_api/src/model/task_full_response_schema.dart';
 import 'package:artifacts_api/src/model/task_type.dart';
-import 'package:artifacts_api/src/model/tasks_reward_response_schema.dart';
 
 class TasksApi {
   final Dio _dio;
@@ -306,10 +306,9 @@ class TasksApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [TasksRewardResponseSchema] as data
+  /// Returns a [Future] containing a [Response] with a [RewardResponseSchema] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TasksRewardResponseSchema>>
-      getTasksRewardTasksRewardsCodeGet({
+  Future<Response<RewardResponseSchema>> getTasksRewardTasksRewardsCodeGet({
     required String code,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -342,7 +341,7 @@ class TasksApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    TasksRewardResponseSchema? _responseData;
+    RewardResponseSchema? _responseData;
 
     try {
       final rawResponse = _response.data;
@@ -350,8 +349,8 @@ class TasksApi {
           ? null
           : _serializers.deserialize(
               rawResponse,
-              specifiedType: const FullType(TasksRewardResponseSchema),
-            ) as TasksRewardResponseSchema;
+              specifiedType: const FullType(RewardResponseSchema),
+            ) as RewardResponseSchema;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -362,7 +361,7 @@ class TasksApi {
       );
     }
 
-    return Response<TasksRewardResponseSchema>(
+    return Response<RewardResponseSchema>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

@@ -1,5 +1,5 @@
 import 'package:artifacts_mmo/business/state/state.dart';
-import 'package:artifacts_mmo/business/state/target/gathering/gathering_skill_target.dart';
+import 'package:artifacts_mmo/business/state/target/no_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
@@ -7,6 +7,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/paged_response.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:async/async.dart';
 
 class StateManager {
   final BoardState boardState = BoardState();
@@ -14,6 +15,10 @@ class StateManager {
   final ArtifactsClient artifactsClient;
   final BehaviorSubject<State> _stateSubject = BehaviorSubject();
   Character character = Character.empty();
+  Target _target = NoTarget();
+  bool needsToStop = false;
+
+  CancelableOperation<void>? _cancelableProcess;
 
   Stream<State> get stateStream => _stateSubject.stream;
 
@@ -31,11 +36,7 @@ class StateManager {
     ]);
     final characters = await artifactsClient.getCharacters();
     character = characters.first;
-    _stateSubject.value = State(boardState: boardState, character: characters.first, target: getNextTarget(character: character), processResult: TargetProcessResult.empty());
-  }
-
-  Target getNextTarget({required Character character}) {
-    return GatheringSkillTarget(skillType: SkillType.woodcutting, targetLevel: 7);
+    _stateSubject.value = State(boardState: boardState, character: characters.first, target: _target, processResult: TargetProcessResult.empty());
   }
 
   Future<void> _fetchMap() async {
@@ -62,7 +63,16 @@ class StateManager {
   }
 
   Future<void> _fetchMonsters() async {
-    boardState.monsters = await _loadAllPaged((int page) => artifactsClient.getMonsters(pageNumber: page),);
+    final results = await _loadAllPaged((int page) => artifactsClient.getMonsters(pageNumber: page),);
+    boardState.monsters = results;
+    for (final monster in results) {
+      for (final drop in monster.drops) {
+        final content = Content(type: ContentType.item, code: drop.code);
+        final existingEntry = boardState.dropsFromMonsters[content] ?? [];
+        existingEntry.add(monster);
+        boardState.dropsFromMonsters[content] = existingEntry;
+      }
+    }
   }
 
   Future<void> _fetchActiveEvents() async {
@@ -82,10 +92,12 @@ class StateManager {
         (int page) => artifactsClient.getResources(pageNumber: page));
     boardState.resources = results;
     for (final resource in results) {
-      final content = Content.item(code: resource.code);
-      final existingEntry = boardState.dropsFromResources[content] ?? [];
-      existingEntry.add(resource);
-      boardState.dropsFromResources[content] = existingEntry;
+      for (final drop in resource.drops) {
+        final content = Content(type: ContentType.item, code: drop.code);
+        final existingEntry = boardState.dropsFromResources[content] ?? [];
+        existingEntry.add(resource);
+        boardState.dropsFromResources[content] = existingEntry;
+      }
     }
   }
 
@@ -104,7 +116,22 @@ class StateManager {
   }
 
   Future<void> startTargetBasedUpa() async {
-    final target = getNextTarget(character: character);
+    final future = _startProcessingNextTarget();
+    _cancelableProcess = CancelableOperation.fromFuture(future);
+    await future;
+  }
+
+  Future<void> stopTargetBasedUpa() async {
+    await _cancelableProcess?.cancel();
+  }
+
+  Future<void> startNewTarget(Target target) async {
+    await stopTargetBasedUpa();
+    _target = target;
+    await startTargetBasedUpa();
+  }
+
+  Future<void> _startProcessingNextTarget() async {
     while (true) {
       // Wait for cooldown.
       final now = DateTime.now();
@@ -113,10 +140,10 @@ class StateManager {
       }
 
       // Process an update.
-      final update = target.update(character: character,
+      final update = _target.update(character: character,
           boardState: boardState,
           artifactsClient: artifactsClient);
-      _stateSubject.value = State(boardState: boardState, character: character, target: target, processResult: update);
+      _stateSubject.value = State(boardState: boardState, character: character, target: _target, processResult: update);
 
       // Target reached?
       if (update.progress.finished) {

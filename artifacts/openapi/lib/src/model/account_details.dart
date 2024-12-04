@@ -19,7 +19,7 @@ part 'account_details.g.dart';
 /// * [status] - Member status.
 /// * [achievementsPoints] - Achievement points.
 /// * [banned] - Banned.
-/// * [badges]
+/// * [badges] - Account badges.
 /// * [banReason] - Ban reason.
 @BuiltValue()
 abstract class AccountDetails
@@ -45,6 +45,7 @@ abstract class AccountDetails
   @BuiltValueField(wireName: r'banned')
   bool get banned;
 
+  /// Account badges.
   @BuiltValueField(wireName: r'badges')
   BuiltList<JsonObject?>? get badges;
 
@@ -108,7 +109,7 @@ class _$AccountDetailsSerializer
       yield serializers.serialize(
         object.badges,
         specifiedType:
-            const FullType.nullable(BuiltList, [FullType.nullable(JsonObject)]),
+            const FullType(BuiltList, [FullType.nullable(JsonObject)]),
       );
     }
     if (object.banReason != null) {
@@ -181,10 +182,9 @@ class _$AccountDetailsSerializer
         case r'badges':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(
-                BuiltList, [FullType.nullable(JsonObject)]),
-          ) as BuiltList<JsonObject?>?;
-          if (valueDes == null) continue;
+            specifiedType:
+                const FullType(BuiltList, [FullType.nullable(JsonObject)]),
+          ) as BuiltList<JsonObject?>;
           result.badges.replace(valueDes);
           break;
         case r'ban_reason':

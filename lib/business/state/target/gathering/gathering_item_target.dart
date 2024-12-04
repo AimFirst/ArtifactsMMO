@@ -20,8 +20,8 @@ class GatheringItemTarget extends GatheringTarget {
           0,
           (previousValue, element) =>
               element.itemQuantity.code == targetItemQuantity.code
-                  ? element.itemQuantity.quantity.toDouble()
-                  : 0.toDouble(),
+                  ? previousValue + element.itemQuantity.quantity.toDouble()
+                  : previousValue.toDouble(),
         ),
         target: targetItemQuantity.quantity.toDouble());
   }
@@ -30,7 +30,7 @@ class GatheringItemTarget extends GatheringTarget {
   List<Resource> getTargetResource(
       {required Character character, required BoardState boardState}) {
     final resourceOptions = boardState.dropsFromResources[
-        Content(type: ContentType.resource, code: targetItemQuantity.code)];
+        Content(type: ContentType.item, code: targetItemQuantity.code)];
     if (resourceOptions == null) {
       throw ArtifactsException(
           errorMessage:

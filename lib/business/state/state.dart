@@ -33,6 +33,7 @@ class BoardState {
   Map<SkillType, List<Item>> itemsByCraftType = {};
   List<Item> items = [];
   List<Monster> monsters = [];
+  Map<Content, List<Monster>> dropsFromMonsters = {};
   List<ActiveEvent> activeEvents = [];
   List<Task> tasks = [];
   List<Achievement> achievements = [];

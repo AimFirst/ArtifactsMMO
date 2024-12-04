@@ -21,6 +21,7 @@ const ActionType _$withdrawGold = const ActionType._('withdrawGold');
 const ActionType _$equip = const ActionType._('equip');
 const ActionType _$unequip = const ActionType._('unequip');
 const ActionType _$task = const ActionType._('task');
+const ActionType _$christmasExchange = const ActionType._('christmasExchange');
 const ActionType _$recycling = const ActionType._('recycling');
 const ActionType _$rest = const ActionType._('rest');
 const ActionType _$use = const ActionType._('use');
@@ -58,6 +59,8 @@ ActionType _$valueOf(String name) {
       return _$unequip;
     case 'task':
       return _$task;
+    case 'christmasExchange':
+      return _$christmasExchange;
     case 'recycling':
       return _$recycling;
     case 'rest':
@@ -88,6 +91,7 @@ final BuiltSet<ActionType> _$values =
   _$equip,
   _$unequip,
   _$task,
+  _$christmasExchange,
   _$recycling,
   _$rest,
   _$use,
@@ -111,6 +115,7 @@ class _$ActionTypeMeta {
   ActionType get equip => _$equip;
   ActionType get unequip => _$unequip;
   ActionType get task => _$task;
+  ActionType get christmasExchange => _$christmasExchange;
   ActionType get recycling => _$recycling;
   ActionType get rest => _$rest;
   ActionType get use => _$use;
@@ -143,6 +148,7 @@ class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
     'equip': 'equip',
     'unequip': 'unequip',
     'task': 'task',
+    'christmasExchange': 'christmas_exchange',
     'recycling': 'recycling',
     'rest': 'rest',
     'use': 'use',
@@ -164,6 +170,7 @@ class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
     'equip': 'equip',
     'unequip': 'unequip',
     'task': 'task',
+    'christmas_exchange': 'christmasExchange',
     'recycling': 'recycling',
     'rest': 'rest',
     'use': 'use',

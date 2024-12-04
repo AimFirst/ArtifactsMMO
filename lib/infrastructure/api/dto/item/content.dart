@@ -10,7 +10,7 @@ class Content with EquatableMixin {
   Content.empty() : type = ContentType.unknown, code ='';
 
   @override
-  List<Object?> get props => [type, code];
+  List<Object?> get props => [type, code,];
 }
 
 enum ContentType {
@@ -18,4 +18,9 @@ enum ContentType {
   monster,
   item,
   resource,
+  workshop,
+  bank,
+  grand_exchange,
+  tasks_master,
+  santa_claus,
 }

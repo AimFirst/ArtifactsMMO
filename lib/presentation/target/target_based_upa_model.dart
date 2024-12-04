@@ -1,6 +1,9 @@
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/presentation/base_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
+
+part 'target_based_upa_model.g.dart';
 
 // Unassisted Process Algorithm
 sealed class TargetBasedUpaModel implements BaseModel {}
@@ -20,11 +23,37 @@ class TargetBasedUpaModelError with EquatableMixin implements TargetBasedUpaMode
   List<Object?> get props => [error];
 }
 
+@CopyWith()
 class TargetBasedUpaModelLoaded with EquatableMixin implements TargetBasedUpaModel {
   final State state;
+  final List<MenuOption> menuOptions;
 
-  TargetBasedUpaModelLoaded({required this.state});
+  TargetBasedUpaModelLoaded({required this.state, required this.menuOptions});
 
   @override
-  List<Object?> get props => [state];
+  List<Object?> get props => [state, menuOptions,];
+}
+
+@CopyWith()
+class MenuOption with EquatableMixin {
+  final MenuItemType type;
+  final String url;
+  final String name;
+  final bool selected;
+
+  MenuOption({
+    required this.type,
+    required this.url,
+    required this.name,
+    this.selected = false,
+  });
+
+  @override
+  List<Object?> get props => [type, url, name, selected];
+}
+
+enum MenuItemType {
+  inventory,
+  skills,
+  items,
 }

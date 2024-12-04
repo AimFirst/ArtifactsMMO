@@ -11,6 +11,7 @@ import 'package:artifacts_api/src/auth/bearer_auth.dart';
 import 'package:artifacts_api/src/auth/oauth.dart';
 import 'package:artifacts_api/src/api/accounts_api.dart';
 import 'package:artifacts_api/src/api/achievements_api.dart';
+import 'package:artifacts_api/src/api/badges_api.dart';
 import 'package:artifacts_api/src/api/characters_api.dart';
 import 'package:artifacts_api/src/api/default_api.dart';
 import 'package:artifacts_api/src/api/events_api.dart';
@@ -100,6 +101,12 @@ class ArtifactsApi {
   /// by doing that all interceptors will not be executed
   AchievementsApi getAchievementsApi() {
     return AchievementsApi(dio, serializers);
+  }
+
+  /// Get BadgesApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  BadgesApi getBadgesApi() {
+    return BadgesApi(dio, serializers);
   }
 
   /// Get CharactersApi instance, base route and serializer can be overridden by a given but be careful,

@@ -20,7 +20,7 @@ extension TaskConversion on TaskFullSchema {
   }
 }
 
-extension TaskRewardConversion on TaskRewardsSchema {
+extension TaskRewardConversion on RewardsSchema {
   TaskReward convert() {
     return TaskReward(
       items: items.map((i) => i.convert()).toList(),

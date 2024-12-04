@@ -50,9 +50,9 @@ extension CooldownExtension on CooldownSchema {
 extension ActionMoveToExtension on CharacterMovementResponseSchema {
   ActionMoveResponse convert() {
     return ActionMoveResponse(
-      cooldown: data.cooldown.convert(),
-      character: data.character.convert(),
-      destination: data.destination.convert(),
+      cooldown: CooldownExtension(data.cooldown).convert(),
+      character: CharacterExtension(data.character).convert(),
+      destination: MapConversion(data.destination).convert(),
     );
   }
 }
@@ -69,8 +69,8 @@ extension DropSchemaExtension on DropSchema {
 extension ActionGatherResponseConversion on SkillResponseSchema {
   ActionGatheringResponse convert() {
     return ActionGatheringResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         details: UseSkillResponse(
           xp: data.details.xp,
           items: data.details.items.map((i) => i.convert()).toList(),
@@ -81,8 +81,8 @@ extension ActionGatherResponseConversion on SkillResponseSchema {
 extension TaskResponseSchemaConversion on TaskResponseSchema {
   ActionAcceptNewTaskResponse convert() {
     return ActionAcceptNewTaskResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         task: data.task.convert());
   }
 }
@@ -91,7 +91,7 @@ extension TaskSchemaConversion on TaskSchema {
   Task convert() {
     return Task(
       code: code,
-      type: type.convert(),
+      type: TaskTypeConversion(type).convert(),
       total: total,
       rewards: rewards.convert(),
     );
@@ -116,9 +116,9 @@ extension ActionWithdrawBankExtensions on ActionWithdrawBank {
 extension UseItemResponseSchemaConversions on UseItemResponseSchema {
   ActionUseItemResponse convert() {
     return ActionUseItemResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
-        item: data.item.convert());
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
+        item: ItemConversion(data.item).convert());
   }
 }
 
@@ -143,8 +143,8 @@ extension ActionUnequipItemConversions on ActionUnequipItem {
 extension TaskTradeResponseSchemaConversions on TaskTradeResponseSchema {
   ActionTaskTradeResponse convert() {
     return ActionTaskTradeResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         trade: data.trade.convert());
   }
 }
@@ -176,8 +176,8 @@ extension CharacterRestResponseSchemaConversions
     on CharacterRestResponseSchema {
   ActionRestResponse convert() {
     return ActionRestResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         hpRestored: data.hpRestored);
   }
 }
@@ -185,8 +185,8 @@ extension CharacterRestResponseSchemaConversions
 extension RecyclingResponseSchemaConversions on RecyclingResponseSchema {
   ActionRecyclingResponse convert() {
     return ActionRecyclingResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         returnedItems: data.details.items.map((i) => i.convert()).toList());
   }
 }
@@ -204,8 +204,8 @@ extension GECreateOrderTransactionResponseSchemaConversions
     on GECreateOrderTransactionResponseSchema {
   ActionGECreateSellOrderResponse convert() {
     return ActionGECreateSellOrderResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         order: data.order.convert());
   }
 }
@@ -242,15 +242,15 @@ extension GETransactionResponseSchemaConversions
     on GETransactionResponseSchema {
   ActionGEBuyItemResponse convert() {
     return ActionGEBuyItemResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         order: data.order.convert());
   }
 
   ActionGECancelSellOrderResponse convertCancel() {
     return ActionGECancelSellOrderResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         order: data.order.convert());
   }
 }
@@ -279,8 +279,8 @@ extension CharacterFightResponseSchemaConversions
     on CharacterFightResponseSchema {
   ActionFightResponse convert() {
     return ActionFightResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         fight: data.fight.convert());
   }
 }
@@ -322,16 +322,16 @@ extension FightResultConversions on FightResult {
 extension EquipmentResponseSchemaConversions on EquipmentResponseSchema {
   ActionEquipItemResponse convert() {
     return ActionEquipItemResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         slot: data.slot.convert(),
         item: data.item.convert());
   }
 
   ActionUnequipItemResponse convertUnequip() {
     return ActionUnequipItemResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         slot: data.slot.convert(),
         item: data.item.convert());
   }
@@ -423,15 +423,15 @@ extension BankGoldTransactionResponseSchemaConversions
     on BankGoldTransactionResponseSchema {
   ActionDepositBankGoldResponse convert() {
     return ActionDepositBankGoldResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         bank: data.bank.quantity);
   }
 
   ActionWithdrawBankGoldResponse convertWithdraw() {
     return ActionWithdrawBankGoldResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         bank: data.bank.quantity);
   }
 }
@@ -446,8 +446,8 @@ extension BankItemTransactionResponseSchemaConversions
     on BankItemTransactionResponseSchema {
   ActionDepositBankResponse convert() {
     return ActionDepositBankResponse(
-      cooldown: data.cooldown.convert(),
-      character: data.character.convert(),
+      cooldown: CooldownExtension(data.cooldown).convert(),
+      character: CharacterExtension(data.character).convert(),
       item: data.item.convert(),
       bank: data.bank.map((i) => i.convert()).toList(),
     );
@@ -455,8 +455,8 @@ extension BankItemTransactionResponseSchemaConversions
 
   ActionWithdrawBankResponse convertWithdraw() {
     return ActionWithdrawBankResponse(
-      cooldown: data.cooldown.convert(),
-      character: data.character.convert(),
+      cooldown: CooldownExtension(data.cooldown).convert(),
+      character: CharacterExtension(data.character).convert(),
       item: data.item.convert(),
       bank: data.bank.map((i) => i.convert()).toList(),
     );
@@ -475,8 +475,8 @@ extension ActionDepositBankConversions on ActionDepositBank {
 extension DeleteItemResponseSchemaConversions on DeleteItemResponseSchema {
   ActionDeleteItemResponse convert() {
     return ActionDeleteItemResponse(
-      cooldown: data.cooldown.convert(),
-      character: data.character.convert(),
+      cooldown: CooldownExtension(data.cooldown).convert(),
+      character: CharacterExtension(data.character).convert(),
       itemQuantity:
           ItemQuantity(code: data.item.code, quantity: data.item.quantity),
     );
@@ -504,8 +504,8 @@ extension ActionCraftingConversions on ActionCrafting {
 extension SkillResponseSchemaConversions on SkillResponseSchema {
   ActionCraftingResponse convertToCraftingResponse() {
     return ActionCraftingResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         details: data.details.convert());
   }
 }
@@ -518,18 +518,18 @@ extension SkillInfoSchemaConversions on SkillInfoSchema {
 }
 
 extension TasksRewardDataResponseSchemaConversions
-    on TasksRewardDataResponseSchema {
+    on RewardDataResponseSchema {
   ActionCompleteTaskResponse convert() {
     return ActionCompleteTaskResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         reward: data.rewards.convert());
   }
 
   ActionTaskExchangeResponse convertExchange() {
     return ActionTaskExchangeResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         reward: data.rewards.convert());
   }
 }
@@ -538,8 +538,8 @@ extension BankExtensionTransactionResponseSchemaConversions
     on BankExtensionTransactionResponseSchema {
   ActionBuyBankExpansionResponse convert() {
     return ActionBuyBankExpansionResponse(
-        cooldown: data.cooldown.convert(),
-        character: data.character.convert(),
+        cooldown: CooldownExtension(data.cooldown).convert(),
+        character: CharacterExtension(data.character).convert(),
         price: data.transaction.price);
   }
 }

@@ -3,8 +3,8 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:artifacts_api/src/model/rewards_schema.dart';
 import 'package:artifacts_api/src/model/task_type.dart';
-import 'package:artifacts_api/src/model/task_rewards_schema.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -49,7 +49,7 @@ abstract class TaskFullSchema
 
   /// Rewards.
   @BuiltValueField(wireName: r'rewards')
-  TaskRewardsSchema get rewards;
+  RewardsSchema get rewards;
 
   TaskFullSchema._();
 
@@ -112,7 +112,7 @@ class _$TaskFullSchemaSerializer
     yield r'rewards';
     yield serializers.serialize(
       object.rewards,
-      specifiedType: const FullType(TaskRewardsSchema),
+      specifiedType: const FullType(RewardsSchema),
     );
   }
 
@@ -185,8 +185,8 @@ class _$TaskFullSchemaSerializer
         case r'rewards':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(TaskRewardsSchema),
-          ) as TaskRewardsSchema;
+            specifiedType: const FullType(RewardsSchema),
+          ) as RewardsSchema;
           result.rewards.replace(valueDes);
           break;
         default:

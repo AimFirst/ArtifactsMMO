@@ -29,6 +29,9 @@ import 'package:artifacts_api/src/model/active_event_schema.dart';
 import 'package:artifacts_api/src/model/add_account_schema.dart';
 import 'package:artifacts_api/src/model/add_character_schema.dart';
 import 'package:artifacts_api/src/model/announcement_schema.dart';
+import 'package:artifacts_api/src/model/badge_condition_schema.dart';
+import 'package:artifacts_api/src/model/badge_response_schema.dart';
+import 'package:artifacts_api/src/model/badge_schema.dart';
 import 'package:artifacts_api/src/model/bank_extension_schema.dart';
 import 'package:artifacts_api/src/model/bank_extension_transaction_response_schema.dart';
 import 'package:artifacts_api/src/model/bank_extension_transaction_schema.dart';
@@ -59,6 +62,7 @@ import 'package:artifacts_api/src/model/data_page_account_achievement_schema.dar
 import 'package:artifacts_api/src/model/data_page_account_leaderboard_schema.dart';
 import 'package:artifacts_api/src/model/data_page_achievement_schema.dart';
 import 'package:artifacts_api/src/model/data_page_active_event_schema.dart';
+import 'package:artifacts_api/src/model/data_page_badge_schema.dart';
 import 'package:artifacts_api/src/model/data_page_character_leaderboard_schema.dart';
 import 'package:artifacts_api/src/model/data_page_drop_rate_schema.dart';
 import 'package:artifacts_api/src/model/data_page_event_schema.dart';
@@ -125,6 +129,10 @@ import 'package:artifacts_api/src/model/recycling_schema.dart';
 import 'package:artifacts_api/src/model/resource_response_schema.dart';
 import 'package:artifacts_api/src/model/resource_schema.dart';
 import 'package:artifacts_api/src/model/response_schema.dart';
+import 'package:artifacts_api/src/model/reward_data_response_schema.dart';
+import 'package:artifacts_api/src/model/reward_data_schema.dart';
+import 'package:artifacts_api/src/model/reward_response_schema.dart';
+import 'package:artifacts_api/src/model/rewards_schema.dart';
 import 'package:artifacts_api/src/model/simple_item_schema.dart';
 import 'package:artifacts_api/src/model/skill.dart';
 import 'package:artifacts_api/src/model/skill_data_schema.dart';
@@ -138,15 +146,11 @@ import 'package:artifacts_api/src/model/task_data_schema.dart';
 import 'package:artifacts_api/src/model/task_full_response_schema.dart';
 import 'package:artifacts_api/src/model/task_full_schema.dart';
 import 'package:artifacts_api/src/model/task_response_schema.dart';
-import 'package:artifacts_api/src/model/task_rewards_schema.dart';
 import 'package:artifacts_api/src/model/task_schema.dart';
 import 'package:artifacts_api/src/model/task_trade_data_schema.dart';
 import 'package:artifacts_api/src/model/task_trade_response_schema.dart';
 import 'package:artifacts_api/src/model/task_trade_schema.dart';
 import 'package:artifacts_api/src/model/task_type.dart';
-import 'package:artifacts_api/src/model/tasks_reward_data_response_schema.dart';
-import 'package:artifacts_api/src/model/tasks_reward_data_schema.dart';
-import 'package:artifacts_api/src/model/tasks_reward_response_schema.dart';
 import 'package:artifacts_api/src/model/token_response_schema.dart';
 import 'package:artifacts_api/src/model/unequip_schema.dart';
 import 'package:artifacts_api/src/model/use_item_response_schema.dart';
@@ -172,6 +176,9 @@ part 'serializers.g.dart';
   AddAccountSchema,
   AddCharacterSchema,
   AnnouncementSchema,
+  BadgeConditionSchema,
+  BadgeResponseSchema,
+  BadgeSchema,
   BankExtensionSchema,
   BankExtensionTransactionResponseSchema,
   BankExtensionTransactionSchema,
@@ -202,6 +209,7 @@ part 'serializers.g.dart';
   DataPageAccountLeaderboardSchema,
   DataPageAchievementSchema,
   DataPageActiveEventSchema,
+  DataPageBadgeSchema,
   DataPageCharacterLeaderboardSchema,
   DataPageDropRateSchema,
   DataPageEventSchema,
@@ -268,6 +276,10 @@ part 'serializers.g.dart';
   ResourceResponseSchema,
   ResourceSchema,
   ResponseSchema,
+  RewardDataResponseSchema,
+  RewardDataSchema,
+  RewardResponseSchema,
+  RewardsSchema,
   SimpleItemSchema,
   Skill,
   SkillDataSchema,
@@ -281,15 +293,11 @@ part 'serializers.g.dart';
   TaskFullResponseSchema,
   TaskFullSchema,
   TaskResponseSchema,
-  TaskRewardsSchema,
   TaskSchema,
   TaskTradeDataSchema,
   TaskTradeResponseSchema,
   TaskTradeSchema,
   TaskType,
-  TasksRewardDataResponseSchema,
-  TasksRewardDataSchema,
-  TasksRewardResponseSchema,
   TokenResponseSchema,
   UnequipSchema,
   UseItemResponseSchema,

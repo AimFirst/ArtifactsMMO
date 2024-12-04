@@ -34,7 +34,7 @@ abstract class LogSchema implements Built<LogSchema, LogSchemaBuilder> {
   /// Type of action.
   @BuiltValueField(wireName: r'type')
   LogType get type;
-  // enum typeEnum {  spawn,  movement,  fight,  crafting,  gathering,  buy_ge,  sell_ge,  cancel_ge,  delete_item,  deposit,  withdraw,  deposit_gold,  withdraw_gold,  equip,  unequip,  new_task,  task_exchange,  task_cancelled,  task_completed,  task_trade,  recycling,  rest,  use,  buy_bank_expansion,  achievement,  };
+  // enum typeEnum {  spawn,  movement,  fight,  crafting,  gathering,  buy_ge,  sell_ge,  cancel_ge,  delete_item,  deposit,  withdraw,  deposit_gold,  withdraw_gold,  equip,  unequip,  new_task,  task_exchange,  task_cancelled,  task_completed,  task_trade,  christmas_exchange,  recycling,  rest,  use,  buy_bank_expansion,  achievement,  };
 
   /// Description of action.
   @BuiltValueField(wireName: r'description')

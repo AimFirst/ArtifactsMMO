@@ -4,6 +4,7 @@ import 'package:artifacts_mmo/presentation/target/target_based_upa_model.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class TargetBasedUpaView
@@ -40,11 +41,27 @@ class TargetBasedUpaView
   }
 
   Widget _widgetLoaded(BuildContext context, TargetBasedUpaModelLoaded model) {
+    final selectedMenuItem =
+        model.menuOptions.where((m) => m.selected).firstOrNull;
     return Stack(
       children: [
         _mapWidget(model),
         Positioned(left: 5, top: 5, child: _statusWidget(context, model)),
-        Positioned(left: 5, bottom: 5, child: _characterStatusPanel(context, model)),
+        Positioned(
+            left: 5, bottom: 5, child: _characterStatusPanel(context, model)),
+        Positioned(
+          right: 5,
+          bottom: 5,
+          child: _menuOptions(model, viewModel),
+        ),
+        if (selectedMenuItem != null)
+          Positioned(
+            left: 30,
+            right: 30,
+            bottom: 150,
+            top: 150,
+            child: _selectedMenu(model, selectedMenuItem),
+          ),
       ],
     );
   }
@@ -108,7 +125,13 @@ class TargetBasedUpaView
       child: Card(
         color: const Color.fromARGB(230, 255, 255, 255),
         child: ListTile(
-          leading: model.state.processResult.imageUrl != null ? SizedBox(width: 20, height: 20, child: CachedNetworkImage(imageUrl: model.state.processResult.imageUrl!)) : null,
+          leading: model.state.processResult.imageUrl != null
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CachedNetworkImage(
+                      imageUrl: model.state.processResult.imageUrl!))
+              : null,
           title: Text(model.state.target.name),
           subtitle: Text(model.state.processResult.description),
         ),
@@ -116,7 +139,8 @@ class TargetBasedUpaView
     );
   }
 
-  Widget _characterStatusPanel(BuildContext context, TargetBasedUpaModelLoaded model) {
+  Widget _characterStatusPanel(
+      BuildContext context, TargetBasedUpaModelLoaded model) {
     return ConstrainedBox(
       constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width * .25,
@@ -127,14 +151,28 @@ class TargetBasedUpaView
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Column(
             children: [
-              Row(children: [
-                Text(model.state.character.name, style: const TextStyle(fontWeight: FontWeight.bold),),
-                const Spacer(),
-                Text('Level ${model.state.character.overall.level}'),
-              ],),
-              _progressBarWithText(0, model.state.character.maxHp, model.state.character.hp, 'HP', Colors.red),
-              const SizedBox(height: 2, width: 1,),
-              _progressBarWithText(0, model.state.character.overall.nextLevelTargetXp, model.state.character.overall.xp, 'XP', Colors.green),
+              Row(
+                children: [
+                  Text(
+                    model.state.character.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  Text('Level ${model.state.character.overall.level}'),
+                ],
+              ),
+              _progressBarWithText(0, model.state.character.maxHp,
+                  model.state.character.hp, 'HP', Colors.red),
+              const SizedBox(
+                height: 2,
+                width: 1,
+              ),
+              _progressBarWithText(
+                  0,
+                  model.state.character.overall.nextLevelTargetXp,
+                  model.state.character.overall.xp,
+                  'XP',
+                  Colors.green),
             ],
           ),
         ),
@@ -142,23 +180,120 @@ class TargetBasedUpaView
     );
   }
 
-  Widget _progressBarWithText(int min, int max, int current, String label, Color color) {
+  Widget _progressBarWithText(
+      int min, int max, int current, String label, Color color) {
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: SizedBox(
         height: 30,
         child: Stack(
-          children: [SizedBox.expand(
-            child: LinearProgressIndicator(
-                  value: current / max,
-                  color: color,
-                ),
-          ),
+          children: [
+            SizedBox.expand(
+              child: LinearProgressIndicator(
+                value: current / max,
+                color: color,
+              ),
+            ),
             Center(
               child: Text('$current/$max $label'),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _menuOptions(
+      TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel) {
+    return Row(
+      children: model.menuOptions
+          .map((o) => _menuOption(
+                imageUrl: o.url,
+                name: o.name,
+                selected: o.selected,
+                onSelect: () => viewModel.updateSelectedMenuItem(o),
+              ))
+          .toList(),
+    );
+  }
+
+  Widget _selectedMenu(TargetBasedUpaModelLoaded model, MenuOption option) {
+    return Expanded(
+      child: Card(
+        color: const Color.fromARGB(230, 255, 255, 255),
+        child: Column(
+          children: [
+            Text(option.name),
+            Expanded(child: _menuForOption(model, option)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _menuForOption(TargetBasedUpaModelLoaded model, MenuOption option) {
+    switch (option.type) {
+      case MenuItemType.items:
+        return _menuForItems(model, viewModel);
+      case MenuItemType.inventory:
+        return Container();
+      case MenuItemType.skills:
+        return Container();
+    }
+  }
+
+  Widget _menuForItems(TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel,) {
+    return GridView.builder(
+        itemCount: model.state.boardState.items.length,
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 150,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: 5,
+          childAspectRatio: 1.0,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          final item = model.state.boardState.items[index];
+          return InkWell(
+            onTap: () => viewModel.onItemTap(item),
+            child: Container(
+              decoration: const BoxDecoration(color: Color.fromARGB(230, 255, 255, 255)),
+              child: Column(
+                children: [
+                  Text(item.name),
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://artifactsmmo.com/images/items/${item.code}.png',
+                    ),
+                  ),
+                  Text('${item.craft?.skill?.name ?? ''} - ${item.craft?.level ?? ''}'),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget _menuOption({
+    required String imageUrl,
+    required String name,
+    required bool selected,
+    required void Function() onSelect,
+  }) {
+    return InkWell(
+      onTap: onSelect,
+      child: Container(
+        color: selected ? const Color.fromARGB(230, 255, 255, 255) : null,
+        child: Column(children: [
+          SizedBox(
+            width: 80,
+            height: 80,
+            child: CachedNetworkImage(imageUrl: imageUrl),
+          ),
+          Center(child: Text(name)),
+        ]),
       ),
     );
   }

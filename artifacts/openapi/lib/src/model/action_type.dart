@@ -40,6 +40,8 @@ class ActionType extends EnumClass {
   static const ActionType unequip = _$unequip;
   @BuiltValueEnumConst(wireName: r'task')
   static const ActionType task = _$task;
+  @BuiltValueEnumConst(wireName: r'christmas_exchange')
+  static const ActionType christmasExchange = _$christmasExchange;
   @BuiltValueEnumConst(wireName: r'recycling')
   static const ActionType recycling = _$recycling;
   @BuiltValueEnumConst(wireName: r'rest')

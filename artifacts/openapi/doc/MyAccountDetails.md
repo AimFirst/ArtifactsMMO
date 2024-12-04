@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 **gems** | **int** | Gems. | 
 **achievementsPoints** | **int** | Achievement points. | 
 **banned** | **bool** | Banned. | 
-**badges** | [**BuiltList&lt;JsonObject&gt;**](JsonObject.md) |  | [optional] 
+**badges** | [**BuiltList&lt;JsonObject&gt;**](JsonObject.md) | Account badges. | [optional] 
 **banReason** | **String** | Ban reason. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

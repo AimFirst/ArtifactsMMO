@@ -50,6 +50,8 @@ class LogType extends EnumClass {
   static const LogType taskCompleted = _$taskCompleted;
   @BuiltValueEnumConst(wireName: r'task_trade')
   static const LogType taskTrade = _$taskTrade;
+  @BuiltValueEnumConst(wireName: r'christmas_exchange')
+  static const LogType christmasExchange = _$christmasExchange;
   @BuiltValueEnumConst(wireName: r'recycling')
   static const LogType recycling = _$recycling;
   @BuiltValueEnumConst(wireName: r'rest')
