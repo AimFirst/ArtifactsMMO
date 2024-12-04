@@ -1,4 +1,5 @@
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/presentation/base_view.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_model.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_view_model.dart';
@@ -236,10 +237,46 @@ class TargetBasedUpaView
       case MenuItemType.items:
         return _menuForItems(model, viewModel);
       case MenuItemType.inventory:
-        return Container();
+        return _menuForInventory(model, viewModel);
       case MenuItemType.skills:
-        return Container();
+        return _menuForSkills(model, viewModel);
     }
+  }
+
+  Widget _menuForInventory(TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel,) {
+    final items = model.state.character.inventoryItems.where((i) => i.itemQuantity.quantity > 0).toList();
+    return GridView.builder(
+        itemCount: items.length,
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 150,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: 5,
+          childAspectRatio: 1.0,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          final inventoryItem = items[index];
+          final item = model.state.boardState.items.firstWhere((i) => i.code == inventoryItem.itemQuantity.code);
+          return InkWell(
+            onTap: null,
+            child: Container(
+              decoration: const BoxDecoration(color: Color.fromARGB(230, 255, 255, 255)),
+              child: Column(
+                children: [
+                  Text(item.name),
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: CachedNetworkImage(
+                      imageUrl:
+                      'https://artifactsmmo.com/images/items/${item.code}.png',
+                    ),
+                  ),
+                  Text('${inventoryItem.itemQuantity.quantity}'),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Widget _menuForItems(TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel,) {
@@ -274,6 +311,48 @@ class TargetBasedUpaView
             ),
           );
         });
+  }
+
+  Widget _menuForSkills(TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel,) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListView.separated(
+        itemCount: model.state.character.allSkills.length,
+        shrinkWrap: true,
+        separatorBuilder: (context, index) => SizedBox(width: 1, height: 15,),
+        itemBuilder: (context, index) {
+        final skill = model.state.character.allSkills[index];
+        return _skillWidget(skill);
+      },),
+    );
+  }
+
+  Widget _skillWidget(Skill skill) {
+    return InkWell(
+      child: Card(
+        color: const Color.fromARGB(230, 255, 255, 255),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              CachedNetworkImage(imageUrl: skill.skillType.image),
+              const SizedBox(width: 20, height: 1,),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('${skill.skillType.name} (Level ${skill.level})'),
+                    const SizedBox(width: 1, height: 4,),
+                    _progressBarWithText(0, skill.nextLevelTargetXp, skill.xp, 'XP', Colors.blue),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _menuOption({

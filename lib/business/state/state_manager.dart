@@ -143,7 +143,6 @@ class StateManager {
       final update = _target.update(character: character,
           boardState: boardState,
           artifactsClient: artifactsClient);
-      _stateSubject.value = State(boardState: boardState, character: character, target: _target, processResult: update);
 
       // Target reached?
       if (update.progress.finished) {
@@ -153,6 +152,7 @@ class StateManager {
       // Update the character after this action.
       final result = await update.action;
       character = result?.character ?? character;
+      _stateSubject.value = State(boardState: boardState, character: character, target: _target, processResult: update);
     }
   }
 }
