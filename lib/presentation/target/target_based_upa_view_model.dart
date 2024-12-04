@@ -1,8 +1,13 @@
 import 'package:artifacts_mmo/business/state/state_manager.dart';
 import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
+import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart';
+import 'package:artifacts_mmo/business/state/target/task/complete_task_target.dart';
+import 'package:artifacts_mmo/business/state/target/task/perform_task_target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/task/task_progress.dart';
 import 'package:artifacts_mmo/presentation/base_view_model.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_model.dart';
 
@@ -68,5 +73,17 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
 
   Future<void> onItemTap(Item item) async {
     await stateManager.startNewTarget(CraftItemTarget(itemQuantity: ItemQuantity(code: item.code, quantity: 1)));
+  }
+  
+  Future<void> onCurrentTaskTap(TaskProgress task) async {
+    if (task.progress == task.total) {
+      await stateManager.startNewTarget(CompleteTaskTarget());
+    } else {
+      await stateManager.startNewTarget(PerformTaskTarget());
+    }
+  }
+
+  Future<void> onTaskTap(Task task) async {
+    await stateManager.startNewTarget(AcceptTaskTarget());
   }
 }

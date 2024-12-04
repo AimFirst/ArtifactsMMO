@@ -221,15 +221,13 @@ class TargetBasedUpaView
   }
 
   Widget _selectedMenu(TargetBasedUpaModelLoaded model, MenuOption option) {
-    return Expanded(
-      child: Card(
-        color: const Color.fromARGB(230, 255, 255, 255),
-        child: Column(
-          children: [
-            Text(option.name),
-            Expanded(child: _menuForOption(model, option)),
-          ],
-        ),
+    return Card(
+      color: const Color.fromARGB(230, 255, 255, 255),
+      child: Column(
+        children: [
+          Text(option.name),
+          Expanded(child: _menuForOption(model, option)),
+        ],
       ),
     );
   }
@@ -423,20 +421,25 @@ class TargetBasedUpaView
   ) {
     final task =
         boardState.tasks.where((t) => t.code == taskProgress.taskCode).first;
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text('${task.type}: ${task.code}'),
-          _progressBarWithText(
-              0, taskProgress.total, taskProgress.progress, '', Colors.blue),
-        ],
+    return InkWell(
+      onTap: () => viewModel.onCurrentTaskTap(taskProgress),
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('${task.type}: ${task.code}'),
+            _progressBarWithText(
+                0, taskProgress.total, taskProgress.progress, '', Colors.blue),
+          ],
+        ),
       ),
     );
   }
 
   Widget _taskWidget(Task task) {
-    return Card(child: Text('$task'));
+    return InkWell(
+        onTap: () => viewModel.onTaskTap(task),
+        child: Card(child: Text('$task')));
   }
 
   Widget _menuOption({
