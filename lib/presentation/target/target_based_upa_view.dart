@@ -244,16 +244,12 @@ class TargetBasedUpaView
         return _menuForTasks(model, viewModel);
     }
   }
-
   Widget _menuForInventory(
-    TargetBasedUpaModelLoaded model,
-    TargetBasedUpaViewModel viewModel,
-  ) {
-    final items = model.state.character.inventoryItems
-        .where((i) => i.itemQuantity.quantity > 0)
-        .toList();
+      TargetBasedUpaModelLoaded model,
+      TargetBasedUpaViewModel viewModel,
+      ) {
     return GridView.builder(
-        itemCount: items.length,
+        itemCount: model.state.character.inventoryItems.where((i) => i.itemQuantity.quantity > 0).toList().length,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 150,
           mainAxisSpacing: 5,
@@ -261,9 +257,9 @@ class TargetBasedUpaView
           childAspectRatio: 1.0,
         ),
         itemBuilder: (BuildContext context, int index) {
-          final inventoryItem = items[index];
-          final item = model.state.boardState.items
-              .firstWhere((i) => i.code == inventoryItem.itemQuantity.code);
+          final inventoryItem = model.state.character.inventoryItems.where((i) => i.itemQuantity.quantity > 0).toList()[index];
+          final item = model.state.boardState.items.where((i) => i.code == inventoryItem.itemQuantity.code).first;
+          final controller = TextEditingController(text: '${inventoryItem.itemQuantity.quantity}');
           return InkWell(
             onTap: null,
             child: Container(
@@ -273,20 +269,76 @@ class TargetBasedUpaView
                 children: [
                   Text(item.name),
                   SizedBox(
-                    width: 80,
-                    height: 80,
+                    width: 55,
+                    height: 55,
                     child: CachedNetworkImage(
+                      fit: BoxFit.fill,
                       imageUrl:
-                          'https://artifactsmmo.com/images/items/${item.code}.png',
+                      'https://artifactsmmo.com/images/items/${item.code}.png',
                     ),
                   ),
-                  Text('${inventoryItem.itemQuantity.quantity}'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                    child: TextField(
+                      maxLines: 1,
+                      decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(vertical: 0), border: OutlineInputBorder(),),
+                      controller: controller,
+                    ),
+                  ),
+                  FilledButton(
+                    onPressed: () => viewModel.onItemDestroy(item, int.parse(controller.text)),
+                    child: const Text('Maintain'),
+                  ),
                 ],
               ),
             ),
           );
         });
   }
+
+
+  // Widget _menuForInventory(
+  //   TargetBasedUpaModelLoaded model,
+  //   TargetBasedUpaViewModel viewModel,
+  // ) {
+  //   final items = model.state.character.inventoryItems
+  //       .where((i) => i.itemQuantity.quantity > 0)
+  //       .toList();
+  //   return GridView.builder(
+  //       itemCount: items.length,
+  //       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+  //         maxCrossAxisExtent: 150,
+  //         mainAxisSpacing: 5,
+  //         crossAxisSpacing: 5,
+  //         childAspectRatio: 1.0,
+  //       ),
+  //       itemBuilder: (BuildContext context, int index) {
+  //         final inventoryItem = items[index];
+  //         final item = model.state.boardState.items
+  //             .firstWhere((i) => i.code == inventoryItem.itemQuantity.code);
+  //         return InkWell(
+  //           onTap: null,
+  //           child: Container(
+  //             decoration: const BoxDecoration(
+  //                 color: Color.fromARGB(230, 255, 255, 255)),
+  //             child: Column(
+  //               children: [
+  //                 Text(item.name),
+  //                 SizedBox(
+  //                   width: 80,
+  //                   height: 80,
+  //                   child: CachedNetworkImage(
+  //                     imageUrl:
+  //                         'https://artifactsmmo.com/images/items/${item.code}.png',
+  //                   ),
+  //                 ),
+  //                 Text('${inventoryItem.itemQuantity.quantity}'),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
 
   Widget _menuForItems(
     TargetBasedUpaModelLoaded model,

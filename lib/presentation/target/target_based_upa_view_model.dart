@@ -1,5 +1,6 @@
 import 'package:artifacts_mmo/business/state/state_manager.dart';
 import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
+import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/complete_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/perform_task_target.dart';
@@ -72,6 +73,10 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
     }
   }
 
+  Future<void> onItemDestroy(Item item, int maintainAmount) async {
+    await stateManager.startNewTarget(ManageInventoryTarget(maxItemQuantity: ItemQuantity(code: item.code, quantity: maintainAmount)));
+  }
+  
   Future<void> onItemCraft(Item item, Character character, int craftAmount) async {
     final currentCount = character.inventoryItems.fold(0, (p, s) => p + ((s.itemQuantity.code == item.code) ? s.itemQuantity.quantity : 0));
     await stateManager.startNewTarget(CraftItemTarget(itemQuantity: ItemQuantity(code: item.code, quantity: currentCount + craftAmount)));
