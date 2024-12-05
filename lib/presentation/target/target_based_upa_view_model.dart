@@ -4,6 +4,7 @@ import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart
 import 'package:artifacts_mmo/business/state/target/task/complete_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/perform_task_target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
@@ -71,8 +72,9 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
     }
   }
 
-  Future<void> onItemTap(Item item) async {
-    await stateManager.startNewTarget(CraftItemTarget(itemQuantity: ItemQuantity(code: item.code, quantity: 1)));
+  Future<void> onItemCraft(Item item, Character character, int craftAmount) async {
+    final currentCount = character.inventoryItems.fold(0, (p, s) => p + ((s.itemQuantity.code == item.code) ? s.itemQuantity.quantity : 0));
+    await stateManager.startNewTarget(CraftItemTarget(itemQuantity: ItemQuantity(code: item.code, quantity: currentCount + craftAmount)));
   }
   
   Future<void> onCurrentTaskTap(TaskProgress task) async {

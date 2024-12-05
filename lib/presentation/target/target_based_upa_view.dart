@@ -302,8 +302,9 @@ class TargetBasedUpaView
         ),
         itemBuilder: (BuildContext context, int index) {
           final item = model.state.boardState.items[index];
+          final controller = TextEditingController();
           return InkWell(
-            onTap: () => viewModel.onItemTap(item),
+            onTap: null,
             child: Container(
               decoration: const BoxDecoration(
                   color: Color.fromARGB(230, 255, 255, 255)),
@@ -311,15 +312,29 @@ class TargetBasedUpaView
                 children: [
                   Text(item.name),
                   SizedBox(
-                    width: 80,
-                    height: 80,
+                    width: 55,
+                    height: 55,
                     child: CachedNetworkImage(
-                      imageUrl:
-                          'https://artifactsmmo.com/images/items/${item.code}.png',
+                    fit: BoxFit.fill,
+                    imageUrl:
+                    'https://artifactsmmo.com/images/items/${item.code}.png',
+                  ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                    child: TextField(
+                      maxLines: 1,
+                      decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(vertical: 0), border: OutlineInputBorder(),),
+                      controller: controller,
                     ),
                   ),
-                  Text(
-                      '${item.craft?.skill?.name ?? ''} - ${item.craft?.level ?? ''}'),
+                  FilledButton(
+                    onPressed: () => viewModel.onItemCraft(
+                        item,
+                        model.state.character,
+                        int.parse(controller.text)),
+                    child: const Text('Craft'),
+                  ),
                 ],
               ),
             ),
