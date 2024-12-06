@@ -31,7 +31,7 @@ abstract class FightTarget extends Target {
       if (canDefeatMonster(character: character, monster: monster)) {
         // Find the closest one.
         final locations = boardState.contentLocations[Content(type: ContentType.monster, code: monster.code,)] ?? [];
-        locations.sort(MathUtil.sortDistance);
+        locations.sort((a,b) => MathUtil.sortDistance(character.location, a, b));
 
         // Move there.
         final moveAction = MoveToTarget(targetLocation: locations.first).update(character: character, boardState: boardState, artifactsClient: artifactsClient);

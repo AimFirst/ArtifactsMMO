@@ -122,7 +122,7 @@ abstract class CraftTarget extends Target {
     }
 
     // Move to the workshop if we're not there.
-    workshopLocations.sort(MathUtil.sortDistance);
+    workshopLocations.sort((a,b) => MathUtil.sortDistance(character.location, a, b));
     final location = workshopLocations.first;
     final moveAction = MoveToTarget(targetLocation: location).update(
         character: character,

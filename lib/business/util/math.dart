@@ -11,14 +11,15 @@ class MathUtil {
     return sqrt(pow(second.x - first.x, 2) + pow(second.y - first.y, 2));
   }
 
-  static int sortDistance(Location first, Location second) {
-    double pointDistance = distance(first, second);
-    return pointDistance < 0 ? -1 : pointDistance > 0 ? 1 : 0;
+  static int sortDistance(Location current, Location first, Location second) {
+    double point1Distance = distance(current, first);
+    double point2Distance = distance(current, second);
+    return point1Distance < point2Distance ? -1 : point1Distance > point2Distance ? 1 : 0;
   }
 
   static int doubleToCompare(double compareValue) {
     return compareValue < 0 ? -1 : compareValue > 0 ? 1 : 0;
   }
 
-  static int sortDistanceReversed(Location first, Location second) => sortDistance(second, first);
+  static int sortDistanceReversed(Location current, Location first, Location second) => sortDistance(current, second, first);
 }

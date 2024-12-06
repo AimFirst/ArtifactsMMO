@@ -1,8 +1,8 @@
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/target/inventory/recycle_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_delete_item.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/action/action_recycling.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:equatable/equatable.dart';
@@ -11,6 +11,10 @@ class ManageInventoryTarget extends Target {
   final Map<String, InventoryItemConstraints> itemConstraints = {
     'ash_wood': InventoryItemConstraints(code: 'ash_wood', min: 20, max: 30),
     'sap': InventoryItemConstraints(code: 'sap', min: 20, max: 30),
+    'wooden_staff':
+        InventoryItemConstraints(code: 'wooden_staff', min: 1, max: 1),
+    'copper_dagger':
+        InventoryItemConstraints(code: 'copper_dagger', min: 1, max: 1),
   };
 
   ManageInventoryTarget({ItemQuantity? maxItemQuantity}) {
@@ -43,21 +47,27 @@ class ManageInventoryTarget extends Target {
           .first;
 
       if (inventoryItem.itemQuantity.quantity > constraint.max) {
+        if (item.craft != null) {
+          return RecycleItemTarget(
+            quantityToMaintain: ItemQuantity(
+              code: constraint.code,
+              quantity: constraint.min,
+            ),
+          ).update(
+            character: character,
+            boardState: boardState,
+            artifactsClient: artifactsClient,
+          );
+        }
+
         return TargetProcessResult(
             progress: Progress.empty(),
-            action: item.craft != null
-                ? artifactsClient.recycle(
-                    action: ActionRecycling(
-                        itemQuantity: ItemQuantity(
-                            code: inventoryItem.itemQuantity.code,
-                            quantity: inventoryItem.itemQuantity.quantity -
-                                constraint.min)))
-                : artifactsClient.deleteItem(
-                    action: ActionDeleteItem(
-                        itemQuantity: ItemQuantity(
-                            code: inventoryItem.itemQuantity.code,
-                            quantity: inventoryItem.itemQuantity.quantity -
-                                constraint.min))),
+            action: artifactsClient.deleteItem(
+                action: ActionDeleteItem(
+                    itemQuantity: ItemQuantity(
+                        code: inventoryItem.itemQuantity.code,
+                        quantity: inventoryItem.itemQuantity.quantity -
+                            constraint.min))),
             description: 'Dumping extra ${inventoryItem.itemQuantity.code}',
             imageUrl:
                 'https://artifactsmmo.com/images/items/${inventoryItem.itemQuantity.code}.png');

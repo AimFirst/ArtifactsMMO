@@ -27,7 +27,7 @@ class CraftLevelTarget extends CraftTarget {
     }
     options.sort((a, b) => b.level - a.level);
 
-    return options.firstWhere((i) => i.craft != null && ((i.craft!.level ?? 1) <= getCurrentSkill(character: character, skillType: skillType).level));
+    return options.firstWhere((i) => i.craft != null && i.code != 'wooden_staff' && ((i.craft!.level ?? 1)  <= getCurrentSkill(character: character, skillType: skillType).level));
   }
 
   @override
