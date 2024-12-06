@@ -10,7 +10,11 @@ import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/resource/resource.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
+part 'state.g.dart';
+
+@CopyWith()
 class State {
   final BoardState boardState;
   final Character character;

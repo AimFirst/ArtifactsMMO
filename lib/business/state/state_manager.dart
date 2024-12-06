@@ -123,6 +123,8 @@ class StateManager {
 
   Future<void> stopTargetBasedUpa() async {
     await _cancelableProcess?.cancel();
+    _target = NoTarget();
+    _stateSubject.value = _stateSubject.value.copyWith(target: _target, processResult: TargetProcessResult.empty());
   }
 
   Future<void> startNewTarget(Target target) async {

@@ -73,6 +73,10 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
     }
   }
 
+  Future<void> onCancelTarget() async {
+    await stateManager.stopTargetBasedUpa();
+  }
+
   Future<void> onItemDestroy(Item item, int maintainAmount) async {
     await stateManager.startNewTarget(ManageInventoryTarget(maxItemQuantity: ItemQuantity(code: item.code, quantity: maintainAmount)));
   }

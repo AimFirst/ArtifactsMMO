@@ -123,20 +123,25 @@ class TargetBasedUpaView
   Widget _statusWidget(BuildContext context, TargetBasedUpaModelLoaded model) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-          minWidth: MediaQuery.of(context).size.width * .25,
-          maxWidth: MediaQuery.of(context).size.width * .50),
+        minWidth: MediaQuery.of(context).size.width * .25,
+        maxWidth: MediaQuery.of(context).size.width * .50,
+      ),
       child: Card(
         color: const Color.fromARGB(230, 255, 255, 255),
-        child: ListTile(
-          leading: model.state.processResult.imageUrl != null
-              ? SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CachedNetworkImage(
-                      imageUrl: model.state.processResult.imageUrl!))
-              : null,
-          title: Text(model.state.target.name),
-          subtitle: Text(model.state.processResult.description),
+        child: InkWell(
+          onTap: viewModel.onCancelTarget,
+          child: ListTile(
+            leading: model.state.processResult.imageUrl != null
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CachedNetworkImage(
+                      imageUrl: model.state.processResult.imageUrl!,
+                    ))
+                : null,
+            title: Text(model.state.target.name),
+            subtitle: Text(model.state.processResult.description),
+          ),
         ),
       ),
     );
@@ -244,12 +249,16 @@ class TargetBasedUpaView
         return _menuForTasks(model, viewModel);
     }
   }
+
   Widget _menuForInventory(
-      TargetBasedUpaModelLoaded model,
-      TargetBasedUpaViewModel viewModel,
-      ) {
+    TargetBasedUpaModelLoaded model,
+    TargetBasedUpaViewModel viewModel,
+  ) {
     return GridView.builder(
-        itemCount: model.state.character.inventoryItems.where((i) => i.itemQuantity.quantity > 0).toList().length,
+        itemCount: model.state.character.inventoryItems
+            .where((i) => i.itemQuantity.quantity > 0)
+            .toList()
+            .length,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 150,
           mainAxisSpacing: 5,
@@ -257,9 +266,14 @@ class TargetBasedUpaView
           childAspectRatio: 1.0,
         ),
         itemBuilder: (BuildContext context, int index) {
-          final inventoryItem = model.state.character.inventoryItems.where((i) => i.itemQuantity.quantity > 0).toList()[index];
-          final item = model.state.boardState.items.where((i) => i.code == inventoryItem.itemQuantity.code).first;
-          final controller = TextEditingController(text: '${inventoryItem.itemQuantity.quantity}');
+          final inventoryItem = model.state.character.inventoryItems
+              .where((i) => i.itemQuantity.quantity > 0)
+              .toList()[index];
+          final item = model.state.boardState.items
+              .where((i) => i.code == inventoryItem.itemQuantity.code)
+              .first;
+          final controller = TextEditingController(
+              text: '${inventoryItem.itemQuantity.quantity}');
           return InkWell(
             onTap: null,
             child: Container(
@@ -274,19 +288,25 @@ class TargetBasedUpaView
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
                       imageUrl:
-                      'https://artifactsmmo.com/images/items/${item.code}.png',
+                          'https://artifactsmmo.com/images/items/${item.code}.png',
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
                     child: TextField(
                       maxLines: 1,
-                      decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(vertical: 0), border: OutlineInputBorder(),),
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 0),
+                        border: OutlineInputBorder(),
+                      ),
                       controller: controller,
                     ),
                   ),
                   FilledButton(
-                    onPressed: () => viewModel.onItemDestroy(item, int.parse(controller.text)),
+                    onPressed: () => viewModel.onItemDestroy(
+                        item, int.parse(controller.text)),
                     child: const Text('Maintain'),
                   ),
                 ],
@@ -295,7 +315,6 @@ class TargetBasedUpaView
           );
         });
   }
-
 
   // Widget _menuForInventory(
   //   TargetBasedUpaModelLoaded model,
@@ -367,24 +386,27 @@ class TargetBasedUpaView
                     width: 55,
                     height: 55,
                     child: CachedNetworkImage(
-                    fit: BoxFit.fill,
-                    imageUrl:
-                    'https://artifactsmmo.com/images/items/${item.code}.png',
-                  ),
+                      fit: BoxFit.fill,
+                      imageUrl:
+                          'https://artifactsmmo.com/images/items/${item.code}.png',
+                    ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
                     child: TextField(
                       maxLines: 1,
-                      decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(vertical: 0), border: OutlineInputBorder(),),
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 0),
+                        border: OutlineInputBorder(),
+                      ),
                       controller: controller,
                     ),
                   ),
                   FilledButton(
-                    onPressed: () => viewModel.onItemCraft(
-                        item,
-                        model.state.character,
-                        int.parse(controller.text)),
+                    onPressed: () => viewModel.onItemCraft(item,
+                        model.state.character, int.parse(controller.text)),
                     child: const Text('Craft'),
                   ),
                 ],
