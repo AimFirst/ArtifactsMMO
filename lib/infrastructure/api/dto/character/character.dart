@@ -108,4 +108,6 @@ class Character with EquatableMixin {
 
   List<Skill> get craftingSkills =>
       [weaponCrafting, gearCrafting, jewelryCrafting, cooking];
+
+  int get cooldownLeftSeconds => cooldownEnd.difference(DateTime.now()).inSeconds;
 }

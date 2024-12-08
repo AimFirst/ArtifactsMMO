@@ -331,12 +331,3 @@ lib/src/model/validation_error.dart
 lib/src/model/validation_error_loc_inner.dart
 lib/src/serializers.dart
 pubspec.yaml
-test/badge_condition_schema_test.dart
-test/badge_response_schema_test.dart
-test/badge_schema_test.dart
-test/badges_api_test.dart
-test/data_page_badge_schema_test.dart
-test/reward_data_response_schema_test.dart
-test/reward_data_schema_test.dart
-test/reward_response_schema_test.dart
-test/rewards_schema_test.dart

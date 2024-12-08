@@ -9,6 +9,7 @@ import 'package:artifacts_mmo/presentation/target/target_based_upa_view_model.da
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
 class TargetBasedUpaView
     extends BaseView<TargetBasedUpaModel, TargetBasedUpaViewModel> {
@@ -149,6 +150,7 @@ class TargetBasedUpaView
 
   Widget _characterStatusPanel(
       BuildContext context, TargetBasedUpaModelLoaded model) {
+    final secondsCooldown = model.state.character.cooldownLeftSeconds;
     return ConstrainedBox(
       constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width * .25,
@@ -181,6 +183,13 @@ class TargetBasedUpaView
                   model.state.character.overall.xp,
                   'XP',
                   Colors.green),
+              const SizedBox(
+                height: 2,
+                width: 1,
+              ),
+              Countdown(key: Key('countdown:${model.state.character.cooldownEnd.toString()}'), seconds: secondsCooldown, interval: const Duration(milliseconds: 100), build: (BuildContext context, double timeLeft) {
+               return LinearProgressIndicator(value: timeLeft <= 0 ? 0 : timeLeft / secondsCooldown,); // _progressBarWithText(0, secondsCooldown*1000, (timeLeft*1000).round(), 'ms', Colors.blue);
+              },),
             ],
           ),
         ),
@@ -230,11 +239,24 @@ class TargetBasedUpaView
       color: const Color.fromARGB(230, 255, 255, 255),
       child: Column(
         children: [
-          Text(option.name),
+          Text(_titleForOption(model, option)),
           Expanded(child: _menuForOption(model, option)),
         ],
       ),
     );
+  }
+
+  String _titleForOption(TargetBasedUpaModelLoaded model, MenuOption option) {
+    switch (option.type) {
+      case MenuItemType.items:
+        return 'Items';
+      case MenuItemType.tasks:
+        return 'Tasks';
+      case MenuItemType.inventory:
+        return 'Inventory (${model.state.character.inventoryItems.fold(0, (a,b) => a + b.itemQuantity.quantity)}/${model.state.character.inventoryMaxItems})';
+      case MenuItemType.skills:
+        return 'Skills';
+    }
   }
 
   Widget _menuForOption(TargetBasedUpaModelLoaded model, MenuOption option) {

@@ -5,6 +5,7 @@ import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_delete_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:equatable/equatable.dart';
 
 class ManageInventoryTarget extends Target {
@@ -16,6 +17,7 @@ class ManageInventoryTarget extends Target {
     'copper_dagger':
         InventoryItemConstraints(code: 'copper_dagger', min: 1, max: 1),
   };
+  static const recyclableSkills = [SkillType.weaponCrafting, SkillType.gearCrafting];
 
   ManageInventoryTarget({ItemQuantity? maxItemQuantity}) {
     if (maxItemQuantity != null) {
@@ -47,7 +49,7 @@ class ManageInventoryTarget extends Target {
           .first;
 
       if (inventoryItem.itemQuantity.quantity > constraint.max) {
-        if (item.craft != null) {
+        if (item.craft != null && recyclableSkills.contains(item.craft!.skill)) {
           return RecycleItemTarget(
             quantityToMaintain: ItemQuantity(
               code: constraint.code,

@@ -47,6 +47,7 @@ dependencies:
   cached_network_image: ^3.4.1
   async: ^2.11.0
   copy_with_extension: ^6.0.0
+  timer_count_down: ^2.2.2
 
 dev_dependencies:
   flutter_test:
