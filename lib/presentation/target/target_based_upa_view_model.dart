@@ -1,5 +1,6 @@
 import 'package:artifacts_mmo/business/state/state_manager.dart';
 import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
+import 'package:artifacts_mmo/business/state/target/inventory/deposit_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/complete_task_target.dart';

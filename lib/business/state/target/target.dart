@@ -37,6 +37,7 @@ class Progress {
 
   Progress({required this.current, required this.target});
   Progress.empty() : current = 0, target = 1;
+  Progress.done() : current = 1, target = 1;
 
   bool get finished => current >= target;
 

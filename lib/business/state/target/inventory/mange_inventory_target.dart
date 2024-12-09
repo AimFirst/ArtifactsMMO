@@ -1,4 +1,5 @@
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/target/inventory/deposit_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/recycle_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
@@ -10,21 +11,87 @@ import 'package:equatable/equatable.dart';
 
 class ManageInventoryTarget extends Target {
   final Map<String, InventoryItemConstraints> itemConstraints = {
-    'ash_wood': InventoryItemConstraints(code: 'ash_wood', min: 20, max: 30),
-    'sap': InventoryItemConstraints(code: 'sap', min: 20, max: 30),
-    'wooden_staff':
-        InventoryItemConstraints(code: 'wooden_staff', min: 1, max: 1),
-    'copper_dagger':
-        InventoryItemConstraints(code: 'copper_dagger', min: 1, max: 1),
+    'ash_wood': InventoryItemConstraints(
+        code: 'ash_wood',
+        min: 20,
+        max: 30,
+        overflowSolution: InventoryOverflowSolution.deposit),
+    'sap': InventoryItemConstraints(
+        code: 'sap',
+        min: 20,
+        max: 30,
+        overflowSolution: InventoryOverflowSolution.deposit),
+    'wooden_staff': InventoryItemConstraints(
+        code: 'wooden_staff',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
+    'copper_dagger': InventoryItemConstraints(
+        code: 'copper_dagger',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
+    'fire_staff': InventoryItemConstraints(
+        code: 'fire_staff',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
+    'sticky_dagger': InventoryItemConstraints(
+        code: 'sticky_dagger',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
+    'sticky_sword': InventoryItemConstraints(
+        code: 'sticky_sword',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
+    'water_bow': InventoryItemConstraints(
+        code: 'water_bow',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
+    'copper_boots': InventoryItemConstraints(
+        code: 'copper_boots',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
+    'copper_helmet': InventoryItemConstraints(
+        code: 'copper_helmet',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
+    'wooden_shield': InventoryItemConstraints(
+        code: 'wooden_shield',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
+    'copper_ring': InventoryItemConstraints(
+        code: 'copper_ring',
+        min: 1,
+        max: 1,
+        overflowSolution: InventoryOverflowSolution.destroy),
   };
-  static const recyclableSkills = [SkillType.weaponCrafting, SkillType.gearCrafting];
+  static const recyclableSkills = [
+    SkillType.weaponCrafting,
+    SkillType.gearCrafting,
+    SkillType.jewelryCrafting
+  ];
+  final bool onlyRunIfNearFull;
 
-  ManageInventoryTarget({ItemQuantity? maxItemQuantity}) {
+  ManageInventoryTarget({
+    ItemQuantity? maxItemQuantity,
+    InventoryOverflowSolution overflowSolution =
+        InventoryOverflowSolution.deposit,
+    this.onlyRunIfNearFull = false,
+  }) {
     if (maxItemQuantity != null) {
       itemConstraints[maxItemQuantity.code] = InventoryItemConstraints(
-          code: maxItemQuantity.code,
-          min: maxItemQuantity.quantity,
-          max: maxItemQuantity.quantity);
+        code: maxItemQuantity.code,
+        min: maxItemQuantity.quantity,
+        max: maxItemQuantity.quantity,
+        overflowSolution: overflowSolution,
+      );
     }
   }
 
@@ -36,6 +103,21 @@ class ManageInventoryTarget extends Target {
       {required Character character,
       required BoardState boardState,
       required ArtifactsClient artifactsClient}) {
+    // Check to see if our inventory is almost full. If not, we don't need to manage inventory yet.
+    if (onlyRunIfNearFull) {
+      final totalItems = character.inventoryItems
+          .fold(0, (o, i) => o + i.itemQuantity.quantity);
+      final percent = totalItems / character.inventoryMaxItems.toDouble();
+      if (percent < .8) {
+        return TargetProcessResult(
+          progress: Progress(current: percent, target: percent),
+          action: null,
+          description: 'Inventory not nearing full, so no action needed.',
+          imageUrl: null,
+        );
+      }
+    }
+
     final filteredItems = character.inventoryItems
         .where((e) => itemConstraints.keys.contains(e.itemQuantity.code));
     for (final inventoryItem in filteredItems) {
@@ -49,30 +131,46 @@ class ManageInventoryTarget extends Target {
           .first;
 
       if (inventoryItem.itemQuantity.quantity > constraint.max) {
-        if (item.craft != null && recyclableSkills.contains(item.craft!.skill)) {
-          return RecycleItemTarget(
-            quantityToMaintain: ItemQuantity(
-              code: constraint.code,
-              quantity: constraint.min,
-            ),
-          ).update(
-            character: character,
-            boardState: boardState,
-            artifactsClient: artifactsClient,
-          );
-        }
+        // Supposed to deposit items or destroy them?
+        switch (constraint.overflowSolution) {
+          case InventoryOverflowSolution.deposit:
+            return DepositItemTarget(
+              quantityToRemain: ItemQuantity(
+                code: constraint.code,
+                quantity: constraint.min,
+              ),
+            ).update(
+              character: character,
+              boardState: boardState,
+              artifactsClient: artifactsClient,
+            );
+          case InventoryOverflowSolution.destroy:
+            if (item.craft != null &&
+                recyclableSkills.contains(item.craft!.skill)) {
+              return RecycleItemTarget(
+                quantityToMaintain: ItemQuantity(
+                  code: constraint.code,
+                  quantity: constraint.min,
+                ),
+              ).update(
+                character: character,
+                boardState: boardState,
+                artifactsClient: artifactsClient,
+              );
+            }
 
-        return TargetProcessResult(
-            progress: Progress.empty(),
-            action: artifactsClient.deleteItem(
-                action: ActionDeleteItem(
-                    itemQuantity: ItemQuantity(
-                        code: inventoryItem.itemQuantity.code,
-                        quantity: inventoryItem.itemQuantity.quantity -
-                            constraint.min))),
-            description: 'Dumping extra ${inventoryItem.itemQuantity.code}',
-            imageUrl:
-                'https://artifactsmmo.com/images/items/${inventoryItem.itemQuantity.code}.png');
+            return TargetProcessResult(
+                progress: Progress.empty(),
+                action: artifactsClient.deleteItem(
+                    action: ActionDeleteItem(
+                        itemQuantity: ItemQuantity(
+                            code: inventoryItem.itemQuantity.code,
+                            quantity: inventoryItem.itemQuantity.quantity -
+                                constraint.min))),
+                description: 'Dumping extra ${inventoryItem.itemQuantity.code}',
+                imageUrl:
+                    'https://artifactsmmo.com/images/items/${inventoryItem.itemQuantity.code}.png');
+        }
       }
     }
 
@@ -88,17 +186,20 @@ class InventoryItemConstraints with EquatableMixin {
   final String code;
   final int min;
   final int max;
+  final InventoryOverflowSolution overflowSolution;
 
   InventoryItemConstraints({
     required this.code,
     required this.min,
     required this.max,
+    required this.overflowSolution,
   });
 
   @override
-  List<Object?> get props => [
-        code,
-        min,
-        max,
-      ];
+  List<Object?> get props => [code, min, max, overflowSolution];
+}
+
+enum InventoryOverflowSolution {
+  deposit,
+  destroy,
 }
