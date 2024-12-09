@@ -8,13 +8,16 @@ part 'target_based_upa_model.g.dart';
 // Unassisted Process Algorithm
 sealed class TargetBasedUpaModel implements BaseModel {}
 
-class TargetBasedUpaModelLoading with EquatableMixin implements TargetBasedUpaModel {
+class TargetBasedUpaModelLoading
+    with EquatableMixin
+    implements TargetBasedUpaModel {
   @override
   List<Object?> get props => [];
-
 }
 
-class TargetBasedUpaModelError with EquatableMixin implements TargetBasedUpaModel {
+class TargetBasedUpaModelError
+    with EquatableMixin
+    implements TargetBasedUpaModel {
   final String error;
 
   TargetBasedUpaModelError({required this.error});
@@ -24,14 +27,21 @@ class TargetBasedUpaModelError with EquatableMixin implements TargetBasedUpaMode
 }
 
 @CopyWith()
-class TargetBasedUpaModelLoaded with EquatableMixin implements TargetBasedUpaModel {
+class TargetBasedUpaModelLoaded
+    with EquatableMixin
+    implements TargetBasedUpaModel {
   final State state;
   final List<MenuOption> menuOptions;
+  final String selectedChar;
 
-  TargetBasedUpaModelLoaded({required this.state, required this.menuOptions});
+  TargetBasedUpaModelLoaded({
+    required this.state,
+    required this.menuOptions,
+    required this.selectedChar,
+  });
 
   @override
-  List<Object?> get props => [state, menuOptions,];
+  List<Object?> get props => [state, menuOptions, selectedChar];
 }
 
 @CopyWith()

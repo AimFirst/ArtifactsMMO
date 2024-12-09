@@ -9,11 +9,7 @@ part of 'state.dart';
 abstract class _$StateCWProxy {
   State boardState(BoardState boardState);
 
-  State character(Character character);
-
-  State target(Target target);
-
-  State processResult(TargetProcessResult processResult);
+  State characterStates(Map<String, CharacterState> characterStates);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `State(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -23,9 +19,7 @@ abstract class _$StateCWProxy {
   /// ````
   State call({
     BoardState boardState,
-    Character character,
-    Target target,
-    TargetProcessResult processResult,
+    Map<String, CharacterState> characterStates,
   });
 }
 
@@ -39,14 +33,8 @@ class _$StateCWProxyImpl implements _$StateCWProxy {
   State boardState(BoardState boardState) => this(boardState: boardState);
 
   @override
-  State character(Character character) => this(character: character);
-
-  @override
-  State target(Target target) => this(target: target);
-
-  @override
-  State processResult(TargetProcessResult processResult) =>
-      this(processResult: processResult);
+  State characterStates(Map<String, CharacterState> characterStates) =>
+      this(characterStates: characterStates);
 
   @override
 
@@ -58,27 +46,17 @@ class _$StateCWProxyImpl implements _$StateCWProxy {
   /// ````
   State call({
     Object? boardState = const $CopyWithPlaceholder(),
-    Object? character = const $CopyWithPlaceholder(),
-    Object? target = const $CopyWithPlaceholder(),
-    Object? processResult = const $CopyWithPlaceholder(),
+    Object? characterStates = const $CopyWithPlaceholder(),
   }) {
     return State(
       boardState: boardState == const $CopyWithPlaceholder()
           ? _value.boardState
           // ignore: cast_nullable_to_non_nullable
           : boardState as BoardState,
-      character: character == const $CopyWithPlaceholder()
-          ? _value.character
+      characterStates: characterStates == const $CopyWithPlaceholder()
+          ? _value.characterStates
           // ignore: cast_nullable_to_non_nullable
-          : character as Character,
-      target: target == const $CopyWithPlaceholder()
-          ? _value.target
-          // ignore: cast_nullable_to_non_nullable
-          : target as Target,
-      processResult: processResult == const $CopyWithPlaceholder()
-          ? _value.processResult
-          // ignore: cast_nullable_to_non_nullable
-          : processResult as TargetProcessResult,
+          : characterStates as Map<String, CharacterState>,
     );
   }
 }

@@ -11,6 +11,8 @@ abstract class _$TargetBasedUpaModelLoadedCWProxy {
 
   TargetBasedUpaModelLoaded menuOptions(List<MenuOption> menuOptions);
 
+  TargetBasedUpaModelLoaded selectedChar(String selectedChar);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `TargetBasedUpaModelLoaded(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -20,6 +22,7 @@ abstract class _$TargetBasedUpaModelLoadedCWProxy {
   TargetBasedUpaModelLoaded call({
     State state,
     List<MenuOption> menuOptions,
+    String selectedChar,
   });
 }
 
@@ -38,6 +41,10 @@ class _$TargetBasedUpaModelLoadedCWProxyImpl
       this(menuOptions: menuOptions);
 
   @override
+  TargetBasedUpaModelLoaded selectedChar(String selectedChar) =>
+      this(selectedChar: selectedChar);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `TargetBasedUpaModelLoaded(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -48,6 +55,7 @@ class _$TargetBasedUpaModelLoadedCWProxyImpl
   TargetBasedUpaModelLoaded call({
     Object? state = const $CopyWithPlaceholder(),
     Object? menuOptions = const $CopyWithPlaceholder(),
+    Object? selectedChar = const $CopyWithPlaceholder(),
   }) {
     return TargetBasedUpaModelLoaded(
       state: state == const $CopyWithPlaceholder()
@@ -58,6 +66,10 @@ class _$TargetBasedUpaModelLoadedCWProxyImpl
           ? _value.menuOptions
           // ignore: cast_nullable_to_non_nullable
           : menuOptions as List<MenuOption>,
+      selectedChar: selectedChar == const $CopyWithPlaceholder()
+          ? _value.selectedChar
+          // ignore: cast_nullable_to_non_nullable
+          : selectedChar as String,
     );
   }
 }

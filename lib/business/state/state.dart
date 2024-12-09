@@ -1,6 +1,5 @@
-import 'package:artifacts_mmo/business/state/target/target.dart';
+import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/active_event.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
@@ -11,22 +10,22 @@ import 'package:artifacts_mmo/infrastructure/api/dto/resource/resource.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:equatable/equatable.dart';
 
 part 'state.g.dart';
 
 @CopyWith()
-class State {
+class State with EquatableMixin {
   final BoardState boardState;
-  final Character character;
-  final Target target;
-  final TargetProcessResult processResult;
+  final Map<String, CharacterState> characterStates;
 
   State({
     required this.boardState,
-    required this.character,
-    required this.target,
-    required this.processResult,
+    required this.characterStates,
   });
+
+  @override
+  List<Object?> get props => [boardState, characterStates,];
 }
 
 class BoardState {

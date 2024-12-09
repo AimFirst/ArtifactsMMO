@@ -1,3 +1,4 @@
+import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
@@ -20,6 +21,10 @@ class TargetBasedUpaView
       viewModel: Provider.of<TargetBasedUpaViewModel>(context, listen: false),
       key: key,
     );
+  }
+
+  CharacterState _characterState(TargetBasedUpaModelLoaded model) {
+    return model.state.characterStates[model.selectedChar] ?? CharacterState.empty();
   }
 
   @override
@@ -84,8 +89,10 @@ class TargetBasedUpaView
         final row = index ~/ rows;
         final column = index % columns;
 
-        final x = model.state.character.location.x + (column - columns ~/ 2);
-        final y = model.state.character.location.y + (row - rows ~/ 2);
+        final x = _characterState(model).character.location.x +
+            (column - columns ~/ 2);
+        final y =
+            _characterState(model).character.location.y + (row - rows ~/ 2);
 
         final mapLocation = model.state.boardState.map[Location(x: x, y: y)];
 
@@ -99,7 +106,7 @@ class TargetBasedUpaView
 
         if (row == rows ~/ 2 && column == columns ~/ 2) {
           final characterUrl =
-              'https://artifactsmmo.com/images/characters/${model.state.character.skin}.png';
+              'https://artifactsmmo.com/images/characters/${_characterState(model).character.skin}.png';
           return Stack(
             children: [
               mapImage,
@@ -132,16 +139,16 @@ class TargetBasedUpaView
         child: InkWell(
           onTap: viewModel.onCancelTarget,
           child: ListTile(
-            leading: model.state.processResult.imageUrl != null
+            leading: _characterState(model).processResult.imageUrl != null
                 ? SizedBox(
                     width: 20,
                     height: 20,
                     child: CachedNetworkImage(
-                      imageUrl: model.state.processResult.imageUrl!,
+                      imageUrl: _characterState(model).processResult.imageUrl!,
                     ))
                 : null,
-            title: Text(model.state.target.name),
-            subtitle: Text(model.state.processResult.description),
+            title: Text(_characterState(model).target.name),
+            subtitle: Text(_characterState(model).processResult.description),
           ),
         ),
       ),
@@ -150,7 +157,8 @@ class TargetBasedUpaView
 
   Widget _characterStatusPanel(
       BuildContext context, TargetBasedUpaModelLoaded model) {
-    final secondsCooldown = model.state.character.cooldownLeftSeconds;
+    final secondsCooldown =
+        _characterState(model).character.cooldownLeftSeconds;
     return ConstrainedBox(
       constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width * .25,
@@ -164,32 +172,41 @@ class TargetBasedUpaView
               Row(
                 children: [
                   Text(
-                    model.state.character.name,
+                    _characterState(model).character.name,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const Spacer(),
-                  Text('Level ${model.state.character.overall.level}'),
+                  Text(
+                      'Level ${_characterState(model).character.overall.level}'),
                 ],
               ),
-              _progressBarWithText(0, model.state.character.maxHp,
-                  model.state.character.hp, 'HP', Colors.red),
+              _progressBarWithText(0, _characterState(model).character.maxHp,
+                  _characterState(model).character.hp, 'HP', Colors.red),
               const SizedBox(
                 height: 2,
                 width: 1,
               ),
               _progressBarWithText(
                   0,
-                  model.state.character.overall.nextLevelTargetXp,
-                  model.state.character.overall.xp,
+                  _characterState(model).character.overall.nextLevelTargetXp,
+                  _characterState(model).character.overall.xp,
                   'XP',
                   Colors.green),
               const SizedBox(
                 height: 2,
                 width: 1,
               ),
-              Countdown(key: Key('countdown:${model.state.character.cooldownEnd.toString()}'), seconds: secondsCooldown, interval: const Duration(milliseconds: 100), build: (BuildContext context, double timeLeft) {
-               return LinearProgressIndicator(value: timeLeft <= 0 ? 0 : timeLeft / secondsCooldown,); // _progressBarWithText(0, secondsCooldown*1000, (timeLeft*1000).round(), 'ms', Colors.blue);
-              },),
+              Countdown(
+                key: Key(
+                    'countdown:${_characterState(model).character.cooldownEnd.toString()}'),
+                seconds: secondsCooldown,
+                interval: const Duration(milliseconds: 100),
+                build: (BuildContext context, double timeLeft) {
+                  return LinearProgressIndicator(
+                    value: timeLeft <= 0 ? 0 : timeLeft / secondsCooldown,
+                  ); // _progressBarWithText(0, secondsCooldown*1000, (timeLeft*1000).round(), 'ms', Colors.blue);
+                },
+              ),
             ],
           ),
         ),
@@ -253,7 +270,7 @@ class TargetBasedUpaView
       case MenuItemType.tasks:
         return 'Tasks';
       case MenuItemType.inventory:
-        return 'Inventory (${model.state.character.inventoryItems.fold(0, (a,b) => a + b.itemQuantity.quantity)}/${model.state.character.inventoryMaxItems})';
+        return 'Inventory (${_characterState(model).character.inventoryItems.fold(0, (a, b) => a + b.itemQuantity.quantity)}/${_characterState(model).character.inventoryMaxItems})';
       case MenuItemType.skills:
         return 'Skills';
     }
@@ -277,7 +294,9 @@ class TargetBasedUpaView
     TargetBasedUpaViewModel viewModel,
   ) {
     return GridView.builder(
-        itemCount: model.state.character.inventoryItems
+        itemCount: _characterState(model)
+            .character
+            .inventoryItems
             .where((i) => i.itemQuantity.quantity > 0)
             .toList()
             .length,
@@ -288,7 +307,9 @@ class TargetBasedUpaView
           childAspectRatio: 1.0,
         ),
         itemBuilder: (BuildContext context, int index) {
-          final inventoryItem = model.state.character.inventoryItems
+          final inventoryItem = _characterState(model)
+              .character
+              .inventoryItems
               .where((i) => i.itemQuantity.quantity > 0)
               .toList()[index];
           final item = model.state.boardState.items
@@ -427,8 +448,10 @@ class TargetBasedUpaView
                     ),
                   ),
                   FilledButton(
-                    onPressed: () => viewModel.onItemCraft(item,
-                        model.state.character, int.parse(controller.text)),
+                    onPressed: () => viewModel.onItemCraft(
+                        item,
+                        _characterState(model).character,
+                        int.parse(controller.text)),
                     child: const Text('Craft'),
                   ),
                 ],
@@ -445,14 +468,14 @@ class TargetBasedUpaView
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView.separated(
-        itemCount: model.state.character.allSkills.length,
+        itemCount: _characterState(model).character.allSkills.length,
         shrinkWrap: true,
         separatorBuilder: (context, index) => const SizedBox(
           width: 1,
           height: 15,
         ),
         itemBuilder: (context, index) {
-          final skill = model.state.character.allSkills[index];
+          final skill = _characterState(model).character.allSkills[index];
           return _skillWidget(skill);
         },
       ),
@@ -502,9 +525,9 @@ class TargetBasedUpaView
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          if (model.state.character.taskProgress != null)
+          if (_characterState(model).character.taskProgress != null)
             _inProgressTask(
-              model.state.character.taskProgress!,
+              _characterState(model).character.taskProgress!,
               model.state.boardState,
             ),
           Expanded(

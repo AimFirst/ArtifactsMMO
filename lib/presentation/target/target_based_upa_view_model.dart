@@ -1,11 +1,12 @@
+import 'package:artifacts_mmo/business/state/character_target_manager.dart';
 import 'package:artifacts_mmo/business/state/state_manager.dart';
 import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
-import 'package:artifacts_mmo/business/state/target/inventory/deposit_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/complete_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/perform_task_target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/artifacts_exception.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
@@ -39,23 +40,27 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
       name: 'Items',
     ),
   };
+  String selectedCharacter = '';
 
-  TargetBasedUpaViewModel(
-      {required this.artifactsClient, required this.stateManager})
-      : super(TargetBasedUpaModelLoading());
+  TargetBasedUpaViewModel({
+    required this.artifactsClient,
+    required this.stateManager,
+  }) : super(
+          TargetBasedUpaModelLoading(),
+        );
 
   @override
   Future<void> loadAsync() async {
     await stateManager.init();
+    selectedCharacter = stateManager.characterTargetManagers.keys.first;
 
     stateManager.stateStream.listen((s) {
       value = TargetBasedUpaModelLoaded(
         state: s,
         menuOptions: _menuOptions.values.toList(),
+        selectedChar: selectedCharacter,
       );
     });
-
-    stateManager.startTargetBasedUpa();
   }
 
   @override
@@ -66,7 +71,8 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
   void updateSelectedMenuItem(MenuOption option) {
     var currentOption = _menuOptions[option.type];
     currentOption = currentOption!.copyWith(selected: !currentOption.selected);
-    _menuOptions.forEach((k, v) => _menuOptions[k] = v.copyWith(selected: false));
+    _menuOptions
+        .forEach((k, v) => _menuOptions[k] = v.copyWith(selected: false));
     _menuOptions[currentOption.type] = currentOption;
     final tempVal = value;
     if (tempVal is TargetBasedUpaModelLoaded) {
@@ -74,28 +80,45 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
     }
   }
 
+  CharacterTargetManager _getCurrentTargetManager() {
+    final targetManager = stateManager.characterTargetManagers[selectedCharacter];
+    if (targetManager == null) {
+      throw ArtifactsException(errorMessage: 'No character target manager with name $selectedCharacter');
+    }
+    return targetManager;
+  }
+
   Future<void> onCancelTarget() async {
-    await stateManager.stopTargetBasedUpa();
+    await _getCurrentTargetManager().stopTargetBasedUpa();
   }
 
   Future<void> onItemDestroy(Item item, int maintainAmount) async {
-    await stateManager.startNewTarget(ManageInventoryTarget(maxItemQuantity: ItemQuantity(code: item.code, quantity: maintainAmount)));
+    await _getCurrentTargetManager().startNewTarget(ManageInventoryTarget(
+        maxItemQuantity:
+            ItemQuantity(code: item.code, quantity: maintainAmount)));
   }
-  
-  Future<void> onItemCraft(Item item, Character character, int craftAmount) async {
-    final currentCount = character.inventoryItems.fold(0, (p, s) => p + ((s.itemQuantity.code == item.code) ? s.itemQuantity.quantity : 0));
-    await stateManager.startNewTarget(CraftItemTarget(itemQuantity: ItemQuantity(code: item.code, quantity: currentCount + craftAmount)));
+
+  Future<void> onItemCraft(
+      Item item, Character character, int craftAmount) async {
+    final currentCount = character.inventoryItems.fold(
+        0,
+        (p, s) =>
+            p +
+            ((s.itemQuantity.code == item.code) ? s.itemQuantity.quantity : 0));
+    await _getCurrentTargetManager().startNewTarget(CraftItemTarget(
+        itemQuantity: ItemQuantity(
+            code: item.code, quantity: currentCount + craftAmount)));
   }
-  
+
   Future<void> onCurrentTaskTap(TaskProgress task) async {
     if (task.progress == task.total) {
-      await stateManager.startNewTarget(CompleteTaskTarget());
+      await _getCurrentTargetManager().startNewTarget(CompleteTaskTarget());
     } else {
-      await stateManager.startNewTarget(PerformTaskTarget());
+      await _getCurrentTargetManager().startNewTarget(PerformTaskTarget());
     }
   }
 
   Future<void> onTaskTap(Task task) async {
-    await stateManager.startNewTarget(AcceptTaskTarget());
+    await _getCurrentTargetManager().startNewTarget(AcceptTaskTarget());
   }
 }
