@@ -12,6 +12,7 @@ class Character with EquatableMixin {
   final int hp;
   final int maxHp;
   final Location location;
+  final int cooldownSeconds;
   final DateTime cooldownEnd;
   final Skill overall;
   final Skill mining;
@@ -43,6 +44,7 @@ class Character with EquatableMixin {
     required this.skin,
     required this.gold,
     required this.location,
+    required this.cooldownSeconds,
     required this.cooldownEnd,
     required this.inventoryMaxItems,
     required this.inventoryItems,
@@ -66,6 +68,7 @@ class Character with EquatableMixin {
         skin = '',
         gold = 0,
         location = Location.empty(),
+        cooldownSeconds = 0,
         cooldownEnd = DateTime.now(),
         inventoryMaxItems = 1,
         inventoryItems = [],
@@ -89,6 +92,7 @@ class Character with EquatableMixin {
         skin,
         gold,
         location,
+        cooldownSeconds,
         cooldownEnd,
         inventoryMaxItems,
         inventoryItems,

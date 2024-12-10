@@ -14,6 +14,7 @@ extension CharacterExtension on CharacterSchema {
       name: name,
       skin: skin.name,
       location: Location(x: x, y: y),
+      cooldownSeconds: cooldown,
       cooldownEnd: cooldownExpiration ?? DateTime.now(),
       hp: hp,
       maxHp: maxHp,
