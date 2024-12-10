@@ -86,11 +86,14 @@ class Character with EquatableMixin {
         cooking,
         alchemy,
         name,
+        skin,
         gold,
         location,
         cooldownEnd,
         inventoryMaxItems,
-        inventoryItems
+        inventoryItems,
+        equipmentLoadout,
+        taskProgress,
       ];
 
   List<Skill> get allSkills => [
@@ -109,5 +112,6 @@ class Character with EquatableMixin {
   List<Skill> get craftingSkills =>
       [weaponCrafting, gearCrafting, jewelryCrafting, cooking];
 
-  int get cooldownLeftSeconds => cooldownEnd.difference(DateTime.now()).inSeconds;
+  int get cooldownLeftSeconds =>
+      cooldownEnd.difference(DateTime.now()).inSeconds;
 }

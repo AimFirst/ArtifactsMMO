@@ -41,7 +41,7 @@ class TargetBasedUpaModelLoaded
   });
 
   @override
-  List<Object?> get props => [state, menuOptions, selectedChar];
+  List<Object?> get props => [state, menuOptions, selectedChar,];
 }
 
 @CopyWith()

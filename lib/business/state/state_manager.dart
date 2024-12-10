@@ -40,7 +40,7 @@ class StateManager {
       characterTargetManagers[c.name] = characterTargetManager;
       await characterTargetManager.init();
       characterTargetManager.stateStream.listen((c) {
-        final currentState = _stateSubject.value.characterStates;
+        final currentState = {..._stateSubject.value.characterStates};
         currentState[c.character.name] = c;
         _stateSubject.value = _stateSubject.value.copyWith(characterStates: {...currentState});
       });
