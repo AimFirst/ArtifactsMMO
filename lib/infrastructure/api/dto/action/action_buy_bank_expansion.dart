@@ -16,4 +16,6 @@ class ActionBuyBankExpansionResponse extends ActionResponse {
       ];
 }
 
-class ActionBuyBankExpansion extends Action {}
+class ActionBuyBankExpansion extends Action {
+  ActionBuyBankExpansion({required super.characterName});
+}

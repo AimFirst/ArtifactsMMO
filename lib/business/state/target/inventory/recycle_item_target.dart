@@ -74,6 +74,7 @@ class RecycleItemTarget extends Target {
       progress: progress,
       action: artifactsClient.recycle(
         action: ActionRecycling(
+          characterName: character.name,
           itemQuantity: ItemQuantity(
             code: quantityToMaintain.code,
             quantity: amountToRecycle,

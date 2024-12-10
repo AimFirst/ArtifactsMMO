@@ -17,4 +17,6 @@ class ActionTaskExchangeResponse extends ActionResponse {
       ];
 }
 
-class ActionTaskExchange extends Action {}
+class ActionTaskExchange extends Action {
+  ActionTaskExchange({required super.characterName});
+}

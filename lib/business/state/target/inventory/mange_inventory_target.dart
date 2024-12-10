@@ -163,6 +163,7 @@ class ManageInventoryTarget extends Target {
                 progress: Progress.empty(),
                 action: artifactsClient.deleteItem(
                     action: ActionDeleteItem(
+                      characterName: character.name,
                         itemQuantity: ItemQuantity(
                             code: inventoryItem.itemQuantity.code,
                             quantity: inventoryItem.itemQuantity.quantity -

@@ -23,7 +23,7 @@ class ActionMove extends Action {
   final Location location;
 
   ActionMove({
-    required this.location,
+    required this.location, required super.characterName,
   });
 
   @override

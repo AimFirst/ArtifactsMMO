@@ -43,7 +43,7 @@ class CompleteTaskTarget extends Target {
 
     return TargetProcessResult(
       progress: Progress(current: 0, target: 1),
-      action: artifactsClient.completeTask(action: ActionCompleteTask()),
+      action: artifactsClient.completeTask(action: ActionCompleteTask(characterName: character.name)),
       description: 'Completing task',
       imageUrl: 'https://artifactsmmo.com/images/items/forest_whip.png',
     );

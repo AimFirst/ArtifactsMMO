@@ -18,6 +18,5 @@ class ActionFightResponse extends ActionResponse {
 }
 
 class ActionFight extends Action {
-  @override
-  List<Object?> get props => super.props;
+  ActionFight({required super.characterName});
 }

@@ -51,8 +51,6 @@ abstract class ArtifactsClient {
   // Characters
   Future<List<Character>> getCharacters();
 
-  Stream<Character> get character;
-
   // Items
   Future<PagedResponse<Item>> getItems({int? pageNumber});
 

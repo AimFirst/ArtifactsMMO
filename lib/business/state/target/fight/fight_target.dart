@@ -39,7 +39,7 @@ abstract class FightTarget extends Target {
           return moveAction;
         }
 
-        return TargetProcessResult(progress: progress, action: artifactsClient.fight(action: ActionFight()), description: 'Fighting $monster', imageUrl: 'https://artifactsmmo.com/images/items/christmas_star.png');
+        return TargetProcessResult(progress: progress, action: artifactsClient.fight(action: ActionFight(characterName: character.name)), description: 'Fighting $monster', imageUrl: 'https://artifactsmmo.com/images/items/christmas_star.png');
       }
     }
     return FightLevelTarget(level: character.overall.level + 1).update(character: character, boardState: boardState, artifactsClient: artifactsClient);

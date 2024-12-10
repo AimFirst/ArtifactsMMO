@@ -31,10 +31,10 @@ class HealTarget extends Target {
       final healValue = item.effects.first.value;
       final count = (missingHealth / healValue).floor();
       final quantity = min(count, myHealingItems.first.itemQuantity.quantity);
-      return TargetProcessResult(progress: progress, action: artifactsClient.useItem(action: ActionUseItem(itemQuantity: ItemQuantity(code: item.code, quantity: quantity))), description: 'Using ${item.name} x$quantity to heal.', imageUrl: 'https://artifactsmmo.com/images/items/${item.code}.png');
+      return TargetProcessResult(progress: progress, action: artifactsClient.useItem(action: ActionUseItem(characterName: character.name, itemQuantity: ItemQuantity(code: item.code, quantity: quantity))), description: 'Using ${item.name} x$quantity to heal.', imageUrl: 'https://artifactsmmo.com/images/items/${item.code}.png');
     }
 
-    return TargetProcessResult(progress: progress, action: artifactsClient.rest(action: ActionRest()), description: 'Resting to restore health.', imageUrl: 'https://artifactsmmo.com/images/items/small_health_potion.png');
+    return TargetProcessResult(progress: progress, action: artifactsClient.rest(action: ActionRest(characterName: character.name)), description: 'Resting to restore health.', imageUrl: 'https://artifactsmmo.com/images/items/small_health_potion.png');
   }
   
 }

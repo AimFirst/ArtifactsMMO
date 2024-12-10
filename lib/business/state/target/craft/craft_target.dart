@@ -137,6 +137,7 @@ abstract class CraftTarget extends Target {
       progress: progress,
       action: artifactsClient.craft(
           action: ActionCrafting(
+            characterName: character.name,
               itemQuantity: ItemQuantity(
         code: item.code,
         quantity: 1,

@@ -52,12 +52,9 @@ import 'package:artifacts_mmo/infrastructure/api/impl/conversion/resource.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/task.dart';
 import 'package:dio/dio.dart';
-import 'package:rxdart/rxdart.dart';
 
 class ArtifactsImpl extends ArtifactsClient {
   final api = ArtifactsApi(basePathOverride: "https://api.artifactsmmo.com");
-  final BehaviorSubject<Character> _characterSubject = BehaviorSubject();
-  String characterName = "";
 
   ArtifactsImpl() {
     const token = String.fromEnvironment('ARTIFACTS_TOKEN');
@@ -66,15 +63,6 @@ class ArtifactsImpl extends ArtifactsClient {
           'Use --dart-define-from-file=api_keys.json to load it');
     }
     api.setBearerAuth("JWTBearer", token);
-    _updateCharacter(Character.empty());
-  }
-
-  @override
-  Stream<Character> get character => _characterSubject.stream;
-
-  void _updateCharacter(Character character) {
-    characterName = character.name;
-    _characterSubject.add(character);
   }
 
   void _throwIfError(Response<dynamic> response) {
@@ -159,11 +147,7 @@ class ArtifactsImpl extends ArtifactsClient {
 
     _throwIfError(response);
 
-    final characters = response.data!.data.map((c) => c.convert()).toList();
-    if (characters.isNotEmpty) {
-      _updateCharacter(characters.first);
-    }
-    return characters;
+    return response.data!.data.map((c) => c.convert()).toList();
   }
 
   @override
@@ -186,7 +170,7 @@ class ArtifactsImpl extends ArtifactsClient {
   Future<ActionMoveResponse> moveTo({required ActionMove action}) async {
     final response =
         await api.getMyCharactersApi().actionMoveMyNameActionMovePost(
-            name: characterName,
+            name: action.characterName,
             destinationSchema: DestinationSchema(
               (b) => b
                 ..x = action.location.x
@@ -194,9 +178,7 @@ class ArtifactsImpl extends ArtifactsClient {
             ));
 
     _throwIfError(response);
-
-    final character = response.data!.data.character.convert();
-    _updateCharacter(character);
+    
     return response.data!.convert();
   }
 
@@ -205,12 +187,10 @@ class ArtifactsImpl extends ArtifactsClient {
       {required ActionGathering action}) async {
     final response = await api
         .getMyCharactersApi()
-        .actionGatheringMyNameActionGatheringPost(name: characterName);
+        .actionGatheringMyNameActionGatheringPost(name: action.characterName);
 
     _throwIfError(response);
 
-    final character = response.data!.data.character.convert();
-    _updateCharacter(character);
     return response.data!.convert();
   }
 
@@ -347,7 +327,7 @@ class ArtifactsImpl extends ArtifactsClient {
       {required ActionAcceptNewTask action}) async {
     final response = await api
         .getMyCharactersApi()
-        .actionAcceptNewTaskMyNameActionTaskNewPost(name: characterName);
+        .actionAcceptNewTaskMyNameActionTaskNewPost(name: action.characterName);
 
     _throwIfError(response);
 
@@ -360,7 +340,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionBuyBankExpansionMyNameActionBankBuyExpansionPost(
-            name: characterName);
+            name: action.characterName);
 
     _throwIfError(response);
 
@@ -372,7 +352,7 @@ class ArtifactsImpl extends ArtifactsClient {
       {required ActionCompleteTask action}) async {
     final response = await api
         .getMyCharactersApi()
-        .actionCompleteTaskMyNameActionTaskCompletePost(name: characterName);
+        .actionCompleteTaskMyNameActionTaskCompletePost(name: action.characterName);
 
     _throwIfError(response);
 
@@ -384,7 +364,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionCraftingMyNameActionCraftingPost(
-            name: characterName, craftingSchema: action.convert());
+            name: action.characterName, craftingSchema: action.convert());
 
     _throwIfError(response);
 
@@ -397,7 +377,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionDeleteItemMyNameActionDeletePost(
-            name: characterName, simpleItemSchema: action.convert());
+            name: action.characterName, simpleItemSchema: action.convert());
 
     _throwIfError(response);
 
@@ -410,7 +390,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionDepositBankMyNameActionBankDepositPost(
-            name: characterName, simpleItemSchema: action.convert());
+            name: action.characterName, simpleItemSchema: action.convert());
 
     _throwIfError(response);
 
@@ -423,7 +403,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionDepositBankGoldMyNameActionBankDepositGoldPost(
-            name: characterName, depositWithdrawGoldSchema: action.convert());
+            name: action.characterName, depositWithdrawGoldSchema: action.convert());
 
     _throwIfError(response);
 
@@ -436,7 +416,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionEquipItemMyNameActionEquipPost(
-            name: characterName, equipSchema: action.convert());
+            name: action.characterName, equipSchema: action.convert());
 
     _throwIfError(response);
 
@@ -447,7 +427,7 @@ class ArtifactsImpl extends ArtifactsClient {
   Future<ActionFightResponse> fight({required ActionFight action}) async {
     final response = await api
         .getMyCharactersApi()
-        .actionFightMyNameActionFightPost(name: characterName);
+        .actionFightMyNameActionFightPost(name: action.characterName);
 
     _throwIfError(response);
 
@@ -460,7 +440,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionGeBuyItemMyNameActionGrandexchangeBuyPost(
-            name: characterName, gEBuyOrderSchema: action.convert());
+            name: action.characterName, gEBuyOrderSchema: action.convert());
 
     _throwIfError(response);
 
@@ -473,7 +453,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionGeCancelSellOrderMyNameActionGrandexchangeCancelPost(
-            name: characterName, gECancelOrderSchema: action.convert());
+            name: action.characterName, gECancelOrderSchema: action.convert());
 
     _throwIfError(response);
 
@@ -486,7 +466,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionGeCreateSellOrderMyNameActionGrandexchangeSellPost(
-            name: characterName, gEOrderCreationrSchema: action.convert());
+            name: action.characterName, gEOrderCreationrSchema: action.convert());
 
     _throwIfError(response);
 
@@ -499,7 +479,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionRecyclingMyNameActionRecyclingPost(
-            name: characterName, recyclingSchema: action.convert());
+            name: action.characterName, recyclingSchema: action.convert());
 
     _throwIfError(response);
 
@@ -510,7 +490,7 @@ class ArtifactsImpl extends ArtifactsClient {
   Future<ActionRestResponse> rest({required ActionRest action}) async {
     final response = await api
         .getMyCharactersApi()
-        .actionRestMyNameActionRestPost(name: characterName);
+        .actionRestMyNameActionRestPost(name: action.characterName);
 
     _throwIfError(response);
 
@@ -522,7 +502,7 @@ class ArtifactsImpl extends ArtifactsClient {
       {required ActionTaskCancel action}) async {
     final response = await api
         .getMyCharactersApi()
-        .actionTaskCancelMyNameActionTaskCancelPost(name: characterName);
+        .actionTaskCancelMyNameActionTaskCancelPost(name: action.characterName);
 
     _throwIfError(response);
 
@@ -534,7 +514,7 @@ class ArtifactsImpl extends ArtifactsClient {
       {required ActionTaskExchange action}) async {
     final response = await api
         .getMyCharactersApi()
-        .actionTaskExchangeMyNameActionTaskExchangePost(name: characterName);
+        .actionTaskExchangeMyNameActionTaskExchangePost(name: action.characterName);
 
     _throwIfError(response);
 
@@ -547,7 +527,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionTaskTradeMyNameActionTaskTradePost(
-            name: characterName, simpleItemSchema: action.convert());
+            name: action.characterName, simpleItemSchema: action.convert());
 
     _throwIfError(response);
 
@@ -560,7 +540,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionUnequipItemMyNameActionUnequipPost(
-            name: characterName, unequipSchema: action.convert());
+            name: action.characterName, unequipSchema: action.convert());
 
     _throwIfError(response);
 
@@ -572,7 +552,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionUseItemMyNameActionUsePost(
-            name: characterName, simpleItemSchema: action.convert());
+            name: action.characterName, simpleItemSchema: action.convert());
 
     _throwIfError(response);
 
@@ -585,7 +565,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionWithdrawBankMyNameActionBankWithdrawPost(
-            name: characterName, simpleItemSchema: action.convert());
+            name: action.characterName, simpleItemSchema: action.convert());
 
     _throwIfError(response);
 
@@ -598,7 +578,7 @@ class ArtifactsImpl extends ArtifactsClient {
     final response = await api
         .getMyCharactersApi()
         .actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost(
-            name: characterName, depositWithdrawGoldSchema: action.convert());
+            name: action.characterName, depositWithdrawGoldSchema: action.convert());
 
     _throwIfError(response);
 

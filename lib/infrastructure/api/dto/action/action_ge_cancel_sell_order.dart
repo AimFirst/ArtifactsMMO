@@ -18,7 +18,7 @@ class ActionGECancelSellOrder extends Action {
   final String id;
 
   ActionGECancelSellOrder({
-    required this.id,
+    required this.id, required super.characterName,
   });
 
   @override

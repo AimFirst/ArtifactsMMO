@@ -25,7 +25,7 @@ class ActionWithdrawBank extends Action {
   final ItemQuantity itemQuantity;
 
   ActionWithdrawBank({
-    required this.itemQuantity,
+    required this.itemQuantity, required super.characterName,
   });
 
   @override

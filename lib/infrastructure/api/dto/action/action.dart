@@ -20,8 +20,12 @@ class ActionResponse with EquatableMixin {
 }
 
 class Action with EquatableMixin {
+  final String characterName;
+
+  Action({required this.characterName});
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [characterName];
 }
 
 class UseSkillResponse with EquatableMixin {

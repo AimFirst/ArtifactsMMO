@@ -18,8 +18,5 @@ class ActionRestResponse extends ActionResponse {
 }
 
 class ActionRest extends Action {
-  @override
-  List<Object?> get props => [
-        ...super.props,
-      ];
+  ActionRest({required super.characterName});
 }

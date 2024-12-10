@@ -29,7 +29,7 @@ class ActionEquipItem extends Action {
   ActionEquipItem({
     required this.code,
     required this.slot,
-    required this.quantity,
+    required this.quantity, required super.characterName,
   });
 
   @override

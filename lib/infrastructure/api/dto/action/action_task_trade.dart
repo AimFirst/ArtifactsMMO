@@ -21,7 +21,7 @@ class ActionTaskTrade extends Action {
   final ItemQuantity itemQuantity;
 
   ActionTaskTrade({
-    required this.itemQuantity,
+    required this.itemQuantity, required super.characterName,
   });
 
   @override

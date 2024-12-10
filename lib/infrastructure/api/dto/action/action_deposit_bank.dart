@@ -25,7 +25,7 @@ class ActionDepositBank extends Action {
   final ItemQuantity itemQuantity;
 
   ActionDepositBank({
-    required this.itemQuantity,
+    required this.itemQuantity, required super.characterName,
   });
 
   @override

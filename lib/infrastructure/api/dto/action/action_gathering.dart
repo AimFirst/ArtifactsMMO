@@ -16,4 +16,6 @@ class ActionGatheringResponse extends ActionResponse {
       ];
 }
 
-class ActionGathering extends Action {}
+class ActionGathering extends Action {
+  ActionGathering({required super.characterName});
+}

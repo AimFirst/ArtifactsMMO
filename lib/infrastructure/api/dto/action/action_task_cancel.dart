@@ -7,4 +7,6 @@ class ActionTaskCancelResponse extends ActionResponse {
   });
 }
 
-class ActionTaskCancel extends Action {}
+class ActionTaskCancel extends Action {
+  ActionTaskCancel({required super.characterName});
+}

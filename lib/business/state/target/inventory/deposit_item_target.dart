@@ -63,7 +63,7 @@ class DepositItemTarget extends Target {
     return TargetProcessResult(
         progress: progress,
         action: artifactsClient.depositBank(
-            action: ActionDepositBank(itemQuantity: quantityToDeposit)),
+            action: ActionDepositBank(characterName: character.name, itemQuantity: quantityToDeposit)),
         description: 'Depositing $quantityToDeposit',
         imageUrl:
             'https://artifactsmmo.com/images/items/${quantityToRemain.code}.png');

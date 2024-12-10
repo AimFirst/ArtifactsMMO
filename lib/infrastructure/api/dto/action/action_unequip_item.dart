@@ -27,7 +27,7 @@ class ActionUnequipItem extends Action {
 
   ActionUnequipItem({
     required this.slot,
-    required this.quantity,
+    required this.quantity, required super.characterName,
   });
 
   @override

@@ -96,7 +96,7 @@ abstract class GatheringTarget extends Target {
     // Start gathering.
     return TargetProcessResult(
       progress: progress,
-      action: artifactsClient.gather(action: ActionGathering()),
+      action: artifactsClient.gather(action: ActionGathering(characterName: character.name)),
       description: 'Gathering $resourceToTarget',
       imageUrl:
           'https://artifactsmmo.com/images/resources/${resourceToTarget.code}.png',

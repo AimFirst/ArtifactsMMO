@@ -17,4 +17,6 @@ class ActionCompleteTaskResponse extends ActionResponse {
       ];
 }
 
-class ActionCompleteTask extends Action {}
+class ActionCompleteTask extends Action {
+  ActionCompleteTask({required super.characterName});
+}

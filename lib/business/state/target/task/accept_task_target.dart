@@ -43,7 +43,7 @@ class AcceptTaskTarget extends Target {
 
     return TargetProcessResult(
       progress: Progress(current: 0, target: 1),
-      action: artifactsClient.acceptNewTask(action: ActionAcceptNewTask()),
+      action: artifactsClient.acceptNewTask(action: ActionAcceptNewTask(characterName: character.name)),
       description: 'Accepting new task',
       imageUrl: 'https://artifactsmmo.com/images/items/forest_whip.png',
     );

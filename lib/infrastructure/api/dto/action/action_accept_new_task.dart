@@ -17,4 +17,6 @@ class ActionAcceptNewTaskResponse extends ActionResponse {
       ];
 }
 
-class ActionAcceptNewTask extends Action {}
+class ActionAcceptNewTask extends Action {
+  ActionAcceptNewTask({required super.characterName});
+}

@@ -21,7 +21,7 @@ class MoveToTarget extends Target {
       return TargetProcessResult(progress: progress, action: null, description: 'At destination $targetLocation', imageUrl: null);
     }
 
-    return TargetProcessResult(progress: progress, action: artifactsClient.moveTo(action: ActionMove(location: targetLocation)), description: 'Moving to $targetLocation', imageUrl: null);
+    return TargetProcessResult(progress: progress, action: artifactsClient.moveTo(action: ActionMove(characterName: character.name, location: targetLocation)), description: 'Moving to $targetLocation', imageUrl: null);
   }
 
   Progress getProgress({required Character character}) {
