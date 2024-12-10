@@ -57,11 +57,14 @@ class TargetBasedUpaView
         _mapWidget(model),
         Positioned(left: 5, top: 5, child: _statusWidget(context, model)),
         Positioned(
-            left: 5, bottom: 5, child: _characterStatusPanel(context, model)),
-        Positioned(
           right: 5,
           bottom: 5,
           child: _menuOptions(model, viewModel),
+        ),
+        Positioned(
+          right: 5,
+          top: 5,
+          child: _characterList(context, model, viewModel),
         ),
         if (selectedMenuItem != null)
           Positioned(
@@ -156,15 +159,15 @@ class TargetBasedUpaView
   }
 
   Widget _characterStatusPanel(
-      BuildContext context, TargetBasedUpaModelLoaded model) {
+      BuildContext context, TargetBasedUpaModelLoaded model, CharacterState characterState) {
     final secondsCooldown =
-        _characterState(model).character.cooldownLeftSeconds;
+        characterState.character.cooldownLeftSeconds;
     return ConstrainedBox(
       constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width * .25,
-          maxWidth: MediaQuery.of(context).size.width * .50),
+          maxWidth: MediaQuery.of(context).size.width * .25),
       child: Card(
-        color: const Color.fromARGB(230, 255, 255, 255),
+        color: characterState.character.name == model.selectedChar ? const Color.fromARGB(230, 200, 200, 255) : const Color.fromARGB(230, 255, 255, 255),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Column(
@@ -172,24 +175,24 @@ class TargetBasedUpaView
               Row(
                 children: [
                   Text(
-                    _characterState(model).character.name,
+                    characterState.character.name,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const Spacer(),
                   Text(
-                      'Level ${_characterState(model).character.overall.level}'),
+                      'Level ${characterState.character.overall.level}'),
                 ],
               ),
-              _progressBarWithText(0, _characterState(model).character.maxHp,
-                  _characterState(model).character.hp, 'HP', Colors.red),
+              _progressBarWithText(0, characterState.character.maxHp,
+                  characterState.character.hp, 'HP', Colors.red),
               const SizedBox(
                 height: 2,
                 width: 1,
               ),
               _progressBarWithText(
                   0,
-                  _characterState(model).character.overall.nextLevelTargetXp,
-                  _characterState(model).character.overall.xp,
+                  characterState.character.overall.nextLevelTargetXp,
+                  characterState.character.overall.xp,
                   'XP',
                   Colors.green),
               const SizedBox(
@@ -198,19 +201,25 @@ class TargetBasedUpaView
               ),
               Countdown(
                 key: Key(
-                    'countdown:${_characterState(model).character.cooldownEnd.toString()}'),
+                    'countdown:${characterState.character.cooldownEnd.toString()}'),
                 seconds: secondsCooldown,
-                interval: const Duration(milliseconds: 100),
+                interval: const Duration(milliseconds: 10),
                 build: (BuildContext context, double timeLeft) {
                   return LinearProgressIndicator(
                     value: timeLeft <= 0 ? 0 : timeLeft / secondsCooldown,
-                  ); // _progressBarWithText(0, secondsCooldown*1000, (timeLeft*1000).round(), 'ms', Colors.blue);
+                  );
                 },
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+  
+  Widget _characterList(BuildContext context, TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel) {
+    return Column(
+      children: model.state.characterStates.values.map((c) => InkWell(onTap: () => viewModel.onCharacterSelected(c.character), child: _characterStatusPanel(context, model, c))).toList(),
     );
   }
 
@@ -358,49 +367,6 @@ class TargetBasedUpaView
           );
         });
   }
-
-  // Widget _menuForInventory(
-  //   TargetBasedUpaModelLoaded model,
-  //   TargetBasedUpaViewModel viewModel,
-  // ) {
-  //   final items = model.state.character.inventoryItems
-  //       .where((i) => i.itemQuantity.quantity > 0)
-  //       .toList();
-  //   return GridView.builder(
-  //       itemCount: items.length,
-  //       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-  //         maxCrossAxisExtent: 150,
-  //         mainAxisSpacing: 5,
-  //         crossAxisSpacing: 5,
-  //         childAspectRatio: 1.0,
-  //       ),
-  //       itemBuilder: (BuildContext context, int index) {
-  //         final inventoryItem = items[index];
-  //         final item = model.state.boardState.items
-  //             .firstWhere((i) => i.code == inventoryItem.itemQuantity.code);
-  //         return InkWell(
-  //           onTap: null,
-  //           child: Container(
-  //             decoration: const BoxDecoration(
-  //                 color: Color.fromARGB(230, 255, 255, 255)),
-  //             child: Column(
-  //               children: [
-  //                 Text(item.name),
-  //                 SizedBox(
-  //                   width: 80,
-  //                   height: 80,
-  //                   child: CachedNetworkImage(
-  //                     imageUrl:
-  //                         'https://artifactsmmo.com/images/items/${item.code}.png',
-  //                   ),
-  //                 ),
-  //                 Text('${inventoryItem.itemQuantity.quantity}'),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
 
   Widget _menuForItems(
     TargetBasedUpaModelLoaded model,

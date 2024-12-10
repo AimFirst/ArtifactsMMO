@@ -121,4 +121,12 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
   Future<void> onTaskTap(Task task) async {
     await _getCurrentTargetManager().startNewTarget(AcceptTaskTarget());
   }
+
+  Future<void> onCharacterSelected(Character character) async {
+    selectedCharacter = character.name;
+    final tempVal = value;
+    if (tempVal is TargetBasedUpaModelLoaded) {
+      value = tempVal.copyWith(selectedChar: selectedCharacter);
+    }
+  }
 }
