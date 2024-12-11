@@ -13,14 +13,67 @@ class ManageInventoryTarget extends Target {
   final Map<String, InventoryItemConstraints> itemConstraints = {
     'ash_wood': InventoryItemConstraints(
         code: 'ash_wood',
-        min: 20,
+        min: 0,
         max: 30,
         overflowSolution: InventoryOverflowSolution.deposit),
     'sap': InventoryItemConstraints(
         code: 'sap',
-        min: 20,
+        min: 0,
         max: 30,
         overflowSolution: InventoryOverflowSolution.deposit),
+    'copper_ore': InventoryItemConstraints(
+      code: 'copper_ore',
+      min: 0,
+      max: 30,
+      overflowSolution: InventoryOverflowSolution.deposit),
+    'yellow_slimeball': InventoryItemConstraints(
+      code: 'yellow_slimeball',
+      min: 0,
+      max: 20,
+      overflowSolution: InventoryOverflowSolution.deposit
+    ),
+    'red_slimeball': InventoryItemConstraints(
+      code: 'red_slimeball',
+      min: 0,
+      max: 20,
+      overflowSolution: InventoryOverflowSolution.deposit
+    ),
+    'feather': InventoryItemConstraints(
+      code: 'feather',
+      min: 0,
+      max: 20,
+      overflowSolution: InventoryOverflowSolution.deposit
+    ),
+    'egg': InventoryItemConstraints(
+        code: 'egg',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit
+    ),
+    'raw_chicken': InventoryItemConstraints(
+        code: 'raw_chicken',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit
+    ),
+    'sunflower': InventoryItemConstraints(
+        code: 'sunflower',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit
+    ),
+    'gudgeon': InventoryItemConstraints(
+        code: 'gudgeon',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit
+    ),
+    'algae': InventoryItemConstraints(
+        code: 'algae',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit
+    ),
     'wooden_staff': InventoryItemConstraints(
         code: 'wooden_staff',
         min: 1,
