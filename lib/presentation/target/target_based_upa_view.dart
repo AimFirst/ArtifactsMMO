@@ -450,6 +450,7 @@ class TargetBasedUpaView
 
   Widget _skillWidget(Skill skill) {
     return InkWell(
+      onTap: () => viewModel.onSkillSelected(skill),
       child: Card(
         color: const Color.fromARGB(230, 255, 255, 255),
         child: Padding(

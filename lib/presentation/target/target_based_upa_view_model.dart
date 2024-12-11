@@ -1,6 +1,7 @@
 import 'package:artifacts_mmo/business/state/character_target_manager.dart';
 import 'package:artifacts_mmo/business/state/state_manager.dart';
 import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
+import 'package:artifacts_mmo/business/state/target/gathering/gathering_skill_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/complete_task_target.dart';
@@ -10,6 +11,7 @@ import 'package:artifacts_mmo/infrastructure/api/artifacts_exception.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task_progress.dart';
 import 'package:artifacts_mmo/presentation/base_view_model.dart';
@@ -128,5 +130,9 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
     if (tempVal is TargetBasedUpaModelLoaded) {
       value = tempVal.copyWith(selectedChar: selectedCharacter);
     }
+  }
+
+  Future<void> onSkillSelected(Skill skill) async {
+    await _getCurrentTargetManager().startNewTarget(GatheringSkillTarget(skillType: skill.skillType, targetLevel: 99));
   }
 }
