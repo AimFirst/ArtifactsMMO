@@ -54,7 +54,16 @@ import 'package:artifacts_mmo/infrastructure/api/impl/conversion/task.dart';
 import 'package:dio/dio.dart';
 
 class ArtifactsImpl extends ArtifactsClient {
-  final api = ArtifactsApi(basePathOverride: "https://api.artifactsmmo.com");
+  final api = ArtifactsApi(
+      basePathOverride: 'https://api.artifactsmmo.com',
+      dio: Dio(
+        BaseOptions(
+          baseUrl: 'https://api.artifactsmmo.com',
+          receiveDataWhenStatusError: true,
+          connectTimeout: const Duration(seconds: 60),
+          receiveTimeout: const Duration(seconds: 60),
+        ),
+      ));
 
   ArtifactsImpl() {
     const token = String.fromEnvironment('ARTIFACTS_TOKEN');
@@ -65,12 +74,31 @@ class ArtifactsImpl extends ArtifactsClient {
     api.setBearerAuth("JWTBearer", token);
   }
 
-  void _throwIfError(Response<dynamic> response) {
-    if (response.statusCode != 200 || response.data == null) {
-      throw ArtifactsException(
-          errorMessage:
-              'Failed to move: ${response.statusCode} - ${response.statusMessage}');
+  void _throwIfError(Response<dynamic>? response, {Exception? ex}) {
+    if (response?.statusCode != 200 || response?.data == null) {
+      throw NetworkArtifactsException(
+          ErrorType.values
+                  .where((e) => e.code == response?.statusCode)
+                  .firstOrNull ??
+              ErrorType.unknown,
+          parent: ex);
     }
+  }
+
+  Future<Response<T>> _checkedServerCall<T>(
+      Future<Response<T>> Function() serverAction) async {
+    try {
+      final response = await serverAction();
+
+      _throwIfError(response);
+
+      return response;
+    } on DioException catch (ex) {
+      _throwIfError(ex.response, ex: ex);
+    }
+
+    throw ArtifactsException(
+        errorMessage: 'Reached end of call with no result.');
   }
 
   @override
@@ -79,13 +107,12 @@ class ArtifactsImpl extends ArtifactsClient {
     int? maxSkillLevel,
     int? pageNumber,
   }) async {
-    final response = await api.getResourcesApi().getAllResourcesResourcesGet(
-          maxLevel: maxSkillLevel,
-          skill: skillType?.convert(),
-          page: pageNumber,
-        );
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(
+        () => api.getResourcesApi().getAllResourcesResourcesGet(
+              maxLevel: maxSkillLevel,
+              skill: skillType?.convert(),
+              page: pageNumber,
+            ));
 
     return PagedResponse(
       total: response.data?.total,
@@ -98,9 +125,8 @@ class ArtifactsImpl extends ArtifactsClient {
 
   @override
   Future<PagedResponse<MapLocation>> getMap({int? pageNumber}) async {
-    final response = await api.getMapsApi().getAllMapsMapsGet(page: pageNumber);
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(
+        () => api.getMapsApi().getAllMapsMapsGet(page: pageNumber));
 
     return PagedResponse(
       total: response.data?.total,
@@ -114,10 +140,8 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<PagedResponse<MapLocation>> getLocationsForContent(
       {required String contentCode}) async {
-    final response =
-        await api.getMapsApi().getAllMapsMapsGet(contentCode: contentCode);
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(
+        () => api.getMapsApi().getAllMapsMapsGet(contentCode: contentCode));
 
     return PagedResponse(
       total: response.data?.total,
@@ -130,10 +154,8 @@ class ArtifactsImpl extends ArtifactsClient {
 
   @override
   Future<MapLocation> getLocationInfo({required Location location}) async {
-    final response =
-        await api.getMapsApi().getMapMapsXYGet(x: location.x, y: location.y);
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(
+        () => api.getMapsApi().getMapMapsXYGet(x: location.x, y: location.y));
 
     return response.data == null
         ? MapLocation.empty()
@@ -142,20 +164,16 @@ class ArtifactsImpl extends ArtifactsClient {
 
   @override
   Future<List<Character>> getCharacters() async {
-    final response =
-        await api.getMyCharactersApi().getMyCharactersMyCharactersGet();
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(
+        () => api.getMyCharactersApi().getMyCharactersMyCharactersGet());
 
     return response.data!.data.map((c) => c.convert()).toList();
   }
 
   @override
   Future<PagedResponse<Task>> getTasks({int? pageNumber}) async {
-    final response =
-        await api.getTasksApi().getAllTasksTasksListGet(page: pageNumber);
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(
+        () => api.getTasksApi().getAllTasksTasksListGet(page: pageNumber));
 
     return PagedResponse(
       total: response.data?.total,
@@ -168,39 +186,33 @@ class ArtifactsImpl extends ArtifactsClient {
 
   @override
   Future<ActionMoveResponse> moveTo({required ActionMove action}) async {
-    final response =
-        await api.getMyCharactersApi().actionMoveMyNameActionMovePost(
+    final response = await _checkedServerCall(
+        () => api.getMyCharactersApi().actionMoveMyNameActionMovePost(
             name: action.characterName,
             destinationSchema: DestinationSchema(
               (b) => b
                 ..x = action.location.x
                 ..y = action.location.y,
-            ));
+            )));
 
-    _throwIfError(response);
-    
     return response.data!.convert();
   }
 
   @override
   Future<ActionGatheringResponse> gather(
       {required ActionGathering action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
-        .actionGatheringMyNameActionGatheringPost(name: action.characterName);
-
-    _throwIfError(response);
+        .actionGatheringMyNameActionGatheringPost(name: action.characterName));
 
     return response.data!.convert();
   }
 
   @override
   Future<PagedResponse<Achievement>> getAchievements({int? pageNumber}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getAchievementsApi()
-        .getAllAchievementsAchievementsGet(page: pageNumber);
-
-    _throwIfError(response);
+        .getAllAchievementsAchievementsGet(page: pageNumber));
 
     return PagedResponse(
       total: response.data?.total,
@@ -213,11 +225,8 @@ class ArtifactsImpl extends ArtifactsClient {
 
   @override
   Future<PagedResponse<ActiveEvent>> getActiveEvents({int? pageNumber}) async {
-    final response = await api
-        .getEventsApi()
-        .getAllActiveEventsEventsActiveGet(page: pageNumber);
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(() =>
+        api.getEventsApi().getAllActiveEventsEventsActiveGet(page: pageNumber));
 
     return PagedResponse(
       total: response.data?.total,
@@ -230,10 +239,8 @@ class ArtifactsImpl extends ArtifactsClient {
 
   @override
   Future<PagedResponse<Event>> getEvents({int? pageNumber}) async {
-    final response =
-        await api.getEventsApi().getAllEventsEventsGet(page: pageNumber);
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(
+        () => api.getEventsApi().getAllEventsEventsGet(page: pageNumber));
 
     return PagedResponse(
       total: response.data?.total,
@@ -246,10 +253,8 @@ class ArtifactsImpl extends ArtifactsClient {
 
   @override
   Future<PagedResponse<Item>> getItems({int? pageNumber}) async {
-    final response =
-        await api.getItemsApi().getAllItemsItemsGet(page: pageNumber);
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(
+        () => api.getItemsApi().getAllItemsItemsGet(page: pageNumber));
 
     return PagedResponse(
       total: response.data?.total,
@@ -262,10 +267,8 @@ class ArtifactsImpl extends ArtifactsClient {
 
   @override
   Future<PagedResponse<Monster>> getMonsters({int? pageNumber}) async {
-    final response =
-        await api.getMonstersApi().getAllMonstersMonstersGet(page: pageNumber);
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(
+        () => api.getMonstersApi().getAllMonstersMonstersGet(page: pageNumber));
 
     return PagedResponse(
       total: response.data?.total,
@@ -282,16 +285,13 @@ class ArtifactsImpl extends ArtifactsClient {
       int? pageNumber,
       String? buyer,
       String? seller}) async {
-    final response = await api
-        .getGrandExchangeApi()
-        .getGeSellHistoryGrandexchangeHistoryCodeGet(
-          page: pageNumber,
-          code: itemCode,
-          buyer: buyer,
-          seller: seller,
-        );
-
-    _throwIfError(response);
+    final response = await _checkedServerCall(() =>
+        api.getGrandExchangeApi().getGeSellHistoryGrandexchangeHistoryCodeGet(
+              page: pageNumber,
+              code: itemCode,
+              buyer: buyer,
+              seller: seller,
+            ));
 
     return PagedResponse(
       total: response.data?.total,
@@ -305,13 +305,11 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<PagedResponse<OpenOrder>> getSellOrders(
       {int? pageNumber, String? seller}) async {
-    final response =
-        await api.getGrandExchangeApi().getGeSellOrdersGrandexchangeOrdersGet(
+    final response = await _checkedServerCall(
+        () => api.getGrandExchangeApi().getGeSellOrdersGrandexchangeOrdersGet(
               page: pageNumber,
               seller: seller,
-            );
-
-    _throwIfError(response);
+            ));
 
     return PagedResponse(
       total: response.data?.total,
@@ -325,11 +323,10 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionAcceptNewTaskResponse> acceptNewTask(
       {required ActionAcceptNewTask action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
-        .actionAcceptNewTaskMyNameActionTaskNewPost(name: action.characterName);
-
-    _throwIfError(response);
+        .actionAcceptNewTaskMyNameActionTaskNewPost(
+            name: action.characterName));
 
     return response.data!.convert();
   }
@@ -337,12 +334,10 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionBuyBankExpansionResponse> buyBankExpansion(
       {required ActionBuyBankExpansion action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionBuyBankExpansionMyNameActionBankBuyExpansionPost(
-            name: action.characterName);
-
-    _throwIfError(response);
+            name: action.characterName));
 
     return response.data!.convert();
   }
@@ -350,23 +345,20 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionCompleteTaskResponse> completeTask(
       {required ActionCompleteTask action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
-        .actionCompleteTaskMyNameActionTaskCompletePost(name: action.characterName);
-
-    _throwIfError(response);
+        .actionCompleteTaskMyNameActionTaskCompletePost(
+            name: action.characterName));
 
     return response.data!.convert();
   }
 
   @override
   Future<ActionCraftingResponse> craft({required ActionCrafting action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionCraftingMyNameActionCraftingPost(
-            name: action.characterName, craftingSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, craftingSchema: action.convert()));
 
     return response.data!.convertToCraftingResponse();
   }
@@ -374,12 +366,10 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionDeleteItemResponse> deleteItem(
       {required ActionDeleteItem action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionDeleteItemMyNameActionDeletePost(
-            name: action.characterName, simpleItemSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, simpleItemSchema: action.convert()));
 
     return response.data!.convert();
   }
@@ -387,12 +377,10 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionDepositBankResponse> depositBank(
       {required ActionDepositBank action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionDepositBankMyNameActionBankDepositPost(
-            name: action.characterName, simpleItemSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, simpleItemSchema: action.convert()));
 
     return response.data!.convert();
   }
@@ -400,12 +388,11 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionDepositBankGoldResponse> depositBankGold(
       {required ActionDepositBankGold action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionDepositBankGoldMyNameActionBankDepositGoldPost(
-            name: action.characterName, depositWithdrawGoldSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName,
+            depositWithdrawGoldSchema: action.convert()));
 
     return response.data!.convert();
   }
@@ -413,36 +400,29 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionEquipItemResponse> equipItem(
       {required ActionEquipItem action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionEquipItemMyNameActionEquipPost(
-            name: action.characterName, equipSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, equipSchema: action.convert()));
 
     return response.data!.convert();
   }
 
   @override
   Future<ActionFightResponse> fight({required ActionFight action}) async {
-    final response = await api
+    final response = await (_checkedServerCall(() => api
         .getMyCharactersApi()
-        .actionFightMyNameActionFightPost(name: action.characterName);
-
-    _throwIfError(response);
-
+        .actionFightMyNameActionFightPost(name: action.characterName)));
     return response.data!.convert();
   }
 
   @override
   Future<ActionGEBuyItemResponse> geBuyItem(
       {required ActionGEBuyItem action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionGeBuyItemMyNameActionGrandexchangeBuyPost(
-            name: action.characterName, gEBuyOrderSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, gEBuyOrderSchema: action.convert()));
 
     return response.data!.convert();
   }
@@ -450,12 +430,10 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionGECancelSellOrderResponse> geCancelSellOrder(
       {required ActionGECancelSellOrder action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionGeCancelSellOrderMyNameActionGrandexchangeCancelPost(
-            name: action.characterName, gECancelOrderSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, gECancelOrderSchema: action.convert()));
 
     return response.data!.convertCancel();
   }
@@ -463,12 +441,11 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionGECreateSellOrderResponse> geCreateSellOrder(
       {required ActionGECreateSellOrder action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionGeCreateSellOrderMyNameActionGrandexchangeSellPost(
-            name: action.characterName, gEOrderCreationrSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName,
+            gEOrderCreationrSchema: action.convert()));
 
     return response.data!.convert();
   }
@@ -476,23 +453,19 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionRecyclingResponse> recycle(
       {required ActionRecycling action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionRecyclingMyNameActionRecyclingPost(
-            name: action.characterName, recyclingSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, recyclingSchema: action.convert()));
 
     return response.data!.convert();
   }
 
   @override
   Future<ActionRestResponse> rest({required ActionRest action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
-        .actionRestMyNameActionRestPost(name: action.characterName);
-
-    _throwIfError(response);
+        .actionRestMyNameActionRestPost(name: action.characterName));
 
     return response.data!.convert();
   }
@@ -500,11 +473,10 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionTaskCancelResponse> taskCancel(
       {required ActionTaskCancel action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
-        .actionTaskCancelMyNameActionTaskCancelPost(name: action.characterName);
-
-    _throwIfError(response);
+        .actionTaskCancelMyNameActionTaskCancelPost(
+            name: action.characterName));
 
     return response.data!.convert();
   }
@@ -512,11 +484,10 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionTaskExchangeResponse> taskExchange(
       {required ActionTaskExchange action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
-        .actionTaskExchangeMyNameActionTaskExchangePost(name: action.characterName);
-
-    _throwIfError(response);
+        .actionTaskExchangeMyNameActionTaskExchangePost(
+            name: action.characterName));
 
     return response.data!.convertExchange();
   }
@@ -524,12 +495,10 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionTaskTradeResponse> taskTrade(
       {required ActionTaskTrade action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionTaskTradeMyNameActionTaskTradePost(
-            name: action.characterName, simpleItemSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, simpleItemSchema: action.convert()));
 
     return response.data!.convert();
   }
@@ -537,24 +506,20 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionUnequipItemResponse> unequipItem(
       {required ActionUnequipItem action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionUnequipItemMyNameActionUnequipPost(
-            name: action.characterName, unequipSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, unequipSchema: action.convert()));
 
     return response.data!.convertUnequip();
   }
 
   @override
   Future<ActionUseItemResponse> useItem({required ActionUseItem action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionUseItemMyNameActionUsePost(
-            name: action.characterName, simpleItemSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, simpleItemSchema: action.convert()));
 
     return response.data!.convert();
   }
@@ -562,12 +527,10 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionWithdrawBankResponse> withdrawBank(
       {required ActionWithdrawBank action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionWithdrawBankMyNameActionBankWithdrawPost(
-            name: action.characterName, simpleItemSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName, simpleItemSchema: action.convert()));
 
     return response.data!.convertWithdraw();
   }
@@ -575,12 +538,11 @@ class ArtifactsImpl extends ArtifactsClient {
   @override
   Future<ActionWithdrawBankGoldResponse> withdrawBankGold(
       {required ActionWithdrawBankGold action}) async {
-    final response = await api
+    final response = await _checkedServerCall(() => api
         .getMyCharactersApi()
         .actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost(
-            name: action.characterName, depositWithdrawGoldSchema: action.convert());
-
-    _throwIfError(response);
+            name: action.characterName,
+            depositWithdrawGoldSchema: action.convert()));
 
     return response.data!.convertWithdraw();
   }
