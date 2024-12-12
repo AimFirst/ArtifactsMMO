@@ -140,4 +140,8 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
   Future<void> onSkillSelected(Skill skill) async {
     await _getCurrentTargetManager().startNewTarget(GatheringSkillTarget(skillType: skill.skillType, targetLevel: 99));
   }
+
+  Future<void> toggleTeamPlayer(Character character) async {
+    stateManager.toggleTeamPlayer(character.name);
+  }
 }

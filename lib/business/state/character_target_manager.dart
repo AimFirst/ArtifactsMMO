@@ -21,7 +21,7 @@ class CharacterTargetManager {
   final BehaviorSubject<CharacterState> _stateSubject = BehaviorSubject();
   final BankManager bankManager;
 
-  Stream<CharacterState> get stateStream => _stateSubject.stream;
+  ValueStream<CharacterState> get stateStream => _stateSubject;
 
   CancelableOperation<void>? _cancelableProcess;
 

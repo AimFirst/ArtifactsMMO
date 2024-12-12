@@ -11,6 +11,9 @@ import 'package:artifacts_mmo/business/state/board/resource_manager.dart';
 import 'package:artifacts_mmo/business/state/board/task_manager.dart';
 import 'package:artifacts_mmo/business/state/character_target_manager.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/target/no_target.dart';
+import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
+import 'package:artifacts_mmo/business/state/target/team/team_target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -25,6 +28,8 @@ class StateManager {
   final MonsterManager monsterManager;
   final ResourceManager resourceManager;
   final TaskManager taskManager;
+
+  final teamManager = TeamManager();
 
   final ArtifactsClient artifactsClient;
 
@@ -164,6 +169,35 @@ class StateManager {
         _stateSubject.value =
             _stateSubject.value.copyWith(characterStates: {...currentState});
       });
+    }
+  }
+
+  void toggleTeamPlayer(String characterName) {
+
+    final targetManager = characterTargetManagers[characterName];
+    if (targetManager != null) {
+      if (teamManager.characters.containsKey(characterName)) {
+        removeCharacterFromTeam(characterName);
+      } else {
+        addCharacterToTeam(characterName);
+      }
+    }
+  }
+  
+  void addCharacterToTeam(String characterName) {
+    final targetManager = characterTargetManagers[characterName];
+    if (targetManager != null) {
+        teamManager.addCharacter(targetManager.stateStream);
+      targetManager.startNewTarget(
+          TeamTarget(teamManager: teamManager));
+    }
+  }
+
+  void removeCharacterFromTeam(String characterName) {
+    final targetManager = characterTargetManagers[characterName];
+    if (targetManager != null) {
+      teamManager.removeCharacter(targetManager.stateStream);
+      targetManager.startNewTarget(NoTarget());
     }
   }
 }
