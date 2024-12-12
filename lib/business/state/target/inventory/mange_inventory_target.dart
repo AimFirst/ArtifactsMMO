@@ -16,8 +16,18 @@ class ManageInventoryTarget extends Target {
         min: 0,
         max: 30,
         overflowSolution: InventoryOverflowSolution.deposit),
+    'spruce_wood': InventoryItemConstraints(
+        code: 'spruce_wood',
+        min: 0,
+        max: 30,
+        overflowSolution: InventoryOverflowSolution.deposit),
     'sap': InventoryItemConstraints(
         code: 'sap',
+        min: 0,
+        max: 30,
+        overflowSolution: InventoryOverflowSolution.deposit),
+    'apple': InventoryItemConstraints(
+        code: 'apple',
         min: 0,
         max: 30,
         overflowSolution: InventoryOverflowSolution.deposit),
@@ -26,6 +36,11 @@ class ManageInventoryTarget extends Target {
       min: 0,
       max: 30,
       overflowSolution: InventoryOverflowSolution.deposit),
+    'iron_ore': InventoryItemConstraints(
+        code: 'iron_ore',
+        min: 0,
+        max: 30,
+        overflowSolution: InventoryOverflowSolution.deposit),
     'yellow_slimeball': InventoryItemConstraints(
       code: 'yellow_slimeball',
       min: 0,

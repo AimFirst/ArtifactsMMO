@@ -67,4 +67,5 @@ enum MenuItemType {
   skills,
   items,
   tasks,
+  bank,
 }

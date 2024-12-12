@@ -1,8 +1,11 @@
+import 'package:artifacts_mmo/business/state/board/bank_manager.dart';
 import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/business/state/target/no_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_bank_gold.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/action/action_bank_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:async/async.dart';
 import 'package:rxdart/rxdart.dart';
@@ -13,8 +16,10 @@ class CharacterTargetManager {
   bool needsToStop = false;
 
   final ArtifactsClient artifactsClient;
-  final BoardState boardState;
+  final Stream<BoardState> boardStateStream;
+  BoardState boardState = BoardState.empty();
   final BehaviorSubject<CharacterState> _stateSubject = BehaviorSubject();
+  final BankManager bankManager;
 
   Stream<CharacterState> get stateStream => _stateSubject.stream;
 
@@ -23,10 +28,15 @@ class CharacterTargetManager {
   CharacterTargetManager({
     required this.character,
     required this.artifactsClient,
-    required this.boardState,
+    required this.boardStateStream,
+    required this.bankManager,
   });
 
   Future<void> init() async {
+    boardStateStream.listen((b) =>
+    boardState = b
+    );
+
     _stateSubject.value = CharacterState(
         character: character,
         target: NoTarget(),
@@ -78,6 +88,11 @@ class CharacterTargetManager {
 
       // Update the character after this action.
       final result = await update.action;
+      if (result is ActionBankGoldResponse) {
+        bankManager.updateBankGold(result.bank);
+      } else if (result is ActionBankItemResponse) {
+        bankManager.updateBankItems(result.bank);
+      }
       character = result?.character ?? character;
       _stateSubject.value = CharacterState(
           character: character, target: _target, processResult: update);

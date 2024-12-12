@@ -27,10 +27,12 @@ import 'package:artifacts_mmo/infrastructure/api/dto/action/action_unequip_item.
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_use_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_withdraw_bank.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_withdraw_bank_gold.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/bank/bank_details.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/active_event.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/event.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
@@ -42,6 +44,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/achievement.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/action.dart';
+import 'package:artifacts_mmo/infrastructure/api/impl/conversion/bank.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/event.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/item.dart';
@@ -545,5 +548,30 @@ class ArtifactsImpl extends ArtifactsClient {
             depositWithdrawGoldSchema: action.convert()));
 
     return response.data!.convertWithdraw();
+  }
+
+  @override
+  Future<PagedResponse<ItemQuantity>> getBankItems({required int pageNumber}) async {
+    final response = await _checkedServerCall(
+            () => api.getMyAccountApi().getBankItemsMyBankItemsGet(
+          page: pageNumber,
+        ));
+
+    return PagedResponse(
+      total: response.data?.total,
+      page: response.data?.page,
+      size: response.data?.size,
+      pages: response.data?.pages,
+      data: response.data?.data.map((r) => r.convert()).toList() ?? [],
+    );
+  }
+
+  @override
+  Future<BankDetails> getBankDetails() async {
+    final response = await _checkedServerCall(
+        () => api.getMyAccountApi().getBankDetailsMyBankGet()
+    );
+
+    return response.data!.convert();
   }
 }

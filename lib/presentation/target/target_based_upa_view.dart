@@ -282,6 +282,8 @@ class TargetBasedUpaView
         return 'Inventory (${_characterState(model).character.inventoryItems.fold(0, (a, b) => a + b.itemQuantity.quantity)}/${_characterState(model).character.inventoryMaxItems})';
       case MenuItemType.skills:
         return 'Skills';
+      case MenuItemType.bank:
+        return 'Bank (${model.state.boardState.bankItems.where((b) => b.quantity > 0).length}/${model.state.boardState.bankDetails.slots})';
     }
   }
 
@@ -295,6 +297,8 @@ class TargetBasedUpaView
         return _menuForSkills(model, viewModel);
       case MenuItemType.tasks:
         return _menuForTasks(model, viewModel);
+      case MenuItemType.bank:
+        return _menuForBank(model, viewModel);
     }
   }
 
@@ -541,6 +545,72 @@ class TargetBasedUpaView
     return InkWell(
         onTap: () => viewModel.onTaskTap(task),
         child: Card(child: Text('$task')));
+  }
+
+  Widget _menuForBank(
+      TargetBasedUpaModelLoaded model,
+      TargetBasedUpaViewModel viewModel,
+      ) {
+    return GridView.builder(
+        itemCount: model.state.boardState.bankItems
+            .where((i) => i.quantity > 0)
+            .toList()
+            .length,
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 150,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: 5,
+          childAspectRatio: 1.0,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          final inventoryItem = model.state.boardState.bankItems
+              .where((i) => i.quantity > 0)
+              .toList()[index];
+          final item = model.state.boardState.items
+              .where((i) => i.code == inventoryItem.code)
+              .first;
+          final controller = TextEditingController(
+              text: '${inventoryItem.quantity}');
+          return InkWell(
+            onTap: null,
+            child: Container(
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(230, 255, 255, 255)),
+              child: Column(
+                children: [
+                  Text(item.name),
+                  SizedBox(
+                    width: 55,
+                    height: 55,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl:
+                      'https://artifactsmmo.com/images/items/${item.code}.png',
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                    child: TextField(
+                      maxLines: 1,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 0),
+                        border: OutlineInputBorder(),
+                      ),
+                      controller: controller,
+                    ),
+                  ),
+                  FilledButton(
+                    onPressed: () => viewModel.onItemDestroy(
+                        item, int.parse(controller.text)),
+                    child: const Text('Maintain'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Widget _menuOption({

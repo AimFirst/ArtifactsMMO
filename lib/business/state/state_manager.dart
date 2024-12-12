@@ -1,136 +1,169 @@
+import 'dart:async';
+
+import 'package:artifacts_mmo/business/state/board/achievement_manager.dart';
+import 'package:artifacts_mmo/business/state/board/bank_manager.dart';
+import 'package:artifacts_mmo/business/state/board/board_element_manager.dart';
+import 'package:artifacts_mmo/business/state/board/event_manager.dart';
+import 'package:artifacts_mmo/business/state/board/item_manager.dart';
+import 'package:artifacts_mmo/business/state/board/map_manager.dart';
+import 'package:artifacts_mmo/business/state/board/monster_manager.dart';
+import 'package:artifacts_mmo/business/state/board/resource_manager.dart';
+import 'package:artifacts_mmo/business/state/board/task_manager.dart';
 import 'package:artifacts_mmo/business/state/character_target_manager.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/paged_response.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StateManager {
-  final BoardState boardState = BoardState();
+  late final BehaviorSubject<BoardState> boardStateStream;
+  BoardState _boardState = BoardState.empty();
+  final AchievementManager achievementManager;
+  final BankManager bankManager;
+  final EventManager eventManager;
+  final ItemManager itemManager;
+  final MapManager mapManager;
+  final MonsterManager monsterManager;
+  final ResourceManager resourceManager;
+  final TaskManager taskManager;
 
   final ArtifactsClient artifactsClient;
 
-  final BehaviorSubject<State> _stateSubject = BehaviorSubject();
+  final BehaviorSubject<State> _stateSubject =
+      BehaviorSubject.seeded(State.empty());
   final Map<String, CharacterTargetManager> characterTargetManagers = {};
 
   Stream<State> get stateStream => _stateSubject.stream;
 
-  StateManager({required this.artifactsClient});
+  List<BoardElementManager> get _managers => [
+        achievementManager,
+        bankManager,
+        eventManager,
+        itemManager,
+        mapManager,
+        monsterManager,
+        resourceManager,
+        taskManager,
+      ];
+
+  StateManager({required this.artifactsClient})
+      : achievementManager =
+            AchievementManager(artifactsClient: artifactsClient),
+        bankManager = BankManager(artifactsClient: artifactsClient),
+        eventManager = EventManager(artifactsClient: artifactsClient),
+        itemManager = ItemManager(artifactsClient: artifactsClient),
+        mapManager = MapManager(artifactsClient: artifactsClient),
+        monsterManager = MonsterManager(artifactsClient: artifactsClient),
+        resourceManager = ResourceManager(artifactsClient: artifactsClient),
+        taskManager = TaskManager(artifactsClient: artifactsClient) {
+    boardStateStream = BehaviorSubject.seeded(BoardState.empty())..addStream(combineLatestAll(
+      achievementManager.achievementsSubject,
+      bankManager.bankItemsSubject,
+      bankManager.bankDetailsSubject,
+      eventManager.activeEventsSubject,
+      itemManager.itemsByCraftTypeSubject,
+      itemManager.itemsSubject,
+      mapManager.contentLocationSubject,
+      mapManager.mapSubject,
+      monsterManager.dropsFromMonstersSubject,
+      monsterManager.monsterSubject,
+      resourceManager.dropsFromResourcesSubject,
+      resourceManager.resourcesSubject,
+      taskManager.tasksSubject,
+      (a, b, c, d, e, f, g, h, i, j, k, l, m) => BoardState(
+        map: h,
+        resources: l,
+        contentLocations: g,
+        dropsFromResources: k,
+        itemsByCraftType: e,
+        items: f,
+        monsters: j,
+        dropsFromMonsters: i,
+        activeEvents: d,
+        tasks: m,
+        achievements: a,
+        bankItems: b,
+        bankDetails: c,
+      ),
+    ));
+  }
+
+  static Stream<T> combineLatestAll<A, B, C, D, E, F, G, H, I, J, K, L, M, T>(
+    Stream<A> streamA,
+    Stream<B> streamB,
+    Stream<C> streamC,
+    Stream<D> streamD,
+    Stream<E> streamE,
+    Stream<F> streamF,
+    Stream<G> streamG,
+    Stream<H> streamH,
+    Stream<I> streamI,
+    Stream<J> streamJ,
+    Stream<K> streamK,
+    Stream<L> streamL,
+    Stream<M> streamM,
+    T Function(A a, B b, C c, D d, E e, F f, G g, H h, I i, J j, K k, L l, M m)
+        combiner,
+  ) =>
+      CombineLatestStream<dynamic, T>(
+        [
+          streamA,
+          streamB,
+          streamC,
+          streamD,
+          streamE,
+          streamF,
+          streamG,
+          streamH,
+          streamI,
+          streamJ,
+          streamK,
+          streamL,
+          streamM,
+        ],
+        (List<dynamic> values) {
+          return combiner(
+            values[0] as A,
+            values[1] as B,
+            values[2] as C,
+            values[3] as D,
+            values[4] as E,
+            values[5] as F,
+            values[6] as G,
+            values[7] as H,
+            values[8] as I,
+            values[9] as J,
+            values[10] as K,
+            values[11] as L,
+            values[12] as M,
+          );
+        },
+      );
 
   Future<void> init() async {
-    await Future.wait([
-      _fetchMap(),
-      _fetchItems(),
-      _fetchMonsters(),
-      _fetchActiveEvents(),
-      _fetchTasks(),
-      _fetchAchievements(),
-      _fetchResources(),
-    ]);
-    _stateSubject.value =
-        State(boardState: boardState, characterStates: {});
+    await Future.wait(_managers.map((m) => m.init()));
+    boardStateStream.listen((b) {
+      _boardState = b;
+      var tempValue = _stateSubject.value;
+      tempValue = tempValue.copyWith(boardState: b);
+      _stateSubject.value = tempValue;
+    });
+    _stateSubject.value = State(boardState: _boardState, characterStates: {});
     final characters = await artifactsClient.getCharacters();
     for (final c in characters) {
       final characterTargetManager = CharacterTargetManager(
         character: c,
         artifactsClient: artifactsClient,
-        boardState: boardState,
+        boardStateStream: boardStateStream,
+        bankManager: bankManager,
       );
       characterTargetManagers[c.name] = characterTargetManager;
       await characterTargetManager.init();
       characterTargetManager.stateStream.listen((c) {
         final currentState = {..._stateSubject.value.characterStates};
         currentState[c.character.name] = c;
-        _stateSubject.value = _stateSubject.value.copyWith(characterStates: {...currentState});
+        _stateSubject.value =
+            _stateSubject.value.copyWith(characterStates: {...currentState});
       });
     }
-  }
-
-  Future<void> _fetchMap() async {
-    final results = await _loadAllPaged(
-        (int page) => artifactsClient.getMap(pageNumber: page));
-    for (final mapLocation in results) {
-      boardState.map[mapLocation.location] = mapLocation;
-      final content = mapLocation.content;
-      if (content != null) {
-        final existingContentList = boardState.contentLocations[content] ?? [];
-        existingContentList.add(mapLocation.location);
-        boardState.contentLocations[content] = existingContentList;
-      }
-    }
-  }
-
-  Future<void> _fetchItems() async {
-    final items = await _loadAllPaged(
-      (int page) => artifactsClient.getItems(pageNumber: page),
-    );
-    boardState.items = items;
-    for (final skillType in SkillType.values) {
-      final itemsForType =
-          items.where((i) => i.craft?.skill == skillType).toList();
-      boardState.itemsByCraftType[skillType] = itemsForType;
-    }
-  }
-
-  Future<void> _fetchMonsters() async {
-    final results = await _loadAllPaged(
-      (int page) => artifactsClient.getMonsters(pageNumber: page),
-    );
-    boardState.monsters = results;
-    for (final monster in results) {
-      for (final drop in monster.drops) {
-        final content = Content(type: ContentType.item, code: drop.code);
-        final existingEntry = boardState.dropsFromMonsters[content] ?? [];
-        existingEntry.add(monster);
-        boardState.dropsFromMonsters[content] = existingEntry;
-      }
-    }
-  }
-
-  Future<void> _fetchActiveEvents() async {
-    boardState.activeEvents = await _loadAllPaged(
-      (int page) => artifactsClient.getActiveEvents(pageNumber: page),
-    );
-  }
-
-  Future<void> _fetchTasks() async {
-    boardState.tasks = await _loadAllPaged(
-      (int page) => artifactsClient.getTasks(pageNumber: page),
-    );
-  }
-
-  Future<void> _fetchAchievements() async {
-    boardState.achievements = await _loadAllPaged(
-      (int page) => artifactsClient.getAchievements(pageNumber: page),
-    );
-  }
-
-  Future<void> _fetchResources() async {
-    final results = await _loadAllPaged(
-        (int page) => artifactsClient.getResources(pageNumber: page));
-    boardState.resources = results;
-    for (final resource in results) {
-      for (final drop in resource.drops) {
-        final content = Content(type: ContentType.item, code: drop.code);
-        final existingEntry = boardState.dropsFromResources[content] ?? [];
-        existingEntry.add(resource);
-        boardState.dropsFromResources[content] = existingEntry;
-      }
-    }
-  }
-
-  Future<List<V>> _loadAllPaged<V, T extends PagedResponse<V>>(
-    Future<PagedResponse<V>> Function(int) fetcher,
-  ) async {
-    final result = <V>[];
-    var nextPage = 1;
-    var totalPages = 0;
-    do {
-      final response = await fetcher(nextPage);
-      result.addAll(response.data);
-      totalPages = response.pages ?? 1;
-    } while (nextPage++ < totalPages);
-    return result;
   }
 }

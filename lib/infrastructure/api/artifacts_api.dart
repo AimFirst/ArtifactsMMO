@@ -22,10 +22,12 @@ import 'package:artifacts_mmo/infrastructure/api/dto/action/action_unequip_item.
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_use_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_withdraw_bank.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_withdraw_bank_gold.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/bank/bank_details.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/active_event.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/event.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
@@ -79,6 +81,10 @@ abstract class ArtifactsClient {
     String? buyer,
     String? seller,
   });
+
+  // Bank
+  Future<PagedResponse<ItemQuantity>> getBankItems({required int pageNumber});
+  Future<BankDetails> getBankDetails();
 
   // Actions
   Future<ActionMoveResponse> moveTo({required ActionMove action});

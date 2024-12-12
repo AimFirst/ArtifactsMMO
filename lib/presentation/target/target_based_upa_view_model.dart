@@ -41,6 +41,11 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
       url: 'https://artifactsmmo.com/images/items/ruby_book.png',
       name: 'Items',
     ),
+    MenuItemType.bank: MenuOption(
+      type: MenuItemType.bank,
+      url: 'https://artifactsmmo.com/images/items/bag_of_gold.png',
+      name: 'Bank',
+    ),
   };
   String selectedCharacter = '';
 

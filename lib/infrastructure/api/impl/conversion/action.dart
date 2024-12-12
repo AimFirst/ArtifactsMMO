@@ -438,7 +438,7 @@ extension BankGoldTransactionResponseSchemaConversions
 
 extension ActionDepositBankGoldConversions on ActionDepositBankGold {
   DepositWithdrawGoldSchema convert() {
-    return (DepositWithdrawGoldSchemaBuilder()..quantity = quantity).build();
+    return (DepositWithdrawGoldSchemaBuilder()..quantity = bank).build();
   }
 }
 
