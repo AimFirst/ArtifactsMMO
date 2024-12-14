@@ -645,6 +645,14 @@ abstract class TeamRoleTarget extends Target {
       bool hasEnough = true;
       for (final ingredientQuantity
           in option.craft?.items ?? <ItemQuantity>[]) {
+
+        // Don't use any rare resources for level up crafting.
+        if (boardState.items.where((i) => i.code == ingredientQuantity.code).first.subType == 'task') {
+          hasEnough = false;
+          break;
+        }
+
+        // Check how many we currently have in our inventory and bank
         final ownedCount = character.inventoryItems.fold(
                 0,
                 (o, i) =>
@@ -656,6 +664,8 @@ abstract class TeamRoleTarget extends Target {
                 0,
                 (o, b) =>
                     o + (b.code == ingredientQuantity.code ? b.quantity : 0));
+
+        //  Not enough, this is not a viable craft.
         if (ownedCount < ingredientQuantity.quantity) {
           hasEnough = false;
           break;
@@ -674,6 +684,8 @@ abstract class TeamRoleTarget extends Target {
                   (i.itemQuantity.code == ingredientQuantity.code
                       ? i.itemQuantity.quantity
                       : 0));
+
+          // We do, pull it from the bank.
           if (inventoryCount < ingredientQuantity.quantity) {
             return WithdrawItemTarget(quantityToMaintain: ingredientQuantity)
                 .update(
@@ -700,6 +712,7 @@ abstract class TeamRoleTarget extends Target {
       }
     }
 
+    // Didn't find any valid items to craft.
     return TargetProcessResult(
         progress: Progress.done(),
         action: null,
