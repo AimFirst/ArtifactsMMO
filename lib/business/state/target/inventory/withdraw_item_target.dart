@@ -3,7 +3,6 @@ import 'package:artifacts_mmo/business/state/target/move/move_to_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_exception.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/action/action_deposit_bank.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_withdraw_bank.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';

@@ -1,5 +1,4 @@
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action.dart';
-import 'package:equatable/equatable.dart';
 
 class ActionRestResponse extends ActionResponse {
   final int hpRestored;

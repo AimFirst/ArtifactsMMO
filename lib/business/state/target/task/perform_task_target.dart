@@ -1,8 +1,6 @@
 import 'package:artifacts_mmo/business/state/state.dart';
-import 'package:artifacts_mmo/business/state/target/fight/fight_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/fight/fight_monster_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
-import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_exception.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';

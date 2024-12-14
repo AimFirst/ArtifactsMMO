@@ -1,7 +1,6 @@
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
-import 'package:equatable/equatable.dart';
 
 class ActionMoveResponse extends ActionResponse {
   final MapLocation destination;

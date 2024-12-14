@@ -1,5 +1,4 @@
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 
