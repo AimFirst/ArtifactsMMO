@@ -1,15 +1,16 @@
+import 'package:artifacts_mmo/infrastructure/api/dto/item/equipment_slot.dart';
 import 'package:equatable/equatable.dart';
 
 class EquipmentLoadout with EquatableMixin {
-  final EquipmentSlot weapon;
-  final EquipmentSlot shield;
-  final EquipmentSlot helmet;
-  final EquipmentSlot bodyArmor;
-  final EquipmentSlot legArmor;
-  final EquipmentSlot boots;
-  final List<EquipmentSlot> rings;
-  final EquipmentSlot amulet;
-  final List<EquipmentSlot> artifacts;
+  final EquipmentSlotItem weapon;
+  final EquipmentSlotItem shield;
+  final EquipmentSlotItem helmet;
+  final EquipmentSlotItem bodyArmor;
+  final EquipmentSlotItem legArmor;
+  final EquipmentSlotItem boots;
+  final List<EquipmentSlotItem> rings;
+  final EquipmentSlotItem amulet;
+  final List<EquipmentSlotItem> artifacts;
   final List<QuantityEquipmentSlot> utilities;
 
   EquipmentLoadout({
@@ -26,19 +27,20 @@ class EquipmentLoadout with EquatableMixin {
   });
 
   EquipmentLoadout.empty()
-      : weapon = EquipmentSlot.empty(),
-        shield = EquipmentSlot.empty(),
-        helmet = EquipmentSlot.empty(),
-        bodyArmor = EquipmentSlot.empty(),
-        legArmor = EquipmentSlot.empty(),
-        boots = EquipmentSlot.empty(),
+      : weapon = EquipmentSlotItem.empty(),
+        shield = EquipmentSlotItem.empty(),
+        helmet = EquipmentSlotItem.empty(),
+        bodyArmor = EquipmentSlotItem.empty(),
+        legArmor = EquipmentSlotItem.empty(),
+        boots = EquipmentSlotItem.empty(),
         rings = [],
-        amulet = EquipmentSlot.empty(),
+        amulet = EquipmentSlotItem.empty(),
         artifacts = [],
         utilities = [];
 
   @override
-  List<Object?> get props => [
+  List<Object?> get props =>
+      [
         weapon,
         shield,
         helmet,
@@ -50,23 +52,44 @@ class EquipmentLoadout with EquatableMixin {
         artifacts,
         utilities,
       ];
+
+  Map<EquipmentSlot, QuantityEquipmentSlot> get equipmentSlots => {
+    EquipmentSlot.weapon: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: weapon),
+    EquipmentSlot.shield: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: shield),
+    EquipmentSlot.helmet: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: helmet),
+    EquipmentSlot.bodyArmor: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: bodyArmor),
+    EquipmentSlot.legArmor: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: legArmor),
+    EquipmentSlot.boots: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: boots),
+    EquipmentSlot.amulet: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: amulet),
+    EquipmentSlot.artifact1: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: artifacts.isNotEmpty ? artifacts[0] : EquipmentSlotItem.empty()),
+    EquipmentSlot.artifact2: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: artifacts.length > 1 ? artifacts[1] : EquipmentSlotItem.empty()),
+    EquipmentSlot.artifact3: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: artifacts.length > 2 ? artifacts[2] : EquipmentSlotItem.empty()),
+    EquipmentSlot.ring1: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: rings.isNotEmpty ? rings[0] : EquipmentSlotItem.empty()),
+    EquipmentSlot.ring2: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: artifacts.length > 1 ? rings[1] : EquipmentSlotItem.empty()),
+    EquipmentSlot.utility1: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: utilities.isNotEmpty ? utilities[1] : EquipmentSlotItem.empty()),
+    EquipmentSlot.utility2: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: utilities.length > 1 ? utilities[1] : EquipmentSlotItem.empty()),
+  };
+
 }
 
-class EquipmentSlot with EquatableMixin {
+class EquipmentSlotItem with EquatableMixin {
   final EquipmentType equipmentType;
+  final EquipmentSlot equipmentSlot;
   final String? itemCode;
 
-  EquipmentSlot({
+  EquipmentSlotItem({
     required this.equipmentType,
+    required this.equipmentSlot,
     required this.itemCode,
   });
 
-  EquipmentSlot.empty()
+  EquipmentSlotItem.empty()
       : equipmentType = EquipmentType.weapon,
+        equipmentSlot = EquipmentSlot.weapon,
         itemCode = null;
 
   @override
-  List<Object?> get props => [equipmentType, itemCode];
+  List<Object?> get props => [equipmentType, equipmentSlot, itemCode];
 }
 
 enum EquipmentType {
@@ -82,13 +105,15 @@ enum EquipmentType {
   utility,
 }
 
-class QuantityEquipmentSlot extends EquipmentSlot {
+class QuantityEquipmentSlot extends EquipmentSlotItem {
   final int quantity;
 
-  QuantityEquipmentSlot(
-      {required super.equipmentType,
-      required super.itemCode,
-      required this.quantity});
+  QuantityEquipmentSlot({required super.equipmentType,
+    required super.equipmentSlot,
+    required super.itemCode,
+    required this.quantity});
+
+  QuantityEquipmentSlot.fromEquipmentSlotItem({required EquipmentSlotItem slot}) : this(equipmentType: slot.equipmentType, equipmentSlot: slot.equipmentSlot, itemCode: slot.itemCode, quantity: 1);
 
   @override
   List<Object?> get props => [...super.props, quantity];

@@ -1,6 +1,7 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/equipment.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/equipment_slot.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart' as sk;
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
@@ -67,41 +68,71 @@ extension CharacterExtension on CharacterSchema {
       inventoryMaxItems: inventoryMaxItems,
       inventoryItems: inventory?.map((i) => i.convert()).toList() ?? [],
       equipmentLoadout: EquipmentLoadout(
-        weapon: EquipmentSlot(
-            equipmentType: EquipmentType.weapon, itemCode: weaponSlot),
-        shield: EquipmentSlot(
-            equipmentType: EquipmentType.shield, itemCode: shieldSlot),
-        helmet: EquipmentSlot(
-            equipmentType: EquipmentType.helmet, itemCode: helmetSlot),
-        bodyArmor: EquipmentSlot(
-            equipmentType: EquipmentType.bodyArmor, itemCode: bodyArmorSlot),
-        legArmor: EquipmentSlot(
-            equipmentType: EquipmentType.legArmor, itemCode: legArmorSlot),
-        boots: EquipmentSlot(
-            equipmentType: EquipmentType.boots, itemCode: bootsSlot),
+        weapon: EquipmentSlotItem(
+            equipmentType: EquipmentType.weapon,
+            itemCode: weaponSlot,
+            equipmentSlot: EquipmentSlot.weapon),
+        shield: EquipmentSlotItem(
+            equipmentType: EquipmentType.shield,
+            itemCode: shieldSlot,
+            equipmentSlot: EquipmentSlot.shield),
+        helmet: EquipmentSlotItem(
+            equipmentType: EquipmentType.helmet,
+            itemCode: helmetSlot,
+            equipmentSlot: EquipmentSlot.helmet),
+        bodyArmor: EquipmentSlotItem(
+            equipmentType: EquipmentType.bodyArmor,
+            itemCode: bodyArmorSlot,
+            equipmentSlot: EquipmentSlot.bodyArmor),
+        legArmor: EquipmentSlotItem(
+            equipmentType: EquipmentType.legArmor,
+            itemCode: legArmorSlot,
+            equipmentSlot: EquipmentSlot.legArmor),
+        boots: EquipmentSlotItem(
+            equipmentType: EquipmentType.boots,
+            itemCode: bootsSlot,
+            equipmentSlot: EquipmentSlot.boots),
         rings: [
-          EquipmentSlot(equipmentType: EquipmentType.ring, itemCode: ring1Slot),
-          EquipmentSlot(equipmentType: EquipmentType.ring, itemCode: ring2Slot)
+          EquipmentSlotItem(
+              equipmentType: EquipmentType.ring,
+              itemCode: ring1Slot,
+              equipmentSlot: EquipmentSlot.ring1),
+          EquipmentSlotItem(
+              equipmentType: EquipmentType.ring,
+              itemCode: ring2Slot,
+              equipmentSlot: EquipmentSlot.ring2)
         ],
-        amulet: EquipmentSlot(
-            equipmentType: EquipmentType.amulet, itemCode: amuletSlot),
+        amulet: EquipmentSlotItem(
+            equipmentType: EquipmentType.amulet,
+            itemCode: amuletSlot,
+            equipmentSlot: EquipmentSlot.amulet),
         artifacts: [
-          EquipmentSlot(
-              equipmentType: EquipmentType.artifact, itemCode: artifact1Slot),
-          EquipmentSlot(
-              equipmentType: EquipmentType.artifact, itemCode: artifact2Slot),
-          EquipmentSlot(
-              equipmentType: EquipmentType.artifact, itemCode: artifact3Slot),
+          EquipmentSlotItem(
+              equipmentType: EquipmentType.artifact,
+              itemCode: artifact1Slot,
+              equipmentSlot: EquipmentSlot.artifact1),
+          EquipmentSlotItem(
+              equipmentType: EquipmentType.artifact,
+              itemCode: artifact2Slot,
+              equipmentSlot: EquipmentSlot.artifact2),
+          EquipmentSlotItem(
+              equipmentType: EquipmentType.artifact,
+              itemCode: artifact3Slot,
+              equipmentSlot: EquipmentSlot.artifact3),
         ],
         utilities: [
           QuantityEquipmentSlot(
-              equipmentType: EquipmentType.utility,
-              itemCode: utility1Slot,
-              quantity: utility1SlotQuantity),
+            equipmentType: EquipmentType.utility,
+            itemCode: utility1Slot,
+            quantity: utility1SlotQuantity,
+            equipmentSlot: EquipmentSlot.utility1,
+          ),
           QuantityEquipmentSlot(
-              equipmentType: EquipmentType.utility,
-              itemCode: utility2Slot,
-              quantity: utility2SlotQuantity),
+            equipmentType: EquipmentType.utility,
+            itemCode: utility2Slot,
+            quantity: utility2SlotQuantity,
+            equipmentSlot: EquipmentSlot.utility2,
+          ),
         ],
       ),
       taskProgress: task.isEmpty

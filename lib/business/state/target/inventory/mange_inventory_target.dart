@@ -89,6 +89,12 @@ class ManageInventoryTarget extends Target {
         max: 20,
         overflowSolution: InventoryOverflowSolution.deposit
     ),
+    'shrimp': InventoryItemConstraints(
+        code: 'shrimp',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit
+    ),
     'wooden_staff': InventoryItemConstraints(
         code: 'wooden_staff',
         min: 1,

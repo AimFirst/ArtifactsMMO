@@ -30,7 +30,8 @@ enum SkillType {
   gearCrafting('https://artifactsmmo.com/images/items/iron_armor.png'),
   jewelryCrafting('https://artifactsmmo.com/images/items/ring_of_chance.png'),
   cooking('https://artifactsmmo.com/images/items/cooked_wolf_meat.png'),
-  alchemy('https://artifactsmmo.com/images/items/maple_syrup.png');
+  alchemy('https://artifactsmmo.com/images/items/maple_syrup.png'),
+  unknown('');
 
   const SkillType(this.image);
   final String image;
