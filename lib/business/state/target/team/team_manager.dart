@@ -4,8 +4,11 @@ import 'dart:math';
 import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
+
+part 'team_manager.g.dart';
 
 class TeamManager {
   static const Map<TeamRole, List<SkillType>> skillsForRole = {
@@ -87,6 +90,7 @@ class TeamManager {
   }
 }
 
+@CopyWith()
 class UniqueItemQuantityRequest with EquatableMixin {
   final String key;
   final Item item;
@@ -120,6 +124,7 @@ class PrioritizedList<T> {
     for (var i = 0; i < list.length; i++) {
       if (list[i].itemPriority.code < element.itemPriority.code) {
         list.insert(max(0,i-1), element);
+        return;
       }
     }
   }
