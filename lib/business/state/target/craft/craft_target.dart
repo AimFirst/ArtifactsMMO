@@ -54,11 +54,7 @@ abstract class CraftTarget extends Target {
 
     // See if we have the right ingredients.
     for (final craftIngredient in item.craft?.items ?? []) {
-      if (character.inventoryItems.fold(
-              0,
-              (c, i) => i.itemQuantity.code == craftIngredient.code
-                  ? c + i.itemQuantity.quantity
-                  : c) <
+      if (character.inventory.items.count(code: craftIngredient.code) <
           craftIngredient.quantity) {
         // Can we get it from resources?
         final resources = boardState.dropsFromResources[
@@ -122,7 +118,8 @@ abstract class CraftTarget extends Target {
     }
 
     // Move to the workshop if we're not there.
-    workshopLocations.sort((a,b) => MathUtil.sortDistance(character.location, a, b));
+    workshopLocations
+        .sort((a, b) => MathUtil.sortDistance(character.location, a, b));
     final location = workshopLocations.first;
     final moveAction = MoveToTarget(targetLocation: location).update(
         character: character,
@@ -137,12 +134,12 @@ abstract class CraftTarget extends Target {
       progress: progress,
       action: artifactsClient.craft(
           action: ActionCrafting(
-            characterName: character.name,
+              characterName: character.name,
               itemQuantity: ItemQuantity(
-        code: item.code,
-        quantity: 1,
-        //quantity: progress.target.round() - progress.current.round(),
-      ))),
+                code: item.code,
+                quantity: 1,
+                //quantity: progress.target.round() - progress.current.round(),
+              ))),
       description: 'Crafting $item',
       imageUrl: 'https://artifactsmmo.com/images/items/${item.code}.png',
     );

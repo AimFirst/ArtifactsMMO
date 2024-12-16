@@ -1,6 +1,7 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/equipment.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/character/inventory.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/equipment_slot.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart' as sk;
@@ -65,8 +66,13 @@ extension CharacterExtension on CharacterSchema {
           xp: alchemyXp,
           nextLevelTargetXp: alchemyMaxXp),
       gold: gold,
-      inventoryMaxItems: inventoryMaxItems,
-      inventoryItems: inventory?.map((i) => i.convert()).toList() ?? [],
+      inventory: Inventory(
+          maxCount: inventoryMaxItems,
+          items: inventory
+                  ?.map((i) => i.convert())
+                  .where((i) => i.quantity > 0)
+                  .toList() ??
+              []),
       equipmentLoadout: EquipmentLoadout(
         weapon: EquipmentSlotItem(
             equipmentType: EquipmentType.weapon,

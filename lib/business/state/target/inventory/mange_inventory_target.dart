@@ -32,69 +32,60 @@ class ManageInventoryTarget extends Target {
         max: 30,
         overflowSolution: InventoryOverflowSolution.deposit),
     'copper_ore': InventoryItemConstraints(
-      code: 'copper_ore',
-      min: 0,
-      max: 30,
-      overflowSolution: InventoryOverflowSolution.deposit),
+        code: 'copper_ore',
+        min: 0,
+        max: 30,
+        overflowSolution: InventoryOverflowSolution.deposit),
     'iron_ore': InventoryItemConstraints(
         code: 'iron_ore',
         min: 0,
         max: 30,
         overflowSolution: InventoryOverflowSolution.deposit),
     'yellow_slimeball': InventoryItemConstraints(
-      code: 'yellow_slimeball',
-      min: 0,
-      max: 20,
-      overflowSolution: InventoryOverflowSolution.deposit
-    ),
+        code: 'yellow_slimeball',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit),
     'red_slimeball': InventoryItemConstraints(
-      code: 'red_slimeball',
-      min: 0,
-      max: 20,
-      overflowSolution: InventoryOverflowSolution.deposit
-    ),
+        code: 'red_slimeball',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit),
     'feather': InventoryItemConstraints(
-      code: 'feather',
-      min: 0,
-      max: 20,
-      overflowSolution: InventoryOverflowSolution.deposit
-    ),
+        code: 'feather',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit),
     'egg': InventoryItemConstraints(
         code: 'egg',
         min: 0,
         max: 20,
-        overflowSolution: InventoryOverflowSolution.deposit
-    ),
+        overflowSolution: InventoryOverflowSolution.deposit),
     'raw_chicken': InventoryItemConstraints(
         code: 'raw_chicken',
         min: 0,
         max: 20,
-        overflowSolution: InventoryOverflowSolution.deposit
-    ),
+        overflowSolution: InventoryOverflowSolution.deposit),
     'sunflower': InventoryItemConstraints(
         code: 'sunflower',
         min: 0,
         max: 20,
-        overflowSolution: InventoryOverflowSolution.deposit
-    ),
+        overflowSolution: InventoryOverflowSolution.deposit),
     'gudgeon': InventoryItemConstraints(
         code: 'gudgeon',
         min: 0,
         max: 20,
-        overflowSolution: InventoryOverflowSolution.deposit
-    ),
+        overflowSolution: InventoryOverflowSolution.deposit),
     'algae': InventoryItemConstraints(
         code: 'algae',
         min: 0,
         max: 20,
-        overflowSolution: InventoryOverflowSolution.deposit
-    ),
+        overflowSolution: InventoryOverflowSolution.deposit),
     'shrimp': InventoryItemConstraints(
         code: 'shrimp',
         min: 0,
         max: 20,
-        overflowSolution: InventoryOverflowSolution.deposit
-    ),
+        overflowSolution: InventoryOverflowSolution.deposit),
     'wooden_staff': InventoryItemConstraints(
         code: 'wooden_staff',
         min: 1,
@@ -179,9 +170,8 @@ class ManageInventoryTarget extends Target {
       required ArtifactsClient artifactsClient}) {
     // Check to see if our inventory is almost full. If not, we don't need to manage inventory yet.
     if (onlyRunIfNearFull) {
-      final totalItems = character.inventoryItems
-          .fold(0, (o, i) => o + i.itemQuantity.quantity);
-      final percent = totalItems / character.inventoryMaxItems.toDouble();
+      final totalItems = character.inventory.items.count();
+      final percent = totalItems / character.inventory.maxCount.toDouble();
       if (percent < .8) {
         return TargetProcessResult(
           progress: Progress(current: percent, target: percent),
@@ -192,19 +182,18 @@ class ManageInventoryTarget extends Target {
       }
     }
 
-    final filteredItems = character.inventoryItems
-        .where((e) => itemConstraints.keys.contains(e.itemQuantity.code));
+    final filteredItems = character.inventory.items
+        .where((e) => itemConstraints.keys.contains(e.code));
     for (final inventoryItem in filteredItems) {
-      final constraint = itemConstraints[inventoryItem.itemQuantity.code];
+      final constraint = itemConstraints[inventoryItem.code];
       if (constraint == null) {
         continue;
       }
 
-      final item = boardState.items
-          .where((i) => i.code == inventoryItem.itemQuantity.code)
-          .first;
+      final item =
+          boardState.items.where((i) => i.code == inventoryItem.code).first;
 
-      if (inventoryItem.itemQuantity.quantity > constraint.max) {
+      if (inventoryItem.quantity > constraint.max) {
         // Supposed to deposit items or destroy them?
         switch (constraint.overflowSolution) {
           case InventoryOverflowSolution.deposit:
@@ -237,14 +226,14 @@ class ManageInventoryTarget extends Target {
                 progress: Progress.empty(),
                 action: artifactsClient.deleteItem(
                     action: ActionDeleteItem(
-                      characterName: character.name,
+                        characterName: character.name,
                         itemQuantity: ItemQuantity(
-                            code: inventoryItem.itemQuantity.code,
-                            quantity: inventoryItem.itemQuantity.quantity -
-                                constraint.min))),
-                description: 'Dumping extra ${inventoryItem.itemQuantity.code}',
+                            code: inventoryItem.code,
+                            quantity:
+                                inventoryItem.quantity - constraint.min))),
+                description: 'Dumping extra ${inventoryItem.code}',
                 imageUrl:
-                    'https://artifactsmmo.com/images/items/${inventoryItem.itemQuantity.code}.png');
+                    'https://artifactsmmo.com/images/items/${inventoryItem.code}.png');
         }
       }
     }

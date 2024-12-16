@@ -1,10 +1,9 @@
 import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/bank/bank_details.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/bank/bank.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/active_event.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
@@ -26,7 +25,9 @@ class State with EquatableMixin {
     required this.characterStates,
   });
 
-  State.empty() : boardState = BoardState.empty(), characterStates = {};
+  State.empty()
+      : boardState = BoardState.empty(),
+        characterStates = {};
 
   @override
   List<Object?> get props => [
@@ -48,8 +49,7 @@ class BoardState with EquatableMixin {
   final List<ActiveEvent> activeEvents;
   final List<Task> tasks;
   final List<Achievement> achievements;
-  final List<ItemQuantity> bankItems;
-  final BankDetails bankDetails;
+  final Bank bank;
 
   BoardState({
     required this.map,
@@ -63,8 +63,7 @@ class BoardState with EquatableMixin {
     required this.activeEvents,
     required this.tasks,
     required this.achievements,
-    required this.bankItems,
-    required this.bankDetails,
+    required this.bank,
   });
 
   BoardState.empty()
@@ -79,8 +78,7 @@ class BoardState with EquatableMixin {
         activeEvents = [],
         tasks = [],
         achievements = [],
-        bankItems = [],
-        bankDetails = BankDetails.empty();
+        bank = Bank.empty();
 
   @override
   List<Object?> get props => [

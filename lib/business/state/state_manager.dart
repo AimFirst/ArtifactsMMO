@@ -15,6 +15,7 @@ import 'package:artifacts_mmo/business/state/target/no_target.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_target.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/bank/bank.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StateManager {
@@ -60,36 +61,36 @@ class StateManager {
         monsterManager = MonsterManager(artifactsClient: artifactsClient),
         resourceManager = ResourceManager(artifactsClient: artifactsClient),
         taskManager = TaskManager(artifactsClient: artifactsClient) {
-    boardStateStream = BehaviorSubject.seeded(BoardState.empty())..addStream(combineLatestAll(
-      achievementManager.achievementsSubject,
-      bankManager.bankItemsSubject,
-      bankManager.bankDetailsSubject,
-      eventManager.activeEventsSubject,
-      itemManager.itemsByCraftTypeSubject,
-      itemManager.itemsSubject,
-      mapManager.contentLocationSubject,
-      mapManager.mapSubject,
-      monsterManager.dropsFromMonstersSubject,
-      monsterManager.monsterSubject,
-      resourceManager.dropsFromResourcesSubject,
-      resourceManager.resourcesSubject,
-      taskManager.tasksSubject,
-      (a, b, c, d, e, f, g, h, i, j, k, l, m) => BoardState(
-        map: h,
-        resources: l,
-        contentLocations: g,
-        dropsFromResources: k,
-        itemsByCraftType: e,
-        items: f,
-        monsters: j,
-        dropsFromMonsters: i,
-        activeEvents: d,
-        tasks: m,
-        achievements: a,
-        bankItems: b,
-        bankDetails: c,
-      ),
-    ));
+    boardStateStream = BehaviorSubject.seeded(BoardState.empty())
+      ..addStream(combineLatestAll(
+        achievementManager.achievementsSubject,
+        bankManager.bankItemsSubject,
+        bankManager.bankDetailsSubject,
+        eventManager.activeEventsSubject,
+        itemManager.itemsByCraftTypeSubject,
+        itemManager.itemsSubject,
+        mapManager.contentLocationSubject,
+        mapManager.mapSubject,
+        monsterManager.dropsFromMonstersSubject,
+        monsterManager.monsterSubject,
+        resourceManager.dropsFromResourcesSubject,
+        resourceManager.resourcesSubject,
+        taskManager.tasksSubject,
+        (a, b, c, d, e, f, g, h, i, j, k, l, m) => BoardState(
+          map: h,
+          resources: l,
+          contentLocations: g,
+          dropsFromResources: k,
+          itemsByCraftType: e,
+          items: f,
+          monsters: j,
+          dropsFromMonsters: i,
+          activeEvents: d,
+          tasks: m,
+          achievements: a,
+          bank: Bank(bankDetails: c, items: b),
+        ),
+      ));
   }
 
   static Stream<T> combineLatestAll<A, B, C, D, E, F, G, H, I, J, K, L, M, T>(
@@ -173,7 +174,6 @@ class StateManager {
   }
 
   void toggleTeamPlayer(String characterName) {
-
     final targetManager = characterTargetManagers[characterName];
     if (targetManager != null) {
       if (teamManager.characters.containsKey(characterName)) {
@@ -183,13 +183,12 @@ class StateManager {
       }
     }
   }
-  
+
   void addCharacterToTeam(String characterName) {
     final targetManager = characterTargetManagers[characterName];
     if (targetManager != null) {
-        teamManager.addCharacter(targetManager.stateStream);
-      targetManager.startNewTarget(
-          TeamTarget(teamManager: teamManager));
+      teamManager.addCharacter(targetManager.stateStream);
+      targetManager.startNewTarget(TeamTarget(teamManager: teamManager));
     }
   }
 

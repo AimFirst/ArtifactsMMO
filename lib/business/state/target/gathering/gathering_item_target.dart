@@ -16,13 +16,9 @@ class GatheringItemTarget extends GatheringTarget {
   Progress getProgress(
       {required Character character, required BoardState boardState}) {
     return Progress(
-        current: character.inventoryItems.fold(
-          0,
-          (previousValue, element) =>
-              element.itemQuantity.code == targetItemQuantity.code
-                  ? previousValue + element.itemQuantity.quantity.toDouble()
-                  : previousValue.toDouble(),
-        ),
+        current: character.inventory.items
+            .count(code: targetItemQuantity.code)
+            .toDouble(),
         target: targetItemQuantity.quantity.toDouble());
   }
 

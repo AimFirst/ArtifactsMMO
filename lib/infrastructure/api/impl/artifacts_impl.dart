@@ -551,26 +551,30 @@ class ArtifactsImpl extends ArtifactsClient {
   }
 
   @override
-  Future<PagedResponse<ItemQuantity>> getBankItems({required int pageNumber}) async {
+  Future<PagedResponse<ItemQuantity>> getBankItems(
+      {required int pageNumber}) async {
     final response = await _checkedServerCall(
-            () => api.getMyAccountApi().getBankItemsMyBankItemsGet(
-          page: pageNumber,
-        ));
+        () => api.getMyAccountApi().getBankItemsMyBankItemsGet(
+              page: pageNumber,
+            ));
 
     return PagedResponse(
       total: response.data?.total,
       page: response.data?.page,
       size: response.data?.size,
       pages: response.data?.pages,
-      data: response.data?.data.map((r) => r.convert()).toList() ?? [],
+      data: response.data?.data
+              .map((r) => r.convert())
+              .where((r) => r.quantity > 0)
+              .toList() ??
+          [],
     );
   }
 
   @override
   Future<BankDetails> getBankDetails() async {
     final response = await _checkedServerCall(
-        () => api.getMyAccountApi().getBankDetailsMyBankGet()
-    );
+        () => api.getMyAccountApi().getBankDetailsMyBankGet());
 
     return response.data!.convert();
   }

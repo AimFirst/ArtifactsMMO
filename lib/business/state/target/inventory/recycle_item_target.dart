@@ -24,13 +24,8 @@ class RecycleItemTarget extends Target {
       {required Character character,
       required BoardState boardState,
       required ArtifactsClient artifactsClient}) {
-    final currentAmount = character.inventoryItems.fold(
-        0,
-        (p, i) =>
-            p +
-            (i.itemQuantity.code == quantityToMaintain.code
-                ? i.itemQuantity.quantity
-                : 0));
+    final currentAmount =
+        character.inventory.items.count(code: quantityToMaintain.code);
     final amountToRecycle = currentAmount - quantityToMaintain.quantity;
     final progress = amountToRecycle <= 0
         ? Progress(current: 1, target: 1)

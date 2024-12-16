@@ -21,13 +21,8 @@ class DepositItemTarget extends Target {
       {required Character character,
       required BoardState boardState,
       required ArtifactsClient artifactsClient}) {
-    final currentAmount = character.inventoryItems.fold(
-        0,
-        (o, i) =>
-            o +
-            (i.itemQuantity.code == quantityToRemain.code
-                ? i.itemQuantity.quantity
-                : 0));
+    final currentAmount =
+        character.inventory.items.count(code: quantityToRemain.code);
     final amountToDeposit = currentAmount - quantityToRemain.quantity;
     final progress = amountToDeposit <= 0
         ? Progress.done()
@@ -63,7 +58,9 @@ class DepositItemTarget extends Target {
     return TargetProcessResult(
         progress: progress,
         action: artifactsClient.depositBank(
-            action: ActionDepositBank(characterName: character.name, itemQuantity: quantityToDeposit)),
+            action: ActionDepositBank(
+                characterName: character.name,
+                itemQuantity: quantityToDeposit)),
         description: 'Depositing $quantityToDeposit',
         imageUrl:
             'https://artifactsmmo.com/images/items/${quantityToRemain.code}.png');

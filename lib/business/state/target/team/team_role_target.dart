@@ -180,13 +180,7 @@ abstract class TeamRoleTarget extends Target {
         .fold(0, (o, r) => o + (r.itemCode == request.item.code ? 1 : 0));
     count += character.equipmentLoadout.utilities.fold(
         0, (o, u) => o + (u.itemCode == request.item.code ? u.quantity : 0));
-    count += character.inventoryItems.fold(
-        0,
-        (o, n) =>
-            o +
-            (n.itemQuantity.code == request.item.code
-                ? n.itemQuantity.quantity
-                : 0));
+    count += character.inventory.items.count(code: request.item.code);
     return count;
   }
 
@@ -351,13 +345,7 @@ abstract class TeamRoleTarget extends Target {
       required ArtifactsClient artifactsClient}) {
     for (final desiredItem in teamManager.neededItems.list) {
       if (desiredItem.element.requestingCharacter == character.name) {
-        if (boardState.bankItems.fold(
-                0,
-                (o, i) =>
-                    o +
-                    (i.code == desiredItem.element.item.code
-                        ? i.quantity
-                        : 0)) >=
+        if (boardState.bank.items.count(code: desiredItem.element.item.code) >=
             desiredItem.element.quantity) {
           return WithdrawItemTarget(
                   quantityToMaintain: ItemQuantity(
@@ -390,15 +378,7 @@ abstract class TeamRoleTarget extends Target {
 
       // How many do we want that aren't in the bank?
       final countNotInBank = desiredItem.element.quantity -
-          boardState.bankItems
-              .fold(
-                  0,
-                  (o, b) =>
-                      o +
-                      (b.code == desiredItem.element.item.code
-                          ? b.quantity
-                          : 0))
-              .toInt();
+          boardState.bank.items.count(code: desiredItem.element.item.code);
 
       // Everything we need is already in the bank.
       if (countNotInBank <= 0) {
@@ -409,13 +389,8 @@ abstract class TeamRoleTarget extends Target {
       if (canGatherItem(desiredItem.element.item) ||
           canCraftItem(desiredItem.element.item) ||
           canFightForItem(desiredItem.element.item)) {
-        final countInInventory = character.inventoryItems.fold(
-            0,
-            (o, i) =>
-                o +
-                (i.itemQuantity.code == desiredItem.element.item.code
-                    ? i.itemQuantity.quantity
-                    : 0));
+        final countInInventory = character.inventory.items
+            .count(code: desiredItem.element.item.code);
 
         // Do we have enough to deposit?
         if (countInInventory >= countNotInBank) {
@@ -446,25 +421,12 @@ abstract class TeamRoleTarget extends Target {
       if (canGatherItem(desiredItem.element.item)) {
         // How many do we want that aren't in the bank?
         var countNotInBank = desiredItem.element.quantity -
-            boardState.bankItems
-                .fold(
-                    0,
-                    (o, b) =>
-                        o +
-                        (b.code == desiredItem.element.item.code
-                            ? b.quantity
-                            : 0))
-                .toInt();
+            boardState.bank.items.count(code: desiredItem.element.item.code);
 
         // If it's for us, check our inventory too.
         if (desiredItem.element.requestingCharacter == character.name) {
-          countNotInBank -= character.inventoryItems.fold(
-              0,
-              (o, i) =>
-                  o +
-                  (i.itemQuantity.code == desiredItem.element.item.code
-                      ? i.itemQuantity.quantity
-                      : 0));
+          countNotInBank -= character.inventory.items
+              .count(code: desiredItem.element.item.code);
         }
 
         // Everything we need is already in the bank.
@@ -510,10 +472,10 @@ abstract class TeamRoleTarget extends Target {
         itemCode: character.equipmentLoadout.weapon.itemCode,
         boardState: boardState,
         skillType: skillType);
-    final potentialOptions = character.inventoryItems
+    final potentialOptions = character.inventory.items
         .where((i) =>
             skillBonusForItemCode(
-                itemCode: i.itemQuantity.code,
+                itemCode: i.code,
                 boardState: boardState,
                 skillType: skillType) !=
             0)
@@ -521,17 +483,13 @@ abstract class TeamRoleTarget extends Target {
     if (potentialOptions.isNotEmpty) {
       potentialOptions.sort((a, b) =>
           skillBonusForItemCode(
-              itemCode: a.itemQuantity.code,
-              boardState: boardState,
-              skillType: skillType) -
+              itemCode: a.code, boardState: boardState, skillType: skillType) -
           skillBonusForItemCode(
-              itemCode: b.itemQuantity.code,
-              boardState: boardState,
-              skillType: skillType));
+              itemCode: b.code, boardState: boardState, skillType: skillType));
 
       // If we have a better option, equip it.
       if (skillBonusForItemCode(
-              itemCode: potentialOptions.first.itemQuantity.code,
+              itemCode: potentialOptions.first.code,
               boardState: boardState,
               skillType: skillType) <
           currentBonus) {
@@ -540,7 +498,7 @@ abstract class TeamRoleTarget extends Target {
                 equipmentSlot: QuantityEquipmentSlot(
                     equipmentType: EquipmentType.weapon,
                     equipmentSlot: EquipmentSlot.weapon,
-                    itemCode: potentialOptions.first.itemQuantity.code,
+                    itemCode: potentialOptions.first.code,
                     quantity: 1))
             .update(
                 character: character,
@@ -633,13 +591,7 @@ abstract class TeamRoleTarget extends Target {
           }
 
           // Equip any extra potions in inventory.
-          final count = character.inventoryItems.fold(
-              0,
-              (o, i) =>
-                  o +
-                  (i.itemQuantity.code == first.code
-                      ? i.itemQuantity.quantity
-                      : 0));
+          final count = character.inventory.items.count(code: first.code);
           if (count > 0) {
             return TargetProcessResult(
                 progress: Progress.empty(),
@@ -714,25 +666,12 @@ abstract class TeamRoleTarget extends Target {
       if (canFightForItem(desiredItem.element.item)) {
         // How many do we want that aren't in the bank?
         var countNotInBank = desiredItem.element.quantity -
-            boardState.bankItems
-                .fold(
-                    0,
-                    (o, b) =>
-                        o +
-                        (b.code == desiredItem.element.item.code
-                            ? b.quantity
-                            : 0))
-                .toInt();
+            boardState.bank.items.count(code: desiredItem.element.item.code);
 
         // If it's for us, check our inventory too.
         if (desiredItem.element.requestingCharacter == character.name) {
-          countNotInBank -= character.inventoryItems.fold(
-              0,
-              (o, i) =>
-                  o +
-                  (i.itemQuantity.code == desiredItem.element.item.code
-                      ? i.itemQuantity.quantity
-                      : 0));
+          countNotInBank -= character.inventory.items
+              .count(code: desiredItem.element.item.code);
         }
 
         // Everything we need is already in the bank.
@@ -767,26 +706,12 @@ abstract class TeamRoleTarget extends Target {
       if (canCraftItem(desiredItem.element.item)) {
         // How many do we want that aren't in the bank?
         var countNotInBank = desiredItem.element.quantity -
-            boardState.bankItems
-                .fold(
-                    0,
-                    (o, b) =>
-                        o +
-                        (b.code == desiredItem.element.item.code
-                            ? b.quantity
-                            : 0))
-                .toInt();
+            boardState.bank.items.count(code: desiredItem.element.item.code);
 
         // If it's for us, check our inventory too.
         if (desiredItem.element.requestingCharacter == character.name) {
-          countNotInBank -= character.inventoryItems.fold(
-              0,
-              (o, i) =>
-                  o +
-                  (i.itemQuantity.quantity > 0 &&
-                          i.itemQuantity.code == desiredItem.element.item.code
-                      ? i.itemQuantity.quantity
-                      : 0));
+          countNotInBank -= character.inventory.items
+              .count(code: desiredItem.element.item.code);
         }
 
         // Everything we need is already in the bank.
@@ -800,13 +725,8 @@ abstract class TeamRoleTarget extends Target {
             in desiredItem.element.item.craft?.items ?? <ItemQuantity>[]) {
           final neededCount =
               ingredientQuantity.quantity * desiredItem.element.quantity;
-          final countInInventory = character.inventoryItems.fold(
-              0,
-              (o, i) =>
-                  o +
-                  (i.itemQuantity.code == ingredientQuantity.code
-                      ? i.itemQuantity.quantity
-                      : 0));
+          final countInInventory =
+              character.inventory.items.count(code: ingredientQuantity.code);
           if (countInInventory < neededCount) {
             teamManager.addRequestedItem(PrioritizedElement(
               itemPriority: desiredItem.itemPriority,
@@ -864,16 +784,15 @@ abstract class TeamRoleTarget extends Target {
       {required Character character,
       required BoardState boardState,
       required ArtifactsClient artifactsClient}) {
-    final itemCount =
-        character.inventoryItems.fold(0, (o, i) => o + i.itemQuantity.quantity);
+    final itemCount = character.inventory.items.count();
     // More than 80% full? try to clean up.
-    if (itemCount / character.inventoryMaxItems.toDouble() > .8) {
+    if (itemCount / character.inventory.maxCount.toDouble() > .8) {
       // Do we have any items to recycle?
-      for (final itemQuantity in character.inventoryItems) {
+      for (final itemQuantity in character.inventory.items) {
         final item = boardState.items
-            .where((i) => i.code == itemQuantity.itemQuantity.code)
+            .where((i) => i.code == itemQuantity.code)
             .firstOrNull;
-        if (itemQuantity.itemQuantity.quantity > 1 &&
+        if (itemQuantity.quantity > 1 &&
             item?.craft != null &&
             [
               SkillType.jewelryCrafting,
@@ -881,8 +800,8 @@ abstract class TeamRoleTarget extends Target {
               SkillType.gearCrafting
             ].contains(item?.craft?.skill)) {
           return RecycleItemTarget(
-                  quantityToMaintain: ItemQuantity(
-                      code: itemQuantity.itemQuantity.code, quantity: 1))
+                  quantityToMaintain:
+                      ItemQuantity(code: itemQuantity.code, quantity: 1))
               .update(
                   character: character,
                   boardState: boardState,
@@ -892,12 +811,12 @@ abstract class TeamRoleTarget extends Target {
 
       // Do we have any items to deposit?
       final List<ItemQuantity> resources = [];
-      for (final itemQuantity in character.inventoryItems) {
+      for (final itemQuantity in character.inventory.items) {
         final item = boardState.items
-            .where((i) => i.code == itemQuantity.itemQuantity.code)
+            .where((i) => i.code == itemQuantity.code)
             .firstOrNull;
         if (item?.type == 'resource' || item?.type == 'consumable') {
-          resources.add(itemQuantity.itemQuantity);
+          resources.add(itemQuantity);
         }
       }
       resources.sort((a, b) => b.quantity - a.quantity);
@@ -953,17 +872,9 @@ abstract class TeamRoleTarget extends Target {
         }
 
         // Check how many we currently have in our inventory and bank
-        final ownedCount = character.inventoryItems.fold(
-                0,
-                (o, i) =>
-                    o +
-                    (i.itemQuantity.code == ingredientQuantity.code
-                        ? i.itemQuantity.quantity
-                        : 0)) +
-            boardState.bankItems.fold(
-                0,
-                (o, b) =>
-                    o + (b.code == ingredientQuantity.code ? b.quantity : 0));
+        final ownedCount =
+            character.inventory.items.count(code: ingredientQuantity.code) +
+                boardState.bank.items.count(code: ingredientQuantity.code);
 
         //  Not enough, this is not a viable craft.
         if (ownedCount < ingredientQuantity.quantity) {
@@ -977,13 +888,8 @@ abstract class TeamRoleTarget extends Target {
         // Decide if we need to pull something out of bank or not.
         for (final ingredientQuantity
             in option.craft?.items ?? <ItemQuantity>[]) {
-          final inventoryCount = character.inventoryItems.fold(
-              0,
-              (o, i) =>
-                  o +
-                  (i.itemQuantity.code == ingredientQuantity.code
-                      ? i.itemQuantity.quantity
-                      : 0));
+          final inventoryCount =
+              character.inventory.items.count(code: ingredientQuantity.code);
 
           // We do, pull it from the bank.
           if (inventoryCount < ingredientQuantity.quantity) {
@@ -997,18 +903,14 @@ abstract class TeamRoleTarget extends Target {
 
         // Craft it.
         return CraftItemTarget(
-            itemQuantity: ItemQuantity(
-                code: option.code,
-                quantity: character.inventoryItems.fold(
-                    1,
-                    (o, i) =>
-                        o +
-                        (i.itemQuantity.code == option.code
-                            ? i.itemQuantity.quantity
-                            : 0)))).update(
-            character: character,
-            boardState: boardState,
-            artifactsClient: artifactsClient);
+                itemQuantity: ItemQuantity(
+                    code: option.code,
+                    quantity:
+                        character.inventory.items.count(code: option.code) + 1))
+            .update(
+                character: character,
+                boardState: boardState,
+                artifactsClient: artifactsClient);
       }
     }
 

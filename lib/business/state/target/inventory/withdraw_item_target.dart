@@ -19,15 +19,10 @@ class WithdrawItemTarget extends Target {
   @override
   TargetProcessResult update(
       {required Character character,
-        required BoardState boardState,
-        required ArtifactsClient artifactsClient}) {
-    final currentAmount = character.inventoryItems.fold(
-        0,
-            (o, i) =>
-        o +
-            (i.itemQuantity.code == quantityToMaintain.code
-                ? i.itemQuantity.quantity
-                : 0));
+      required BoardState boardState,
+      required ArtifactsClient artifactsClient}) {
+    final currentAmount =
+        character.inventory.items.count(code: quantityToMaintain.code);
     final amountToWithdraw = quantityToMaintain.quantity - currentAmount;
     final progress = amountToWithdraw <= 0
         ? Progress.done()
@@ -40,7 +35,7 @@ class WithdrawItemTarget extends Target {
           action: null,
           description: 'No items to withdraw',
           imageUrl:
-          'https://artifactsmmo.com/images/items/${quantityToMaintain.code}.png');
+              'https://artifactsmmo.com/images/items/${quantityToMaintain.code}.png');
     }
 
     // Move to bank.
@@ -59,13 +54,15 @@ class WithdrawItemTarget extends Target {
 
     // Withdraw the item.
     final quantityToWithdraw =
-    ItemQuantity(code: quantityToMaintain.code, quantity: amountToWithdraw);
+        ItemQuantity(code: quantityToMaintain.code, quantity: amountToWithdraw);
     return TargetProcessResult(
         progress: progress,
         action: artifactsClient.withdrawBank(
-            action: ActionWithdrawBank(characterName: character.name, itemQuantity: quantityToWithdraw)),
+            action: ActionWithdrawBank(
+                characterName: character.name,
+                itemQuantity: quantityToWithdraw)),
         description: 'Withdrawing $quantityToWithdraw',
         imageUrl:
-        'https://artifactsmmo.com/images/items/${quantityToMaintain.code}.png');
+            'https://artifactsmmo.com/images/items/${quantityToMaintain.code}.png');
   }
 }

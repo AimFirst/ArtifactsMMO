@@ -13,3 +13,10 @@ class ItemQuantity with EquatableMixin {
   @override
   List<Object?> get props => [code, quantity];
 }
+
+extension ItemQuantityListExtensions on List<ItemQuantity> {
+  int count({String? code}) {
+    return fold(
+        0, (o, i) => o + (code == null || i.code == code ? i.quantity : 0));
+  }
+}

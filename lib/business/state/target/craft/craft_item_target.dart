@@ -20,13 +20,8 @@ class CraftItemTarget extends CraftTarget {
   Progress getProgress(
       {required Character character, required BoardState boardState}) {
     return Progress(
-      current: character.inventoryItems
-              .where((i) => i.itemQuantity.code == itemQuantity.code)
-              .firstOrNull
-              ?.itemQuantity
-              .quantity
-              .toDouble() ??
-          0.toDouble(),
+      current:
+          character.inventory.items.count(code: itemQuantity.code).toDouble(),
       target: itemQuantity.quantity.toDouble(),
     );
   }

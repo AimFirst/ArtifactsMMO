@@ -17,12 +17,8 @@ class FightItemTarget extends FightTarget {
   Progress getProgress(
       {required Character character, required BoardState boardState}) {
     return Progress(
-      current: character.inventoryItems
-              .where((i) => i.itemQuantity.code == itemQuantity.code)
-              .map((i) => i.itemQuantity.quantity)
-              .firstOrNull
-              ?.toDouble() ??
-          0.toDouble(),
+      current:
+          character.inventory.items.count(code: itemQuantity.code).toDouble(),
       target: itemQuantity.quantity.toDouble(),
     );
   }
@@ -32,8 +28,18 @@ class FightItemTarget extends FightTarget {
     required Character character,
     required BoardState boardState,
   }) {
-    final options = boardState.monsters.where((m) => m.drops.where((d) => d.code == itemQuantity.code).isNotEmpty).toList();
-    options.sort((a, b) => MathUtil.doubleToCompare(b.drops.where((d) => d.code == itemQuantity.code).first.averageQuantity - a.drops.where((d) => d.code == itemQuantity.code).first.averageQuantity));
+    final options = boardState.monsters
+        .where(
+            (m) => m.drops.where((d) => d.code == itemQuantity.code).isNotEmpty)
+        .toList();
+    options.sort((a, b) => MathUtil.doubleToCompare(b.drops
+            .where((d) => d.code == itemQuantity.code)
+            .first
+            .averageQuantity -
+        a.drops
+            .where((d) => d.code == itemQuantity.code)
+            .first
+            .averageQuantity));
     return options;
   }
 

@@ -91,9 +91,7 @@ abstract class _$BoardStateCWProxy {
 
   BoardState achievements(List<Achievement> achievements);
 
-  BoardState bankItems(List<ItemQuantity> bankItems);
-
-  BoardState bankDetails(BankDetails bankDetails);
+  BoardState bank(Bank bank);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BoardState(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -113,8 +111,7 @@ abstract class _$BoardStateCWProxy {
     List<ActiveEvent> activeEvents,
     List<Task> tasks,
     List<Achievement> achievements,
-    List<ItemQuantity> bankItems,
-    BankDetails bankDetails,
+    Bank bank,
   });
 }
 
@@ -165,12 +162,7 @@ class _$BoardStateCWProxyImpl implements _$BoardStateCWProxy {
       this(achievements: achievements);
 
   @override
-  BoardState bankItems(List<ItemQuantity> bankItems) =>
-      this(bankItems: bankItems);
-
-  @override
-  BoardState bankDetails(BankDetails bankDetails) =>
-      this(bankDetails: bankDetails);
+  BoardState bank(Bank bank) => this(bank: bank);
 
   @override
 
@@ -192,8 +184,7 @@ class _$BoardStateCWProxyImpl implements _$BoardStateCWProxy {
     Object? activeEvents = const $CopyWithPlaceholder(),
     Object? tasks = const $CopyWithPlaceholder(),
     Object? achievements = const $CopyWithPlaceholder(),
-    Object? bankItems = const $CopyWithPlaceholder(),
-    Object? bankDetails = const $CopyWithPlaceholder(),
+    Object? bank = const $CopyWithPlaceholder(),
   }) {
     return BoardState(
       map: map == const $CopyWithPlaceholder()
@@ -240,14 +231,10 @@ class _$BoardStateCWProxyImpl implements _$BoardStateCWProxy {
           ? _value.achievements
           // ignore: cast_nullable_to_non_nullable
           : achievements as List<Achievement>,
-      bankItems: bankItems == const $CopyWithPlaceholder()
-          ? _value.bankItems
+      bank: bank == const $CopyWithPlaceholder()
+          ? _value.bank
           // ignore: cast_nullable_to_non_nullable
-          : bankItems as List<ItemQuantity>,
-      bankDetails: bankDetails == const $CopyWithPlaceholder()
-          ? _value.bankDetails
-          // ignore: cast_nullable_to_non_nullable
-          : bankDetails as BankDetails,
+          : bank as Bank,
     );
   }
 }

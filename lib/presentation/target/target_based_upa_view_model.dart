@@ -88,9 +88,12 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
   }
 
   CharacterTargetManager _getCurrentTargetManager() {
-    final targetManager = stateManager.characterTargetManagers[selectedCharacter];
+    final targetManager =
+        stateManager.characterTargetManagers[selectedCharacter];
     if (targetManager == null) {
-      throw ArtifactsException(errorMessage: 'No character target manager with name $selectedCharacter');
+      throw ArtifactsException(
+          errorMessage:
+              'No character target manager with name $selectedCharacter');
     }
     return targetManager;
   }
@@ -107,11 +110,7 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
 
   Future<void> onItemCraft(
       Item item, Character character, int craftAmount) async {
-    final currentCount = character.inventoryItems.fold(
-        0,
-        (p, s) =>
-            p +
-            ((s.itemQuantity.code == item.code) ? s.itemQuantity.quantity : 0));
+    final currentCount = character.inventory.items.count(code: item.code);
     await _getCurrentTargetManager().startNewTarget(CraftItemTarget(
         itemQuantity: ItemQuantity(
             code: item.code, quantity: currentCount + craftAmount)));
@@ -138,7 +137,8 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
   }
 
   Future<void> onSkillSelected(Skill skill) async {
-    await _getCurrentTargetManager().startNewTarget(GatheringSkillTarget(skillType: skill.skillType, targetLevel: 99));
+    await _getCurrentTargetManager().startNewTarget(
+        GatheringSkillTarget(skillType: skill.skillType, targetLevel: 99));
   }
 
   Future<void> toggleTeamPlayer(Character character) async {

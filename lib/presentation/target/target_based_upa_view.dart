@@ -1,5 +1,6 @@
 import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
@@ -24,7 +25,8 @@ class TargetBasedUpaView
   }
 
   CharacterState _characterState(TargetBasedUpaModelLoaded model) {
-    return model.state.characterStates[model.selectedChar] ?? CharacterState.empty();
+    return model.state.characterStates[model.selectedChar] ??
+        CharacterState.empty();
   }
 
   @override
@@ -158,16 +160,17 @@ class TargetBasedUpaView
     );
   }
 
-  Widget _characterStatusPanel(
-      BuildContext context, TargetBasedUpaModelLoaded model, CharacterState characterState) {
-    final secondsCooldown =
-        characterState.character.cooldownLeftSeconds;
+  Widget _characterStatusPanel(BuildContext context,
+      TargetBasedUpaModelLoaded model, CharacterState characterState) {
+    final secondsCooldown = characterState.character.cooldownLeftSeconds;
     return ConstrainedBox(
       constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width * .25,
           maxWidth: MediaQuery.of(context).size.width * .25),
       child: Card(
-        color: characterState.character.name == model.selectedChar ? const Color.fromARGB(230, 200, 200, 255) : const Color.fromARGB(230, 255, 255, 255),
+        color: characterState.character.name == model.selectedChar
+            ? const Color.fromARGB(230, 200, 200, 255)
+            : const Color.fromARGB(230, 255, 255, 255),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Column(
@@ -179,8 +182,7 @@ class TargetBasedUpaView
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const Spacer(),
-                  Text(
-                      'Level ${characterState.character.overall.level}'),
+                  Text('Level ${characterState.character.overall.level}'),
                 ],
               ),
               _progressBarWithText(0, characterState.character.maxHp,
@@ -216,10 +218,15 @@ class TargetBasedUpaView
       ),
     );
   }
-  
-  Widget _characterList(BuildContext context, TargetBasedUpaModelLoaded model, TargetBasedUpaViewModel viewModel) {
+
+  Widget _characterList(BuildContext context, TargetBasedUpaModelLoaded model,
+      TargetBasedUpaViewModel viewModel) {
     return Column(
-      children: model.state.characterStates.values.map((c) => InkWell(onTap: () => viewModel.onCharacterSelected(c.character), child: _characterStatusPanel(context, model, c))).toList(),
+      children: model.state.characterStates.values
+          .map((c) => InkWell(
+              onTap: () => viewModel.onCharacterSelected(c.character),
+              child: _characterStatusPanel(context, model, c)))
+          .toList(),
     );
   }
 
@@ -279,11 +286,11 @@ class TargetBasedUpaView
       case MenuItemType.tasks:
         return 'Tasks';
       case MenuItemType.inventory:
-        return 'Inventory (${_characterState(model).character.inventoryItems.fold(0, (a, b) => a + b.itemQuantity.quantity)}/${_characterState(model).character.inventoryMaxItems})';
+        return 'Inventory (${_characterState(model).character.inventory.items.count()}/${_characterState(model).character.inventory.maxCount})';
       case MenuItemType.skills:
         return 'Skills';
       case MenuItemType.bank:
-        return 'Bank (${model.state.boardState.bankItems.where((b) => b.quantity > 0).length}/${model.state.boardState.bankDetails.slots})';
+        return 'Bank (${model.state.boardState.bank.items.count()}/${model.state.boardState.bank.bankDetails.slots})';
     }
   }
 
@@ -307,12 +314,7 @@ class TargetBasedUpaView
     TargetBasedUpaViewModel viewModel,
   ) {
     return GridView.builder(
-        itemCount: _characterState(model)
-            .character
-            .inventoryItems
-            .where((i) => i.itemQuantity.quantity > 0)
-            .toList()
-            .length,
+        itemCount: _characterState(model).character.inventory.items.count(),
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 150,
           mainAxisSpacing: 5,
@@ -320,16 +322,13 @@ class TargetBasedUpaView
           childAspectRatio: 1.0,
         ),
         itemBuilder: (BuildContext context, int index) {
-          final inventoryItem = _characterState(model)
-              .character
-              .inventoryItems
-              .where((i) => i.itemQuantity.quantity > 0)
-              .toList()[index];
+          final inventoryItem =
+              _characterState(model).character.inventory.items[index];
           final item = model.state.boardState.items
-              .where((i) => i.code == inventoryItem.itemQuantity.code)
+              .where((i) => i.code == inventoryItem.code)
               .first;
-          final controller = TextEditingController(
-              text: '${inventoryItem.itemQuantity.quantity}');
+          final controller =
+              TextEditingController(text: '${inventoryItem.quantity}');
           return InkWell(
             onTap: null,
             child: Container(
@@ -496,7 +495,10 @@ class TargetBasedUpaView
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          TextButton(onPressed: () => viewModel.toggleTeamPlayer(_characterState(model).character), child: const Text('Team Player!')),
+          TextButton(
+              onPressed: () =>
+                  viewModel.toggleTeamPlayer(_characterState(model).character),
+              child: const Text('Team Player!')),
           if (_characterState(model).character.taskProgress != null)
             _inProgressTask(
               _characterState(model).character.taskProgress!,
@@ -549,14 +551,11 @@ class TargetBasedUpaView
   }
 
   Widget _menuForBank(
-      TargetBasedUpaModelLoaded model,
-      TargetBasedUpaViewModel viewModel,
-      ) {
+    TargetBasedUpaModelLoaded model,
+    TargetBasedUpaViewModel viewModel,
+  ) {
     return GridView.builder(
-        itemCount: model.state.boardState.bankItems
-            .where((i) => i.quantity > 0)
-            .toList()
-            .length,
+        itemCount: model.state.boardState.bank.items.count(),
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 150,
           mainAxisSpacing: 5,
@@ -564,14 +563,12 @@ class TargetBasedUpaView
           childAspectRatio: 1.0,
         ),
         itemBuilder: (BuildContext context, int index) {
-          final inventoryItem = model.state.boardState.bankItems
-              .where((i) => i.quantity > 0)
-              .toList()[index];
+          final inventoryItem = model.state.boardState.bank.items[index];
           final item = model.state.boardState.items
               .where((i) => i.code == inventoryItem.code)
               .first;
-          final controller = TextEditingController(
-              text: '${inventoryItem.quantity}');
+          final controller =
+              TextEditingController(text: '${inventoryItem.quantity}');
           return InkWell(
             onTap: null,
             child: Container(
@@ -586,12 +583,12 @@ class TargetBasedUpaView
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
                       imageUrl:
-                      'https://artifactsmmo.com/images/items/${item.code}.png',
+                          'https://artifactsmmo.com/images/items/${item.code}.png',
                     ),
                   ),
                   Padding(
                     padding:
-                    const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
                     child: TextField(
                       maxLines: 1,
                       decoration: const InputDecoration(

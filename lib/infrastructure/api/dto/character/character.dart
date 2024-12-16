@@ -1,5 +1,5 @@
 import 'package:artifacts_mmo/infrastructure/api/dto/character/equipment.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/item/inventory_item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/character/inventory.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task_progress.dart';
@@ -23,8 +23,7 @@ class Character with EquatableMixin {
   final Skill jewelryCrafting;
   final Skill cooking;
   final Skill alchemy;
-  final int inventoryMaxItems;
-  final List<InventoryItem> inventoryItems;
+  final Inventory inventory;
   final EquipmentLoadout equipmentLoadout;
   final TaskProgress? taskProgress;
 
@@ -46,8 +45,7 @@ class Character with EquatableMixin {
     required this.location,
     required this.cooldownSeconds,
     required this.cooldownEnd,
-    required this.inventoryMaxItems,
-    required this.inventoryItems,
+    required this.inventory,
     required this.equipmentLoadout,
     required this.taskProgress,
   });
@@ -70,8 +68,7 @@ class Character with EquatableMixin {
         location = Location.empty(),
         cooldownSeconds = 0,
         cooldownEnd = DateTime.now(),
-        inventoryMaxItems = 1,
-        inventoryItems = [],
+        inventory = Inventory.empty(),
         equipmentLoadout = EquipmentLoadout.empty(),
         taskProgress = null;
 
@@ -94,8 +91,7 @@ class Character with EquatableMixin {
         location,
         cooldownSeconds,
         cooldownEnd,
-        inventoryMaxItems,
-        inventoryItems,
+        inventory,
         equipmentLoadout,
         taskProgress,
       ];
