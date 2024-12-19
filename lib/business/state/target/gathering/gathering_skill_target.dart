@@ -18,7 +18,7 @@ class GatheringSkillTarget extends GatheringTarget {
   String get name => 'Skill $skillType';
 
   Skill getCurrentSkill({required Character character, required SkillType skillType}) {
-    return character.allSkills.firstWhere((s) => s.skillType == skillType);
+    return [...character.allSkills, character.overall].firstWhere((s) => s.skillType == skillType);
   }
 
   @override

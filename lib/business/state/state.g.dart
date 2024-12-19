@@ -77,9 +77,7 @@ abstract class _$BoardStateCWProxy {
   BoardState dropsFromResources(
       Map<Content, List<Resource>> dropsFromResources);
 
-  BoardState itemsByCraftType(Map<SkillType, List<Item>> itemsByCraftType);
-
-  BoardState items(List<Item> items);
+  BoardState items(ItemManager items);
 
   BoardState monsters(List<Monster> monsters);
 
@@ -104,8 +102,7 @@ abstract class _$BoardStateCWProxy {
     List<Resource> resources,
     Map<Content, List<Location>> contentLocations,
     Map<Content, List<Resource>> dropsFromResources,
-    Map<SkillType, List<Item>> itemsByCraftType,
-    List<Item> items,
+    ItemManager items,
     List<Monster> monsters,
     Map<Content, List<Monster>> dropsFromMonsters,
     List<ActiveEvent> activeEvents,
@@ -137,11 +134,7 @@ class _$BoardStateCWProxyImpl implements _$BoardStateCWProxy {
       this(dropsFromResources: dropsFromResources);
 
   @override
-  BoardState itemsByCraftType(Map<SkillType, List<Item>> itemsByCraftType) =>
-      this(itemsByCraftType: itemsByCraftType);
-
-  @override
-  BoardState items(List<Item> items) => this(items: items);
+  BoardState items(ItemManager items) => this(items: items);
 
   @override
   BoardState monsters(List<Monster> monsters) => this(monsters: monsters);
@@ -177,7 +170,6 @@ class _$BoardStateCWProxyImpl implements _$BoardStateCWProxy {
     Object? resources = const $CopyWithPlaceholder(),
     Object? contentLocations = const $CopyWithPlaceholder(),
     Object? dropsFromResources = const $CopyWithPlaceholder(),
-    Object? itemsByCraftType = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? monsters = const $CopyWithPlaceholder(),
     Object? dropsFromMonsters = const $CopyWithPlaceholder(),
@@ -203,14 +195,10 @@ class _$BoardStateCWProxyImpl implements _$BoardStateCWProxy {
           ? _value.dropsFromResources
           // ignore: cast_nullable_to_non_nullable
           : dropsFromResources as Map<Content, List<Resource>>,
-      itemsByCraftType: itemsByCraftType == const $CopyWithPlaceholder()
-          ? _value.itemsByCraftType
-          // ignore: cast_nullable_to_non_nullable
-          : itemsByCraftType as Map<SkillType, List<Item>>,
       items: items == const $CopyWithPlaceholder()
           ? _value.items
           // ignore: cast_nullable_to_non_nullable
-          : items as List<Item>,
+          : items as ItemManager,
       monsters: monsters == const $CopyWithPlaceholder()
           ? _value.monsters
           // ignore: cast_nullable_to_non_nullable

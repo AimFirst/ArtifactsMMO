@@ -40,8 +40,7 @@ class RecycleItemTarget extends Target {
               'https://artifactsmmo.com/images/items/${quantityToMaintain.code}.png');
     }
 
-    final item =
-        boardState.items.where((i) => i.code == quantityToMaintain.code).first;
+    final item = boardState.items.itemByCode(quantityToMaintain.code);
 
     // Find the right workshop.
     final workshopLocations = boardState.contentLocations[Content(

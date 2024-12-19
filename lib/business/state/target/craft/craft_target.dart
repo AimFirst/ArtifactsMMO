@@ -87,20 +87,16 @@ abstract class CraftTarget extends Target {
         }
 
         // Can we craft it?
-        final craftItem = boardState.items
-            .where((i) => i.code == craftIngredient.code)
-            .firstOrNull;
-        if (craftItem != null) {
-          if (craftItem.craft != null) {
-            return CraftItemTarget(
-                    itemQuantity: ItemQuantity(
-                        code: craftIngredient.code,
-                        quantity: craftIngredient.quantity))
-                .update(
-                    character: character,
-                    boardState: boardState,
-                    artifactsClient: artifactsClient);
-          }
+        final craftItem = boardState.items.itemByCode(craftIngredient.code);
+        if (craftItem.craft != null) {
+          return CraftItemTarget(
+                  itemQuantity: ItemQuantity(
+                      code: craftIngredient.code,
+                      quantity: craftIngredient.quantity))
+              .update(
+                  character: character,
+                  boardState: boardState,
+                  artifactsClient: artifactsClient);
         }
 
         throw ArtifactsException(

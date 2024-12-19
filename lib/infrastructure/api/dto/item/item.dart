@@ -6,8 +6,8 @@ class Item with EquatableMixin {
   final String name;
   final String code;
   final int level;
-  final String type;
-  final String subType;
+  final ItemType type;
+  final ItemSubType subType;
   final String description;
   final List<Effect> effects;
   final Craft? craft;
@@ -37,4 +37,56 @@ class Item with EquatableMixin {
         craft,
         tradeable,
       ];
+
+  String get imageUrl => 'https://artifactsmmo.com/images/items/$code.png';
+}
+
+enum ItemType {
+  utility,
+  bodyArmor,
+  weapon,
+  resource,
+  legArmor,
+  helmet,
+  boots,
+  shield,
+  amulet,
+  ring,
+  artifact,
+  currency,
+  consumable,
+  unknown,
+}
+
+enum ItemSubType {
+  tool,
+  potion,
+  task,
+  mob,
+  mining,
+  woodcutting,
+  alchemy,
+  fishing,
+  unknown,
+  food,
+  dagger,
+  bar,
+  staff,
+  plank,
+  bag,
+  candy,
+  coat,
+  sword,
+  bow,
+  whip,
+  axe,
+  alloy,
+  preciousStone,
+  mask,
+  club,
+  wand,
+  helm,
+  sap,
+  sceptre,
+  cane,
 }

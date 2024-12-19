@@ -13,7 +13,7 @@ class CraftItemTarget extends CraftTarget {
   @override
   Item getItemCraft(
       {required Character character, required BoardState boardState}) {
-    return boardState.items.firstWhere((i) => i.code == itemQuantity.code);
+    return boardState.items.itemByCode(itemQuantity.code);
   }
 
   @override

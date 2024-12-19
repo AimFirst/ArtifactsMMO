@@ -314,7 +314,7 @@ class TargetBasedUpaView
     TargetBasedUpaViewModel viewModel,
   ) {
     return GridView.builder(
-        itemCount: _characterState(model).character.inventory.items.count(),
+        itemCount: _characterState(model).character.inventory.items.length,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 150,
           mainAxisSpacing: 5,
@@ -324,9 +324,7 @@ class TargetBasedUpaView
         itemBuilder: (BuildContext context, int index) {
           final inventoryItem =
               _characterState(model).character.inventory.items[index];
-          final item = model.state.boardState.items
-              .where((i) => i.code == inventoryItem.code)
-              .first;
+          final item = model.state.boardState.items.itemByCode(inventoryItem.code);
           final controller =
               TextEditingController(text: '${inventoryItem.quantity}');
           return InkWell(
@@ -376,7 +374,7 @@ class TargetBasedUpaView
     TargetBasedUpaViewModel viewModel,
   ) {
     return GridView.builder(
-        itemCount: model.state.boardState.items.length,
+        itemCount: model.state.boardState.items.allItems.length,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 150,
           mainAxisSpacing: 5,
@@ -384,7 +382,7 @@ class TargetBasedUpaView
           childAspectRatio: 1.0,
         ),
         itemBuilder: (BuildContext context, int index) {
-          final item = model.state.boardState.items[index];
+          final item = model.state.boardState.items.allItems[index];
           final controller = TextEditingController();
           return InkWell(
             onTap: null,
@@ -434,17 +432,21 @@ class TargetBasedUpaView
     TargetBasedUpaModelLoaded model,
     TargetBasedUpaViewModel viewModel,
   ) {
+    final skills = [
+      ..._characterState(model).character.allSkills,
+      _characterState(model).character.overall
+    ];
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView.separated(
-        itemCount: _characterState(model).character.allSkills.length,
+        itemCount: skills.length,
         shrinkWrap: true,
         separatorBuilder: (context, index) => const SizedBox(
           width: 1,
           height: 15,
         ),
         itemBuilder: (context, index) {
-          final skill = _characterState(model).character.allSkills[index];
+          final skill = skills[index];
           return _skillWidget(skill);
         },
       ),
@@ -564,9 +566,7 @@ class TargetBasedUpaView
         ),
         itemBuilder: (BuildContext context, int index) {
           final inventoryItem = model.state.boardState.bank.items[index];
-          final item = model.state.boardState.items
-              .where((i) => i.code == inventoryItem.code)
-              .first;
+          final item = model.state.boardState.items.itemByCode(inventoryItem.code);
           final controller =
               TextEditingController(text: '${inventoryItem.quantity}');
           return InkWell(
@@ -582,8 +582,7 @@ class TargetBasedUpaView
                     height: 55,
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
-                      imageUrl:
-                          'https://artifactsmmo.com/images/items/${item.code}.png',
+                      imageUrl: item.imageUrl,
                     ),
                   ),
                   Padding(

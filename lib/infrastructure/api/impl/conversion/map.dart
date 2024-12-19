@@ -2,6 +2,7 @@ import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
+import 'package:artifacts_mmo/infrastructure/api/impl/conversion/util.dart';
 
 extension MapConversion on MapSchema {
   MapLocation convert() {
@@ -16,7 +17,7 @@ extension MapConversion on MapSchema {
 extension MapContentSchemaConversion on MapContentSchema {
   Content convert() {
     return Content(
-      type: ContentType.values.byName(type),
+      type: ContentType.values.byName(type.toCamelCase().toUnknownIfEmpty()),
       code: code,
     );
   }

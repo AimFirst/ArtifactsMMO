@@ -4,7 +4,7 @@ import 'package:artifacts_mmo/business/state/board/achievement_manager.dart';
 import 'package:artifacts_mmo/business/state/board/bank_manager.dart';
 import 'package:artifacts_mmo/business/state/board/board_element_manager.dart';
 import 'package:artifacts_mmo/business/state/board/event_manager.dart';
-import 'package:artifacts_mmo/business/state/board/item_manager.dart';
+import 'package:artifacts_mmo/business/state/board/item_element_manager.dart';
 import 'package:artifacts_mmo/business/state/board/map_manager.dart';
 import 'package:artifacts_mmo/business/state/board/monster_manager.dart';
 import 'package:artifacts_mmo/business/state/board/resource_manager.dart';
@@ -24,7 +24,7 @@ class StateManager {
   final AchievementManager achievementManager;
   final BankManager bankManager;
   final EventManager eventManager;
-  final ItemManager itemManager;
+  final ItemElementManager itemManager;
   final MapManager mapManager;
   final MonsterManager monsterManager;
   final ResourceManager resourceManager;
@@ -56,7 +56,7 @@ class StateManager {
             AchievementManager(artifactsClient: artifactsClient),
         bankManager = BankManager(artifactsClient: artifactsClient),
         eventManager = EventManager(artifactsClient: artifactsClient),
-        itemManager = ItemManager(artifactsClient: artifactsClient),
+        itemManager = ItemElementManager(artifactsClient: artifactsClient),
         mapManager = MapManager(artifactsClient: artifactsClient),
         monsterManager = MonsterManager(artifactsClient: artifactsClient),
         resourceManager = ResourceManager(artifactsClient: artifactsClient),
@@ -67,7 +67,6 @@ class StateManager {
         bankManager.bankItemsSubject,
         bankManager.bankDetailsSubject,
         eventManager.activeEventsSubject,
-        itemManager.itemsByCraftTypeSubject,
         itemManager.itemsSubject,
         mapManager.contentLocationSubject,
         mapManager.mapSubject,
@@ -76,13 +75,12 @@ class StateManager {
         resourceManager.dropsFromResourcesSubject,
         resourceManager.resourcesSubject,
         taskManager.tasksSubject,
-        (a, b, c, d, e, f, g, h, i, j, k, l, m) => BoardState(
+        (a, b, c, d, f, g, h, i, j, k, l, m) => BoardState(
           map: h,
           resources: l,
           contentLocations: g,
           dropsFromResources: k,
-          itemsByCraftType: e,
-          items: f,
+          items: ItemManager(items: f),
           monsters: j,
           dropsFromMonsters: i,
           activeEvents: d,
@@ -93,7 +91,7 @@ class StateManager {
       ));
   }
 
-  static Stream<T> combineLatestAll<A, B, C, D, E, F, G, H, I, J, K, L, M, T>(
+  static Stream<T> combineLatestAll<A, B, C, D, E, F, G, H, I, J, K, L, T>(
     Stream<A> streamA,
     Stream<B> streamB,
     Stream<C> streamC,
@@ -106,8 +104,7 @@ class StateManager {
     Stream<J> streamJ,
     Stream<K> streamK,
     Stream<L> streamL,
-    Stream<M> streamM,
-    T Function(A a, B b, C c, D d, E e, F f, G g, H h, I i, J j, K k, L l, M m)
+    T Function(A a, B b, C c, D d, E e, F f, G g, H h, I i, J j, K k, L l)
         combiner,
   ) =>
       CombineLatestStream<dynamic, T>(
@@ -124,7 +121,6 @@ class StateManager {
           streamJ,
           streamK,
           streamL,
-          streamM,
         ],
         (List<dynamic> values) {
           return combiner(
@@ -140,7 +136,6 @@ class StateManager {
             values[9] as J,
             values[10] as K,
             values[11] as L,
-            values[12] as M,
           );
         },
       );

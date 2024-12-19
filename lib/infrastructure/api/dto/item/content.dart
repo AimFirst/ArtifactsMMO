@@ -20,7 +20,7 @@ enum ContentType {
   resource,
   workshop,
   bank,
-  grand_exchange,
-  tasks_master,
-  santa_claus,
+  grandExchange,
+  tasksMaster,
+  santaClaus,
 }

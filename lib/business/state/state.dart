@@ -3,6 +3,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement.dar
 import 'package:artifacts_mmo/infrastructure/api/dto/bank/bank.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/active_event.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/effect.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
@@ -42,8 +43,7 @@ class BoardState with EquatableMixin {
   final List<Resource> resources;
   final Map<Content, List<Location>> contentLocations;
   final Map<Content, List<Resource>> dropsFromResources;
-  final Map<SkillType, List<Item>> itemsByCraftType;
-  final List<Item> items;
+  final ItemManager items;
   final List<Monster> monsters;
   final Map<Content, List<Monster>> dropsFromMonsters;
   final List<ActiveEvent> activeEvents;
@@ -56,7 +56,6 @@ class BoardState with EquatableMixin {
     required this.resources,
     required this.contentLocations,
     required this.dropsFromResources,
-    required this.itemsByCraftType,
     required this.items,
     required this.monsters,
     required this.dropsFromMonsters,
@@ -71,8 +70,7 @@ class BoardState with EquatableMixin {
         resources = [],
         contentLocations = {},
         dropsFromResources = {},
-        itemsByCraftType = {},
-        items = [],
+        items = ItemManager.empty(),
         monsters = [],
         dropsFromMonsters = {},
         activeEvents = [],
@@ -86,7 +84,6 @@ class BoardState with EquatableMixin {
         resources,
         contentLocations,
         dropsFromResources,
-        itemsByCraftType,
         items,
         monsters,
         dropsFromMonsters,
@@ -94,4 +91,83 @@ class BoardState with EquatableMixin {
         tasks,
         achievements,
       ];
+}
+
+class ItemManager with EquatableMixin {
+  final List<Item> _allItems;
+  final Map<String, Item> _itemsByCode = {};
+  final Map<SkillType, List<Item>> _itemsByCraftType = {};
+  final Map<ItemType, List<Item>> _itemsByType = {};
+  final Map<ItemTypeAndSubType, List<Item>> _itemsBySubType = {};
+  final Map<EffectType, List<Item>> _itemsByEffectType = {};
+
+  ItemManager({required List<Item> items}) : _allItems = items {
+    for (var i in _allItems) {
+      // Items by code.
+      _itemsByCode[i.code] = i;
+
+      // Craft skill types.
+      final craftSkill = i.craft?.skill;
+      if (craftSkill != null) {
+        final currentCraftList = _itemsByCraftType[craftSkill] ?? [];
+        currentCraftList.add(i);
+        _itemsByCraftType[craftSkill] = currentCraftList;
+      }
+
+      // Current type lists.
+      final currentTypeList = _itemsByType[i.type] ?? [];
+      currentTypeList.add(i);
+      _itemsByType[i.type] = currentTypeList;
+
+      // Current sub type lists.
+      final itemSubType = ItemTypeAndSubType(itemType: i.type, itemSubType: i.subType);
+      final currentSubTypeList = _itemsBySubType[itemSubType] ?? [];
+      currentSubTypeList.add(i);
+      _itemsBySubType[itemSubType] = currentSubTypeList;
+
+      // Effects list
+      for (final effect in i.effects) {
+        final currentEffectList = _itemsByEffectType[effect.effectType] ?? [];
+        currentEffectList.add(i);
+        _itemsByEffectType[effect.effectType] = currentEffectList;
+      }
+    }
+  }
+
+  ItemManager.empty() : _allItems = [];
+
+  @override
+  List<Object?> get props => [_allItems];
+
+  Item itemByCode(String code) {
+    return _itemsByCode[code]!;
+  }
+
+  List<Item> itemsByCraftType(SkillType skillType) {
+    return _itemsByCraftType[skillType] ?? [];
+  }
+
+  List<Item> itemsByType(ItemType itemType) {
+    return _itemsByType[itemType] ?? [];
+  }
+
+  List<Item> itemsByTypeAndSubType(ItemType itemType, ItemSubType itemSubType) {
+    return _itemsBySubType[ItemTypeAndSubType(itemType: itemType, itemSubType: itemSubType)] ?? [];
+  }
+
+  List<Item> itemsByEffectType(EffectType effectType) {
+    return _itemsByEffectType[effectType] ?? [];
+  }
+
+  List<Item> get allItems => _allItems;
+}
+
+class ItemTypeAndSubType with EquatableMixin {
+  final ItemType itemType;
+  final ItemSubType itemSubType;
+
+  ItemTypeAndSubType({required this.itemType, required this.itemSubType});
+
+  @override
+  List<Object?> get props => [itemType, itemSubType];
 }

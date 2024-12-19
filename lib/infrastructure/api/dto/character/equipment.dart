@@ -70,6 +70,27 @@ class EquipmentLoadout with EquatableMixin {
     EquipmentSlot.utility2: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: utilities.length > 1 ? utilities[1] : EquipmentSlotItem.empty()),
   };
 
+
+  int count({String? code}) {
+    return
+      weapon.count(code: code) +
+      shield.count(code: code) +
+      helmet.count(code: code) +
+      bodyArmor.count(code: code) +
+      legArmor.count(code: code) +
+      boots.count(code: code) +
+      amulet.count(code: code) +
+      artifacts.count(code: code) +
+      rings.count(code: code) +
+      utilities.count(code: code);
+  }
+
+}
+
+extension EquipmentSlotListExtensions on List<EquipmentSlotItem> {
+  int count({String? code}) {
+    return fold(0, (o, e) => o + e.count(code: code));
+  }
 }
 
 class EquipmentSlotItem with EquatableMixin {
@@ -90,6 +111,13 @@ class EquipmentSlotItem with EquatableMixin {
 
   @override
   List<Object?> get props => [equipmentType, equipmentSlot, itemCode];
+
+  int count({String? code}) {
+    if (code != null) return itemCode == code ? 1 : 0;
+
+    return (itemCode?.isNotEmpty ?? false) ? 1 : 0;
+  }
+
 }
 
 enum EquipmentType {
@@ -117,4 +145,11 @@ class QuantityEquipmentSlot extends EquipmentSlotItem {
 
   @override
   List<Object?> get props => [...super.props, quantity];
+
+  @override
+  int count({String? code}) {
+    if (code != null) return itemCode == code ? quantity : 0;
+
+    return (itemCode?.isNotEmpty ?? false) ? quantity : 0;
+  }
 }

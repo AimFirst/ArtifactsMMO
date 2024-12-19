@@ -20,9 +20,9 @@ class CraftLevelTarget extends CraftTarget {
     required Character character,
     required BoardState boardState,
   }) {
-    final options = boardState.itemsByCraftType[skillType];
+    final options = boardState.items.itemsByCraftType(skillType);
     
-    if (options == null) {
+    if (options.isEmpty) {
       throw ArtifactsException(errorMessage: 'No crafts for $skillType');
     }
     options.sort((a, b) => b.level - a.level);

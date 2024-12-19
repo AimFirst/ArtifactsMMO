@@ -1,6 +1,8 @@
 import 'package:artifacts_mmo/business/state/character_target_manager.dart';
 import 'package:artifacts_mmo/business/state/state_manager.dart';
 import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
+import 'package:artifacts_mmo/business/state/target/craft/craft_level_target.dart';
+import 'package:artifacts_mmo/business/state/target/fight/fight_level_target.dart';
 import 'package:artifacts_mmo/business/state/target/gathering/gathering_skill_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart';
@@ -137,8 +139,19 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
   }
 
   Future<void> onSkillSelected(Skill skill) async {
-    await _getCurrentTargetManager().startNewTarget(
-        GatheringSkillTarget(skillType: skill.skillType, targetLevel: 99));
+    if (skill.skillType == SkillType.overall) {
+      await _getCurrentTargetManager()
+          .startNewTarget(FightLevelTarget(level: 99));
+    } else if (skill.skillType == SkillType.alchemy ||
+        skill.skillType == SkillType.fishing ||
+        skill.skillType == SkillType.woodcutting ||
+        skill.skillType == SkillType.mining) {
+      await _getCurrentTargetManager().startNewTarget(
+          GatheringSkillTarget(skillType: skill.skillType, targetLevel: 99));
+    } else {
+      await _getCurrentTargetManager().startNewTarget(
+          CraftLevelTarget(skillType: skill.skillType, targetLevel: 99));
+    }
   }
 
   Future<void> toggleTeamPlayer(Character character) async {

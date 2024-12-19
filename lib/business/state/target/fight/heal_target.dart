@@ -6,6 +6,7 @@ import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_rest.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action_use_item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/effect.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 
 class HealTarget extends Target {
@@ -30,9 +31,7 @@ class HealTarget extends Target {
 
     // Look for an item that will heal us, but less than our missing health so we don't waste any.
     final missingHealth = character.maxHp - character.hp;
-    final allHealingItems = boardState.items.where((i) =>
-        i.effects.length == 1 &&
-        i.effects.first.name == 'heal' &&
+    final allHealingItems = boardState.items.itemsByEffectType(EffectType.heal) .where((i) =>
         i.effects.first.value <= missingHealth);
     final allHealingItemsCodes = allHealingItems.map((h) => h.code);
     final myHealingItems = character.inventory.items

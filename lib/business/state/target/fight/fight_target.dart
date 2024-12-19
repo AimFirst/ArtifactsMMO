@@ -46,7 +46,7 @@ abstract class FightTarget extends Target {
   }
 
   bool canDefeatMonster({required Character character, required Monster monster,}) {
-    return true;
+    return monster.level < 10;
   }
 
   List<Monster> getTargetMonster({

@@ -21,6 +21,11 @@ class ManageInventoryTarget extends Target {
         min: 0,
         max: 30,
         overflowSolution: InventoryOverflowSolution.deposit),
+    'birch_wood': InventoryItemConstraints(
+        code: 'birch_wood',
+        min: 0,
+        max: 30,
+        overflowSolution: InventoryOverflowSolution.deposit),
     'sap': InventoryItemConstraints(
         code: 'sap',
         min: 0,
@@ -38,6 +43,16 @@ class ManageInventoryTarget extends Target {
         overflowSolution: InventoryOverflowSolution.deposit),
     'iron_ore': InventoryItemConstraints(
         code: 'iron_ore',
+        min: 0,
+        max: 30,
+        overflowSolution: InventoryOverflowSolution.deposit),
+    'coal': InventoryItemConstraints(
+        code: 'coal',
+        min: 0,
+        max: 30,
+        overflowSolution: InventoryOverflowSolution.deposit),
+    'emerald_stone': InventoryItemConstraints(
+        code: 'emerald_stone',
         min: 0,
         max: 30,
         overflowSolution: InventoryOverflowSolution.deposit),
@@ -83,6 +98,11 @@ class ManageInventoryTarget extends Target {
         overflowSolution: InventoryOverflowSolution.deposit),
     'shrimp': InventoryItemConstraints(
         code: 'shrimp',
+        min: 0,
+        max: 20,
+        overflowSolution: InventoryOverflowSolution.deposit),
+    'trout': InventoryItemConstraints(
+        code: 'trout',
         min: 0,
         max: 20,
         overflowSolution: InventoryOverflowSolution.deposit),
@@ -190,8 +210,7 @@ class ManageInventoryTarget extends Target {
         continue;
       }
 
-      final item =
-          boardState.items.where((i) => i.code == inventoryItem.code).first;
+      final item = boardState.items.itemByCode(inventoryItem.code);
 
       if (inventoryItem.quantity > constraint.max) {
         // Supposed to deposit items or destroy them?
