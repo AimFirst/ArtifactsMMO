@@ -27,10 +27,11 @@ abstract class CraftTarget extends Target {
     final item = getItemCraft(character: character, boardState: boardState);
     if (progress.finished) {
       return TargetProcessResult(
-          progress: progress,
-          action: null,
-          description: 'Finished Craft Target',
-          imageUrl: 'https://artifactsmmo.com/images/items/${item.code}.png');
+        progress: progress,
+        action: null,
+        description: 'Finished Craft Target',
+        imageUrl: item.imageUrl,
+      );
     }
 
     if (item.craft == null) {
@@ -137,7 +138,7 @@ abstract class CraftTarget extends Target {
                 //quantity: progress.target.round() - progress.current.round(),
               ))),
       description: 'Crafting $item',
-      imageUrl: 'https://artifactsmmo.com/images/items/${item.code}.png',
+      imageUrl: item.imageUrl,
     );
   }
 

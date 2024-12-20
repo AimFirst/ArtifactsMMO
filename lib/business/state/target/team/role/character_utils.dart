@@ -12,7 +12,8 @@ extension EquipmentExtensions on EquipmentLoadout {
     count += shield.itemCode == itemCode ? 1 : 0;
     count += artifacts.fold(0, (o, a) => o + (a.itemCode == itemCode ? 1 : 0));
     count += rings.fold(0, (o, r) => o + (r.itemCode == itemCode ? 1 : 0));
-    count += utilities.fold(0, (o, u) => o + (u.itemCode == itemCode ? u.quantity : 0));
+    count += utilities.fold(
+        0, (o, u) => o + (u.itemCode == itemCode ? u.quantity : 0));
     return count;
   }
 }

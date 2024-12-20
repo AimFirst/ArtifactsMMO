@@ -6,19 +6,24 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 
 class FightMonsterTaskTarget extends FightTarget {
-
   @override
-  Progress getProgress({required Character character, required BoardState boardState}) {
-    return Progress(current: character.taskProgress?.progress.toDouble() ?? 1.0,
-      target: character.taskProgress?.total.toDouble() ?? 1.0,);
+  Progress getProgress(
+      {required Character character, required BoardState boardState}) {
+    return Progress(
+      current: character.taskProgress?.progress.toDouble() ?? 1.0,
+      target: character.taskProgress?.total.toDouble() ?? 1.0,
+    );
   }
 
   @override
-  List<Monster> getTargetMonster({required Character character, required BoardState boardState}) {
+  List<Monster> getTargetMonster(
+      {required Character character, required BoardState boardState}) {
     final monsterCode = character.taskProgress?.taskCode ?? '';
-    final monster = boardState.monsters.where((m) => m.code == monsterCode).firstOrNull;
+    final monster =
+        boardState.monsters.where((m) => m.code == monsterCode).firstOrNull;
     if (monster == null) {
-      throw ArtifactsException(errorMessage: 'Unable to find monster $monsterCode');
+      throw ArtifactsException(
+          errorMessage: 'Unable to find monster $monsterCode');
     }
 
     return [monster];
@@ -26,5 +31,4 @@ class FightMonsterTaskTarget extends FightTarget {
 
   @override
   String get name => 'Fight monster for task';
-
 }

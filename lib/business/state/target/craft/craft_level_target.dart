@@ -21,13 +21,17 @@ class CraftLevelTarget extends CraftTarget {
     required BoardState boardState,
   }) {
     final options = boardState.items.itemsByCraftType(skillType);
-    
+
     if (options.isEmpty) {
       throw ArtifactsException(errorMessage: 'No crafts for $skillType');
     }
     options.sort((a, b) => b.level - a.level);
 
-    return options.firstWhere((i) => i.craft != null && i.code != 'wooden_staff' && ((i.craft!.level ?? 1)  <= getCurrentSkill(character: character, skillType: skillType).level));
+    return options.firstWhere((i) =>
+        i.craft != null &&
+        i.code != 'wooden_staff' &&
+        ((i.craft!.level ?? 1) <=
+            getCurrentSkill(character: character, skillType: skillType).level));
   }
 
   @override
@@ -42,7 +46,8 @@ class CraftLevelTarget extends CraftTarget {
     );
   }
 
-  Skill getCurrentSkill({required Character character, required SkillType skillType}) {
+  Skill getCurrentSkill(
+      {required Character character, required SkillType skillType}) {
     return character.allSkills.firstWhere((s) => s.skillType == skillType);
   }
 

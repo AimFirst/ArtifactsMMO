@@ -15,22 +15,23 @@ abstract class ActionBankItemResponse extends ActionBankResponse {
 
   @override
   List<Object?> get props => [
-    ...super.props,
-    item,
-    bank,
-  ];
+        ...super.props,
+        item,
+        bank,
+      ];
 }
 
 abstract class ActionBankItem extends ActionBank {
   final ItemQuantity itemQuantity;
 
   ActionBankItem({
-    required this.itemQuantity, required super.characterName,
+    required this.itemQuantity,
+    required super.characterName,
   });
 
   @override
   List<Object?> get props => [
-    ...super.props,
-    itemQuantity,
-  ];
+        ...super.props,
+        itemQuantity,
+      ];
 }

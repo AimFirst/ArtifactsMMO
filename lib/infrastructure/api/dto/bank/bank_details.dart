@@ -10,9 +10,23 @@ class BankDetails with EquatableMixin {
   final int nextExpansionCost;
   final int gold;
 
-  BankDetails({required this.slots, required this.expansions, required this.nextExpansionCost, required this.gold});
-  BankDetails.empty() : slots = 0, expansions = 0, nextExpansionCost = 0, gold = 0;
+  BankDetails(
+      {required this.slots,
+      required this.expansions,
+      required this.nextExpansionCost,
+      required this.gold});
+
+  BankDetails.empty()
+      : slots = 0,
+        expansions = 0,
+        nextExpansionCost = 0,
+        gold = 0;
 
   @override
-  List<Object?> get props => [slots, expansions, nextExpansionCost, gold,];
+  List<Object?> get props => [
+        slots,
+        expansions,
+        nextExpansionCost,
+        gold,
+      ];
 }

@@ -102,16 +102,14 @@ class TargetBasedUpaView
         final mapLocation = model.state.boardState.map[Location(x: x, y: y)];
 
         // Replace with your image URLs
-        final mapTileImageUrl =
-            'https://artifactsmmo.com/images/maps/${mapLocation?.skin}.png';
+        final mapTileImageUrl = mapLocation?.url ?? '';
         final mapImage = CachedNetworkImage(
           imageUrl: mapTileImageUrl,
           fit: BoxFit.cover, // Adjust the fit as needed
         );
 
         if (row == rows ~/ 2 && column == columns ~/ 2) {
-          final characterUrl =
-              'https://artifactsmmo.com/images/characters/${_characterState(model).character.skin}.png';
+          final characterUrl = _characterState(model).character.imageUrl;
           return Stack(
             children: [
               mapImage,
@@ -324,7 +322,8 @@ class TargetBasedUpaView
         itemBuilder: (BuildContext context, int index) {
           final inventoryItem =
               _characterState(model).character.inventory.items[index];
-          final item = model.state.boardState.items.itemByCode(inventoryItem.code);
+          final item =
+              model.state.boardState.items.itemByCode(inventoryItem.code);
           final controller =
               TextEditingController(text: '${inventoryItem.quantity}');
           return InkWell(
@@ -340,8 +339,7 @@ class TargetBasedUpaView
                     height: 55,
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
-                      imageUrl:
-                          'https://artifactsmmo.com/images/items/${item.code}.png',
+                      imageUrl: item.imageUrl,
                     ),
                   ),
                   Padding(
@@ -397,8 +395,7 @@ class TargetBasedUpaView
                     height: 55,
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
-                      imageUrl:
-                          'https://artifactsmmo.com/images/items/${item.code}.png',
+                      imageUrl: item.imageUrl,
                     ),
                   ),
                   Padding(
@@ -566,7 +563,8 @@ class TargetBasedUpaView
         ),
         itemBuilder: (BuildContext context, int index) {
           final inventoryItem = model.state.boardState.bank.items[index];
-          final item = model.state.boardState.items.itemByCode(inventoryItem.code);
+          final item =
+              model.state.boardState.items.itemByCode(inventoryItem.code);
           final controller =
               TextEditingController(text: '${inventoryItem.quantity}');
           return InkWell(

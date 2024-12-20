@@ -1,6 +1,7 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/effect.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart' as dto_item;
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart'
+    as dto_item;
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/craft.dart';
 import 'package:artifacts_mmo/infrastructure/api/impl/conversion/util.dart';
@@ -17,8 +18,10 @@ extension ItemConversion on ItemSchema {
       name: name,
       code: code,
       level: level,
-      type: dto_item.ItemType.values.byName(type.toCamelCase().toUnknownIfEmpty()),
-      subType: dto_item.ItemSubType.values.byName(subtype.toCamelCase().toUnknownIfEmpty()),
+      type: dto_item.ItemType.values
+          .byName(type.toCamelCase().toUnknownIfEmpty()),
+      subType: dto_item.ItemSubType.values
+          .byName(subtype.toCamelCase().toUnknownIfEmpty()),
       description: description,
       effects: effects?.map((e) => e.convert()).toList() ?? [],
       craft: craft?.convert(),

@@ -16,32 +16,60 @@ class TeamTarget extends Target {
   TeamRole lastRole = TeamRole.float;
   TeamRoleTarget target;
 
-  TeamTarget({required this.teamManager}) : target = TeamRoleTargetNone(teamManager: teamManager, character: Character.empty(), boardState: BoardState.empty());
+  TeamTarget({required this.teamManager})
+      : target = TeamRoleTargetNone(
+            teamManager: teamManager,
+            character: Character.empty(),
+            boardState: BoardState.empty());
 
   @override
   String get name => 'TeamTarget: $lastRole';
 
   @override
-  TargetProcessResult update({required Character character, required BoardState boardState, required ArtifactsClient artifactsClient}) {
-    final newRole = teamManager.roleForCharacter[character.name] ?? TeamRole.float;
+  TargetProcessResult update(
+      {required Character character,
+      required BoardState boardState,
+      required ArtifactsClient artifactsClient}) {
+    final newRole =
+        teamManager.roleForCharacter[character.name] ?? TeamRole.float;
     if (lastRole != newRole) {
       lastRole = newRole;
       switch (lastRole) {
         case TeamRole.fighter:
-          target = TeamRoleTargetFighter(teamManager: teamManager, character: character, boardState: boardState);
+          target = TeamRoleTargetFighter(
+              teamManager: teamManager,
+              character: character,
+              boardState: boardState);
         case TeamRole.weaponAndWood:
-          target = TeamRoleTargetWeaponAndWood(teamManager: teamManager, character: character, boardState: boardState);
+          target = TeamRoleTargetWeaponAndWood(
+              teamManager: teamManager,
+              character: character,
+              boardState: boardState);
         case TeamRole.gearAndMine:
-          target = TeamRoleTargetGearAndMine(teamManager: teamManager, character: character, boardState: boardState);
+          target = TeamRoleTargetGearAndMine(
+              teamManager: teamManager,
+              character: character,
+              boardState: boardState);
         case TeamRole.jewelAndAlchemy:
-          target = TeamRoleTargetJewelAndAlchemy(teamManager: teamManager, character: character, boardState: boardState);
+          target = TeamRoleTargetJewelAndAlchemy(
+              teamManager: teamManager,
+              character: character,
+              boardState: boardState);
         case TeamRole.cookAndFish:
-          target = TeamRoleTargetCookAndFish(teamManager: teamManager, character: character, boardState: boardState);
+          target = TeamRoleTargetCookAndFish(
+              teamManager: teamManager,
+              character: character,
+              boardState: boardState);
         case TeamRole.float:
-          target = TeamRoleTargetNone(teamManager: teamManager, character: character, boardState: boardState);
+          target = TeamRoleTargetNone(
+              teamManager: teamManager,
+              character: character,
+              boardState: boardState);
       }
     }
-    return target.update(character: character, boardState: boardState, artifactsClient: artifactsClient);
+    return target.update(
+        character: character,
+        boardState: boardState,
+        artifactsClient: artifactsClient);
   }
-
 }

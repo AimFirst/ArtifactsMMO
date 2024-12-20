@@ -19,7 +19,8 @@ class ActionUseItem extends Action {
   final ItemQuantity itemQuantity;
 
   ActionUseItem({
-    required this.itemQuantity, required super.characterName,
+    required this.itemQuantity,
+    required super.characterName,
   });
 
   @override

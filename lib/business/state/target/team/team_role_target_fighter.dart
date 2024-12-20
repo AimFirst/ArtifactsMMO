@@ -2,7 +2,10 @@ import 'package:artifacts_mmo/business/state/target/team/team_role_target.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 
 class TeamRoleTargetFighter extends TeamRoleTarget {
-  TeamRoleTargetFighter({required super.teamManager, required super.character, required super.boardState});
+  TeamRoleTargetFighter(
+      {required super.teamManager,
+      required super.character,
+      required super.boardState});
 
   @override
   String get name => 'Team fighter';
@@ -18,5 +21,4 @@ class TeamRoleTargetFighter extends TeamRoleTarget {
 
   @override
   List<SkillType> get skillTypes => [fightingSkill];
-
 }

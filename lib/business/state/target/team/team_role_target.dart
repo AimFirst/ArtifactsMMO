@@ -52,15 +52,18 @@ abstract class TeamRoleTarget extends Target {
       {required Character character, required BoardState boardState}) {
     List<UniqueItemQuantityRequest> desiredItems = [];
     if (gatheringSkill != SkillType.unknown) {
-      desiredItems.addAll(boardState.items.itemsByTypeAndSubType(ItemType.weapon, ItemSubType.tool)
+      desiredItems.addAll(boardState.items
+          .itemsByTypeAndSubType(ItemType.weapon, ItemSubType.tool)
           .where((i) =>
               i.effects.fold(
-                    0,
-                    (o, e) =>
-                        o +
-                        (e.effectType == gatheringSkill.effectType && e.value < 0 ? 1 : 0),
-                  ) >
-                  0)
+                0,
+                (o, e) =>
+                    o +
+                    (e.effectType == gatheringSkill.effectType && e.value < 0
+                        ? 1
+                        : 0),
+              ) >
+              0)
           .map((i) => UniqueItemQuantityRequest(
               key: '${character.name}:tool:${i.code}',
               item: i,
@@ -70,62 +73,69 @@ abstract class TeamRoleTarget extends Target {
 
     if (fightingSkill != SkillType.unknown) {
       final fightingLevel = character.overall.level;
-      desiredItems.addAll(_bestItems(boardState.items, ItemType.weapon, fightingLevel)
-          .map((i) => UniqueItemQuantityRequest(
-              key: '${character.name}:weapon:${i.code}',
-              item: i,
-              quantity: 1,
-              requestingCharacter: character.name)));
-      desiredItems.addAll(_bestItems(boardState.items, ItemType.boots, fightingLevel)
-          .map((i) => UniqueItemQuantityRequest(
-              key: '${character.name}:boots:${i.code}',
-              item: i,
-              quantity: 1,
-              requestingCharacter: character.name)));
-      desiredItems.addAll(_bestItems(boardState.items, ItemType.helmet, fightingLevel)
-          .map((i) => UniqueItemQuantityRequest(
-              key: '${character.name}:helmet:${i.code}',
-              item: i,
-              quantity: 1,
-              requestingCharacter: character.name)));
-      desiredItems.addAll(_bestItems(boardState.items, ItemType.shield, fightingLevel)
-          .map((i) => UniqueItemQuantityRequest(
-              key: '${character.name}:shield:${i.code}',
-              item: i,
-              quantity: 1,
-              requestingCharacter: character.name)));
-      desiredItems.addAll(_bestItems(boardState.items, ItemType.ring, fightingLevel)
-          .map((i) => UniqueItemQuantityRequest(
-              key: '${character.name}:ring:${i.code}',
-              item: i,
-              quantity: 2,
-              requestingCharacter: character.name)));
       desiredItems.addAll(
-          _bestItems(boardState.items, ItemType.legArmor, fightingLevel).map((i) =>
+          _bestItems(boardState.items, ItemType.weapon, fightingLevel).map(
+              (i) => UniqueItemQuantityRequest(
+                  key: '${character.name}:weapon:${i.code}',
+                  item: i,
+                  quantity: 1,
+                  requestingCharacter: character.name)));
+      desiredItems.addAll(
+          _bestItems(boardState.items, ItemType.boots, fightingLevel).map((i) =>
               UniqueItemQuantityRequest(
+                  key: '${character.name}:boots:${i.code}',
+                  item: i,
+                  quantity: 1,
+                  requestingCharacter: character.name)));
+      desiredItems.addAll(
+          _bestItems(boardState.items, ItemType.helmet, fightingLevel).map(
+              (i) => UniqueItemQuantityRequest(
+                  key: '${character.name}:helmet:${i.code}',
+                  item: i,
+                  quantity: 1,
+                  requestingCharacter: character.name)));
+      desiredItems.addAll(
+          _bestItems(boardState.items, ItemType.shield, fightingLevel).map(
+              (i) => UniqueItemQuantityRequest(
+                  key: '${character.name}:shield:${i.code}',
+                  item: i,
+                  quantity: 1,
+                  requestingCharacter: character.name)));
+      desiredItems.addAll(
+          _bestItems(boardState.items, ItemType.ring, fightingLevel).map((i) =>
+              UniqueItemQuantityRequest(
+                  key: '${character.name}:ring:${i.code}',
+                  item: i,
+                  quantity: 2,
+                  requestingCharacter: character.name)));
+      desiredItems.addAll(
+          _bestItems(boardState.items, ItemType.legArmor, fightingLevel).map(
+              (i) => UniqueItemQuantityRequest(
                   key: '${character.name}:leg_armor:${i.code}',
                   item: i,
                   quantity: 1,
                   requestingCharacter: character.name)));
       desiredItems.addAll(
-          _bestItems(boardState.items, ItemType.bodyArmor, fightingLevel).map((i) =>
-              UniqueItemQuantityRequest(
+          _bestItems(boardState.items, ItemType.bodyArmor, fightingLevel).map(
+              (i) => UniqueItemQuantityRequest(
                   key: '${character.name}:body_armor:${i.code}',
                   item: i,
                   quantity: 1,
                   requestingCharacter: character.name)));
-      desiredItems.addAll(_bestItems(boardState.items, ItemType.amulet, fightingLevel)
-          .map((i) => UniqueItemQuantityRequest(
-              key: '${character.name}:amulet:${i.code}',
-              item: i,
-              quantity: 1,
-              requestingCharacter: character.name)));
-      desiredItems.addAll(_bestItems(boardState.items, ItemType.amulet, fightingLevel)
-          .map((i) => UniqueItemQuantityRequest(
-              key: '${character.name}:amulet:${i.code}',
-              item: i,
-              quantity: 1,
-              requestingCharacter: character.name)));
+      desiredItems.addAll(
+          _bestItems(boardState.items, ItemType.amulet, fightingLevel).map(
+              (i) => UniqueItemQuantityRequest(
+                  key: '${character.name}:amulet:${i.code}',
+                  item: i,
+                  quantity: 1,
+                  requestingCharacter: character.name)));
+      desiredItems.addAll(
+          _bestItems(boardState.items, ItemType.amulet, fightingLevel).map(
+              (i) => UniqueItemQuantityRequest(
+                  key: '${character.name}:amulet:${i.code}',
+                  item: i,
+                  quantity: 1,
+                  requestingCharacter: character.name)));
     }
 
     desiredItems.removeWhere((i) => _hasDesiredItem(character, i));
@@ -136,7 +146,8 @@ abstract class TeamRoleTarget extends Target {
   List<Item> _bestItems(
       ItemManager itemManager, ItemType itemType, int characterLevel) {
     final List<Item> bestOptions = [];
-    final options = itemManager.itemsByType(itemType)
+    final options = itemManager
+        .itemsByType(itemType)
         .where((i) => i.level <= characterLevel)
         .toList();
     options.sort((a, b) => b.level - a.level);
@@ -526,15 +537,12 @@ abstract class TeamRoleTarget extends Target {
     }
 
     return skillBonusForItem(
-        item: boardState.items.itemByCode(itemCode),
-        skillType: skillType);
+        item: boardState.items.itemByCode(itemCode), skillType: skillType);
   }
 
   int skillBonusForItem({required Item item, required SkillType skillType}) {
     return item.effects.fold(
-                0,
-                (o, e) =>
-                    o + (e.effectType == skillType.effectType ? e.value : 0));
+        0, (o, e) => o + (e.effectType == skillType.effectType ? e.value : 0));
   }
 
   TargetProcessResult _checkConsumables({
@@ -544,10 +552,13 @@ abstract class TeamRoleTarget extends Target {
   }) {
     // Health potions
     if (fightingSkill != SkillType.unknown) {
-      final options = boardState.items.itemsByTypeAndSubType(ItemType.utility, ItemSubType.potion)
+      final options = boardState.items
+          .itemsByTypeAndSubType(ItemType.utility, ItemSubType.potion)
           .where((i) =>
               i.level <= character.overall.level &&
-              i.effects.where((i) => i.effectType == EffectType.restore).isNotEmpty)
+              i.effects
+                  .where((i) => i.effectType == EffectType.restore)
+                  .isNotEmpty)
           .toList();
       options.sort((a, b) => b.level - a.level);
       if (options.isNotEmpty) {
@@ -573,31 +584,31 @@ abstract class TeamRoleTarget extends Target {
           // Unequip util 1
           if (slot1?.itemCode != null && slot1?.itemCode != first.code) {
             return TargetProcessResult(
-                progress: Progress.empty(),
-                action: artifactsClient.unequipItem(
-                    action: ActionUnequipItem(
-                        slot: EquipmentSlot.utility1,
-                        quantity: slot1?.quantity ?? 0,
-                        characterName: character.name)),
-                description: 'Unequipping ${first.name}',
-                imageUrl:
-                    'https://artifactsmmo.com/images/items/${first.code}.png');
+              progress: Progress.empty(),
+              action: artifactsClient.unequipItem(
+                  action: ActionUnequipItem(
+                      slot: EquipmentSlot.utility1,
+                      quantity: slot1?.quantity ?? 0,
+                      characterName: character.name)),
+              description: 'Unequipping ${first.name}',
+              imageUrl: first.imageUrl,
+            );
           }
 
           // Equip any extra potions in inventory.
           final count = character.inventory.items.count(code: first.code);
           if (count > 0) {
             return TargetProcessResult(
-                progress: Progress.empty(),
-                action: artifactsClient.equipItem(
-                    action: ActionEquipItem(
-                        code: first.code,
-                        slot: EquipmentSlot.utility1,
-                        quantity: count,
-                        characterName: character.name)),
-                description: 'Equipping ${first.name}.',
-                imageUrl:
-                    'https://artifactsmmo.com/images/items/${first.code}.png');
+              progress: Progress.empty(),
+              action: artifactsClient.equipItem(
+                  action: ActionEquipItem(
+                      code: first.code,
+                      slot: EquipmentSlot.utility1,
+                      quantity: count,
+                      characterName: character.name)),
+              description: 'Equipping ${first.name}.',
+              imageUrl: first.imageUrl,
+            );
           }
         }
       }
@@ -627,8 +638,9 @@ abstract class TeamRoleTarget extends Target {
       }
 
       // Healing items.
-      final healOptions = boardState.items.itemsByType(ItemType.consumable) .where(
-          (i) => i.level < character.overall.level);
+      final healOptions = boardState.items
+          .itemsByType(ItemType.consumable)
+          .where((i) => i.level < character.overall.level);
       for (final option in healOptions) {
         const desiredCountOfConsumableItems = 5;
         final request = UniqueItemQuantityRequest(
@@ -765,7 +777,8 @@ abstract class TeamRoleTarget extends Target {
   }
 
   bool canGatherItem(Item item) {
-    return item.type == ItemType.resource && item.subType == gatheringSkill.itemSubtype;
+    return item.type == ItemType.resource &&
+        item.subType == gatheringSkill.itemSubtype;
   }
 
   bool canCraftItem(Item item) {
@@ -803,7 +816,8 @@ abstract class TeamRoleTarget extends Target {
       final List<ItemQuantity> resources = [];
       for (final itemQuantity in character.inventory.items) {
         final item = boardState.items.itemByCode(itemQuantity.code);
-        if (item.type == ItemType.resource || item.type == ItemType.consumable) {
+        if (item.type == ItemType.resource ||
+            item.type == ItemType.consumable) {
           resources.add(itemQuantity);
         }
       }
@@ -832,13 +846,18 @@ abstract class TeamRoleTarget extends Target {
       required BoardState boardState,
       required ArtifactsClient artifactsClient}) {
     // Try to craft the highest level thing we can.
-    final options = skillTypes.fold([], (o,l) => o..addAll(skillTypes.map((s) => boardState.items.itemsByCraftType(s))))
+    final options = skillTypes
+        .fold(
+            [],
+            (o, l) => o
+              ..addAll(
+                  skillTypes.map((s) => boardState.items.itemsByCraftType(s))))
         .where((i) =>
             (i.craft?.level ?? 0) <=
-                character.allSkills
-                    .where((s) => s.skillType == i.craft?.skill)
-                    .first
-                    .level)
+            character.allSkills
+                .where((s) => s.skillType == i.craft?.skill)
+                .first
+                .level)
         .toList();
 
     options.sort((a, b) => (b.craft?.level ?? 0) - (a.craft?.level ?? 0));
@@ -849,8 +868,8 @@ abstract class TeamRoleTarget extends Target {
       for (final ingredientQuantity
           in option.craft?.items ?? <ItemQuantity>[]) {
         // Don't use any rare resources for level up crafting.
-        if (boardState.items.itemByCode(ingredientQuantity.code)
-                .subType == ItemSubType.task) {
+        if (boardState.items.itemByCode(ingredientQuantity.code).subType ==
+            ItemSubType.task) {
           hasEnough = false;
           break;
         }

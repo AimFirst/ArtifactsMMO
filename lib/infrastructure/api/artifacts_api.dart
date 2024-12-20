@@ -61,6 +61,7 @@ abstract class ArtifactsClient {
 
   // Events
   Future<PagedResponse<ActiveEvent>> getActiveEvents({int? pageNumber});
+
   Future<PagedResponse<Event>> getEvents({int? pageNumber});
 
   // Tasks
@@ -84,30 +85,66 @@ abstract class ArtifactsClient {
 
   // Bank
   Future<PagedResponse<ItemQuantity>> getBankItems({required int pageNumber});
+
   Future<BankDetails> getBankDetails();
 
   // Actions
   Future<ActionMoveResponse> moveTo({required ActionMove action});
+
   Future<ActionRestResponse> rest({required ActionRest action});
+
   Future<ActionEquipItemResponse> equipItem({required ActionEquipItem action});
-  Future<ActionUnequipItemResponse> unequipItem({required ActionUnequipItem action});
+
+  Future<ActionUnequipItemResponse> unequipItem(
+      {required ActionUnequipItem action});
+
   Future<ActionUseItemResponse> useItem({required ActionUseItem action});
+
   Future<ActionFightResponse> fight({required ActionFight action});
+
   Future<ActionGatheringResponse> gather({required ActionGathering action});
+
   Future<ActionCraftingResponse> craft({required ActionCrafting action});
-  Future<ActionDepositBankGoldResponse> depositBankGold({required ActionDepositBankGold action});
-  Future<ActionDepositBankResponse> depositBank({required ActionDepositBank action});
-  Future<ActionWithdrawBankResponse> withdrawBank({required ActionWithdrawBank action});
-  Future<ActionWithdrawBankGoldResponse> withdrawBankGold({required ActionWithdrawBankGold action});
-  Future<ActionBuyBankExpansionResponse> buyBankExpansion({required ActionBuyBankExpansion action});
+
+  Future<ActionDepositBankGoldResponse> depositBankGold(
+      {required ActionDepositBankGold action});
+
+  Future<ActionDepositBankResponse> depositBank(
+      {required ActionDepositBank action});
+
+  Future<ActionWithdrawBankResponse> withdrawBank(
+      {required ActionWithdrawBank action});
+
+  Future<ActionWithdrawBankGoldResponse> withdrawBankGold(
+      {required ActionWithdrawBankGold action});
+
+  Future<ActionBuyBankExpansionResponse> buyBankExpansion(
+      {required ActionBuyBankExpansion action});
+
   Future<ActionRecyclingResponse> recycle({required ActionRecycling action});
+
   Future<ActionGEBuyItemResponse> geBuyItem({required ActionGEBuyItem action});
-  Future<ActionGECreateSellOrderResponse> geCreateSellOrder({required ActionGECreateSellOrder action});
-  Future<ActionGECancelSellOrderResponse> geCancelSellOrder({required ActionGECancelSellOrder action});
-  Future<ActionCompleteTaskResponse> completeTask({required ActionCompleteTask action});
-  Future<ActionTaskExchangeResponse> taskExchange({required ActionTaskExchange action});
-  Future<ActionAcceptNewTaskResponse> acceptNewTask({required ActionAcceptNewTask action});
+
+  Future<ActionGECreateSellOrderResponse> geCreateSellOrder(
+      {required ActionGECreateSellOrder action});
+
+  Future<ActionGECancelSellOrderResponse> geCancelSellOrder(
+      {required ActionGECancelSellOrder action});
+
+  Future<ActionCompleteTaskResponse> completeTask(
+      {required ActionCompleteTask action});
+
+  Future<ActionTaskExchangeResponse> taskExchange(
+      {required ActionTaskExchange action});
+
+  Future<ActionAcceptNewTaskResponse> acceptNewTask(
+      {required ActionAcceptNewTask action});
+
   Future<ActionTaskTradeResponse> taskTrade({required ActionTaskTrade action});
-  Future<ActionTaskCancelResponse> taskCancel({required ActionTaskCancel action});
-  Future<ActionDeleteItemResponse> deleteItem({required ActionDeleteItem action});
+
+  Future<ActionTaskCancelResponse> taskCancel(
+      {required ActionTaskCancel action});
+
+  Future<ActionDeleteItemResponse> deleteItem(
+      {required ActionDeleteItem action});
 }

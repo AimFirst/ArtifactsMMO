@@ -11,10 +11,9 @@ class ItemElementManager extends BoardElementManager {
   @override
   Future<void> init() async {
     final items = await AllPageLoader.loadAllPaged(
-          (int page) => artifactsClient.getItems(pageNumber: page),
+      (int page) => artifactsClient.getItems(pageNumber: page),
     );
 
     itemsSubject.value = items;
   }
-
 }

@@ -5,7 +5,7 @@ abstract class BaseViewModel<T extends BaseModel> extends ValueNotifier<T> {
   BaseViewModel(super.initialData) {
     try {
       loadAsync();
-    } on Error catch (err){
+    } on Error catch (err) {
       value = errorModel(err);
     }
   }

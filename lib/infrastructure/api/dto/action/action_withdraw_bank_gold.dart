@@ -20,7 +20,8 @@ class ActionWithdrawBankGold extends Action {
   final int quantity;
 
   ActionWithdrawBankGold({
-    required this.quantity, required super.characterName,
+    required this.quantity,
+    required super.characterName,
   });
 
   @override

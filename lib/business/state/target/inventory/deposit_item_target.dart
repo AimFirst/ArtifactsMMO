@@ -27,15 +27,16 @@ class DepositItemTarget extends Target {
     final progress = amountToDeposit <= 0
         ? Progress.done()
         : Progress(current: 0, target: amountToDeposit.toDouble());
+    final item = boardState.items.itemByCode(quantityToRemain.code);
 
     // Already done?
     if (progress.finished) {
       return TargetProcessResult(
-          progress: progress,
-          action: null,
-          description: 'No items to deposit',
-          imageUrl:
-              'https://artifactsmmo.com/images/items/${quantityToRemain.code}.png');
+        progress: progress,
+        action: null,
+        description: 'No items to deposit',
+        imageUrl: item.imageUrl,
+      );
     }
 
     // Move to bank.
@@ -56,13 +57,12 @@ class DepositItemTarget extends Target {
     final quantityToDeposit =
         ItemQuantity(code: quantityToRemain.code, quantity: amountToDeposit);
     return TargetProcessResult(
-        progress: progress,
-        action: artifactsClient.depositBank(
-            action: ActionDepositBank(
-                characterName: character.name,
-                itemQuantity: quantityToDeposit)),
-        description: 'Depositing $quantityToDeposit',
-        imageUrl:
-            'https://artifactsmmo.com/images/items/${quantityToRemain.code}.png');
+      progress: progress,
+      action: artifactsClient.depositBank(
+          action: ActionDepositBank(
+              characterName: character.name, itemQuantity: quantityToDeposit)),
+      description: 'Depositing $quantityToDeposit',
+      imageUrl: item.imageUrl,
+    );
   }
 }

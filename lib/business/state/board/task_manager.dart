@@ -11,8 +11,7 @@ class TaskManager extends BoardElementManager {
   @override
   Future<void> init() async {
     tasksSubject.value = await AllPageLoader.loadAllPaged(
-          (int page) => artifactsClient.getTasks(pageNumber: page),
+      (int page) => artifactsClient.getTasks(pageNumber: page),
     );
   }
-
 }

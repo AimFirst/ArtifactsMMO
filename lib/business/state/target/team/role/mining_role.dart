@@ -1,5 +1,3 @@
 import 'package:artifacts_mmo/business/state/target/team/role/role.dart';
 
-class MineRole extends Role {
-
-}
+class MineRole extends Role {}

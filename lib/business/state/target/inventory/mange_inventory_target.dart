@@ -251,8 +251,7 @@ class ManageInventoryTarget extends Target {
                             quantity:
                                 inventoryItem.quantity - constraint.min))),
                 description: 'Dumping extra ${inventoryItem.code}',
-                imageUrl:
-                    'https://artifactsmmo.com/images/items/${inventoryItem.code}.png');
+                imageUrl: item.imageUrl,);
         }
       }
     }

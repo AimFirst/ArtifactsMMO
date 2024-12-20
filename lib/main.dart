@@ -12,7 +12,9 @@ Future<void> main() async {
   _registerDependencies();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => TargetBasedUpaViewModel(artifactsClient: GetIt.I(), stateManager: GetIt.I()))
+    ChangeNotifierProvider(
+        create: (_) => TargetBasedUpaViewModel(
+            artifactsClient: GetIt.I(), stateManager: GetIt.I()))
   ], child: const MyApp()));
 }
 
@@ -33,7 +35,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context).copyWith(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple));
+    final ThemeData theme = Theme.of(context).copyWith(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple));
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme,

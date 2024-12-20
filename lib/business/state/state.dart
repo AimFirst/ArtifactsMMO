@@ -120,7 +120,8 @@ class ItemManager with EquatableMixin {
       _itemsByType[i.type] = currentTypeList;
 
       // Current sub type lists.
-      final itemSubType = ItemTypeAndSubType(itemType: i.type, itemSubType: i.subType);
+      final itemSubType =
+          ItemTypeAndSubType(itemType: i.type, itemSubType: i.subType);
       final currentSubTypeList = _itemsBySubType[itemSubType] ?? [];
       currentSubTypeList.add(i);
       _itemsBySubType[itemSubType] = currentSubTypeList;
@@ -152,7 +153,9 @@ class ItemManager with EquatableMixin {
   }
 
   List<Item> itemsByTypeAndSubType(ItemType itemType, ItemSubType itemSubType) {
-    return _itemsBySubType[ItemTypeAndSubType(itemType: itemType, itemSubType: itemSubType)] ?? [];
+    return _itemsBySubType[
+            ItemTypeAndSubType(itemType: itemType, itemSubType: itemSubType)] ??
+        [];
   }
 
   List<Item> itemsByEffectType(EffectType effectType) {

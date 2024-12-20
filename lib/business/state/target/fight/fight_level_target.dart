@@ -6,19 +6,24 @@ import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 
 class FightLevelTarget extends FightTarget {
   final int level;
-  FightLevelTarget({required this.level,});
+
+  FightLevelTarget({
+    required this.level,
+  });
 
   @override
-  Progress getProgress({required Character character, required BoardState boardState}) {
-    return Progress(current: character.overall.level.toDouble(), target: level.toDouble());
+  Progress getProgress(
+      {required Character character, required BoardState boardState}) {
+    return Progress(
+        current: character.overall.level.toDouble(), target: level.toDouble());
   }
 
   @override
-  List<Monster> getTargetMonster({required Character character, required BoardState boardState}) {
+  List<Monster> getTargetMonster(
+      {required Character character, required BoardState boardState}) {
     return boardState.monsters..sort((a, b) => b.level - a.level);
   }
 
   @override
   String get name => 'Fight target level $level';
-
 }

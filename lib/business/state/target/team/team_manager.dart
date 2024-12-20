@@ -23,8 +23,8 @@ class TeamManager {
   final Map<TeamRole, String> characterForRole = {};
   final Map<String, StreamSubscription<CharacterState>> subscriptions = {};
 
-  final PrioritizedList<UniqueItemQuantityRequest> neededItems = PrioritizedList();
-
+  final PrioritizedList<UniqueItemQuantityRequest> neededItems =
+      PrioritizedList();
 
   void addCharacter(ValueStream<CharacterState> characterStream) {
     characters[characterStream.value.character.name] = characterStream.value;
@@ -74,19 +74,23 @@ class TeamManager {
     }
   }
 
-  void addRequestedItem(PrioritizedElement<UniqueItemQuantityRequest> itemQuantity) {
+  void addRequestedItem(
+      PrioritizedElement<UniqueItemQuantityRequest> itemQuantity) {
     if (!neededItems.list.contains(itemQuantity)) {
-      neededItems.list.removeWhere((i) => i.element.key == itemQuantity.element.key);
+      neededItems.list
+          .removeWhere((i) => i.element.key == itemQuantity.element.key);
       neededItems.addElement(itemQuantity);
     }
   }
 
-  void removeRequestedItem(PrioritizedElement<UniqueItemQuantityRequest> itemQuantity) {
+  void removeRequestedItem(
+      PrioritizedElement<UniqueItemQuantityRequest> itemQuantity) {
     neededItems.removeElement(itemQuantity);
   }
 
   void removeItemsForCharacter(String characterName) {
-    neededItems.list.removeWhere((i) => i.element.requestingCharacter == characterName);
+    neededItems.list
+        .removeWhere((i) => i.element.requestingCharacter == characterName);
   }
 }
 
@@ -97,10 +101,20 @@ class UniqueItemQuantityRequest with EquatableMixin {
   final int quantity;
   final String requestingCharacter;
 
-  UniqueItemQuantityRequest({required this.key, required this.item, required this.quantity, required this.requestingCharacter,});
+  UniqueItemQuantityRequest({
+    required this.key,
+    required this.item,
+    required this.quantity,
+    required this.requestingCharacter,
+  });
 
   @override
-  List<Object?> get props => [key, item, quantity, requestingCharacter,];
+  List<Object?> get props => [
+        key,
+        item,
+        quantity,
+        requestingCharacter,
+      ];
 }
 
 enum TeamRole {
@@ -123,7 +137,7 @@ class PrioritizedList<T> {
 
     for (var i = 0; i < list.length; i++) {
       if (list[i].itemPriority.code < element.itemPriority.code) {
-        list.insert(max(0,i-1), element);
+        list.insert(max(0, i - 1), element);
         return;
       }
     }
@@ -155,5 +169,6 @@ enum ItemPriority {
   lowest(-100);
 
   final int code;
+
   const ItemPriority(this.code);
 }

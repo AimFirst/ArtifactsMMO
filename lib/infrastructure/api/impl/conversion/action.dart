@@ -517,8 +517,7 @@ extension SkillInfoSchemaConversions on SkillInfoSchema {
   }
 }
 
-extension TasksRewardDataResponseSchemaConversions
-    on RewardDataResponseSchema {
+extension TasksRewardDataResponseSchemaConversions on RewardDataResponseSchema {
   ActionCompleteTaskResponse convert() {
     return ActionCompleteTaskResponse(
         cooldown: CooldownExtension(data.cooldown).convert(),

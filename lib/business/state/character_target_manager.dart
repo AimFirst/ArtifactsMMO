@@ -33,9 +33,7 @@ class CharacterTargetManager {
   });
 
   Future<void> init() async {
-    boardStateStream.listen((b) =>
-    boardState = b
-    );
+    boardStateStream.listen((b) => boardState = b);
 
     _stateSubject.value = CharacterState(
         character: character,

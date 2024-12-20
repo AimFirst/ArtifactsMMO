@@ -20,7 +20,11 @@ class NetworkArtifactsException extends ArtifactsException {
         );
 
   @override
-  List<Object?> get props => [...super.props, errorType, parent,];
+  List<Object?> get props => [
+        ...super.props,
+        errorType,
+        parent,
+      ];
 }
 
 enum ErrorType {

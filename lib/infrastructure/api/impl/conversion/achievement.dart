@@ -1,6 +1,7 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_exception.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement.dart' as dto;
+import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement.dart'
+    as dto;
 import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement_reward.dart';
 
 extension AchievementConversion on AchievementSchema {

@@ -31,11 +31,11 @@ class WithdrawItemTarget extends Target {
     // Already done?
     if (progress.finished) {
       return TargetProcessResult(
-          progress: progress,
-          action: null,
-          description: 'No items to withdraw',
-          imageUrl:
-              'https://artifactsmmo.com/images/items/${quantityToMaintain.code}.png');
+        progress: progress,
+        action: null,
+        description: 'No items to withdraw',
+        imageUrl: boardState.items.itemByCode(quantityToMaintain.code).imageUrl,
+      );
     }
 
     // Move to bank.
@@ -56,13 +56,12 @@ class WithdrawItemTarget extends Target {
     final quantityToWithdraw =
         ItemQuantity(code: quantityToMaintain.code, quantity: amountToWithdraw);
     return TargetProcessResult(
-        progress: progress,
-        action: artifactsClient.withdrawBank(
-            action: ActionWithdrawBank(
-                characterName: character.name,
-                itemQuantity: quantityToWithdraw)),
-        description: 'Withdrawing $quantityToWithdraw',
-        imageUrl:
-            'https://artifactsmmo.com/images/items/${quantityToMaintain.code}.png');
+      progress: progress,
+      action: artifactsClient.withdrawBank(
+          action: ActionWithdrawBank(
+              characterName: character.name, itemQuantity: quantityToWithdraw)),
+      description: 'Withdrawing $quantityToWithdraw',
+      imageUrl: boardState.items.itemByCode(quantityToMaintain.code).imageUrl,
+    );
   }
 }

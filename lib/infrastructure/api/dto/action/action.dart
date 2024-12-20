@@ -39,9 +39,9 @@ class UseSkillResponse with EquatableMixin {
 
   @override
   List<Object?> get props => [
-    xp,
-    items,
-  ];
+        xp,
+        items,
+      ];
 }
 
 enum ActionType {

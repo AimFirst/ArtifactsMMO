@@ -39,8 +39,7 @@ class EquipmentLoadout with EquatableMixin {
         utilities = [];
 
   @override
-  List<Object?> get props =>
-      [
+  List<Object?> get props => [
         weapon,
         shield,
         helmet,
@@ -54,37 +53,58 @@ class EquipmentLoadout with EquatableMixin {
       ];
 
   Map<EquipmentSlot, QuantityEquipmentSlot> get equipmentSlots => {
-    EquipmentSlot.weapon: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: weapon),
-    EquipmentSlot.shield: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: shield),
-    EquipmentSlot.helmet: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: helmet),
-    EquipmentSlot.bodyArmor: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: bodyArmor),
-    EquipmentSlot.legArmor: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: legArmor),
-    EquipmentSlot.boots: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: boots),
-    EquipmentSlot.amulet: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: amulet),
-    EquipmentSlot.artifact1: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: artifacts.isNotEmpty ? artifacts[0] : EquipmentSlotItem.empty()),
-    EquipmentSlot.artifact2: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: artifacts.length > 1 ? artifacts[1] : EquipmentSlotItem.empty()),
-    EquipmentSlot.artifact3: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: artifacts.length > 2 ? artifacts[2] : EquipmentSlotItem.empty()),
-    EquipmentSlot.ring1: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: rings.isNotEmpty ? rings[0] : EquipmentSlotItem.empty()),
-    EquipmentSlot.ring2: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: artifacts.length > 1 ? rings[1] : EquipmentSlotItem.empty()),
-    EquipmentSlot.utility1: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: utilities.isNotEmpty ? utilities[1] : EquipmentSlotItem.empty()),
-    EquipmentSlot.utility2: QuantityEquipmentSlot.fromEquipmentSlotItem(slot: utilities.length > 1 ? utilities[1] : EquipmentSlotItem.empty()),
-  };
-
+        EquipmentSlot.weapon:
+            QuantityEquipmentSlot.fromEquipmentSlotItem(slot: weapon),
+        EquipmentSlot.shield:
+            QuantityEquipmentSlot.fromEquipmentSlotItem(slot: shield),
+        EquipmentSlot.helmet:
+            QuantityEquipmentSlot.fromEquipmentSlotItem(slot: helmet),
+        EquipmentSlot.bodyArmor:
+            QuantityEquipmentSlot.fromEquipmentSlotItem(slot: bodyArmor),
+        EquipmentSlot.legArmor:
+            QuantityEquipmentSlot.fromEquipmentSlotItem(slot: legArmor),
+        EquipmentSlot.boots:
+            QuantityEquipmentSlot.fromEquipmentSlotItem(slot: boots),
+        EquipmentSlot.amulet:
+            QuantityEquipmentSlot.fromEquipmentSlotItem(slot: amulet),
+        EquipmentSlot.artifact1: QuantityEquipmentSlot.fromEquipmentSlotItem(
+            slot: artifacts.isNotEmpty
+                ? artifacts[0]
+                : EquipmentSlotItem.empty()),
+        EquipmentSlot.artifact2: QuantityEquipmentSlot.fromEquipmentSlotItem(
+            slot: artifacts.length > 1
+                ? artifacts[1]
+                : EquipmentSlotItem.empty()),
+        EquipmentSlot.artifact3: QuantityEquipmentSlot.fromEquipmentSlotItem(
+            slot: artifacts.length > 2
+                ? artifacts[2]
+                : EquipmentSlotItem.empty()),
+        EquipmentSlot.ring1: QuantityEquipmentSlot.fromEquipmentSlotItem(
+            slot: rings.isNotEmpty ? rings[0] : EquipmentSlotItem.empty()),
+        EquipmentSlot.ring2: QuantityEquipmentSlot.fromEquipmentSlotItem(
+            slot: artifacts.length > 1 ? rings[1] : EquipmentSlotItem.empty()),
+        EquipmentSlot.utility1: QuantityEquipmentSlot.fromEquipmentSlotItem(
+            slot: utilities.isNotEmpty
+                ? utilities[1]
+                : EquipmentSlotItem.empty()),
+        EquipmentSlot.utility2: QuantityEquipmentSlot.fromEquipmentSlotItem(
+            slot: utilities.length > 1
+                ? utilities[1]
+                : EquipmentSlotItem.empty()),
+      };
 
   int count({String? code}) {
-    return
-      weapon.count(code: code) +
-      shield.count(code: code) +
-      helmet.count(code: code) +
-      bodyArmor.count(code: code) +
-      legArmor.count(code: code) +
-      boots.count(code: code) +
-      amulet.count(code: code) +
-      artifacts.count(code: code) +
-      rings.count(code: code) +
-      utilities.count(code: code);
+    return weapon.count(code: code) +
+        shield.count(code: code) +
+        helmet.count(code: code) +
+        bodyArmor.count(code: code) +
+        legArmor.count(code: code) +
+        boots.count(code: code) +
+        amulet.count(code: code) +
+        artifacts.count(code: code) +
+        rings.count(code: code) +
+        utilities.count(code: code);
   }
-
 }
 
 extension EquipmentSlotListExtensions on List<EquipmentSlotItem> {
@@ -117,7 +137,6 @@ class EquipmentSlotItem with EquatableMixin {
 
     return (itemCode?.isNotEmpty ?? false) ? 1 : 0;
   }
-
 }
 
 enum EquipmentType {
@@ -136,12 +155,18 @@ enum EquipmentType {
 class QuantityEquipmentSlot extends EquipmentSlotItem {
   final int quantity;
 
-  QuantityEquipmentSlot({required super.equipmentType,
-    required super.equipmentSlot,
-    required super.itemCode,
-    required this.quantity});
+  QuantityEquipmentSlot(
+      {required super.equipmentType,
+      required super.equipmentSlot,
+      required super.itemCode,
+      required this.quantity});
 
-  QuantityEquipmentSlot.fromEquipmentSlotItem({required EquipmentSlotItem slot}) : this(equipmentType: slot.equipmentType, equipmentSlot: slot.equipmentSlot, itemCode: slot.itemCode, quantity: 1);
+  QuantityEquipmentSlot.fromEquipmentSlotItem({required EquipmentSlotItem slot})
+      : this(
+            equipmentType: slot.equipmentType,
+            equipmentSlot: slot.equipmentSlot,
+            itemCode: slot.itemCode,
+            quantity: 1);
 
   @override
   List<Object?> get props => [...super.props, quantity];

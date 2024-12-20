@@ -1,6 +1,1 @@
-enum CombatType {
-  fire,
-  earth,
-  water,
-  air
-}
+enum CombatType { fire, earth, water, air }

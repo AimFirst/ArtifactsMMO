@@ -12,10 +12,11 @@ class CompleteTaskTarget extends Target {
   String get name => 'Complete Task';
 
   @override
-  TargetProcessResult update(
-      {required Character character,
-        required BoardState boardState,
-        required ArtifactsClient artifactsClient,}) {
+  TargetProcessResult update({
+    required Character character,
+    required BoardState boardState,
+    required ArtifactsClient artifactsClient,
+  }) {
     if (character.taskProgress == null) {
       return TargetProcessResult(
           progress: Progress(current: 1, target: 1),
@@ -26,7 +27,7 @@ class CompleteTaskTarget extends Target {
 
     // Find taskmaster location
     final locations = boardState.contentLocations[
-    Content(type: ContentType.tasksMaster, code: 'monsters')];
+        Content(type: ContentType.tasksMaster, code: 'monsters')];
     if (locations == null || locations.isEmpty) {
       throw ArtifactsException(
           errorMessage: 'Failed to get task master location');
@@ -43,7 +44,8 @@ class CompleteTaskTarget extends Target {
 
     return TargetProcessResult(
       progress: Progress(current: 0, target: 1),
-      action: artifactsClient.completeTask(action: ActionCompleteTask(characterName: character.name)),
+      action: artifactsClient.completeTask(
+          action: ActionCompleteTask(characterName: character.name)),
       description: 'Completing task',
       imageUrl: 'https://artifactsmmo.com/images/items/forest_whip.png',
     );

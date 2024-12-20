@@ -40,20 +40,20 @@ class Monster with EquatableMixin {
 
   @override
   List<Object?> get props => [
-    name,
-    code,
-    level,
-    hp,
-    fireAttack,
-    earthAttack,
-    waterAttack,
-    airAttack,
-    fireResistance,
-    earthResistance,
-    waterResistance,
-    airResistance,
-    minGold,
-    maxGold,
-    drops,
-  ];
+        name,
+        code,
+        level,
+        hp,
+        fireAttack,
+        earthAttack,
+        waterAttack,
+        airAttack,
+        fireResistance,
+        earthResistance,
+        waterResistance,
+        airResistance,
+        minGold,
+        maxGold,
+        drops,
+      ];
 }

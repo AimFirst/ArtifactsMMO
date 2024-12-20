@@ -20,9 +20,17 @@ class TargetProcessResult with EquatableMixin {
   final String description;
   final String? imageUrl;
 
-  TargetProcessResult({required this.progress, required this.action, required this.description, required this.imageUrl});
+  TargetProcessResult(
+      {required this.progress,
+      required this.action,
+      required this.description,
+      required this.imageUrl});
 
-  TargetProcessResult.empty() : progress = Progress.empty(), action = null, description = '', imageUrl = null;
+  TargetProcessResult.empty()
+      : progress = Progress.empty(),
+        action = null,
+        description = '',
+        imageUrl = null;
 
   @override
   List<Object?> get props => [
@@ -36,8 +44,14 @@ class Progress {
   final double target;
 
   Progress({required this.current, required this.target});
-  Progress.empty() : current = 0, target = 1;
-  Progress.done() : current = 1, target = 1;
+
+  Progress.empty()
+      : current = 0,
+        target = 1;
+
+  Progress.done()
+      : current = 1,
+        target = 1;
 
   bool get finished => current >= target;
 

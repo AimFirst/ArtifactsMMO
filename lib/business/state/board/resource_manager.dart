@@ -6,14 +6,15 @@ import 'package:rxdart/rxdart.dart';
 
 class ResourceManager extends BoardElementManager {
   final resourcesSubject = BehaviorSubject<List<Resource>>.seeded([]);
-  final dropsFromResourcesSubject = BehaviorSubject<Map<Content, List<Resource>>>.seeded({});
+  final dropsFromResourcesSubject =
+      BehaviorSubject<Map<Content, List<Resource>>>.seeded({});
 
   ResourceManager({required super.artifactsClient});
 
   @override
   Future<void> init() async {
     final results = await AllPageLoader.loadAllPaged(
-            (int page) => artifactsClient.getResources(pageNumber: page));
+        (int page) => artifactsClient.getResources(pageNumber: page));
 
     Map<Content, List<Resource>> dropsFromResources = {};
     for (final resource in results) {
@@ -28,5 +29,4 @@ class ResourceManager extends BoardElementManager {
     resourcesSubject.value = results;
     dropsFromResourcesSubject.value = dropsFromResources;
   }
-
 }

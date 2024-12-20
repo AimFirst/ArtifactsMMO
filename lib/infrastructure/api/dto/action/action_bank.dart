@@ -1,4 +1,3 @@
-
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action.dart';
 
 abstract class ActionBankResponse extends ActionResponse {
@@ -7,5 +6,4 @@ abstract class ActionBankResponse extends ActionResponse {
 
 abstract class ActionBank extends Action {
   ActionBank({required super.characterName});
-
 }

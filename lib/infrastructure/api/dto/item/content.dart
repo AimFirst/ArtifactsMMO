@@ -5,12 +5,18 @@ class Content with EquatableMixin {
   final String code;
 
   Content({required this.type, required this.code});
+
   Content.item({required this.code}) : type = ContentType.item;
 
-  Content.empty() : type = ContentType.unknown, code ='';
+  Content.empty()
+      : type = ContentType.unknown,
+        code = '';
 
   @override
-  List<Object?> get props => [type, code,];
+  List<Object?> get props => [
+        type,
+        code,
+      ];
 }
 
 enum ContentType {

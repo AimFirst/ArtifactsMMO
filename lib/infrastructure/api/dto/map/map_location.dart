@@ -6,11 +6,20 @@ class MapLocation with EquatableMixin {
   final Location location;
   final Content? content;
   final String skin;
-  MapLocation({required this.location, required this.content, required this.skin});
 
-  MapLocation.empty() : location = Location.empty(), content = Content.empty(), skin = '';
+  MapLocation({
+    required this.location,
+    required this.content,
+    required this.skin,
+  });
+
+  MapLocation.empty()
+      : location = Location.empty(),
+        content = Content.empty(),
+        skin = '';
 
   @override
   List<Object?> get props => [location, content];
 
+  String get url => 'https://artifactsmmo.com/images/maps/$skin.png';
 }

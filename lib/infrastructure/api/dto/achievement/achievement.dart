@@ -11,10 +11,20 @@ class Achievement with EquatableMixin {
   final int total;
   final AchievementReward rewards;
 
-  Achievement({required this.name, required this.code, required this.description, required this.points, required this.type, required this.target, required this.total, required this.rewards,});
+  Achievement({
+    required this.name,
+    required this.code,
+    required this.description,
+    required this.points,
+    required this.type,
+    required this.target,
+    required this.total,
+    required this.rewards,
+  });
 
   @override
-  List<Object?> get props => [name, code, description, points, type, target, total, rewards];
+  List<Object?> get props =>
+      [name, code, description, points, type, target, total, rewards];
 }
 
 enum AchievementType {

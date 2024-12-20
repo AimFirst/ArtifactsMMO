@@ -22,41 +22,49 @@ class EquipItemTarget extends Target {
     final current =
         character.equipmentLoadout.equipmentSlots[equipmentSlot.equipmentSlot];
 
+    final currentItem = current?.itemCode == null
+        ? boardState.items.itemByCode(current!.itemCode!)
+        : null;
+    final targetItem = equipmentSlot.itemCode == null
+        ? boardState.items.itemByCode(equipmentSlot.itemCode!)
+        : null;
+
     // Is the right item already equipped?
     if (equipmentSlot.itemCode == current?.itemCode) {
       return TargetProcessResult(
-          progress: Progress.done(),
-          action: null,
-          description: 'Done equipping ${equipmentSlot.itemCode}',
-          imageUrl:
-              'https://artifactsmmo.com/images/items/${equipmentSlot.itemCode}.png');
+        progress: Progress.done(),
+        action: null,
+        description:
+            'Done equipping ${targetItem?.imageUrl ?? equipmentSlot.itemCode}',
+        imageUrl: targetItem?.imageUrl,
+      );
     }
 
     // Do we need to un equip first?
     if (current != null) {
       return TargetProcessResult(
-          progress: Progress(current: 0, target: current.quantity.toDouble()),
-          action: artifactsClient.unequipItem(
-              action: ActionUnequipItem(
-                  slot: current.equipmentSlot,
-                  quantity: current.quantity,
-                  characterName: character.name)),
-          description: 'Unequipping ${current.itemCode}',
-          imageUrl:
-              'https://artifactsmmo.com/images/items/${current.itemCode}.png');
+        progress: Progress(current: 0, target: current.quantity.toDouble()),
+        action: artifactsClient.unequipItem(
+            action: ActionUnequipItem(
+                slot: current.equipmentSlot,
+                quantity: current.quantity,
+                characterName: character.name)),
+        description: 'Unequipping ${currentItem?.name ?? current.itemCode}',
+        imageUrl: currentItem?.imageUrl,
+      );
     }
 
     // Equip item
     return TargetProcessResult(
-        progress:
-            Progress(current: 0, target: equipmentSlot.quantity.toDouble()),
-        action: artifactsClient.equipItem(
-            action: ActionEquipItem(
-                code: equipmentSlot.itemCode ?? '',
-                slot: equipmentSlot.equipmentSlot,
-                quantity: equipmentSlot.quantity,
-                characterName: character.name)),
-        description: 'Equipping ${equipmentSlot.itemCode}',
-        imageUrl: 'https://artifactsmmo.com/images/items/${equipmentSlot.itemCode}.png');
+      progress: Progress(current: 0, target: equipmentSlot.quantity.toDouble()),
+      action: artifactsClient.equipItem(
+          action: ActionEquipItem(
+              code: equipmentSlot.itemCode ?? '',
+              slot: equipmentSlot.equipmentSlot,
+              quantity: equipmentSlot.quantity,
+              characterName: character.name)),
+      description: 'Equipping ${equipmentSlot.itemCode}',
+      imageUrl: targetItem?.imageUrl,
+    );
   }
 }

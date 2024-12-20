@@ -11,21 +11,22 @@ abstract class ActionBankGoldResponse extends ActionBankResponse {
 
   @override
   List<Object?> get props => [
-    ...super.props,
-    bank,
-  ];
+        ...super.props,
+        bank,
+      ];
 }
 
 abstract class ActionBankGold extends ActionBank {
   final int bank;
 
   ActionBankGold({
-    required this.bank, required super.characterName,
+    required this.bank,
+    required super.characterName,
   });
 
   @override
   List<Object?> get props => [
-    ...super.props,
-    bank,
-  ];
+        ...super.props,
+        bank,
+      ];
 }

@@ -31,8 +31,9 @@ class HealTarget extends Target {
 
     // Look for an item that will heal us, but less than our missing health so we don't waste any.
     final missingHealth = character.maxHp - character.hp;
-    final allHealingItems = boardState.items.itemsByEffectType(EffectType.heal) .where((i) =>
-        i.effects.first.value <= missingHealth);
+    final allHealingItems = boardState.items
+        .itemsByEffectType(EffectType.heal)
+        .where((i) => i.effects.first.value <= missingHealth);
     final allHealingItemsCodes = allHealingItems.map((h) => h.code);
     final myHealingItems = character.inventory.items
         .where((i) => i.quantity > 0 && allHealingItemsCodes.contains(i.code))
@@ -58,14 +59,15 @@ class HealTarget extends Target {
       final count = (missingHealth / healValue).floor();
       final quantity = min(count, myHealingItems.first.quantity);
       return TargetProcessResult(
-          progress: progress,
-          action: artifactsClient.useItem(
-              action: ActionUseItem(
-                  characterName: character.name,
-                  itemQuantity:
-                      ItemQuantity(code: item.code, quantity: quantity))),
-          description: 'Using ${item.name} x$quantity to heal.',
-          imageUrl: 'https://artifactsmmo.com/images/items/${item.code}.png');
+        progress: progress,
+        action: artifactsClient.useItem(
+            action: ActionUseItem(
+                characterName: character.name,
+                itemQuantity:
+                    ItemQuantity(code: item.code, quantity: quantity))),
+        description: 'Using ${item.name} x$quantity to heal.',
+        imageUrl: item.imageUrl,
+      );
     }
 
     return TargetProcessResult(

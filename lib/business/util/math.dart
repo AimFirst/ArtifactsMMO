@@ -14,12 +14,22 @@ class MathUtil {
   static int sortDistance(Location current, Location first, Location second) {
     double point1Distance = distance(current, first);
     double point2Distance = distance(current, second);
-    return point1Distance < point2Distance ? -1 : point1Distance > point2Distance ? 1 : 0;
+    return point1Distance < point2Distance
+        ? -1
+        : point1Distance > point2Distance
+            ? 1
+            : 0;
   }
 
   static int doubleToCompare(double compareValue) {
-    return compareValue < 0 ? -1 : compareValue > 0 ? 1 : 0;
+    return compareValue < 0
+        ? -1
+        : compareValue > 0
+            ? 1
+            : 0;
   }
 
-  static int sortDistanceReversed(Location current, Location first, Location second) => sortDistance(current, second, first);
+  static int sortDistanceReversed(
+          Location current, Location first, Location second) =>
+      sortDistance(current, second, first);
 }

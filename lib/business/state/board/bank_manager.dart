@@ -6,14 +6,15 @@ import 'package:rxdart/rxdart.dart';
 
 class BankManager extends BoardElementManager {
   final bankItemsSubject = BehaviorSubject<List<ItemQuantity>>.seeded([]);
-  final bankDetailsSubject = BehaviorSubject<BankDetails>.seeded(BankDetails.empty());
+  final bankDetailsSubject =
+      BehaviorSubject<BankDetails>.seeded(BankDetails.empty());
 
   BankManager({required super.artifactsClient});
 
   @override
   Future<void> init() async {
     bankItemsSubject.value = await AllPageLoader.loadAllPaged(
-          (int page) => artifactsClient.getBankItems(pageNumber: page),
+      (int page) => artifactsClient.getBankItems(pageNumber: page),
     );
 
     bankDetailsSubject.value = await artifactsClient.getBankDetails();

@@ -21,7 +21,8 @@ class ActionDeleteItem extends Action {
   final ItemQuantity itemQuantity;
 
   ActionDeleteItem({
-    required this.itemQuantity, required super.characterName,
+    required this.itemQuantity,
+    required super.characterName,
   });
 
   @override

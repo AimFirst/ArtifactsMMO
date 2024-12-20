@@ -22,7 +22,8 @@ class ActionGEBuyItem extends Action {
   final ItemQuantity itemQuantity;
 
   ActionGEBuyItem({
-    required this.itemQuantity, required super.characterName,
+    required this.itemQuantity,
+    required super.characterName,
   });
 
   @override

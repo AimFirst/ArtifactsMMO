@@ -5,13 +5,13 @@ import 'package:rxdart/rxdart.dart';
 
 class AchievementManager extends BoardElementManager {
   final achievementsSubject = BehaviorSubject<List<Achievement>>.seeded([]);
+
   AchievementManager({required super.artifactsClient});
 
   @override
   Future<void> init() async {
     achievementsSubject.value = await AllPageLoader.loadAllPaged(
-          (int page) => artifactsClient.getAchievements(pageNumber: page),
+      (int page) => artifactsClient.getAchievements(pageNumber: page),
     );
   }
-
 }

@@ -18,7 +18,8 @@ class ActionCrafting extends Action {
   final ItemQuantity itemQuantity;
 
   ActionCrafting({
-    required this.itemQuantity, required super.characterName,
+    required this.itemQuantity,
+    required super.characterName,
   });
 
   @override

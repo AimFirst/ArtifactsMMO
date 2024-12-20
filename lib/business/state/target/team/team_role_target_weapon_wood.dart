@@ -2,7 +2,10 @@ import 'package:artifacts_mmo/business/state/target/team/team_role_target.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 
 class TeamRoleTargetWeaponAndWood extends TeamRoleTarget {
-  TeamRoleTargetWeaponAndWood({required super.teamManager, required super.character, required super.boardState});
+  TeamRoleTargetWeaponAndWood(
+      {required super.teamManager,
+      required super.character,
+      required super.boardState});
 
   @override
   String get name => 'Team weapon and wood';

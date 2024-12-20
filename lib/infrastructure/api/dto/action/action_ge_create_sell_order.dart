@@ -24,7 +24,8 @@ class ActionGECreateSellOrder extends Action {
 
   ActionGECreateSellOrder({
     required this.itemQuantity,
-    required this.price, required super.characterName,
+    required this.price,
+    required super.characterName,
   });
 
   @override

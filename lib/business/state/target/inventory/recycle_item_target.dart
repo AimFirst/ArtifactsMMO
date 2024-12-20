@@ -31,16 +31,16 @@ class RecycleItemTarget extends Target {
         ? Progress(current: 1, target: 1)
         : Progress(current: 0, target: amountToRecycle.toDouble());
 
+    final item = boardState.items.itemByCode(quantityToMaintain.code);
+
     if (progress.finished) {
       return TargetProcessResult(
-          progress: progress,
-          action: null,
-          description: 'Finished recycling $quantityToMaintain',
-          imageUrl:
-              'https://artifactsmmo.com/images/items/${quantityToMaintain.code}.png');
+        progress: progress,
+        action: null,
+        description: 'Finished recycling $quantityToMaintain',
+        imageUrl: item.imageUrl,
+      );
     }
-
-    final item = boardState.items.itemByCode(quantityToMaintain.code);
 
     // Find the right workshop.
     final workshopLocations = boardState.contentLocations[Content(
@@ -76,8 +76,7 @@ class RecycleItemTarget extends Target {
         ),
       ),
       description: 'Recycling $quantityToMaintain',
-      imageUrl:
-          'https://artifactsmmo.com/images/items/${quantityToMaintain.code}.png',
+      imageUrl: boardState.items.itemByCode(quantityToMaintain.code).imageUrl,
     );
   }
 }

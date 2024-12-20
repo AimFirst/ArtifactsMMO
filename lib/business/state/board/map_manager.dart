@@ -6,17 +6,16 @@ import 'package:artifacts_mmo/infrastructure/api/dto/map/map_location.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MapManager extends BoardElementManager {
-
-  final mapSubject = BehaviorSubject<Map<Location,MapLocation>>.seeded({});
-  final contentLocationSubject = BehaviorSubject<Map<Content, List<Location>>>.seeded({});
-
+  final mapSubject = BehaviorSubject<Map<Location, MapLocation>>.seeded({});
+  final contentLocationSubject =
+      BehaviorSubject<Map<Content, List<Location>>>.seeded({});
 
   MapManager({required super.artifactsClient});
 
   @override
   Future<void> init() async {
     final results = await AllPageLoader.loadAllPaged(
-            (int page) => artifactsClient.getMap(pageNumber: page));
+        (int page) => artifactsClient.getMap(pageNumber: page));
 
     Map<Location, MapLocation> map = {};
     Map<Content, List<Location>> contentLocations = {};
@@ -34,5 +33,4 @@ class MapManager extends BoardElementManager {
     mapSubject.value = map;
     contentLocationSubject.value = contentLocations;
   }
-
 }

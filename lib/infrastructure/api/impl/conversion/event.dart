@@ -35,7 +35,10 @@ extension EventConversion on EventSchema {
 
 extension EventMapsConversion on EventMapSchema {
   Location convert() {
-    return Location(x: x, y: y,);
+    return Location(
+      x: x,
+      y: y,
+    );
   }
 }
 

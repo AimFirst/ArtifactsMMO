@@ -21,7 +21,8 @@ class ActionRecycling extends Action {
   final ItemQuantity itemQuantity;
 
   ActionRecycling({
-    required this.itemQuantity, required super.characterName,
+    required this.itemQuantity,
+    required super.characterName,
   });
 
   @override

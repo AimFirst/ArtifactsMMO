@@ -114,4 +114,6 @@ class Character with EquatableMixin {
 
   int get cooldownLeftSeconds =>
       cooldownEnd.difference(DateTime.now()).inSeconds;
+
+  String get imageUrl => 'https://artifactsmmo.com/images/characters/$skin.png';
 }

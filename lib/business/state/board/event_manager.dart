@@ -11,8 +11,7 @@ class EventManager extends BoardElementManager {
   @override
   Future<void> init() async {
     activeEventsSubject.value = await AllPageLoader.loadAllPaged(
-          (int page) => artifactsClient.getActiveEvents(pageNumber: page),
+      (int page) => artifactsClient.getActiveEvents(pageNumber: page),
     );
   }
-
 }
