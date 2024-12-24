@@ -8,7 +8,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 class CraftItemTarget extends CraftTarget {
   final ItemQuantity itemQuantity;
 
-  CraftItemTarget({required this.itemQuantity});
+  CraftItemTarget({required this.itemQuantity, required super.parentTarget});
 
   @override
   Item getItemCraft(

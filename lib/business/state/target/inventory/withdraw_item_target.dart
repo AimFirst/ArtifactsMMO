@@ -11,7 +11,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 class WithdrawItemTarget extends Target {
   final ItemQuantity quantityToMaintain;
 
-  WithdrawItemTarget({required this.quantityToMaintain});
+  WithdrawItemTarget({required this.quantityToMaintain, required super.parentTarget});
 
   @override
   String get name => 'Deposit item in bank';
@@ -44,7 +44,7 @@ class WithdrawItemTarget extends Target {
     if (bankLocation == null) {
       throw ArtifactsException(errorMessage: 'Unable to find bank to move to');
     }
-    final moveAction = MoveToTarget(targetLocation: bankLocation).update(
+    final moveAction = MoveToTarget(targetLocation: bankLocation, parentTarget: this).update(
         character: character,
         boardState: boardState,
         artifactsClient: artifactsClient);

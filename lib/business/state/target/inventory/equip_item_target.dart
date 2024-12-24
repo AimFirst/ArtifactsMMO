@@ -9,7 +9,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/equipment.dart';
 class EquipItemTarget extends Target {
   final QuantityEquipmentSlot equipmentSlot;
 
-  EquipItemTarget({required this.equipmentSlot});
+  EquipItemTarget({required this.equipmentSlot, required super.parentTarget});
 
   @override
   String get name => 'Equipping ${equipmentSlot.itemCode}';

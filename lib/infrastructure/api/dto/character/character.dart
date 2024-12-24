@@ -112,6 +112,10 @@ class Character with EquatableMixin {
   List<Skill> get craftingSkills =>
       [weaponCrafting, gearCrafting, jewelryCrafting, cooking];
 
+  Skill skillByType(SkillType skillType) {
+    return allSkills.firstWhere((s) => s.skillType == skillType);
+  }
+
   int get cooldownLeftSeconds =>
       cooldownEnd.difference(DateTime.now()).inSeconds;
 

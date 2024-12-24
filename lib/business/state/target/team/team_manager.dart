@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:artifacts_mmo/business/state/character_state.dart';
+import 'package:artifacts_mmo/business/state/target/team/role/role.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -20,6 +21,7 @@ class TeamManager {
   };
   final Map<String, CharacterState> characters = {};
   final Map<String, TeamRole> roleForCharacter = {};
+  final Map<String, List<RoleType>> skillTypesForCharacter = {};
   final Map<TeamRole, String> characterForRole = {};
   final Map<String, StreamSubscription<CharacterState>> subscriptions = {};
 

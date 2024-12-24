@@ -1,4 +1,5 @@
 import 'package:artifacts_mmo/business/state/character_state.dart';
+import 'package:artifacts_mmo/business/state/team_state.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/bank/bank.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/event/active_event.dart';
@@ -20,20 +21,24 @@ part 'state.g.dart';
 class State with EquatableMixin {
   final BoardState boardState;
   final Map<String, CharacterState> characterStates;
+  final TeamState teamState;
 
   State({
     required this.boardState,
     required this.characterStates,
+    required this.teamState,
   });
 
   State.empty()
       : boardState = BoardState.empty(),
-        characterStates = {};
+        characterStates = {},
+        teamState = TeamState.empty();
 
   @override
   List<Object?> get props => [
         boardState,
         characterStates,
+        teamState
       ];
 }
 

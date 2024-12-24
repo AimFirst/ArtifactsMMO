@@ -2,9 +2,16 @@ import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 
+part 'target.g.dart';
+
 abstract class Target {
+  final Target? parentTarget;
+
+  Target({required this.parentTarget});
+
   TargetProcessResult update({
     required Character character,
     required BoardState boardState,
@@ -12,6 +19,17 @@ abstract class Target {
   });
 
   String get name;
+}
+
+@CopyWith()
+class TargetOption<T> with EquatableMixin {
+  final String name;
+  final T value;
+
+  TargetOption({required this.name, required this.value});
+
+  @override
+  List<Object?> get props => [name, value];
 }
 
 class TargetProcessResult with EquatableMixin {
@@ -31,6 +49,10 @@ class TargetProcessResult with EquatableMixin {
         action = null,
         description = '',
         imageUrl = null;
+
+  TargetProcessResult.noAction({this.description = 'No action', this.imageUrl})
+      : progress = Progress.done(),
+        action = null;
 
   @override
   List<Object?> get props => [

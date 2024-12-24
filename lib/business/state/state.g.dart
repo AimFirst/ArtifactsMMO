@@ -11,6 +11,8 @@ abstract class _$StateCWProxy {
 
   State characterStates(Map<String, CharacterState> characterStates);
 
+  State teamState(TeamState teamState);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `State(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -20,6 +22,7 @@ abstract class _$StateCWProxy {
   State call({
     BoardState boardState,
     Map<String, CharacterState> characterStates,
+    TeamState teamState,
   });
 }
 
@@ -37,6 +40,9 @@ class _$StateCWProxyImpl implements _$StateCWProxy {
       this(characterStates: characterStates);
 
   @override
+  State teamState(TeamState teamState) => this(teamState: teamState);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `State(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -47,6 +53,7 @@ class _$StateCWProxyImpl implements _$StateCWProxy {
   State call({
     Object? boardState = const $CopyWithPlaceholder(),
     Object? characterStates = const $CopyWithPlaceholder(),
+    Object? teamState = const $CopyWithPlaceholder(),
   }) {
     return State(
       boardState: boardState == const $CopyWithPlaceholder()
@@ -57,6 +64,10 @@ class _$StateCWProxyImpl implements _$StateCWProxy {
           ? _value.characterStates
           // ignore: cast_nullable_to_non_nullable
           : characterStates as Map<String, CharacterState>,
+      teamState: teamState == const $CopyWithPlaceholder()
+          ? _value.teamState
+          // ignore: cast_nullable_to_non_nullable
+          : teamState as TeamState,
     );
   }
 }

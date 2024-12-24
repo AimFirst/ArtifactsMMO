@@ -20,7 +20,7 @@ class CharacterState with EquatableMixin {
 
   CharacterState.empty()
       : character = Character.empty(),
-        target = NoTarget(),
+        target = NoTarget(parentTarget: null),
         processResult = TargetProcessResult.empty();
 
   @override

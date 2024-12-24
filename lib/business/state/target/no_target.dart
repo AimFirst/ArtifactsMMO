@@ -4,6 +4,8 @@ import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 
 class NoTarget extends Target {
+  NoTarget({required super.parentTarget});
+
   @override
   String get name => 'Awaiting target';
 

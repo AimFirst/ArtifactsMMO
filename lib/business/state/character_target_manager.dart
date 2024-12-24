@@ -12,7 +12,7 @@ import 'package:rxdart/rxdart.dart';
 
 class CharacterTargetManager {
   Character character = Character.empty();
-  Target _target = NoTarget();
+  Target _target = NoTarget(parentTarget: null);
   bool needsToStop = false;
 
   final ArtifactsClient artifactsClient;
@@ -37,7 +37,7 @@ class CharacterTargetManager {
 
     _stateSubject.value = CharacterState(
         character: character,
-        target: NoTarget(),
+        target: NoTarget(parentTarget: null),
         processResult: TargetProcessResult(
           progress: Progress.done(),
           action: null,
@@ -54,7 +54,7 @@ class CharacterTargetManager {
 
   Future<void> stopTargetBasedUpa() async {
     await _cancelableProcess?.cancel();
-    _target = NoTarget();
+    _target = NoTarget(parentTarget: null);
     _stateSubject.value = _stateSubject.value
         .copyWith(target: _target, processResult: TargetProcessResult.empty());
   }

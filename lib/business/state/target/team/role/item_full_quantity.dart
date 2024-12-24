@@ -1,4 +1,5 @@
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 
@@ -13,4 +14,6 @@ class ItemFullQuantity with EquatableMixin {
 
   @override
   List<Object?> get props => [item, quantity];
+
+  ItemQuantity get itemQuantity => ItemQuantity(code: item.code, quantity: quantity);
 }

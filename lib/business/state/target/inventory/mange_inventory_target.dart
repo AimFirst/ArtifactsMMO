@@ -168,7 +168,7 @@ class ManageInventoryTarget extends Target {
     ItemQuantity? maxItemQuantity,
     InventoryOverflowSolution overflowSolution =
         InventoryOverflowSolution.deposit,
-    this.onlyRunIfNearFull = false,
+    this.onlyRunIfNearFull = false, required super.parentTarget,
   }) {
     if (maxItemQuantity != null) {
       itemConstraints[maxItemQuantity.code] = InventoryItemConstraints(
@@ -221,6 +221,7 @@ class ManageInventoryTarget extends Target {
                 code: constraint.code,
                 quantity: constraint.min,
               ),
+              parentTarget: this,
             ).update(
               character: character,
               boardState: boardState,
@@ -233,7 +234,7 @@ class ManageInventoryTarget extends Target {
                 quantityToMaintain: ItemQuantity(
                   code: constraint.code,
                   quantity: constraint.min,
-                ),
+                ), parentTarget: this,
               ).update(
                 character: character,
                 boardState: boardState,

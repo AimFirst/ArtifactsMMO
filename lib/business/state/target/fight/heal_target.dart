@@ -10,6 +10,8 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/effect.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 
 class HealTarget extends Target {
+  HealTarget({required super.parentTarget});
+
   @override
   String get name => 'Heal';
 

@@ -12,8 +12,10 @@ import 'package:artifacts_mmo/business/state/board/task_manager.dart';
 import 'package:artifacts_mmo/business/state/character_target_manager.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/business/state/target/no_target.dart';
+import 'package:artifacts_mmo/business/state/target/team/role/role.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_target.dart';
+import 'package:artifacts_mmo/business/state/team_state.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/bank/bank.dart';
 import 'package:rxdart/rxdart.dart';
@@ -140,6 +142,13 @@ class StateManager {
         },
       );
 
+  TeamState _buildTeamState() {
+    return TeamState(
+      playerSkillRolesMap: teamManager.skillTypesForCharacter,
+      neededItems: teamManager.neededItems,
+    );
+  }
+
   Future<void> init() async {
     await Future.wait(_managers.map((m) => m.init()));
     boardStateStream.listen((b) {
@@ -148,7 +157,10 @@ class StateManager {
       tempValue = tempValue.copyWith(boardState: b);
       _stateSubject.value = tempValue;
     });
-    _stateSubject.value = State(boardState: _boardState, characterStates: {});
+    _stateSubject.value = State(
+        boardState: _boardState,
+        characterStates: {},
+        teamState: _buildTeamState());
     final characters = await artifactsClient.getCharacters();
     for (final c in characters) {
       final characterTargetManager = CharacterTargetManager(
@@ -162,8 +174,8 @@ class StateManager {
       characterTargetManager.stateStream.listen((c) {
         final currentState = {..._stateSubject.value.characterStates};
         currentState[c.character.name] = c;
-        _stateSubject.value =
-            _stateSubject.value.copyWith(characterStates: {...currentState});
+        _stateSubject.value = _stateSubject.value.copyWith(
+            characterStates: {...currentState}, teamState: _buildTeamState());
       });
     }
   }
@@ -183,7 +195,29 @@ class StateManager {
     final targetManager = characterTargetManagers[characterName];
     if (targetManager != null) {
       teamManager.addCharacter(targetManager.stateStream);
-      targetManager.startNewTarget(TeamTarget(teamManager: teamManager));
+      targetManager.startNewTarget(
+        TeamTarget(
+          teamManager: teamManager,
+          parentTarget: null,
+          desiredRoleTypes: _desiredRolesForCharacter(characterName),
+        ),
+      );
+    }
+  }
+
+  List<RoleType> _desiredRolesForCharacter(String characterName) {
+    if (characterName == 'AimLater') {
+      return [RoleType.fighting];
+    } else if (characterName == 'Worker1') {
+      return [RoleType.gearCrafting, RoleType.mining];
+    } else if (characterName == 'Worker2') {
+      return [RoleType.weaponCrafting, RoleType.woodcutting];
+    } else if (characterName == 'Worker3') {
+      return [RoleType.cooking, RoleType.fighting];
+    } else if (characterName == 'Worker4') {
+      return [RoleType.jewelryCrafting, RoleType.alchemy];
+    } else {
+      return [];
     }
   }
 
@@ -191,7 +225,7 @@ class StateManager {
     final targetManager = characterTargetManagers[characterName];
     if (targetManager != null) {
       teamManager.removeCharacter(targetManager.stateStream);
-      targetManager.startNewTarget(NoTarget());
+      targetManager.startNewTarget(NoTarget(parentTarget: null));
     }
   }
 }

@@ -10,7 +10,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/resource/resource.dart';
 class GatheringItemTarget extends GatheringTarget {
   final ItemQuantity targetItemQuantity;
 
-  GatheringItemTarget({required this.targetItemQuantity});
+  GatheringItemTarget({required this.targetItemQuantity, required super.parentTarget});
 
   @override
   Progress getProgress(

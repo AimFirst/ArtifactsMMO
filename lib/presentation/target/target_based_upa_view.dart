@@ -1,5 +1,6 @@
 import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
@@ -289,6 +290,8 @@ class TargetBasedUpaView
         return 'Skills';
       case MenuItemType.bank:
         return 'Bank (${model.state.boardState.bank.items.count()}/${model.state.boardState.bank.bankDetails.slots})';
+      case MenuItemType.team:
+        return 'Team';
     }
   }
 
@@ -304,6 +307,8 @@ class TargetBasedUpaView
         return _menuForTasks(model, viewModel);
       case MenuItemType.bank:
         return _menuForBank(model, viewModel);
+      case MenuItemType.team:
+        return _menuForTeam(model, viewModel);
     }
   }
 
@@ -606,6 +611,29 @@ class TargetBasedUpaView
             ),
           );
         });
+  }
+
+  Widget _menuForTeam(
+      TargetBasedUpaModelLoaded model,
+      TargetBasedUpaViewModel viewModel,
+      ) {
+    return Column(
+      children: [
+        Text((model.teamState.playerSkillRolesMap[model.selectedChar] ?? []).fold('', (o, n) => '$o,$n')),
+        ListView.separated(itemBuilder: (context, index) =>
+            _teamItemWidget(model.teamState.neededItems.list[index]), separatorBuilder: (context, index) => const SizedBox(
+          width: 1,
+          height: 15,
+        ), itemCount: model.teamState.neededItems.list.length),
+      ],
+    );
+  }
+
+  Widget _teamItemWidget(PrioritizedElement<UniqueItemQuantityRequest> requestedItem) {
+    return Row(children: [
+      Text(requestedItem.element.requestingCharacter),
+      Text('${requestedItem.element.item.name} x${requestedItem.element.quantity}'),
+    ],);
   }
 
   Widget _menuOption({

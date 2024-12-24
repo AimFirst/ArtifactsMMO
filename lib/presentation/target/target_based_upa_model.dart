@@ -1,4 +1,5 @@
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/team_state.dart';
 import 'package:artifacts_mmo/presentation/base_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -33,11 +34,13 @@ class TargetBasedUpaModelLoaded
   final State state;
   final List<MenuOption> menuOptions;
   final String selectedChar;
+  final TeamState teamState;
 
   TargetBasedUpaModelLoaded({
     required this.state,
     required this.menuOptions,
     required this.selectedChar,
+    required this.teamState,
   });
 
   @override
@@ -72,4 +75,5 @@ enum MenuItemType {
   items,
   tasks,
   bank,
+  team
 }

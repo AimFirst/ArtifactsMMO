@@ -8,6 +8,8 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 
 class CompleteTaskTarget extends Target {
+  CompleteTaskTarget({required super.parentTarget});
+
   @override
   String get name => 'Complete Task';
 
@@ -34,7 +36,7 @@ class CompleteTaskTarget extends Target {
     }
 
     // Move to it.
-    final moveAction = MoveToTarget(targetLocation: locations.first).update(
+    final moveAction = MoveToTarget(targetLocation: locations.first, parentTarget: this).update(
         character: character,
         boardState: boardState,
         artifactsClient: artifactsClient);
