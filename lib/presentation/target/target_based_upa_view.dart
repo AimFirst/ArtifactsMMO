@@ -619,12 +619,14 @@ class TargetBasedUpaView
       ) {
     return Column(
       children: [
-        Text((model.teamState.playerSkillRolesMap[model.selectedChar] ?? []).fold('', (o, n) => '$o,$n')),
-        ListView.separated(itemBuilder: (context, index) =>
-            _teamItemWidget(model.teamState.neededItems.list[index]), separatorBuilder: (context, index) => const SizedBox(
-          width: 1,
-          height: 15,
-        ), itemCount: model.teamState.neededItems.list.length),
+        Text((model.teamState.playerSkillRolesMap[model.selectedChar] ?? []).fold('a', (o, n) => '$o,$n')),
+        Expanded(
+          child: ListView.separated(itemBuilder: (context, index) =>
+              _teamItemWidget(model.teamState.neededItems.list[index]), separatorBuilder: (context, index) => const SizedBox(
+            width: 1,
+            height: 15,
+          ), itemCount: model.teamState.neededItems.list.length),
+        ),
       ],
     );
   }
