@@ -31,3 +31,11 @@ class MonsterManager extends BoardElementManager {
     dropsFromMonstersSubject.value = dropsFromMonsters;
   }
 }
+
+extension MonsterExtension on List<Monster> {
+  List<Monster> monstersThatProvideItem({required String code}) {
+    return where(
+            (r) => r.drops.fold(0, (o, d) => o + (d.code == code ? 1 : 0)) > 0)
+        .toList();
+  }
+}

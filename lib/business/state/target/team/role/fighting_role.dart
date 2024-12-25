@@ -1,66 +1,18 @@
+import 'package:artifacts_mmo/business/state/board/monster_manager.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
-import 'package:artifacts_mmo/business/state/target/fight/fight_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/fight/fight_level_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
-import 'package:artifacts_mmo/business/state/target/team/role/item_full_quantity.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/providability.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/role.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 
 class FightingRole extends Role {
-  @override
-  Providable canGetItem({
-    required BoardState boardState,
-    required Character character,
-    required ItemFullQuantity itemQuantity,
-  }) {
-    final monstersThatDrop = boardState.dropsFromMonsters[
-            Content(type: ContentType.item, code: itemQuantity.item.code)] ??
-        [];
-    monstersThatDrop.sort((a, b) => a.level - b.level);
-    if (monstersThatDrop.isNotEmpty) {
-      return monstersThatDrop.first.level <= character.overall.level
-          ? Providable.canProvideSoon
-          : Providable.canProvideEventually;
-    }
-
-    return Providable.cannotProvide;
-  }
-
-  @override
-  TargetProcessResult getItem({
-    required BoardState boardState,
-    required Character character,
-    required ItemFullQuantity itemQuantity,
-    required ArtifactsClient artifactsClient,
-    required Target? parentTarget,
-  }) {
-    if (canGetItem(
-            boardState: boardState,
-            character: character,
-            itemQuantity: itemQuantity) ==
-        Providable.cannotProvide) {
-      return TargetProcessResult(
-        progress: Progress.done(),
-        action: null,
-        description: 'Cannot get ${itemQuantity.item.name}',
-        imageUrl: itemQuantity.item.imageUrl,
-      );
-    }
-
-    return FightItemTarget(
-            itemQuantity: itemQuantity.itemQuantity, parentTarget: parentTarget)
-        .update(
-      character: character,
-      boardState: boardState,
-      artifactsClient: artifactsClient,
-    );
-  }
 
   @override
   RoleType get roleType => RoleType.fighting;
@@ -155,12 +107,105 @@ class FightingRole extends Role {
   List<InventoryItemConstraints> desiredConsumables(
       {required BoardState boardState, required Character character}) {
     return [
-      InventoryItemConstraints(code: 'small_health_potion', min: 10, max: 20, overflowSolution: InventoryOverflowSolution.deposit),
-      InventoryItemConstraints(code: 'minor_health_potion', min: 10, max: 20, overflowSolution: InventoryOverflowSolution.deposit),
-      InventoryItemConstraints(code: 'earth_boost_potion', min: 1, max: 3, overflowSolution: InventoryOverflowSolution.deposit),
-      InventoryItemConstraints(code: 'air_boost_potion', min: 1, max: 3, overflowSolution: InventoryOverflowSolution.deposit),
-      InventoryItemConstraints(code: 'fire_boost_potion', min: 1, max: 3, overflowSolution: InventoryOverflowSolution.deposit),
-      InventoryItemConstraints(code: 'water_boost_potion', min: 1, max: 3, overflowSolution: InventoryOverflowSolution.deposit),
+      InventoryItemConstraints(
+          code: 'small_health_potion',
+          min: 10,
+          max: 20,
+          overflowSolution: InventoryOverflowSolution.deposit),
+      InventoryItemConstraints(
+          code: 'minor_health_potion',
+          min: 10,
+          max: 20,
+          overflowSolution: InventoryOverflowSolution.deposit),
+      InventoryItemConstraints(
+          code: 'earth_boost_potion',
+          min: 1,
+          max: 3,
+          overflowSolution: InventoryOverflowSolution.deposit),
+      InventoryItemConstraints(
+          code: 'air_boost_potion',
+          min: 1,
+          max: 3,
+          overflowSolution: InventoryOverflowSolution.deposit),
+      InventoryItemConstraints(
+          code: 'fire_boost_potion',
+          min: 1,
+          max: 3,
+          overflowSolution: InventoryOverflowSolution.deposit),
+      InventoryItemConstraints(
+          code: 'water_boost_potion',
+          min: 1,
+          max: 3,
+          overflowSolution: InventoryOverflowSolution.deposit),
     ];
+  }
+
+  @override
+  ProvideResult canProvideItem({
+    required BoardState boardState,
+    required Character character,
+    required ItemQuantity itemQuantity,
+    required bool allowBank,
+  }) {
+    var quantityNeeded = itemQuantity.quantity;
+
+    // Do we have it in the inventory?
+    final inventoryCount =
+        character.inventory.items.count(code: itemQuantity.code);
+    quantityNeeded -= inventoryCount;
+    if (quantityNeeded <= 0) {
+      return ProvideResult(
+        providable: Providable.canProvideImmediately,
+        neededDependencies: [],
+        provideMethod: ProvideMethod.inventory,
+        countNeeded: itemQuantity.quantity,
+      );
+    }
+
+    // Do we have it in the bank?
+    if (allowBank) {
+      final countNeededBeforeBank = quantityNeeded;
+      final bankCount = boardState.bank.items.count(code: itemQuantity.code);
+      quantityNeeded -= bankCount;
+      if (quantityNeeded <= 0) {
+        return ProvideResult(
+          providable: Providable.canProvideSoon,
+          neededDependencies: [],
+          provideMethod: ProvideMethod.bank,
+          countNeeded: countNeededBeforeBank,
+        );
+      }
+    }
+
+    // Can we fight for it?
+    final monsters =
+        boardState.monsters.monstersThatProvideItem(code: itemQuantity.code);
+    final monster = monsters
+        .where((m) => canDefaultMonster(
+            monster: m, character: character, boardState: boardState))
+        .firstOrNull;
+    if (monster != null) {
+      return ProvideResult(
+        providable: Providable.canProvideSoon,
+        neededDependencies: [],
+        provideMethod: ProvideMethod.fight,
+        countNeeded: quantityNeeded,
+      );
+    }
+
+    return ProvideResult(
+      providable: Providable.cannotProvide,
+      neededDependencies: [],
+      provideMethod: ProvideMethod.unknown,
+      countNeeded: quantityNeeded,
+    );
+  }
+
+  bool canDefaultMonster({
+    required Monster monster,
+    required Character character,
+    required BoardState boardState,
+  }) {
+    return monster.level <= character.overall.level - 10;
   }
 }

@@ -137,12 +137,16 @@ class PrioritizedList<T> {
       return;
     }
 
+    // Try to insert it into the right place.
     for (var i = 0; i < list.length; i++) {
       if (list[i].itemPriority.code < element.itemPriority.code) {
         list.insert(max(0, i - 1), element);
         return;
       }
     }
+
+    // It goes at the end of the list.
+    list.add(element);
   }
 
   void removeElement(PrioritizedElement<T> element) {

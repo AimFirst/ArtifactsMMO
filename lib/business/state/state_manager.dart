@@ -213,7 +213,7 @@ class StateManager {
     } else if (characterName == 'Worker2') {
       return [RoleType.weaponCrafting, RoleType.woodcutting];
     } else if (characterName == 'Worker3') {
-      return [RoleType.cooking, RoleType.fighting];
+      return [RoleType.cooking, RoleType.fishing];
     } else if (characterName == 'Worker4') {
       return [RoleType.jewelryCrafting, RoleType.alchemy];
     } else {

@@ -3,6 +3,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:equatable/equatable.dart';
 
 class Skill with EquatableMixin {
+  static const int maxSkillLevel = 40;
   final SkillType skillType;
   final int level;
   final int xp;

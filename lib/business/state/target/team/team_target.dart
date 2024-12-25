@@ -11,7 +11,6 @@ import 'package:artifacts_mmo/business/state/target/team/role/alchemy_role.dart'
 import 'package:artifacts_mmo/business/state/target/team/role/cooking_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/fishing_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/gear_crafting_role.dart';
-import 'package:artifacts_mmo/business/state/target/team/role/item_full_quantity.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/jewelry_crafting_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/mining_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/providability.dart';
@@ -29,6 +28,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 class TeamTarget extends Target {
   final TeamManager teamManager;
   final List<Role> roles = [];
+  var hasCheckedEquipment = false;
 
   TeamTarget(
       {required this.teamManager,
@@ -63,6 +63,15 @@ class TeamTarget extends Target {
     required BoardState boardState,
     required ArtifactsClient artifactsClient,
   }) {
+
+    if (!hasCheckedEquipment) {
+      hasCheckedEquipment = true;
+      final desiredEquipment = getDesiredEquipment(character: character, boardState: boardState);
+      for (final equip in desiredEquipment) {
+        teamManager.addRequestedItem(PrioritizedElement(itemPriority: ItemPriority.medium, element: equip));
+      }
+    }
+
     // Do we now have our desired item?
     removeAcquiredWantedItems(character: character);
 
@@ -191,12 +200,14 @@ class TeamTarget extends Target {
 
       for (final role in roles) {
         final providability = role.canProvideItem(
-            boardState: boardState,
-            character: character,
-            itemQuantity: ItemFullQuantity(
-              item: desiredItem.element.item,
-              quantity: desiredItem.element.quantity,
-            ));
+          boardState: boardState,
+          character: character,
+          itemQuantity: ItemQuantity(
+            code: desiredItem.element.item.code,
+            quantity: desiredItem.element.quantity,
+          ),
+          allowBank: false,
+        );
 
         switch (providability) {
           case Providable.canProvideImmediately:
@@ -211,15 +222,16 @@ class TeamTarget extends Target {
               artifactsClient: artifactsClient,
             );
           case Providable.canProvideSoon:
-            return role.getItem(
+            return role.provideItem(
               boardState: boardState,
               character: character,
-              itemQuantity: ItemFullQuantity(
-                item: desiredItem.element.item,
+              itemQuantity: ItemQuantity(
+                code: desiredItem.element.item.code,
                 quantity: desiredItem.element.quantity,
               ),
               artifactsClient: artifactsClient,
               parentTarget: parentTarget,
+              allowBank: false,
             );
           default:
           // No action

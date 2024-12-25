@@ -1,9 +1,9 @@
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
+import 'package:equatable/equatable.dart';
+
 enum Providable {
   /// Not sure if we can provide or not.
   unknown,
-
-  /// Cannot provide.
-  cannotProvide,
 
   /// Has this item right now and can provide it on short notice.
   canProvideImmediately,
@@ -17,6 +17,40 @@ enum Providable {
   /// usually means we are working on leveling the right skill, but aren't there
   /// yet.
   canProvideEventually,
+
+  /// Cannot provide.
+  cannotProvide,
+}
+
+class ProvideResult with EquatableMixin {
+  final Providable providable;
+  final List<ItemQuantity> neededDependencies;
+  final ProvideMethod provideMethod;
+  final int countNeeded;
+
+  ProvideResult({
+    required this.providable,
+    required this.neededDependencies,
+    required this.provideMethod,
+    required this.countNeeded,
+  });
+
+  @override
+  List<Object?> get props => [
+    providable,
+    neededDependencies,
+    provideMethod,
+    countNeeded,
+  ];
+}
+
+enum ProvideMethod {
+  unknown,
+  inventory,
+  fight,
+  craft,
+  gather,
+  bank,
 }
 
 extension EnumComparisionOperators<T extends Enum> on T {

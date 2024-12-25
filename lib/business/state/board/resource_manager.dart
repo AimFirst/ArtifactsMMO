@@ -30,3 +30,11 @@ class ResourceManager extends BoardElementManager {
     dropsFromResourcesSubject.value = dropsFromResources;
   }
 }
+
+extension ResourceExtension on List<Resource> {
+  List<Resource> resourcesThatProvideItem({required String code}) {
+    return where(
+            (r) => r.drops.fold(0, (o, d) => o + (d.code == code ? 1 : 0)) > 0)
+        .toList();
+  }
+}

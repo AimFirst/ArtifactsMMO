@@ -1,11 +1,13 @@
 import 'dart:math';
 
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
+import 'package:artifacts_mmo/business/state/target/fight/fight_item_target.dart';
+import 'package:artifacts_mmo/business/state/target/gathering/gathering_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/deposit_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/withdraw_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
-import 'package:artifacts_mmo/business/state/target/team/role/item_full_quantity.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/providability.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
@@ -16,36 +18,71 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 abstract class Role {
   RoleType get roleType;
 
-  Providable canProvideItem({
+  // Stubs
+  ProvideResult canProvideItem({
     required BoardState boardState,
     required Character character,
-    required ItemFullQuantity itemQuantity,
-  }) {
-    if (character.inventory.items.count(code: itemQuantity.item.code) >=
-        itemQuantity.quantity) {
-      return Providable.canProvideImmediately;
-    }
+    required ItemQuantity itemQuantity,
+    required bool allowBank,
+  });
 
-    return canGetItem(
+  TargetProcessResult provideItem({
+    required BoardState boardState,
+    required Character character,
+    required ItemQuantity itemQuantity,
+    required ArtifactsClient artifactsClient,
+    required Target? parentTarget,
+    required bool allowBank,
+  }) {
+    final canProvide = canProvideItem(
       boardState: boardState,
       character: character,
       itemQuantity: itemQuantity,
+      allowBank: allowBank,
     );
+
+    switch (canProvide.provideMethod) {
+      case ProvideMethod.fight:
+        return FightItemTarget(
+          itemQuantity: itemQuantity,
+          parentTarget: parentTarget,
+        ).update(
+          character: character,
+          boardState: boardState,
+          artifactsClient: artifactsClient,
+        );
+      case ProvideMethod.craft:
+        return CraftItemTarget(
+          itemQuantity: itemQuantity,
+          parentTarget: parentTarget,
+        ).update(
+          character: character,
+          boardState: boardState,
+          artifactsClient: artifactsClient,
+        );
+      case ProvideMethod.gather:
+        return GatheringItemTarget(
+          targetItemQuantity: itemQuantity,
+          parentTarget: parentTarget,
+        ).update(
+          character: character,
+          boardState: boardState,
+          artifactsClient: artifactsClient,
+        );
+      case ProvideMethod.bank:
+        return WithdrawItemTarget(
+          quantityToMaintain: itemQuantity,
+          parentTarget: parentTarget,
+        ).update(
+          character: character,
+          boardState: boardState,
+          artifactsClient: artifactsClient,
+        );
+      case ProvideMethod.unknown:
+      case ProvideMethod.inventory:
+        return TargetProcessResult.noAction();
+    }
   }
-
-  Providable canGetItem({
-    required BoardState boardState,
-    required Character character,
-    required ItemFullQuantity itemQuantity,
-  });
-
-  TargetProcessResult getItem({
-    required BoardState boardState,
-    required Character character,
-    required ItemFullQuantity itemQuantity,
-    required ArtifactsClient artifactsClient,
-    required Target? parentTarget,
-  });
 
   TargetProcessResult defaultIdle({
     required BoardState boardState,
@@ -59,6 +96,12 @@ abstract class Role {
     required Character character,
   });
 
+  List<InventoryItemConstraints> desiredConsumables({
+    required BoardState boardState,
+    required Character character,
+  });
+
+  // Helper Methods
   List<Item> bestItems(
       ItemManager itemManager, ItemType itemType, int characterLevel) {
     final List<Item> bestOptions = [];
@@ -81,11 +124,7 @@ abstract class Role {
     return bestOptions;
   }
 
-  List<InventoryItemConstraints> desiredConsumables({
-    required BoardState boardState,
-    required Character character,
-  });
-
+  // Target methods
   TargetProcessResult checkConsumables({
     required Character character,
     required BoardState boardState,
