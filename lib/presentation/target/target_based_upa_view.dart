@@ -636,6 +636,7 @@ class TargetBasedUpaView
   Widget _teamItemWidget(PrioritizedElement<UniqueItemQuantityRequest> requestedItem) {
     return Row(children: [
       Text(requestedItem.element.requestingCharacter),
+      Text(requestedItem.element.key),
       Text('${requestedItem.element.item.name} x${requestedItem.element.quantity}'),
     ],);
   }

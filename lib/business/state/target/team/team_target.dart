@@ -1,7 +1,6 @@
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/deposit_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/recycle_item_target.dart';
-import 'package:artifacts_mmo/business/state/target/inventory/withdraw_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/complete_task_target.dart';
@@ -232,6 +231,13 @@ class TeamTarget extends Target {
     required ArtifactsClient artifactsClient,
   }) {
     for (final desiredItem in [...teamManager.neededItems.list]) {
+
+      // If we already have this item in the bank, no action needed. The other player will grab it eventually.
+      if (bankRole.canAcquireItem(boardState: boardState, character: character, itemQuantity: desiredItem.element.toItemQuantity()).providable != Providable.cannotProvide) {
+        continue;
+      }
+
+      // See if any of our roles can provide it.
       var countNeeded = desiredItem.element.quantity;
       for (final role in [bankRole, ...roles]) {
         final canProvide = role.canProvideItem(
@@ -245,9 +251,15 @@ class TeamTarget extends Target {
 
         // We can provide?
         if (canProvide.providable != Providable.cannotProvide) {
+          // We can provide, but do we have all dependencies?
+          final remainingDependencies = canProvide.neededDependencies.map((d){
+            final providability = inventoryRole.canProvideItem(boardState: boardState, character: character, itemQuantity: d);
+            return ItemQuantity(code: d.code, quantity: providability.countNeeded);
+          }).where((d) => d.quantity > 0);
+
           // We can provide but there's dependencies we need first.
-          if (canProvide.neededDependencies.isNotEmpty) {
-            for (final dependency in canProvide.neededDependencies) {
+          if (remainingDependencies.isNotEmpty) {
+            for (final dependency in remainingDependencies) {
               teamManager.addRequestedItem(
                 PrioritizedElement(
                   itemPriority: desiredItem.itemPriority,

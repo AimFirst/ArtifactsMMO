@@ -130,7 +130,7 @@ abstract class Role {
         final countNeededNotInBank = constraint.max - countInBank;
 
         // We don't have enough in the bank, request some more.
-        teamManager.neededItems.addElement(PrioritizedElement(
+        teamManager.addRequestedItem(PrioritizedElement(
           itemPriority: ItemPriority.high,
           element: UniqueItemQuantityRequest(
             key: '${character.name}:consumable:${item.name}',
