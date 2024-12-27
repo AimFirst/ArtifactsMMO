@@ -7,6 +7,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task_progress.dart';
 import 'package:artifacts_mmo/presentation/base_view.dart';
+import 'package:artifacts_mmo/presentation/target/map_view.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_model.dart';
 import 'package:artifacts_mmo/presentation/target/target_based_upa_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -57,7 +58,7 @@ class TargetBasedUpaView
         model.menuOptions.where((m) => m.selected).firstOrNull;
     return Stack(
       children: [
-        _mapWidget(model),
+        Positioned(left: 0, top: 0, right: 0, bottom: 0, child: _mapWidget(model)),
         Positioned(left: 5, top: 5, child: _statusWidget(context, model)),
         Positioned(
           right: 5,
@@ -82,54 +83,55 @@ class TargetBasedUpaView
   }
 
   Widget _mapWidget(TargetBasedUpaModelLoaded model) {
-    const rows = 5;
-    const columns = 5;
-
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 1,
-        crossAxisCount: columns, // 5 columns
-      ),
-      itemCount: rows * columns,
-      itemBuilder: (BuildContext context, int index) {
-        final row = index ~/ rows;
-        final column = index % columns;
-
-        final x = _characterState(model).character.location.x +
-            (column - columns ~/ 2);
-        final y =
-            _characterState(model).character.location.y + (row - rows ~/ 2);
-
-        final mapLocation = model.state.boardState.map[Location(x: x, y: y)];
-
-        // Replace with your image URLs
-        final mapTileImageUrl = mapLocation?.url ?? '';
-        final mapImage = CachedNetworkImage(
-          imageUrl: mapTileImageUrl,
-          fit: BoxFit.cover, // Adjust the fit as needed
-        );
-
-        if (row == rows ~/ 2 && column == columns ~/ 2) {
-          final characterUrl = _characterState(model).character.imageUrl;
-          return Stack(
-            children: [
-              mapImage,
-              Center(
-                child: FractionallySizedBox(
-                  widthFactor: 0.25,
-                  child: CachedNetworkImage(
-                    imageUrl: characterUrl,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ],
-          );
-        }
-
-        return mapImage;
-      },
-    );
+    return MapView(model: model,);
+    // const rows = 5;
+    // const columns = 5;
+    //
+    // return GridView.builder(
+    //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //     childAspectRatio: 1,
+    //     crossAxisCount: columns, // 5 columns
+    //   ),
+    //   itemCount: rows * columns,
+    //   itemBuilder: (BuildContext context, int index) {
+    //     final row = index ~/ rows;
+    //     final column = index % columns;
+    //
+    //     final x = _characterState(model).character.location.x +
+    //         (column - columns ~/ 2);
+    //     final y =
+    //         _characterState(model).character.location.y + (row - rows ~/ 2);
+    //
+    //     final mapLocation = model.state.boardState.map[Location(x: x, y: y)];
+    //
+    //     // Replace with your image URLs
+    //     final mapTileImageUrl = mapLocation?.url ?? '';
+    //     final mapImage = CachedNetworkImage(
+    //       imageUrl: mapTileImageUrl,
+    //       fit: BoxFit.cover, // Adjust the fit as needed
+    //     );
+    //
+    //     if (row == rows ~/ 2 && column == columns ~/ 2) {
+    //       final characterUrl = _characterState(model).character.imageUrl;
+    //       return Stack(
+    //         children: [
+    //           mapImage,
+    //           Center(
+    //             child: FractionallySizedBox(
+    //               widthFactor: 0.25,
+    //               child: CachedNetworkImage(
+    //                 imageUrl: characterUrl,
+    //                 fit: BoxFit.cover,
+    //               ),
+    //             ),
+    //           ),
+    //         ],
+    //       );
+    //     }
+    //
+    //     return mapImage;
+    //   },
+    // );
   }
 
   Widget _statusWidget(BuildContext context, TargetBasedUpaModelLoaded model) {

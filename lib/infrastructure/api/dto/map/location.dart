@@ -6,7 +6,7 @@ class Location with EquatableMixin {
   final int x;
   final int y;
 
-  Location({required this.x, required this.y});
+  const Location({required this.x, required this.y});
 
   Location.empty()
       : x = 0,
