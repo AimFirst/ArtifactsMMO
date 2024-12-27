@@ -23,8 +23,18 @@ abstract class Role {
     required BoardState boardState,
     required Character character,
     required ItemQuantity itemQuantity,
-    required bool allowBank,
   });
+
+  ProvideResult canAcquireItem({
+    required BoardState boardState,
+    required Character character,
+    required ItemQuantity itemQuantity,
+  }) =>
+      canProvideItem(
+        boardState: boardState,
+        character: character,
+        itemQuantity: itemQuantity,
+      );
 
   TargetProcessResult provideItem({
     required BoardState boardState,
@@ -32,57 +42,22 @@ abstract class Role {
     required ItemQuantity itemQuantity,
     required ArtifactsClient artifactsClient,
     required Target? parentTarget,
-    required bool allowBank,
-  }) {
-    final canProvide = canProvideItem(
-      boardState: boardState,
-      character: character,
-      itemQuantity: itemQuantity,
-      allowBank: allowBank,
-    );
+  });
 
-    switch (canProvide.provideMethod) {
-      case ProvideMethod.fight:
-        return FightItemTarget(
-          itemQuantity: itemQuantity,
-          parentTarget: parentTarget,
-        ).update(
-          character: character,
-          boardState: boardState,
-          artifactsClient: artifactsClient,
-        );
-      case ProvideMethod.craft:
-        return CraftItemTarget(
-          itemQuantity: itemQuantity,
-          parentTarget: parentTarget,
-        ).update(
-          character: character,
-          boardState: boardState,
-          artifactsClient: artifactsClient,
-        );
-      case ProvideMethod.gather:
-        return GatheringItemTarget(
-          targetItemQuantity: itemQuantity,
-          parentTarget: parentTarget,
-        ).update(
-          character: character,
-          boardState: boardState,
-          artifactsClient: artifactsClient,
-        );
-      case ProvideMethod.bank:
-        return WithdrawItemTarget(
-          quantityToMaintain: itemQuantity,
-          parentTarget: parentTarget,
-        ).update(
-          character: character,
-          boardState: boardState,
-          artifactsClient: artifactsClient,
-        );
-      case ProvideMethod.unknown:
-      case ProvideMethod.inventory:
-        return TargetProcessResult.noAction();
-    }
-  }
+  TargetProcessResult acquireItem({
+    required BoardState boardState,
+    required Character character,
+    required ItemQuantity itemQuantity,
+    required ArtifactsClient artifactsClient,
+    required Target? parentTarget,
+  }) =>
+      provideItem(
+        boardState: boardState,
+        character: character,
+        itemQuantity: itemQuantity,
+        artifactsClient: artifactsClient,
+        parentTarget: parentTarget,
+      );
 
   TargetProcessResult defaultIdle({
     required BoardState boardState,
@@ -195,4 +170,6 @@ enum RoleType {
   mining,
   weaponCrafting,
   woodcutting,
+  inventory,
+  bank,
 }

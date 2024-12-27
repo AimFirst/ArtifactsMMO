@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/role.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
@@ -117,6 +118,10 @@ class UniqueItemQuantityRequest with EquatableMixin {
         quantity,
         requestingCharacter,
       ];
+
+  ItemQuantity toItemQuantity() {
+    return ItemQuantity(code: item.code, quantity: quantity,);
+  }
 }
 
 enum TeamRole {

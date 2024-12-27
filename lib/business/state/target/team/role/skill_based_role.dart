@@ -2,6 +2,7 @@ import 'package:artifacts_mmo/business/state/board/resource_manager.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/craft/craft_level_target.dart';
+import 'package:artifacts_mmo/business/state/target/gathering/gathering_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/gathering/gathering_skill_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
@@ -22,37 +23,8 @@ abstract class SkillBasedRole extends Role {
     required BoardState boardState,
     required Character character,
     required ItemQuantity itemQuantity,
-    required bool allowBank,
   }) {
-    var quantityNeeded = itemQuantity.quantity;
-
-    // Do we have it in the inventory?
-    final inventoryCount =
-        character.inventory.items.count(code: itemQuantity.code);
-    quantityNeeded -= inventoryCount;
-    if (quantityNeeded <= 0) {
-      return ProvideResult(
-        providable: Providable.canProvideImmediately,
-        neededDependencies: [],
-        provideMethod: ProvideMethod.inventory,
-        countNeeded: itemQuantity.quantity,
-      );
-    }
-
-    // Do we have it in the bank?
-    if (allowBank) {
-      final countNeededBeforeBank = quantityNeeded;
-      final bankCount = boardState.bank.items.count(code: itemQuantity.code);
-      quantityNeeded -= bankCount;
-      if (quantityNeeded <= 0) {
-        return ProvideResult(
-          providable: Providable.canProvideSoon,
-          neededDependencies: [],
-          provideMethod: ProvideMethod.bank,
-          countNeeded: countNeededBeforeBank,
-        );
-      }
-    }
+    final quantityNeeded = itemQuantity.quantity;
 
     // Can we gather it?
     final resources =
@@ -101,11 +73,60 @@ abstract class SkillBasedRole extends Role {
   }
 
   @override
-  TargetProcessResult defaultIdle(
-      {required BoardState boardState,
-      required Character character,
-      required ArtifactsClient artifactsClient,
-      required Target? parentTarget}) {
+  TargetProcessResult provideItem({
+    required BoardState boardState,
+    required Character character,
+    required ItemQuantity itemQuantity,
+    required ArtifactsClient artifactsClient,
+    required Target? parentTarget,
+  }) {
+      final canProvide = canProvideItem(
+        boardState: boardState,
+        character: character,
+        itemQuantity: itemQuantity,
+      );
+
+      final item = boardState.items.itemByCode(itemQuantity.code);
+
+      if (canProvide.providable == Providable.cannotProvide) {
+        return TargetProcessResult.noAction(description: 'No way to provide ${item.name}');
+      }
+
+      switch (canProvide.provideMethod) {
+        case ProvideMethod.craft:
+          return CraftItemTarget(
+            itemQuantity: itemQuantity,
+            parentTarget: parentTarget,
+          ).update(
+            character: character,
+            boardState: boardState,
+            artifactsClient: artifactsClient,
+          );
+        case ProvideMethod.gather:
+          return GatheringItemTarget(
+            targetItemQuantity: itemQuantity,
+            parentTarget: parentTarget,
+          ).update(
+            character: character,
+            boardState: boardState,
+            artifactsClient: artifactsClient,
+          );
+        case ProvideMethod.unknown:
+        case ProvideMethod.inventory:
+        case ProvideMethod.bankWithdraw:
+        case ProvideMethod.bankDeposit:
+        case ProvideMethod.fight:
+          return TargetProcessResult.noAction();
+      }
+  }
+
+  @override
+  TargetProcessResult defaultIdle({
+    required BoardState boardState,
+    required Character character,
+    required ArtifactsClient artifactsClient,
+    required Target? parentTarget,
+  }) {
     // Can we work on our crafting level up?
     final craftTarget = CraftLevelTarget(
       skillType: skillType,
@@ -157,16 +178,19 @@ abstract class SkillBasedRole extends Role {
               0,
               (o, e) =>
                   o +
-                  ((e.effectType == skillType.effectType && (e.value < 0)) ? 1 : 0),
+                  ((e.effectType == skillType.effectType && (e.value < 0))
+                      ? 1
+                      : 0),
             ) >
-            0).toList();
-        final uniqueRequests = skillTypeOptions
+            0)
+        .toList();
+    final uniqueRequests = skillTypeOptions
         .map((i) => UniqueItemQuantityRequest(
             key: '${character.name}:tool:${i.code}',
             item: i,
             quantity: 1,
             requestingCharacter: character.name))
         .toList();
-        return uniqueRequests;
+    return uniqueRequests;
   }
 }

@@ -2,15 +2,16 @@ import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/deposit_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/recycle_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/withdraw_item_target.dart';
-import 'package:artifacts_mmo/business/state/target/no_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/business/state/target/task/accept_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/complete_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/task/perform_task_target.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/alchemy_role.dart';
+import 'package:artifacts_mmo/business/state/target/team/role/bank_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/cooking_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/fishing_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/gear_crafting_role.dart';
+import 'package:artifacts_mmo/business/state/target/team/role/inventory_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/jewelry_crafting_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/mining_role.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/providability.dart';
@@ -28,6 +29,8 @@ import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 class TeamTarget extends Target {
   final TeamManager teamManager;
   final List<Role> roles = [];
+  final inventoryRole = InventoryRole();
+  final bankRole = BankRole();
   var hasCheckedEquipment = false;
 
   TeamTarget(
@@ -49,6 +52,8 @@ class TeamTarget extends Target {
               RoleType.mining => MiningRole(),
               RoleType.weaponCrafting => WeaponCraftingRole(),
               RoleType.fighting => FightingRole(),
+              RoleType.inventory => InventoryRole(),
+              RoleType.bank => BankRole(),
             })
         .toList();
   }
@@ -63,12 +68,13 @@ class TeamTarget extends Target {
     required BoardState boardState,
     required ArtifactsClient artifactsClient,
   }) {
-
     if (!hasCheckedEquipment) {
       hasCheckedEquipment = true;
-      final desiredEquipment = getDesiredEquipment(character: character, boardState: boardState);
+      final desiredEquipment =
+          getDesiredEquipment(character: character, boardState: boardState);
       for (final equip in desiredEquipment) {
-        teamManager.addRequestedItem(PrioritizedElement(itemPriority: ItemPriority.medium, element: equip));
+        teamManager.addRequestedItem(PrioritizedElement(
+            itemPriority: ItemPriority.medium, element: equip));
       }
     }
 
@@ -84,15 +90,7 @@ class TeamTarget extends Target {
       return pickUpFromBank;
     }
 
-    // Check if we have any of the global wanted items in our inventory ready to give.
-    final provideItemsIfPossible = _provideItemsIfPossible(
-        character: character,
-        boardState: boardState,
-        artifactsClient: artifactsClient);
-    if (!provideItemsIfPossible.progress.finished) {
-      return provideItemsIfPossible;
-    }
-
+    // Make sure we have all the consumables we want.
     final checkConsumables = _checkConsumables(
       character: character,
       boardState: boardState,
@@ -112,11 +110,22 @@ class TeamTarget extends Target {
       return inventoryTask;
     }
 
+    // Check if we have any of the global wanted items.
+    final provideItemsIfPossible = _provideItemsIfPossible(
+      character: character,
+      boardState: boardState,
+      artifactsClient: artifactsClient,
+    );
+    if (!provideItemsIfPossible.progress.finished) {
+      return provideItemsIfPossible;
+    }
+
     // Perform default idle action.
     return _performIdleAction(
       character: character,
       boardState: boardState,
       artifactsClient: artifactsClient,
+      teamManager: teamManager,
     );
   }
 
@@ -151,26 +160,30 @@ class TeamTarget extends Target {
         artifactsClient: artifactsClient);
   }
 
-  TargetProcessResult _pickUpDesiredFromBank(
-      {required Character character,
-      required BoardState boardState,
-      required ArtifactsClient artifactsClient}) {
+  TargetProcessResult _pickUpDesiredFromBank({
+    required Character character,
+    required BoardState boardState,
+    required ArtifactsClient artifactsClient,
+  }) {
+    // Check if we can pull anything from the bank.
     for (final desiredItem in teamManager.neededItems.list) {
       if (desiredItem.element.requestingCharacter == character.name) {
-        if (boardState.bank.items.count(code: desiredItem.element.item.code) >=
-            desiredItem.element.quantity) {
-          return WithdrawItemTarget(
-                  quantityToMaintain: ItemQuantity(
-                      code: desiredItem.element.item.code,
-                      quantity: desiredItem.element.quantity),
-                  parentTarget: this)
-              .update(
-                  character: character,
-                  boardState: boardState,
-                  artifactsClient: artifactsClient);
+        final acquireTarget = bankRole.acquireItem(
+          boardState: boardState,
+          character: character,
+          itemQuantity: desiredItem.element.toItemQuantity(),
+          artifactsClient: artifactsClient,
+          parentTarget: parentTarget,
+        );
+
+        // We have a valid task, pull it from the bank.
+        if (!acquireTarget.progress.finished) {
+          return acquireTarget;
         }
       }
     }
+
+    // Wasn't able to get anything from the bank.
     return TargetProcessResult(
       progress: Progress.done(),
       action: null,
@@ -179,69 +192,96 @@ class TeamTarget extends Target {
     );
   }
 
-  TargetProcessResult _provideItemsIfPossible(
-      {required Character character,
-      required BoardState boardState,
-      required ArtifactsClient artifactsClient}) {
-    for (final desiredItem in teamManager.neededItems.list) {
-      // How many do we want that aren't in the bank?
-      final countNotInBank = desiredItem.element.quantity -
-          boardState.bank.items.count(code: desiredItem.element.item.code);
-
-      // Everything we need is already in the bank.
-      if (countNotInBank <= 0) {
-        continue;
-      }
-
-      // How many do we have in our inventory?
-      final countInInventory = character.inventory.items.count(
-        code: desiredItem.element.item.code,
+  Providable _canProvideItem({
+    required Character character,
+    required BoardState boardState,
+    required ItemQuantity itemQuantity,
+  }) {
+    var bestProvidability = Providable.cannotProvide;
+    for (final role in roles) {
+      final provideResult = role.canProvideItem(
+        boardState: boardState,
+        character: character,
+        itemQuantity: itemQuantity,
       );
+      var providability = provideResult.providable;
+      // If we can't provide it immediately, but we can eventually, then check dependencies.
+      if (providability > Providable.canProvideImmediately &&
+          providability < Providable.cannotProvide) {
+        for (final dependency in provideResult.neededDependencies) {
+          final depedencyResult = _canProvideItem(
+            character: character,
+            boardState: boardState,
+            itemQuantity: dependency,
+          );
+          if (depedencyResult > providability) {
+            providability = depedencyResult;
+          }
+        }
+      }
+      if (providability < bestProvidability) {
+        bestProvidability = providability;
+      }
+    }
+    return bestProvidability;
+  }
 
-      for (final role in roles) {
-        final providability = role.canProvideItem(
+  TargetProcessResult _provideItemsIfPossible({
+    required Character character,
+    required BoardState boardState,
+    required ArtifactsClient artifactsClient,
+  }) {
+    for (final desiredItem in [...teamManager.neededItems.list]) {
+      var countNeeded = desiredItem.element.quantity;
+      for (final role in [bankRole, ...roles]) {
+        final canProvide = role.canProvideItem(
           boardState: boardState,
           character: character,
           itemQuantity: ItemQuantity(
             code: desiredItem.element.item.code,
-            quantity: desiredItem.element.quantity,
+            quantity: countNeeded,
           ),
-          allowBank: false,
         );
 
-        switch (providability) {
-          case Providable.canProvideImmediately:
-            return DepositItemTarget(
-                    quantityToRemain: ItemQuantity(
-                        code: desiredItem.element.item.code,
-                        quantity: countInInventory - countNotInBank),
-                    parentTarget: this)
-                .update(
-              character: character,
-              boardState: boardState,
-              artifactsClient: artifactsClient,
-            );
-          case Providable.canProvideSoon:
+        // We can provide?
+        if (canProvide.providable != Providable.cannotProvide) {
+          // We can provide but there's dependencies we need first.
+          if (canProvide.neededDependencies.isNotEmpty) {
+            for (final dependency in canProvide.neededDependencies) {
+              teamManager.neededItems.addElement(
+                PrioritizedElement(
+                  itemPriority: desiredItem.itemPriority,
+                  element: UniqueItemQuantityRequest(
+                    key: '${desiredItem.element.key}:${dependency.code}',
+                    item: boardState.items.itemByCode(dependency.code),
+                    quantity: dependency.quantity,
+                    requestingCharacter: character.name,
+                  ),
+                ),
+              );
+            }
+          } else if (canProvide.providable <= Providable.canProvideSoon) {
+            // We can provide it soon, let's go ahead and work on it.
             return role.provideItem(
               boardState: boardState,
               character: character,
               itemQuantity: ItemQuantity(
                 code: desiredItem.element.item.code,
-                quantity: desiredItem.element.quantity,
+                quantity: countNeeded,
               ),
               artifactsClient: artifactsClient,
               parentTarget: parentTarget,
-              allowBank: false,
             );
-          default:
-          // No action
+          }
         }
       }
     }
+
+    // No items to provide.
     return TargetProcessResult(
       progress: Progress.done(),
       action: null,
-      description: 'No items to deposit',
+      description: 'No items to provide',
       imageUrl: null,
     );
   }
@@ -400,20 +440,24 @@ class TeamTarget extends Target {
         request.quantity;
   }
 
-  TargetProcessResult _performIdleAction(
-      {required Character character,
-      required BoardState boardState,
-      required ArtifactsClient artifactsClient}) {
-    return roles.firstOrNull?.defaultIdle(
-          boardState: boardState,
-          character: character,
-          artifactsClient: artifactsClient,
-          parentTarget: this,
-        ) ??
-        NoTarget(parentTarget: this).update(
-          character: character,
-          boardState: boardState,
-          artifactsClient: artifactsClient,
-        );
+  TargetProcessResult _performIdleAction({
+    required Character character,
+    required BoardState boardState,
+    required ArtifactsClient artifactsClient,
+    required TeamManager teamManager,
+  }) {
+    for (final role in roles) {
+      final idleTarget = role.defaultIdle(
+        boardState: boardState,
+        character: character,
+        artifactsClient: artifactsClient,
+        parentTarget: parentTarget,
+      );
+      if (!idleTarget.progress.finished) {
+        return idleTarget;
+      }
+    }
+
+    return TargetProcessResult.noAction();
   }
 }

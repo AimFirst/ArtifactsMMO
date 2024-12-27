@@ -50,7 +50,8 @@ enum ProvideMethod {
   fight,
   craft,
   gather,
-  bank,
+  bankWithdraw,
+  bankDeposit,
 }
 
 extension EnumComparisionOperators<T extends Enum> on T {

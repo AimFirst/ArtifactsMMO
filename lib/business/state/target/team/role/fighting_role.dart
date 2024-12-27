@@ -1,5 +1,6 @@
 import 'package:artifacts_mmo/business/state/board/monster_manager.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/business/state/target/fight/fight_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/fight/fight_level_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
@@ -13,7 +14,6 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 
 class FightingRole extends Role {
-
   @override
   RoleType get roleType => RoleType.fighting;
 
@@ -91,11 +91,12 @@ class FightingRole extends Role {
   }
 
   @override
-  TargetProcessResult defaultIdle(
-      {required BoardState boardState,
-      required Character character,
-      required ArtifactsClient artifactsClient,
-      required Target? parentTarget}) {
+  TargetProcessResult defaultIdle({
+    required BoardState boardState,
+    required Character character,
+    required ArtifactsClient artifactsClient,
+    required Target? parentTarget,
+  }) {
     return FightLevelTarget(level: 40, parentTarget: parentTarget).update(
       character: character,
       boardState: boardState,
@@ -145,43 +146,14 @@ class FightingRole extends Role {
     required BoardState boardState,
     required Character character,
     required ItemQuantity itemQuantity,
-    required bool allowBank,
   }) {
     var quantityNeeded = itemQuantity.quantity;
-
-    // Do we have it in the inventory?
-    final inventoryCount =
-        character.inventory.items.count(code: itemQuantity.code);
-    quantityNeeded -= inventoryCount;
-    if (quantityNeeded <= 0) {
-      return ProvideResult(
-        providable: Providable.canProvideImmediately,
-        neededDependencies: [],
-        provideMethod: ProvideMethod.inventory,
-        countNeeded: itemQuantity.quantity,
-      );
-    }
-
-    // Do we have it in the bank?
-    if (allowBank) {
-      final countNeededBeforeBank = quantityNeeded;
-      final bankCount = boardState.bank.items.count(code: itemQuantity.code);
-      quantityNeeded -= bankCount;
-      if (quantityNeeded <= 0) {
-        return ProvideResult(
-          providable: Providable.canProvideSoon,
-          neededDependencies: [],
-          provideMethod: ProvideMethod.bank,
-          countNeeded: countNeededBeforeBank,
-        );
-      }
-    }
 
     // Can we fight for it?
     final monsters =
         boardState.monsters.monstersThatProvideItem(code: itemQuantity.code);
     final monster = monsters
-        .where((m) => canDefaultMonster(
+        .where((m) => canDefeatMonster(
             monster: m, character: character, boardState: boardState))
         .firstOrNull;
     if (monster != null) {
@@ -201,11 +173,54 @@ class FightingRole extends Role {
     );
   }
 
-  bool canDefaultMonster({
+  bool canDefeatMonster({
     required Monster monster,
     required Character character,
     required BoardState boardState,
   }) {
     return monster.level <= character.overall.level - 10;
+  }
+
+  @override
+  TargetProcessResult provideItem({
+    required BoardState boardState,
+    required Character character,
+    required ItemQuantity itemQuantity,
+    required ArtifactsClient artifactsClient,
+    required Target? parentTarget,
+  }) {
+    final canProvide = canProvideItem(
+      boardState: boardState,
+      character: character,
+      itemQuantity: itemQuantity,
+    );
+
+    final item = boardState.items.itemByCode(itemQuantity.code);
+    if (canProvide.providable == Providable.cannotProvide) {
+      return TargetProcessResult.noAction(
+          description: 'No way to provide ${item.name}');
+    }
+
+    switch (canProvide.provideMethod) {
+      case ProvideMethod.fight:
+        return FightItemTarget(
+          itemQuantity: itemQuantity,
+          parentTarget: parentTarget,
+        ).update(
+          character: character,
+          boardState: boardState,
+          artifactsClient: artifactsClient,
+        );
+      case ProvideMethod.bankDeposit:
+      case ProvideMethod.bankWithdraw:
+      case ProvideMethod.inventory:
+      case ProvideMethod.craft:
+      case ProvideMethod.gather:
+      case ProvideMethod.unknown:
+        return TargetProcessResult.noAction(
+          description:
+              'Expected type of ${ProvideMethod.fight} but got ${canProvide.provideMethod}',
+        );
+    }
   }
 }
