@@ -248,7 +248,7 @@ class TeamTarget extends Target {
           // We can provide but there's dependencies we need first.
           if (canProvide.neededDependencies.isNotEmpty) {
             for (final dependency in canProvide.neededDependencies) {
-              teamManager.neededItems.addElement(
+              teamManager.addRequestedItem(
                 PrioritizedElement(
                   itemPriority: desiredItem.itemPriority,
                   element: UniqueItemQuantityRequest(
