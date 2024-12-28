@@ -183,8 +183,4 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
       ));
     }
   }
-
-  Future<void> toggleTeamPlayer(Character character) async {
-    stateManager.toggleTeamPlayer(character.name);
-  }
 }

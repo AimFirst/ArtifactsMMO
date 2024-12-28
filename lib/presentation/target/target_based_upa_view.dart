@@ -504,10 +504,6 @@ class TargetBasedUpaView
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          TextButton(
-              onPressed: () =>
-                  viewModel.toggleTeamPlayer(_characterState(model).character),
-              child: const Text('Team Player!')),
           if (_characterState(model).character.taskProgress != null)
             _inProgressTask(
               _characterState(model).character.taskProgress!,

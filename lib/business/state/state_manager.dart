@@ -11,10 +11,7 @@ import 'package:artifacts_mmo/business/state/board/resource_manager.dart';
 import 'package:artifacts_mmo/business/state/board/task_manager.dart';
 import 'package:artifacts_mmo/business/state/character_target_manager.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
-import 'package:artifacts_mmo/business/state/target/no_target.dart';
-import 'package:artifacts_mmo/business/state/target/team/role/role.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
-import 'package:artifacts_mmo/business/state/target/team/team_target.dart';
 import 'package:artifacts_mmo/business/state/team_state.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/bank/bank.dart';
@@ -168,6 +165,7 @@ class StateManager {
         artifactsClient: artifactsClient,
         boardStateStream: boardStateStream,
         bankManager: bankManager,
+        teamManager: teamManager,
       );
       characterTargetManagers[c.name] = characterTargetManager;
       await characterTargetManager.init();
@@ -177,59 +175,6 @@ class StateManager {
         _stateSubject.value = _stateSubject.value.copyWith(
             characterStates: {...currentState}, teamState: _buildTeamState());
       });
-    }
-  }
-
-  void toggleTeamPlayer(String characterName) {
-    final targetManager = characterTargetManagers[characterName];
-    if (targetManager != null) {
-      if (teamManager.characters.containsKey(characterName)) {
-        removeCharacterFromTeam(characterName);
-      } else {
-        addCharacterToTeam(characterName);
-      }
-    }
-  }
-
-  void addCharacterToTeam(String characterName) {
-    final targetManager = characterTargetManagers[characterName];
-    if (targetManager != null) {
-      teamManager.addCharacter(targetManager.stateStream);
-      targetManager.startNewTarget(
-        TeamTarget(
-          teamManager: teamManager,
-          parentTarget: null,
-          desiredRoleTypes: _desiredRolesForCharacter(characterName),
-          characterLog: targetManager.characterLog,
-        ),
-      );
-    }
-  }
-
-  List<RoleType> _desiredRolesForCharacter(String characterName) {
-    if (characterName == 'AimLater') {
-      return [RoleType.fighting];
-    } else if (characterName == 'Worker1') {
-      return [RoleType.gearCrafting, RoleType.mining];
-    } else if (characterName == 'Worker2') {
-      return [RoleType.weaponCrafting, RoleType.woodcutting];
-    } else if (characterName == 'Worker3') {
-      return [RoleType.cooking, RoleType.fishing];
-    } else if (characterName == 'Worker4') {
-      return [RoleType.jewelryCrafting, RoleType.alchemy];
-    } else {
-      return [];
-    }
-  }
-
-  void removeCharacterFromTeam(String characterName) {
-    final targetManager = characterTargetManagers[characterName];
-    if (targetManager != null) {
-      teamManager.removeCharacter(targetManager.stateStream);
-      targetManager.startNewTarget(NoTarget(
-        parentTarget: null,
-        characterLog: targetManager.characterLog,
-      ));
     }
   }
 }
