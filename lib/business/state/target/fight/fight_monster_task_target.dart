@@ -6,7 +6,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 
 class FightMonsterTaskTarget extends FightTarget {
-  FightMonsterTaskTarget({required super.parentTarget});
+  FightMonsterTaskTarget({required super.parentTarget, required super.characterLog});
 
   @override
   Progress getProgress(

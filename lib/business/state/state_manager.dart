@@ -200,6 +200,7 @@ class StateManager {
           teamManager: teamManager,
           parentTarget: null,
           desiredRoleTypes: _desiredRolesForCharacter(characterName),
+          characterLog: targetManager.characterLog,
         ),
       );
     }
@@ -225,7 +226,10 @@ class StateManager {
     final targetManager = characterTargetManagers[characterName];
     if (targetManager != null) {
       teamManager.removeCharacter(targetManager.stateStream);
-      targetManager.startNewTarget(NoTarget(parentTarget: null));
+      targetManager.startNewTarget(NoTarget(
+        parentTarget: null,
+        characterLog: targetManager.characterLog,
+      ));
     }
   }
 }

@@ -12,7 +12,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/resource/resource.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 
 abstract class GatheringTarget extends Target {
-  GatheringTarget({required super.parentTarget});
+  GatheringTarget({required super.parentTarget, required super.characterLog});
 
   @override
   TargetProcessResult update(
@@ -30,7 +30,7 @@ abstract class GatheringTarget extends Target {
     }
 
     // Check our inventory to make sure we have room/etc.
-    final inventoryUpdate = ManageInventoryTarget(parentTarget: this).update(
+    final inventoryUpdate = ManageInventoryTarget(parentTarget: this, characterLog: characterLog).update(
         character: character,
         boardState: boardState,
         artifactsClient: artifactsClient);
@@ -59,7 +59,7 @@ abstract class GatheringTarget extends Target {
         // Last item in the list and we weren't able to gather any of them.
         return GatheringSkillTarget(
                 skillType: targetResource.skillType,
-                targetLevel: targetResource.skillLevel, parentTarget: this)
+                targetLevel: targetResource.skillLevel, parentTarget: this, characterLog: characterLog)
             .update(
           character: character,
           boardState: boardState,
@@ -87,7 +87,7 @@ abstract class GatheringTarget extends Target {
     final closest = locations.first;
 
     // Are we there yet?
-    final moveUpdate = MoveToTarget(targetLocation: closest, parentTarget: this).update(
+    final moveUpdate = MoveToTarget(targetLocation: closest, parentTarget: this, characterLog: characterLog).update(
         character: character,
         boardState: boardState,
         artifactsClient: artifactsClient);

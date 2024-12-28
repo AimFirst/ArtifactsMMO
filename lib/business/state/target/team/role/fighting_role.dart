@@ -14,6 +14,8 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 
 class FightingRole extends Role {
+  FightingRole({required super.characterLog});
+
   @override
   RoleType get roleType => RoleType.fighting;
 
@@ -29,63 +31,72 @@ class FightingRole extends Role {
             UniqueItemQuantityRequest(
                 key: '${character.name}:weapon:${i.code}',
                 item: i,
-                quantity: 1,
+                quantityRemaining: 1,
+                totalQuantity: 1,
                 requestingCharacter: character.name)));
     desiredItems.addAll(
         bestItems(boardState.items, ItemType.boots, fightingLevel).map((i) =>
             UniqueItemQuantityRequest(
                 key: '${character.name}:boots:${i.code}',
                 item: i,
-                quantity: 1,
+                quantityRemaining: 1,
+                totalQuantity: 1,
                 requestingCharacter: character.name)));
     desiredItems.addAll(
         bestItems(boardState.items, ItemType.helmet, fightingLevel).map((i) =>
             UniqueItemQuantityRequest(
                 key: '${character.name}:helmet:${i.code}',
                 item: i,
-                quantity: 1,
+                quantityRemaining: 1,
+                totalQuantity: 1,
                 requestingCharacter: character.name)));
     desiredItems.addAll(
         bestItems(boardState.items, ItemType.shield, fightingLevel).map((i) =>
             UniqueItemQuantityRequest(
                 key: '${character.name}:shield:${i.code}',
                 item: i,
-                quantity: 1,
+                quantityRemaining: 1,
+                totalQuantity: 1,
                 requestingCharacter: character.name)));
     desiredItems.addAll(
         bestItems(boardState.items, ItemType.ring, fightingLevel).map((i) =>
             UniqueItemQuantityRequest(
                 key: '${character.name}:ring:${i.code}',
                 item: i,
-                quantity: 2,
+                quantityRemaining: 2,
+                totalQuantity: 1,
                 requestingCharacter: character.name)));
     desiredItems.addAll(
         bestItems(boardState.items, ItemType.legArmor, fightingLevel).map((i) =>
             UniqueItemQuantityRequest(
                 key: '${character.name}:leg_armor:${i.code}',
                 item: i,
-                quantity: 1,
+                quantityRemaining: 1,
+                totalQuantity: 1,
                 requestingCharacter: character.name)));
     desiredItems.addAll(
         bestItems(boardState.items, ItemType.bodyArmor, fightingLevel).map(
             (i) => UniqueItemQuantityRequest(
                 key: '${character.name}:body_armor:${i.code}',
                 item: i,
-                quantity: 1,
+                quantityRemaining: 1,
+                totalQuantity: 1,
                 requestingCharacter: character.name)));
     desiredItems.addAll(
         bestItems(boardState.items, ItemType.amulet, fightingLevel).map((i) =>
             UniqueItemQuantityRequest(
                 key: '${character.name}:amulet:${i.code}',
                 item: i,
-                quantity: 1,
+                quantityRemaining: 1,
+                totalQuantity: 1,
                 requestingCharacter: character.name)));
     desiredItems.addAll(
         bestItems(boardState.items, ItemType.amulet, fightingLevel).map((i) =>
             UniqueItemQuantityRequest(
                 key: '${character.name}:amulet:${i.code}',
                 item: i,
-                quantity: 1,
+                quantityRemaining: 1,
+                totalQuantity: 1,
                 requestingCharacter: character.name)));
     return desiredItems;
   }
@@ -97,7 +108,9 @@ class FightingRole extends Role {
     required ArtifactsClient artifactsClient,
     required Target? parentTarget,
   }) {
-    return FightLevelTarget(level: 40, parentTarget: parentTarget).update(
+    return FightLevelTarget(
+            level: 40, parentTarget: parentTarget, characterLog: characterLog)
+        .update(
       character: character,
       boardState: boardState,
       artifactsClient: artifactsClient,
@@ -206,6 +219,7 @@ class FightingRole extends Role {
         return FightItemTarget(
           itemQuantity: itemQuantity,
           parentTarget: parentTarget,
+          characterLog: characterLog,
         ).update(
           character: character,
           boardState: boardState,

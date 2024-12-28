@@ -2,7 +2,6 @@ import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task_progress.dart';
@@ -282,6 +281,8 @@ class TargetBasedUpaView
 
   String _titleForOption(TargetBasedUpaModelLoaded model, MenuOption option) {
     switch (option.type) {
+      case MenuItemType.logs:
+        return 'Logs';
       case MenuItemType.items:
         return 'Items';
       case MenuItemType.tasks:
@@ -299,6 +300,8 @@ class TargetBasedUpaView
 
   Widget _menuForOption(TargetBasedUpaModelLoaded model, MenuOption option) {
     switch (option.type) {
+      case MenuItemType.logs:
+        return _menuForLogs(model, viewModel);
       case MenuItemType.items:
         return _menuForItems(model, viewModel);
       case MenuItemType.inventory:
@@ -561,7 +564,7 @@ class TargetBasedUpaView
     TargetBasedUpaViewModel viewModel,
   ) {
     return GridView.builder(
-        itemCount: model.state.boardState.bank.items.count(),
+        itemCount: model.state.boardState.bank.items.length,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 150,
           mainAxisSpacing: 5,
@@ -615,6 +618,17 @@ class TargetBasedUpaView
         });
   }
 
+  Widget _menuForLogs(
+      TargetBasedUpaModelLoaded model,
+      TargetBasedUpaViewModel viewModel,
+      ) {
+    final logs = model.state.characterStates[model.selectedChar]?.characterLog ?? [];
+    return ListView.separated(itemBuilder: (context, index) => Text(logs[index]), separatorBuilder: (context, index) => const SizedBox(
+      width: 1,
+      height: 15,
+    ), itemCount: logs.length);
+  }
+
   Widget _menuForTeam(
       TargetBasedUpaModelLoaded model,
       TargetBasedUpaViewModel viewModel,
@@ -637,7 +651,7 @@ class TargetBasedUpaView
     return Row(children: [
       Text(requestedItem.element.requestingCharacter),
       Text(requestedItem.element.key),
-      Text('${requestedItem.element.item.name} x${requestedItem.element.quantity}'),
+      Text('${requestedItem.element.item.name} x${requestedItem.element.quantityRemaining}'),
     ],);
   }
 

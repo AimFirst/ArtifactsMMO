@@ -4,7 +4,7 @@ import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 
 class NoTarget extends Target {
-  NoTarget({required super.parentTarget});
+  NoTarget({required super.parentTarget, required super.characterLog});
 
   @override
   String get name => 'Awaiting target';
@@ -14,6 +14,7 @@ class NoTarget extends Target {
       {required Character character,
       required BoardState boardState,
       required ArtifactsClient artifactsClient}) {
+    characterLog.addLog('No target target - nothing to do.');
     return TargetProcessResult(
       progress: Progress(current: 1.toDouble(), target: 1.toDouble()),
       action: null,

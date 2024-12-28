@@ -12,7 +12,7 @@ class CraftLevelTarget extends CraftTarget {
 
   CraftLevelTarget({
     required this.skillType,
-    required this.targetLevel, required super.parentTarget,
+    required this.targetLevel, required super.parentTarget, required super.characterLog,
   });
 
   @override

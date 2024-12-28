@@ -70,6 +70,7 @@ class MenuOption with EquatableMixin {
 }
 
 enum MenuItemType {
+  logs,
   inventory,
   skills,
   items,

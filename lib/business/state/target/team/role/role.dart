@@ -1,9 +1,7 @@
 import 'dart:math';
 
+import 'package:artifacts_mmo/business/state/character_log.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
-import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
-import 'package:artifacts_mmo/business/state/target/fight/fight_item_target.dart';
-import 'package:artifacts_mmo/business/state/target/gathering/gathering_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/deposit_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/withdraw_item_target.dart';
@@ -17,6 +15,12 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 
 abstract class Role {
   RoleType get roleType;
+
+  final CharacterLog characterLog;
+
+  Role({
+    required this.characterLog,
+  });
 
   // Stubs
   ProvideResult canProvideItem({
@@ -120,7 +124,8 @@ abstract class Role {
         return DepositItemTarget(
                 quantityToRemain: ItemQuantity(
                     code: constraint.code, quantity: constraint.max),
-                parentTarget: parentTarget)
+                parentTarget: parentTarget,
+                characterLog: characterLog)
             .update(
                 character: character,
                 boardState: boardState,
@@ -135,7 +140,8 @@ abstract class Role {
           element: UniqueItemQuantityRequest(
             key: '${character.name}:consumable:${item.name}',
             item: item,
-            quantity: countNeededNotInBank,
+            quantityRemaining: countNeededNotInBank,
+            totalQuantity: constraint.max,
             requestingCharacter: character.name,
           ),
         ));
@@ -143,15 +149,15 @@ abstract class Role {
         // Withdraw as many as we can/need from the bank.
         if (countInBank > 0) {
           return WithdrawItemTarget(
-                  quantityToMaintain: ItemQuantity(
-                      code: constraint.code,
-                      quantity:
-                          min(constraint.max - currentCount, countInBank)),
-                  parentTarget: parentTarget)
-              .update(
-                  character: character,
-                  boardState: boardState,
-                  artifactsClient: artifactsClient);
+            quantityToMaintain: ItemQuantity(
+                code: constraint.code,
+                quantity: min(constraint.max - currentCount, countInBank)),
+            parentTarget: parentTarget,
+            characterLog: characterLog,
+          ).update(
+              character: character,
+              boardState: boardState,
+              artifactsClient: artifactsClient);
         }
       }
     }

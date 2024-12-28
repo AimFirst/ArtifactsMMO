@@ -7,7 +7,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task.dart';
 
 class PerformTaskTarget extends Target {
-  PerformTaskTarget({required super.parentTarget});
+  PerformTaskTarget({required super.parentTarget, required super.characterLog});
 
   @override
   String get name => 'Performing task';
@@ -35,7 +35,7 @@ class PerformTaskTarget extends Target {
               errorMessage:
                   'Task type ${character.taskProgress!.taskType} not handled yet.');
         case TaskType.monsters:
-          return FightMonsterTaskTarget(parentTarget: this).update(
+          return FightMonsterTaskTarget(parentTarget: this, characterLog: characterLog,).update(
               character: character,
               boardState: boardState,
               artifactsClient: artifactsClient);

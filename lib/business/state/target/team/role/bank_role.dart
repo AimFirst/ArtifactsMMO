@@ -11,6 +11,8 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 
 class BankRole extends Role {
+  BankRole({required super.characterLog});
+
   @override
   List<UniqueItemQuantityRequest> bestEquipment(
       {required BoardState boardState, required Character character}) {
@@ -90,7 +92,7 @@ class BankRole extends Role {
       quantityToMaintain: ItemQuantity(
           code: itemQuantity.code,
           quantity: itemQuantity.quantity + currentAmount),
-      parentTarget: parentTarget,
+      parentTarget: parentTarget, characterLog: characterLog,
     ).update(
       character: character,
       boardState: boardState,
@@ -105,7 +107,7 @@ class BankRole extends Role {
       required ItemQuantity itemQuantity,
       required ArtifactsClient artifactsClient,
       required Target? parentTarget}) {
-    final canProvideItemResult = canAcquireItem(
+    final canProvideItemResult = canProvideItem(
       boardState: boardState,
       character: character,
       itemQuantity: itemQuantity,
@@ -113,18 +115,21 @@ class BankRole extends Role {
     final item = boardState.items.itemByCode(itemQuantity.code);
 
     if (canProvideItemResult.providable == Providable.cannotProvide) {
+      characterLog.addLog('$roleType unable to provide $itemQuantity');
       return TargetProcessResult.noAction(
           description: 'No way to provide ${item.name}');
     }
 
     final currentAmount =
         character.inventory.items.count(code: itemQuantity.code);
+    final targetQuantity = currentAmount - itemQuantity.quantity;
+    characterLog.addLog('Depositing. Current: $currentAmount, target: $targetQuantity');
     // Deposit the item(s) to bank.
     return DepositItemTarget(
       quantityToRemain: ItemQuantity(
           code: itemQuantity.code,
           quantity: currentAmount - itemQuantity.quantity),
-      parentTarget: parentTarget,
+      parentTarget: parentTarget, characterLog: characterLog,
     ).update(
       character: character,
       boardState: boardState,

@@ -101,13 +101,15 @@ class TeamManager {
 class UniqueItemQuantityRequest with EquatableMixin {
   final String key;
   final Item item;
-  final int quantity;
+  final int quantityRemaining;
+  final int totalQuantity;
   final String requestingCharacter;
 
   UniqueItemQuantityRequest({
     required this.key,
     required this.item,
-    required this.quantity,
+    required this.quantityRemaining,
+    required this.totalQuantity,
     required this.requestingCharacter,
   });
 
@@ -115,12 +117,12 @@ class UniqueItemQuantityRequest with EquatableMixin {
   List<Object?> get props => [
         key,
         item,
-        quantity,
+        quantityRemaining,
         requestingCharacter,
       ];
 
   ItemQuantity toItemQuantity() {
-    return ItemQuantity(code: item.code, quantity: quantity,);
+    return ItemQuantity(code: item.code, quantity: quantityRemaining,);
   }
 }
 

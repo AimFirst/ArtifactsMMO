@@ -12,6 +12,11 @@ class ItemQuantity with EquatableMixin {
 
   @override
   List<Object?> get props => [code, quantity];
+
+  @override
+  String toString() {
+    return '$code x$quantity';
+  }
 }
 
 extension ItemQuantityListExtensions on List<ItemQuantity> {

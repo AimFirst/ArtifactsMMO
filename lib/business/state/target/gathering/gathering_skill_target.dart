@@ -11,7 +11,7 @@ class GatheringSkillTarget extends GatheringTarget {
 
   GatheringSkillTarget({
     required this.skillType,
-    required this.targetLevel, required super.parentTarget,
+    required this.targetLevel, required super.parentTarget, required super.characterLog,
   });
 
   @override

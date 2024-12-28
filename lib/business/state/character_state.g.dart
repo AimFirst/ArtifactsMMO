@@ -13,6 +13,8 @@ abstract class _$CharacterStateCWProxy {
 
   CharacterState processResult(TargetProcessResult processResult);
 
+  CharacterState characterLog(List<String> characterLog);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CharacterState(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -23,6 +25,7 @@ abstract class _$CharacterStateCWProxy {
     Character character,
     Target target,
     TargetProcessResult processResult,
+    List<String> characterLog,
   });
 }
 
@@ -43,6 +46,10 @@ class _$CharacterStateCWProxyImpl implements _$CharacterStateCWProxy {
       this(processResult: processResult);
 
   @override
+  CharacterState characterLog(List<String> characterLog) =>
+      this(characterLog: characterLog);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CharacterState(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -54,6 +61,7 @@ class _$CharacterStateCWProxyImpl implements _$CharacterStateCWProxy {
     Object? character = const $CopyWithPlaceholder(),
     Object? target = const $CopyWithPlaceholder(),
     Object? processResult = const $CopyWithPlaceholder(),
+    Object? characterLog = const $CopyWithPlaceholder(),
   }) {
     return CharacterState(
       character: character == const $CopyWithPlaceholder()
@@ -68,6 +76,10 @@ class _$CharacterStateCWProxyImpl implements _$CharacterStateCWProxy {
           ? _value.processResult
           // ignore: cast_nullable_to_non_nullable
           : processResult as TargetProcessResult,
+      characterLog: characterLog == const $CopyWithPlaceholder()
+          ? _value.characterLog
+          // ignore: cast_nullable_to_non_nullable
+          : characterLog as List<String>,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:artifacts_mmo/business/state/board/bank_manager.dart';
+import 'package:artifacts_mmo/business/state/character_log.dart';
 import 'package:artifacts_mmo/business/state/character_state.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/business/state/target/no_target.dart';
@@ -12,7 +13,8 @@ import 'package:rxdart/rxdart.dart';
 
 class CharacterTargetManager {
   Character character = Character.empty();
-  Target _target = NoTarget(parentTarget: null);
+  final CharacterLog characterLog = CharacterLog();
+  Target _target = NoTarget(parentTarget: null, characterLog: CharacterLog());
   bool needsToStop = false;
 
   final ArtifactsClient artifactsClient;
@@ -37,13 +39,14 @@ class CharacterTargetManager {
 
     _stateSubject.value = CharacterState(
         character: character,
-        target: NoTarget(parentTarget: null),
+        target: NoTarget(parentTarget: null, characterLog: characterLog,),
         processResult: TargetProcessResult(
           progress: Progress.done(),
           action: null,
           description: 'Waiting for target',
           imageUrl: null,
-        ));
+        ),
+        characterLog: characterLog.current);
   }
 
   Future<void> startTargetBasedUpa() async {
@@ -54,7 +57,7 @@ class CharacterTargetManager {
 
   Future<void> stopTargetBasedUpa() async {
     await _cancelableProcess?.cancel();
-    _target = NoTarget(parentTarget: null);
+    _target = NoTarget(parentTarget: null, characterLog: characterLog);
     _stateSubject.value = _stateSubject.value
         .copyWith(target: _target, processResult: TargetProcessResult.empty());
   }
@@ -72,6 +75,8 @@ class CharacterTargetManager {
       if (character.cooldownEnd.isAfter(now)) {
         await Future.delayed(character.cooldownEnd.difference(now));
       }
+
+      characterLog.startNewLogSet();
 
       // Process an update.
       final update = _target.update(
@@ -93,7 +98,11 @@ class CharacterTargetManager {
       }
       character = result?.character ?? character;
       _stateSubject.value = CharacterState(
-          character: character, target: _target, processResult: update);
+        character: character,
+        target: _target,
+        processResult: update,
+        characterLog: characterLog.current,
+      );
     }
   }
 }

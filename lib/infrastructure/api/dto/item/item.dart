@@ -41,6 +41,11 @@ class Item with EquatableMixin {
   String get imageUrl => 'https://artifactsmmo.com/images/items/$code.png';
 
   bool get craftable => craft != null;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 enum ItemType {

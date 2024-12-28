@@ -8,7 +8,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 class MoveToTarget extends Target {
   final Location targetLocation;
 
-  MoveToTarget({required this.targetLocation, required super.parentTarget});
+  MoveToTarget({required this.targetLocation, required super.parentTarget, required super.characterLog});
 
   @override
   String get name => 'Move to: $targetLocation';

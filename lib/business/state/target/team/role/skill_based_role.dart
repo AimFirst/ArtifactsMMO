@@ -16,6 +16,8 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 
 abstract class SkillBasedRole extends Role {
+  SkillBasedRole({required super.characterLog});
+
   SkillType get skillType;
 
   @override
@@ -80,44 +82,51 @@ abstract class SkillBasedRole extends Role {
     required ArtifactsClient artifactsClient,
     required Target? parentTarget,
   }) {
-      final canProvide = canProvideItem(
-        boardState: boardState,
-        character: character,
-        itemQuantity: itemQuantity,
-      );
+    final canProvide = canProvideItem(
+      boardState: boardState,
+      character: character,
+      itemQuantity: itemQuantity,
+    );
 
-      final item = boardState.items.itemByCode(itemQuantity.code);
+    final item = boardState.items.itemByCode(itemQuantity.code);
 
-      if (canProvide.providable == Providable.cannotProvide) {
-        return TargetProcessResult.noAction(description: 'No way to provide ${item.name}');
-      }
+    if (canProvide.providable == Providable.cannotProvide) {
+      characterLog.addLog('$roleType cannot provide $itemQuantity');
+      return TargetProcessResult.noAction(
+          description: 'No way to provide ${item.name}');
+    }
 
-      switch (canProvide.provideMethod) {
-        case ProvideMethod.craft:
-          return CraftItemTarget(
-            itemQuantity: itemQuantity,
-            parentTarget: parentTarget,
-          ).update(
-            character: character,
-            boardState: boardState,
-            artifactsClient: artifactsClient,
-          );
-        case ProvideMethod.gather:
-          return GatheringItemTarget(
-            targetItemQuantity: itemQuantity,
-            parentTarget: parentTarget,
-          ).update(
-            character: character,
-            boardState: boardState,
-            artifactsClient: artifactsClient,
-          );
-        case ProvideMethod.unknown:
-        case ProvideMethod.inventory:
-        case ProvideMethod.bankWithdraw:
-        case ProvideMethod.bankDeposit:
-        case ProvideMethod.fight:
-          return TargetProcessResult.noAction();
-      }
+    switch (canProvide.provideMethod) {
+      case ProvideMethod.craft:
+        characterLog.addLog('Providing $itemQuantity via ${canProvide.provideMethod}');
+        return CraftItemTarget(
+          itemQuantity: itemQuantity,
+          parentTarget: parentTarget,
+          characterLog: characterLog,
+        ).update(
+          character: character,
+          boardState: boardState,
+          artifactsClient: artifactsClient,
+        );
+      case ProvideMethod.gather:
+        characterLog.addLog('Providing $itemQuantity via ${canProvide.provideMethod}');
+        return GatheringItemTarget(
+          targetItemQuantity: itemQuantity,
+          parentTarget: parentTarget,
+          characterLog: characterLog,
+        ).update(
+          character: character,
+          boardState: boardState,
+          artifactsClient: artifactsClient,
+        );
+      case ProvideMethod.unknown:
+      case ProvideMethod.inventory:
+      case ProvideMethod.bankWithdraw:
+      case ProvideMethod.bankDeposit:
+      case ProvideMethod.fight:
+        characterLog.addLog('$roleType unexpected provide type ${canProvide.provideMethod} for $itemQuantity');
+        return TargetProcessResult.noAction();
+    }
   }
 
   @override
@@ -132,6 +141,7 @@ abstract class SkillBasedRole extends Role {
       skillType: skillType,
       targetLevel: Skill.maxSkillLevel,
       parentTarget: parentTarget,
+      characterLog: characterLog,
     ).update(
       character: character,
       boardState: boardState,
@@ -146,6 +156,7 @@ abstract class SkillBasedRole extends Role {
       skillType: skillType,
       targetLevel: Skill.maxSkillLevel,
       parentTarget: parentTarget,
+      characterLog: characterLog,
     ).update(
       character: character,
       boardState: boardState,
@@ -188,7 +199,8 @@ abstract class SkillBasedRole extends Role {
         .map((i) => UniqueItemQuantityRequest(
             key: '${character.name}:tool:${i.code}',
             item: i,
-            quantity: 1,
+            quantityRemaining: 1,
+            totalQuantity: 1,
             requestingCharacter: character.name))
         .toList();
     return uniqueRequests;

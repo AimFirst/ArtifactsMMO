@@ -1,3 +1,4 @@
+import 'package:artifacts_mmo/business/state/character_log.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/action/action.dart';
@@ -9,8 +10,9 @@ part 'target.g.dart';
 
 abstract class Target {
   final Target? parentTarget;
+  final CharacterLog characterLog;
 
-  Target({required this.parentTarget});
+  Target({required this.parentTarget, required this.characterLog,});
 
   TargetProcessResult update({
     required Character character,

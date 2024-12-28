@@ -9,6 +9,8 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 
 class InventoryRole extends Role {
+  InventoryRole({required super.characterLog});
+
   @override
   List<UniqueItemQuantityRequest> bestEquipment({
     required BoardState boardState,

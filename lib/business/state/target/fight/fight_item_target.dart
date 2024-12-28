@@ -10,7 +10,7 @@ class FightItemTarget extends FightTarget {
   final ItemQuantity itemQuantity;
 
   FightItemTarget({
-    required this.itemQuantity, required super.parentTarget,
+    required this.itemQuantity, required super.parentTarget, required super.characterLog,
   });
 
   @override

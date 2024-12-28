@@ -11,7 +11,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 
 abstract class FightTarget extends Target {
-  FightTarget({required super.parentTarget});
+  FightTarget({required super.parentTarget, required super.characterLog});
 
   @override
   TargetProcessResult update(
@@ -27,7 +27,7 @@ abstract class FightTarget extends Target {
           imageUrl: 'https://artifactsmmo.com/images/items/iron_sword.png');
     }
 
-    final heal = HealTarget(parentTarget: this).update(
+    final heal = HealTarget(parentTarget: this, characterLog: characterLog).update(
         character: character,
         boardState: boardState,
         artifactsClient: artifactsClient);
@@ -50,7 +50,7 @@ abstract class FightTarget extends Target {
             .sort((a, b) => MathUtil.sortDistance(character.location, a, b));
 
         // Move there.
-        final moveAction = MoveToTarget(targetLocation: locations.first, parentTarget: this).update(
+        final moveAction = MoveToTarget(targetLocation: locations.first, parentTarget: this, characterLog: characterLog).update(
             character: character,
             boardState: boardState,
             artifactsClient: artifactsClient);
@@ -67,7 +67,7 @@ abstract class FightTarget extends Target {
                 'https://artifactsmmo.com/images/items/christmas_star.png');
       }
     }
-    return FightLevelTarget(level: character.overall.level + 1, parentTarget: this).update(
+    return FightLevelTarget(level: character.overall.level + 1, parentTarget: this, characterLog: characterLog).update(
         character: character,
         boardState: boardState,
         artifactsClient: artifactsClient);

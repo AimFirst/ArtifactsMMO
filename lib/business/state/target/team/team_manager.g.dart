@@ -11,7 +11,9 @@ abstract class _$UniqueItemQuantityRequestCWProxy {
 
   UniqueItemQuantityRequest item(Item item);
 
-  UniqueItemQuantityRequest quantity(int quantity);
+  UniqueItemQuantityRequest quantityRemaining(int quantityRemaining);
+
+  UniqueItemQuantityRequest totalQuantity(int totalQuantity);
 
   UniqueItemQuantityRequest requestingCharacter(String requestingCharacter);
 
@@ -24,7 +26,8 @@ abstract class _$UniqueItemQuantityRequestCWProxy {
   UniqueItemQuantityRequest call({
     String key,
     Item item,
-    int quantity,
+    int quantityRemaining,
+    int totalQuantity,
     String requestingCharacter,
   });
 }
@@ -43,7 +46,12 @@ class _$UniqueItemQuantityRequestCWProxyImpl
   UniqueItemQuantityRequest item(Item item) => this(item: item);
 
   @override
-  UniqueItemQuantityRequest quantity(int quantity) => this(quantity: quantity);
+  UniqueItemQuantityRequest quantityRemaining(int quantityRemaining) =>
+      this(quantityRemaining: quantityRemaining);
+
+  @override
+  UniqueItemQuantityRequest totalQuantity(int totalQuantity) =>
+      this(totalQuantity: totalQuantity);
 
   @override
   UniqueItemQuantityRequest requestingCharacter(String requestingCharacter) =>
@@ -60,7 +68,8 @@ class _$UniqueItemQuantityRequestCWProxyImpl
   UniqueItemQuantityRequest call({
     Object? key = const $CopyWithPlaceholder(),
     Object? item = const $CopyWithPlaceholder(),
-    Object? quantity = const $CopyWithPlaceholder(),
+    Object? quantityRemaining = const $CopyWithPlaceholder(),
+    Object? totalQuantity = const $CopyWithPlaceholder(),
     Object? requestingCharacter = const $CopyWithPlaceholder(),
   }) {
     return UniqueItemQuantityRequest(
@@ -72,10 +81,14 @@ class _$UniqueItemQuantityRequestCWProxyImpl
           ? _value.item
           // ignore: cast_nullable_to_non_nullable
           : item as Item,
-      quantity: quantity == const $CopyWithPlaceholder()
-          ? _value.quantity
+      quantityRemaining: quantityRemaining == const $CopyWithPlaceholder()
+          ? _value.quantityRemaining
           // ignore: cast_nullable_to_non_nullable
-          : quantity as int,
+          : quantityRemaining as int,
+      totalQuantity: totalQuantity == const $CopyWithPlaceholder()
+          ? _value.totalQuantity
+          // ignore: cast_nullable_to_non_nullable
+          : totalQuantity as int,
       requestingCharacter: requestingCharacter == const $CopyWithPlaceholder()
           ? _value.requestingCharacter
           // ignore: cast_nullable_to_non_nullable

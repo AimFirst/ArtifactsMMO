@@ -15,7 +15,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 
 abstract class CraftTarget extends Target {
-  CraftTarget({required super.parentTarget});
+  CraftTarget({required super.parentTarget, required super.characterLog});
 
   @override
   TargetProcessResult update(
@@ -47,7 +47,7 @@ abstract class CraftTarget extends Target {
             .level) {
       return CraftLevelTarget(
         skillType: item.craft!.skill!,
-        targetLevel: item.craft!.level!, parentTarget: this,
+        targetLevel: item.craft!.level!, parentTarget: this, characterLog: characterLog,
       ).update(
         character: character,
         boardState: boardState,
@@ -56,7 +56,7 @@ abstract class CraftTarget extends Target {
     }
 
     // See if we have the right ingredients.
-    for (final craftIngredient in item.craft?.items ?? []) {
+    for (final craftIngredient in item.craft?.items ?? <ItemQuantity>[]) {
       if (character.inventory.items.count(code: craftIngredient.code) <
           craftIngredient.quantity) {
         // Can we get it from resources?
@@ -67,7 +67,7 @@ abstract class CraftTarget extends Target {
           return GatheringItemTarget(
                   targetItemQuantity: ItemQuantity(
                       code: craftIngredient.code,
-                      quantity: craftIngredient.quantity), parentTarget: this)
+                      quantity: craftIngredient.quantity), parentTarget: this, characterLog: characterLog,)
               .update(
                   character: character,
                   boardState: boardState,
@@ -82,7 +82,7 @@ abstract class CraftTarget extends Target {
           return FightItemTarget(
                   itemQuantity: ItemQuantity(
                       code: craftIngredient.code,
-                      quantity: craftIngredient.quantity), parentTarget: this)
+                      quantity: craftIngredient.quantity), parentTarget: this, characterLog: characterLog,)
               .update(
                   character: character,
                   boardState: boardState,
@@ -95,7 +95,7 @@ abstract class CraftTarget extends Target {
           return CraftItemTarget(
                   itemQuantity: ItemQuantity(
                       code: craftIngredient.code,
-                      quantity: craftIngredient.quantity), parentTarget: this)
+                      quantity: craftIngredient.quantity), parentTarget: this, characterLog: characterLog,)
               .update(
                   character: character,
                   boardState: boardState,
@@ -120,7 +120,7 @@ abstract class CraftTarget extends Target {
     workshopLocations
         .sort((a, b) => MathUtil.sortDistance(character.location, a, b));
     final location = workshopLocations.first;
-    final moveAction = MoveToTarget(targetLocation: location, parentTarget: this).update(
+    final moveAction = MoveToTarget(targetLocation: location, parentTarget: this, characterLog: characterLog,).update(
         character: character,
         boardState: boardState,
         artifactsClient: artifactsClient);

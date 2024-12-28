@@ -8,7 +8,7 @@ class FightLevelTarget extends FightTarget {
   final int level;
 
   FightLevelTarget({
-    required this.level, required super.parentTarget,
+    required this.level, required super.parentTarget, required super.characterLog,
   });
 
   @override

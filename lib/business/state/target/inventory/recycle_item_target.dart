@@ -13,7 +13,7 @@ class RecycleItemTarget extends Target {
   final ItemQuantity quantityToMaintain;
 
   RecycleItemTarget({
-    required this.quantityToMaintain, required super.parentTarget,
+    required this.quantityToMaintain, required super.parentTarget, required super.characterLog,
   });
 
   @override
@@ -55,7 +55,7 @@ class RecycleItemTarget extends Target {
     workshopLocations
         .sort((a, b) => MathUtil.sortDistance(character.location, a, b));
     final location = workshopLocations.first;
-    final moveAction = MoveToTarget(targetLocation: location, parentTarget: this).update(
+    final moveAction = MoveToTarget(targetLocation: location, parentTarget: this, characterLog: characterLog).update(
         character: character,
         boardState: boardState,
         artifactsClient: artifactsClient);

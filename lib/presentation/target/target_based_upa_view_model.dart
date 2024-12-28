@@ -1,3 +1,4 @@
+import 'package:artifacts_mmo/business/state/character_log.dart';
 import 'package:artifacts_mmo/business/state/character_target_manager.dart';
 import 'package:artifacts_mmo/business/state/state_manager.dart';
 import 'package:artifacts_mmo/business/state/target/craft/craft_item_target.dart';
@@ -23,6 +24,11 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
   final ArtifactsClient artifactsClient;
   final StateManager stateManager;
   final _menuOptions = {
+    MenuItemType.logs: MenuOption(
+      type: MenuItemType.logs,
+      url: 'https://artifactsmmo.com/images/items/gift.png',
+      name: 'Logs',
+    ),
     MenuItemType.skills: MenuOption(
       type: MenuItemType.skills,
       url: 'https://artifactsmmo.com/images/items/iron_sword.png',
@@ -114,7 +120,8 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
     await _getCurrentTargetManager().startNewTarget(ManageInventoryTarget(
         maxItemQuantity:
             ItemQuantity(code: item.code, quantity: maintainAmount),
-        parentTarget: null));
+        parentTarget: null,
+        characterLog: CharacterLog()));
   }
 
   Future<void> onItemCraft(
@@ -123,22 +130,23 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
     await _getCurrentTargetManager().startNewTarget(CraftItemTarget(
         itemQuantity:
             ItemQuantity(code: item.code, quantity: currentCount + craftAmount),
-        parentTarget: null));
+        parentTarget: null,
+        characterLog: CharacterLog()));
   }
 
   Future<void> onCurrentTaskTap(TaskProgress task) async {
     if (task.progress == task.total) {
-      await _getCurrentTargetManager()
-          .startNewTarget(CompleteTaskTarget(parentTarget: null));
+      await _getCurrentTargetManager().startNewTarget(
+          CompleteTaskTarget(parentTarget: null, characterLog: CharacterLog()));
     } else {
-      await _getCurrentTargetManager()
-          .startNewTarget(PerformTaskTarget(parentTarget: null));
+      await _getCurrentTargetManager().startNewTarget(
+          PerformTaskTarget(parentTarget: null, characterLog: CharacterLog()));
     }
   }
 
   Future<void> onTaskTap(Task task) async {
-    await _getCurrentTargetManager()
-        .startNewTarget(AcceptTaskTarget(parentTarget: null));
+    await _getCurrentTargetManager().startNewTarget(
+        AcceptTaskTarget(parentTarget: null, characterLog: CharacterLog()));
   }
 
   Future<void> onCharacterSelected(Character character) async {
@@ -151,17 +159,28 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
 
   Future<void> onSkillSelected(Skill skill) async {
     if (skill.skillType == SkillType.overall) {
-      await _getCurrentTargetManager()
-          .startNewTarget(FightLevelTarget(level: 99, parentTarget: null));
+      await _getCurrentTargetManager().startNewTarget(FightLevelTarget(
+        level: 99,
+        parentTarget: null,
+        characterLog: CharacterLog(),
+      ));
     } else if (skill.skillType == SkillType.alchemy ||
         skill.skillType == SkillType.fishing ||
         skill.skillType == SkillType.woodcutting ||
         skill.skillType == SkillType.mining) {
       await _getCurrentTargetManager().startNewTarget(GatheringSkillTarget(
-          skillType: skill.skillType, targetLevel: 99, parentTarget: null));
+        skillType: skill.skillType,
+        targetLevel: 99,
+        parentTarget: null,
+        characterLog: CharacterLog(),
+      ));
     } else {
       await _getCurrentTargetManager().startNewTarget(CraftLevelTarget(
-          skillType: skill.skillType, targetLevel: 99, parentTarget: null));
+        skillType: skill.skillType,
+        targetLevel: 99,
+        parentTarget: null,
+        characterLog: CharacterLog(),
+      ));
     }
   }
 
