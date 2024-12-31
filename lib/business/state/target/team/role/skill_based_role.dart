@@ -32,7 +32,9 @@ abstract class SkillBasedRole extends Role {
     final resources =
         boardState.resources.resourcesThatProvideItem(code: itemQuantity.code);
     if (resources
-        .where((r) => r.skillLevel <= character.skillByType(skillType).level)
+        .where((r) =>
+            r.skillLevel <= character.skillByType(skillType).level &&
+            r.skillType == skillType)
         .isNotEmpty) {
       return ProvideResult(
         providable: Providable.canProvideSoon,
