@@ -292,7 +292,7 @@ class TargetBasedUpaView
       case MenuItemType.skills:
         return 'Skills';
       case MenuItemType.bank:
-        return 'Bank (${model.state.boardState.bank.items.count()}/${model.state.boardState.bank.bankDetails.slots})';
+        return 'Bank (${model.state.boardState.bank.items.length}/${model.state.boardState.bank.bankDetails.slots})';
       case MenuItemType.team:
         return 'Team';
     }
