@@ -168,7 +168,7 @@ abstract class Role {
           ).update(
               character: character,
               boardState: boardState,
-              artifactsClient: artifactsClient);
+              artifactsClient: artifactsClient,);
         }
       }
     }

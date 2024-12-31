@@ -26,7 +26,6 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
-import 'package:flutter/cupertino.dart';
 
 class TeamTarget extends Target {
   final TeamManager teamManager;
@@ -135,6 +134,16 @@ class TeamTarget extends Target {
       return provideItemsIfPossible;
     }
 
+    // Check if we can provide anything for our generic stockpile.
+    final stockpileIfPossible = _provideItemsForStockpile(
+      character: character,
+      boardState: boardState,
+      artifactsClient: artifactsClient,
+    );
+    if (!stockpileIfPossible.progress.finished) {
+      return stockpileIfPossible;
+    }
+
     // Perform default idle action.
     return _performIdleAction(
       character: character,
@@ -239,11 +248,12 @@ class TeamTarget extends Target {
       }
 
       final acquireRole = role.acquireItem(
-          boardState: boardState,
-          character: character,
-          itemQuantity: itemQuantity,
-          artifactsClient: artifactsClient,
-          parentTarget: parentTarget,);
+        boardState: boardState,
+        character: character,
+        itemQuantity: itemQuantity,
+        artifactsClient: artifactsClient,
+        parentTarget: parentTarget,
+      );
       if (!acquireRole.progress.finished) {
         characterLog.addLog('$role acquiring item: $itemQuantity');
         return acquireRole;
@@ -253,7 +263,6 @@ class TeamTarget extends Target {
       if (quantityLeft <= 0) {
         break;
       }
-
     }
 
     return TargetProcessResult.noAction(
@@ -382,6 +391,61 @@ class TeamTarget extends Target {
       description: 'No items to withdraw',
       imageUrl: null,
     );
+  }
+
+  TargetProcessResult _provideItemsForStockpile({
+    required Character character,
+    required BoardState boardState,
+    required ArtifactsClient artifactsClient,
+  }) {
+    final stockpileTypes = [ItemType.resource];
+
+    for (final itemType in stockpileTypes) {
+      final items = boardState.items.itemsByType(itemType);
+      for (final item in items) {
+        final bankCount = boardState.bank.items.count(code: item.code);
+        var remainingCount = max(0, 10 - bankCount);
+        if (remainingCount > 0) {
+          // If we have enough of this item in our inventory, deposit it.
+          final inventoryCount =
+              character.inventory.items.count(code: item.code);
+          if (inventoryCount >= remainingCount) {
+            characterLog.addLog('Depositing $item for stockpile.');
+            return DepositItemTarget(
+              quantityToRemain: ItemQuantity(
+                  code: item.code, quantity: inventoryCount - remainingCount),
+              parentTarget: parentTarget,
+              characterLog: characterLog,
+            ).update(
+              character: character,
+              boardState: boardState,
+              artifactsClient: artifactsClient,
+            );
+          }
+          remainingCount = remainingCount - inventoryCount;
+
+          // See if we can acquire it.
+          final acquireAction = acquireItemSoon(
+            boardState: boardState,
+            character: character,
+            itemQuantity:
+                ItemQuantity(code: item.code, quantity: remainingCount),
+            artifactsClient: artifactsClient,
+            parentTarget: parentTarget,
+            canUseStock: false,
+            allowRareIngredients: false,
+          );
+
+          if (!acquireAction.progress.finished) {
+            characterLog.addLog('Acquiring $item for stockpile');
+            return acquireAction;
+          }
+        }
+      }
+    }
+
+    // Not able to acquire anything, or we already have it all! (Yeah right)
+    return TargetProcessResult.noAction();
   }
 
   TargetProcessResult _provideItemsIfPossible({

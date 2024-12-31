@@ -25,6 +25,11 @@ class NetworkArtifactsException extends ArtifactsException {
         errorType,
         parent,
       ];
+
+  @override
+  String toString() {
+    return errorMessage;
+  }
 }
 
 enum ErrorType {
