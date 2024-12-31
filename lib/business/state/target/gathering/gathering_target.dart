@@ -69,7 +69,7 @@ abstract class GatheringTarget extends Target {
     }
 
     if (resourceToTarget == null) {
-      throw ArtifactsException(errorMessage: 'Unable to pick resource.');
+      return TargetProcessResult.noAction(description: 'Unable to find resource to target');
     }
 
     // Get closest location for targetResource.

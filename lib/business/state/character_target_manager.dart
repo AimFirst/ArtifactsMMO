@@ -18,7 +18,8 @@ class CharacterTargetManager {
   Character character = Character.empty();
   final CharacterLog characterLog = CharacterLog();
   Target _target = NoTarget(parentTarget: null, characterLog: CharacterLog());
-  Target _overrideTarget = NoTarget(parentTarget: null, characterLog: CharacterLog());
+  Target _overrideTarget =
+      NoTarget(parentTarget: null, characterLog: CharacterLog());
   bool needsToStop = false;
 
   final ArtifactsClient artifactsClient;
@@ -51,15 +52,16 @@ class CharacterTargetManager {
     );
 
     _stateSubject.value = CharacterState(
-        character: character,
-        target: _target,
-        processResult: TargetProcessResult(
-          progress: Progress.done(),
-          action: null,
-          description: 'Waiting for target',
-          imageUrl: null,
-        ),
-        characterLog: characterLog.current,);
+      character: character,
+      target: _target,
+      processResult: TargetProcessResult(
+        progress: Progress.done(),
+        action: null,
+        description: 'Waiting for target',
+        imageUrl: null,
+      ),
+      characterLog: characterLog.current,
+    );
 
     startTargetBasedUpa();
   }
@@ -114,17 +116,26 @@ class CharacterTargetManager {
 
       // Try override first.
       TargetProcessResult? update;
-      final overrideUpdate = _overrideTarget.update(character: character, boardState: boardState, artifactsClient: artifactsClient,);
+      final overrideUpdate = _overrideTarget.update(
+        character: character,
+        boardState: boardState,
+        artifactsClient: artifactsClient,
+      );
       if (!overrideUpdate.progress.finished) {
         update = overrideUpdate;
       }
 
       // Process a normal update if we didn't have an override.
       update ??= _target.update(
-            character: character,
-            boardState: boardState,
-            artifactsClient: artifactsClient,);
+        character: character,
+        boardState: boardState,
+        artifactsClient: artifactsClient,
+      );
 
+      if (overrideUpdate.progress.finished) {
+        _overrideTarget =
+            NoTarget(parentTarget: null, characterLog: characterLog);
+      }
 
       // Target reached?
       if (update.progress.finished) {
@@ -132,13 +143,19 @@ class CharacterTargetManager {
       }
 
       // Update the character after this action.
-      final result = await update.action;
-      if (result is ActionBankGoldResponse) {
-        bankManager.updateBankGold(result.bank);
-      } else if (result is ActionBankItemResponse) {
-        bankManager.updateBankItems(result.bank);
+      try {
+        final result = await update.action;
+        if (result is ActionBankGoldResponse) {
+          bankManager.updateBankGold(result.bank);
+        } else if (result is ActionBankItemResponse) {
+          bankManager.updateBankItems(result.bank);
+        }
+        character = result?.character ?? character;
+      } catch (ex) {
+        characterLog.addLog('Error encountered. $ex');
+        character = character.copyWith(
+            cooldownEnd: DateTime.now().add(const Duration(seconds: 10)));
       }
-      character = result?.character ?? character;
       _stateSubject.value = CharacterState(
         character: character,
         target: _target,

@@ -38,14 +38,14 @@ abstract class SkillBasedRole extends Role {
         providable: Providable.canProvideSoon,
         neededDependencies: [],
         provideMethod: ProvideMethod.gather,
-        countNeeded: quantityNeeded,
+        countNeededAfterThis: 0,
       );
     } else if (resources.isNotEmpty) {
       return ProvideResult(
         providable: Providable.canProvideEventually,
         neededDependencies: [],
         provideMethod: ProvideMethod.gather,
-        countNeeded: quantityNeeded,
+        countNeededAfterThis: 0,
       );
     }
 
@@ -61,7 +61,7 @@ abstract class SkillBasedRole extends Role {
                 .toList() ??
             [],
         provideMethod: ProvideMethod.craft,
-        countNeeded: quantityNeeded,
+        countNeededAfterThis: 0,
       );
     }
 
@@ -70,7 +70,7 @@ abstract class SkillBasedRole extends Role {
       providable: Providable.cannotProvide,
       neededDependencies: [],
       provideMethod: ProvideMethod.unknown,
-      countNeeded: quantityNeeded,
+      countNeededAfterThis: quantityNeeded,
     );
   }
 
@@ -98,9 +98,16 @@ abstract class SkillBasedRole extends Role {
 
     switch (canProvide.provideMethod) {
       case ProvideMethod.craft:
-        characterLog.addLog('Providing $itemQuantity via ${canProvide.provideMethod}');
+        characterLog
+            .addLog('Providing $itemQuantity via ${canProvide.provideMethod}');
         return CraftItemTarget(
-          itemQuantity: itemQuantity,
+          itemQuantity: ItemQuantity(
+            code: itemQuantity.code,
+            quantity: character.inventory.items.count(
+                  code: itemQuantity.code,
+                ) +
+                itemQuantity.quantity,
+          ),
           parentTarget: parentTarget,
           characterLog: characterLog,
         ).update(
@@ -109,7 +116,8 @@ abstract class SkillBasedRole extends Role {
           artifactsClient: artifactsClient,
         );
       case ProvideMethod.gather:
-        characterLog.addLog('Providing $itemQuantity via ${canProvide.provideMethod}');
+        characterLog
+            .addLog('Providing $itemQuantity via ${canProvide.provideMethod}');
         return GatheringItemTarget(
           targetItemQuantity: itemQuantity,
           parentTarget: parentTarget,
@@ -124,7 +132,8 @@ abstract class SkillBasedRole extends Role {
       case ProvideMethod.bankWithdraw:
       case ProvideMethod.bankDeposit:
       case ProvideMethod.fight:
-        characterLog.addLog('$roleType unexpected provide type ${canProvide.provideMethod} for $itemQuantity');
+        characterLog.addLog(
+            '$roleType unexpected provide type ${canProvide.provideMethod} for $itemQuantity');
         return TargetProcessResult.noAction();
     }
   }
@@ -135,21 +144,37 @@ abstract class SkillBasedRole extends Role {
     required Character character,
     required ArtifactsClient artifactsClient,
     required Target? parentTarget,
+    required CharacterItemAcquirerSoon characterItemAcquirer,
   }) {
     // Can we work on our crafting level up?
-    final craftTarget = CraftLevelTarget(
-      skillType: skillType,
-      targetLevel: Skill.maxSkillLevel,
-      parentTarget: parentTarget,
-      characterLog: characterLog,
-    ).update(
-      character: character,
-      boardState: boardState,
-      artifactsClient: artifactsClient,
-    );
-    if (!craftTarget.progress.finished) {
-      return craftTarget;
+    final options = boardState.items
+        .itemsByCraftType(skillType)
+        .where((i) =>
+            (i.craft?.level ?? 99) <= character.skillByType(skillType).level)
+        .toList();
+    options.sort((a, b) => b.level - a.level);
+    for (final option in options) {
+      final itemQuantity = ItemQuantity(
+        code: option.code,
+        quantity: 1,
+      );
+
+      final acquireItem = characterItemAcquirer(
+        artifactsClient: artifactsClient,
+        boardState: boardState,
+        character: character,
+        parentTarget: parentTarget,
+        itemQuantity: itemQuantity,
+        canUseStock: false,
+        allowRareIngredients: false,
+      );
+      if (!acquireItem.progress.finished) {
+        characterLog.addLog('Idle attempting to craft ${option.name}');
+        return acquireItem;
+      }
     }
+
+    characterLog.addLog('No craft options for $roleType, trying gathering');
 
     // Can we work on gathering?
     final gatherTarget = GatheringSkillTarget(

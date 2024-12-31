@@ -107,6 +107,7 @@ class FightingRole extends Role {
     required Character character,
     required ArtifactsClient artifactsClient,
     required Target? parentTarget,
+    required CharacterItemAcquirerSoon characterItemAcquirer,
   }) {
     return FightLevelTarget(
             level: 40, parentTarget: parentTarget, characterLog: characterLog)
@@ -174,7 +175,7 @@ class FightingRole extends Role {
         providable: Providable.canProvideSoon,
         neededDependencies: [],
         provideMethod: ProvideMethod.fight,
-        countNeeded: quantityNeeded,
+        countNeededAfterThis: 0,
       );
     }
 
@@ -182,7 +183,7 @@ class FightingRole extends Role {
       providable: Providable.cannotProvide,
       neededDependencies: [],
       provideMethod: ProvideMethod.unknown,
-      countNeeded: quantityNeeded,
+      countNeededAfterThis: quantityNeeded,
     );
   }
 

@@ -3,8 +3,12 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/inventory.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/map/location.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/task/task_progress.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 
+part 'character.g.dart';
+
+@CopyWith()
 class Character with EquatableMixin {
   final String name;
   final String skin;

@@ -35,7 +35,7 @@ class GatheringSkillTarget extends GatheringTarget {
             r.skillType == skillType && r.skillLevel <= currentSkill.level)
         .toList();
     resources.sort((a, b) => b.skillLevel - a.skillLevel);
-    return [resources.first];
+    return resources.isNotEmpty ? [resources.first] : [];
   }
 
   @override

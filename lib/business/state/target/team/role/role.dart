@@ -13,6 +13,16 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 
+typedef CharacterItemAcquirerSoon = TargetProcessResult Function({
+  required ArtifactsClient artifactsClient,
+  required BoardState boardState,
+  required Character character,
+  required ItemQuantity itemQuantity,
+  required Target? parentTarget,
+  required bool canUseStock,
+  required bool allowRareIngredients,
+});
+
 abstract class Role {
   RoleType get roleType;
 
@@ -68,6 +78,7 @@ abstract class Role {
     required Character character,
     required ArtifactsClient artifactsClient,
     required Target? parentTarget,
+    required CharacterItemAcquirerSoon characterItemAcquirer,
   });
 
   List<UniqueItemQuantityRequest> bestEquipment({

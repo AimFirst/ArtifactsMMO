@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/deposit_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/recycle_item_target.dart';
@@ -24,6 +26,7 @@ import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/skill/skill.dart';
+import 'package:flutter/cupertino.dart';
 
 class TeamTarget extends Target {
   final TeamManager teamManager;
@@ -137,7 +140,7 @@ class TeamTarget extends Target {
       character: character,
       boardState: boardState,
       artifactsClient: artifactsClient,
-      teamManager: teamManager,
+      characterItemAcquirer: acquireItemSoon,
     );
   }
 
@@ -177,6 +180,171 @@ class TeamTarget extends Target {
             character: character,
             boardState: boardState,
             artifactsClient: artifactsClient);
+  }
+
+  TargetProcessResult acquireItemSoon({
+    required BoardState boardState,
+    required Character character,
+    required ItemQuantity itemQuantity,
+    required ArtifactsClient artifactsClient,
+    required Target? parentTarget,
+    required bool canUseStock,
+    required bool allowRareIngredients,
+  }) {
+    final acquirability = _canAcquireAllItemsSoon(
+      boardState: boardState,
+      character: character,
+      itemQuantity: itemQuantity,
+      canUseStock: canUseStock,
+      allowRareIngredients: allowRareIngredients,
+    );
+    // If we can't provide it soon, just return no action.
+    if (acquirability.providable > Providable.canProvideSoon) {
+      return TargetProcessResult.noAction();
+    }
+
+    var quantityLeft = itemQuantity.quantity;
+    final acquireRoles =
+        canUseStock ? [inventoryRole, bankRole, ...roles] : roles;
+    for (final role in acquireRoles) {
+      final roleCanAcquire = role.canAcquireItem(
+          boardState: boardState,
+          character: character,
+          itemQuantity:
+              ItemQuantity(code: itemQuantity.code, quantity: quantityLeft));
+
+      quantityLeft = roleCanAcquire.countNeededAfterThis;
+
+      // This role cannot provide soon, so try the next one.
+      if (roleCanAcquire.providable > Providable.canProvideSoon) {
+        continue;
+      }
+
+      if (roleCanAcquire.neededDependencies.isNotEmpty) {
+        for (final dependency in roleCanAcquire.neededDependencies) {
+          final dependencyTask = acquireItemSoon(
+            boardState: boardState,
+            character: character,
+            itemQuantity: dependency,
+            artifactsClient: artifactsClient,
+            parentTarget: parentTarget,
+            canUseStock: true,
+            allowRareIngredients: allowRareIngredients,
+          );
+          if (!dependencyTask.progress.finished) {
+            characterLog.addLog('Trying to get needed dependency $dependency');
+            return dependencyTask;
+          }
+        }
+      }
+
+      final acquireRole = role.acquireItem(
+          boardState: boardState,
+          character: character,
+          itemQuantity: itemQuantity,
+          artifactsClient: artifactsClient,
+          parentTarget: parentTarget,);
+      if (!acquireRole.progress.finished) {
+        characterLog.addLog('$role acquiring item: $itemQuantity');
+        return acquireRole;
+      }
+
+      // We have the required quantity and there's nothing left to do
+      if (quantityLeft <= 0) {
+        break;
+      }
+
+    }
+
+    return TargetProcessResult.noAction(
+        description: 'Unable to find needed action to provide $itemQuantity');
+  }
+
+  ProvideResult _canAcquireAllItemsSoon({
+    required BoardState boardState,
+    required Character character,
+    required ItemQuantity itemQuantity,
+    required bool canUseStock,
+    required bool allowRareIngredients,
+  }) {
+    var acquirable = Providable.canProvideImmediately;
+    var quantityLeft = itemQuantity.quantity;
+
+    final rolesToCheck =
+        canUseStock ? [inventoryRole, bankRole, ...roles] : roles;
+
+    // If we aren't allowed to use rare ingredients and this item is rare, return false.
+    if (!allowRareIngredients) {
+      final item = boardState.items.itemByCode(itemQuantity.code);
+      if (item.subType == ItemSubType.task) {
+        return ProvideResult(
+          providable: Providable.cannotProvide,
+          neededDependencies: [],
+          provideMethod: ProvideMethod.unknown,
+          countNeededAfterThis: itemQuantity.quantity,
+        );
+      }
+    }
+
+    // Check every role
+    for (final role in rolesToCheck) {
+      final roleCanAcquire = role.canAcquireItem(
+          boardState: boardState,
+          character: character,
+          itemQuantity:
+              ItemQuantity(code: itemQuantity.code, quantity: quantityLeft));
+      // If we can provide it soon, make sure we can also provide the dependencies soon
+      if (roleCanAcquire.providable <= Providable.canProvideSoon) {
+        // Check each dependency.
+        var dependencyAcquirable = Providable.canProvideImmediately;
+        for (final dependency in roleCanAcquire.neededDependencies) {
+          final dependencyCanAcquire = _canAcquireAllItemsSoon(
+            boardState: boardState,
+            character: character,
+            itemQuantity: dependency,
+            canUseStock: true,
+            allowRareIngredients: allowRareIngredients,
+          );
+          if (dependencyCanAcquire.providable >= dependencyAcquirable) {
+            dependencyAcquirable = dependencyCanAcquire.providable;
+          }
+
+          // If we can't provide this dependency, don't bother checking other ones.
+          if (dependencyAcquirable > Providable.canProvideSoon) {
+            break;
+          }
+        }
+
+        // If we can provide all dependencies soon, continue on.
+        if (dependencyAcquirable <= Providable.canProvideSoon) {
+          quantityLeft = roleCanAcquire.countNeededAfterThis;
+          acquirable = Providable.values[max(
+              max(acquirable.index, roleCanAcquire.providable.index),
+              dependencyAcquirable.index)];
+        }
+      }
+
+      // If we've already been able to provide everything needed, no need to check the rest of the roles.
+      if (quantityLeft <= 0) {
+        break;
+      }
+    }
+
+    // We were able to provide all the needed quantity.
+    if (quantityLeft <= 0) {
+      return ProvideResult(
+          providable: acquirable,
+          neededDependencies: [],
+          provideMethod: ProvideMethod.unknown,
+          countNeededAfterThis: 0);
+    }
+
+    // We couldn't provide all the needed quantity.
+    return ProvideResult(
+        providable: Providable.cannotProvide,
+        neededDependencies: [],
+        provideMethod: ProvideMethod.unknown,
+        countNeededAfterThis: quantityLeft);
   }
 
   TargetProcessResult _pickUpDesiredFromBank({
@@ -234,7 +402,7 @@ class TeamTarget extends Target {
       }
 
       // See if any of our roles can provide it.
-      var countNeeded = bankProvide.countNeeded;
+      var countNeeded = bankProvide.countNeededAfterThis;
       for (final role in [bankRole, ...roles]) {
         final canProvide = role.canProvideItem(
           boardState: boardState,
@@ -252,14 +420,13 @@ class TeamTarget extends Target {
             final providability = inventoryRole.canProvideItem(
                 boardState: boardState, character: character, itemQuantity: d);
             return ItemQuantity(
-                code: d.code, quantity: providability.countNeeded);
+                code: d.code, quantity: providability.countNeededAfterThis);
           }).where((d) => d.quantity > 0);
 
           // We can provide but there's dependencies we need first.
           if (remainingDependencies.isNotEmpty) {
             for (final dependency in remainingDependencies) {
-              characterLog
-                  .addLog('Requesting $dependency as a dependency.');
+              characterLog.addLog('Requesting $dependency as a dependency.');
               teamManager.addRequestedItem(
                 PrioritizedElement(
                   itemPriority: desiredItem.itemPriority,
@@ -267,7 +434,9 @@ class TeamTarget extends Target {
                     key: '${desiredItem.element.key}:${dependency.code}',
                     item: boardState.items.itemByCode(dependency.code),
                     quantityRemaining: dependency.quantity,
-                    totalQuantity: character.inventory.items.count(code: dependency.code) + dependency.quantity,
+                    totalQuantity:
+                        character.inventory.items.count(code: dependency.code) +
+                            dependency.quantity,
                     requestingCharacter: character.name,
                   ),
                 ),
@@ -463,7 +632,7 @@ class TeamTarget extends Target {
     required Character character,
     required BoardState boardState,
     required ArtifactsClient artifactsClient,
-    required TeamManager teamManager,
+    required CharacterItemAcquirerSoon characterItemAcquirer,
   }) {
     for (final role in roles) {
       final idleTarget = role.defaultIdle(
@@ -471,6 +640,7 @@ class TeamTarget extends Target {
         character: character,
         artifactsClient: artifactsClient,
         parentTarget: parentTarget,
+        characterItemAcquirer: characterItemAcquirer,
       );
       if (!idleTarget.progress.finished) {
         characterLog.addLog('Performing idle for $role');

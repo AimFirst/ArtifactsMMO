@@ -26,13 +26,13 @@ class ProvideResult with EquatableMixin {
   final Providable providable;
   final List<ItemQuantity> neededDependencies;
   final ProvideMethod provideMethod;
-  final int countNeeded;
+  final int countNeededAfterThis;
 
   ProvideResult({
     required this.providable,
     required this.neededDependencies,
     required this.provideMethod,
-    required this.countNeeded,
+    required this.countNeededAfterThis,
   });
 
   @override
@@ -40,7 +40,7 @@ class ProvideResult with EquatableMixin {
     providable,
     neededDependencies,
     provideMethod,
-    countNeeded,
+    countNeededAfterThis,
   ];
 }
 

@@ -29,17 +29,17 @@ class InventoryRole extends Role {
         character.inventory.items.count(code: itemQuantity.code);
     if (inventoryCount < itemQuantity.quantity) {
       return ProvideResult(
-          providable: Providable.cannotProvide,
+          providable: Providable.canProvideImmediately,
           neededDependencies: [],
           provideMethod: ProvideMethod.inventory,
-          countNeeded: itemQuantity.quantity - inventoryCount);
+          countNeededAfterThis: itemQuantity.quantity - inventoryCount);
     }
 
     return ProvideResult(
         providable: Providable.canProvideImmediately,
         neededDependencies: [],
         provideMethod: ProvideMethod.inventory,
-        countNeeded: 0);
+        countNeededAfterThis: 0);
   }
 
   @override
@@ -59,6 +59,7 @@ class InventoryRole extends Role {
     required Character character,
     required ArtifactsClient artifactsClient,
     required Target? parentTarget,
+    required CharacterItemAcquirerSoon characterItemAcquirer,
   }) {
     return TargetProcessResult.noAction();
   }

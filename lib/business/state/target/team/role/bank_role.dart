@@ -32,14 +32,14 @@ class BankRole extends Role {
           providable: Providable.cannotProvide,
           neededDependencies: [],
           provideMethod: ProvideMethod.bankWithdraw,
-          countNeeded: itemQuantity.quantity - bankCount);
+          countNeededAfterThis: itemQuantity.quantity - bankCount);
     }
 
     return ProvideResult(
         providable: Providable.canProvideSoon,
         neededDependencies: [],
         provideMethod: ProvideMethod.bankWithdraw,
-        countNeeded: 0);
+        countNeededAfterThis: 0);
   }
 
   /// We can only provide it if it's in our inventory. Otherwise, we can't help.
@@ -55,14 +55,14 @@ class BankRole extends Role {
           providable: Providable.cannotProvide,
           neededDependencies: [],
           provideMethod: ProvideMethod.bankWithdraw,
-          countNeeded: itemQuantity.quantity - inventoryCount);
+          countNeededAfterThis: itemQuantity.quantity - inventoryCount);
     }
 
     return ProvideResult(
         providable: Providable.canProvideSoon,
         neededDependencies: [],
         provideMethod: ProvideMethod.bankWithdraw,
-        countNeeded: 0);
+        countNeededAfterThis: 0);
   }
 
   @override
@@ -92,7 +92,8 @@ class BankRole extends Role {
       quantityToMaintain: ItemQuantity(
           code: itemQuantity.code,
           quantity: itemQuantity.quantity + currentAmount),
-      parentTarget: parentTarget, characterLog: characterLog,
+      parentTarget: parentTarget,
+      characterLog: characterLog,
     ).update(
       character: character,
       boardState: boardState,
@@ -123,13 +124,15 @@ class BankRole extends Role {
     final currentAmount =
         character.inventory.items.count(code: itemQuantity.code);
     final targetQuantity = currentAmount - itemQuantity.quantity;
-    characterLog.addLog('Depositing. Current: $currentAmount, target: $targetQuantity');
+    characterLog
+        .addLog('Depositing. Current: $currentAmount, target: $targetQuantity');
     // Deposit the item(s) to bank.
     return DepositItemTarget(
       quantityToRemain: ItemQuantity(
           code: itemQuantity.code,
           quantity: currentAmount - itemQuantity.quantity),
-      parentTarget: parentTarget, characterLog: characterLog,
+      parentTarget: parentTarget,
+      characterLog: characterLog,
     ).update(
       character: character,
       boardState: boardState,
@@ -138,11 +141,13 @@ class BankRole extends Role {
   }
 
   @override
-  TargetProcessResult defaultIdle(
-      {required BoardState boardState,
-      required Character character,
-      required ArtifactsClient artifactsClient,
-      required Target? parentTarget,}) {
+  TargetProcessResult defaultIdle({
+    required BoardState boardState,
+    required Character character,
+    required ArtifactsClient artifactsClient,
+    required Target? parentTarget,
+    required CharacterItemAcquirerSoon characterItemAcquirer,
+  }) {
     return TargetProcessResult.noAction();
   }
 
