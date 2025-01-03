@@ -410,18 +410,22 @@ class TeamTarget extends Target {
           final inventoryCount =
               character.inventory.items.count(code: item.code);
           if (inventoryCount >= remainingCount) {
-            characterLog.addLog('Depositing $item for stockpile.');
-            return DepositItemTarget(
-              quantityToRemain: ItemQuantity(
-                  code: item.code, quantity: inventoryCount - remainingCount),
-              parentTarget: parentTarget,
-              characterLog: characterLog,
-            ).update(
-              character: character,
-              boardState: boardState,
-              artifactsClient: artifactsClient,
-            );
-          }
+            for (final role in roles) {
+              if (role.canAcquireItem(boardState: boardState, character: character, itemQuantity: ItemQuantity(code: item.code, quantity: 1)).providable != Providable.cannotProvide) {
+                characterLog.addLog('Depositing $item for stockpile.');
+                return DepositItemTarget(
+                  quantityToRemain: ItemQuantity(
+                      code: item.code, quantity: inventoryCount - remainingCount),
+                  parentTarget: parentTarget,
+                  characterLog: characterLog,
+                ).update(
+                  character: character,
+                  boardState: boardState,
+                  artifactsClient: artifactsClient,
+                );
+              }
+              }
+            }
           remainingCount = remainingCount - inventoryCount;
 
           // See if we can acquire it.

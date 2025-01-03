@@ -1,6 +1,11 @@
 import 'package:artifacts_mmo/infrastructure/api/dto/item/equipment_slot.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 
+part 'equipment.g.dart';
+
+@CopyWith()
 class EquipmentLoadout with EquatableMixin {
   final EquipmentSlotItem weapon;
   final EquipmentSlotItem shield;
@@ -140,16 +145,20 @@ class EquipmentSlotItem with EquatableMixin {
 }
 
 enum EquipmentType {
-  weapon,
-  shield,
-  helmet,
-  bodyArmor,
-  legArmor,
-  boots,
-  ring,
-  amulet,
-  artifact,
-  utility,
+  weapon(ItemType.weapon),
+  shield(ItemType.shield),
+  helmet(ItemType.helmet),
+  bodyArmor(ItemType.bodyArmor),
+  legArmor(ItemType.legArmor),
+  boots(ItemType.boots),
+  ring(ItemType.ring),
+  amulet(ItemType.amulet),
+  artifact(ItemType.artifact),
+  utility(ItemType.utility);
+
+  const EquipmentType(this.itemType);
+
+  final ItemType itemType;
 }
 
 class QuantityEquipmentSlot extends EquipmentSlotItem {

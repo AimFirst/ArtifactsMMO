@@ -25,6 +25,16 @@ class Item with EquatableMixin {
     required this.tradeable,
   });
 
+  Item.blank({required this.type})
+      : name = '',
+        code = '',
+        level = 1,
+        subType = ItemSubType.unknown,
+        description = '',
+        effects = [],
+        craft = null,
+        tradeable = false;
+
   @override
   List<Object?> get props => [
         name,

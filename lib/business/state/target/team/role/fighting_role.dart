@@ -4,14 +4,21 @@ import 'package:artifacts_mmo/business/state/target/fight/fight_item_target.dart
 import 'package:artifacts_mmo/business/state/target/fight/fight_level_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
+import 'package:artifacts_mmo/business/state/target/team/role/item_full_quantity.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/providability.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/role.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
+import 'package:artifacts_mmo/business/util/fight_calculator.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/character/equipment.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/equipment_slot.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
+import 'package:equatable/equatable.dart';
 
 class FightingRole extends Role {
   FightingRole({required super.characterLog});
@@ -238,4 +245,81 @@ class FightingRole extends Role {
         );
     }
   }
+
+  final optimalMonsterLoadouts = <String, EquipmentLoadout>{};
+
+  // TargetProcessResult _optimizeEquipment({
+  //   required BoardState boardState,
+  //   required Character character,
+  //   required ArtifactsClient artifactsClient,
+  //   required Monster monster,
+  //   required Target? parentTarget,
+  // }) {
+  //   // Find our optimal loadout for this monster.
+  //   var optimalLoadout = optimalMonsterLoadouts[monster.code] ??
+  //       _optimalLoadout(
+  //         boardState: boardState,
+  //         character: character,
+  //         monster: monster,
+  //       );
+  //   optimalMonsterLoadouts[monster.code] = optimalLoadout;
+  //
+  //   return TargetProcessResult.noAction();
+  // }
+
+  // EquipmentLoadout _optimalLoadout({
+  //   required BoardState boardState,
+  //   required Character character,
+  //   required Monster monster,
+  // }) {
+  //   final allPossibleItems = character.inventory.items
+  //       .map((i) => ItemFullQuantity(
+  //           item: boardState.items.itemByCode(i.code), quantity: i.quantity))
+  //       .toList();
+  //   character.equipmentLoadout.equipmentSlots.forEach((k, v) {
+  //     if (v.itemCode != null) {
+  //       allPossibleItems.add(ItemFullQuantity(
+  //           item: boardState.items.itemByCode(v.itemCode!),
+  //           quantity: v.quantity));
+  //     }
+  //   });
+  //
+  //   EquipmentLoadout equipmentLoadout = EquipmentLoadout.empty();
+  //
+  //   final slotOptions = <EquipmentSlot, List<ItemFullQuantity>>{};
+  //
+  //   for (final slot in EquipmentSlot.values) {
+  //     slotOptions[slot] = _options(allOptions: allPossibleItems, itemType: slot.acceptedItemType);
+  //   }
+  // }
+
+  // OptimalLoadoutResult _tryAllLoadoutOptions({required Map<EquipmentSlot, List<ItemFullQuantity>> slotOptions, required EquipmentLoadout currentLoadout, required int slotIndex}) {
+  //   final keys = slotOptions.keys.toList();
+  //   final thisSlot = keys[slotIndex];
+  //   final values = slotOptions[thisSlot];
+  //   for (final val in values!) {
+  //     currentLoadout.
+  //   }
+  // }
+
+  List<ItemFullQuantity> _options({required List<ItemFullQuantity> allOptions, required ItemType itemType}) {
+    return [ItemFullQuantity(item: Item.blank(type: itemType), quantity: 1), ...allOptions.where((i) => i.item.type == itemType)];
+  }
+
+// List<Item> weaponOptions({required BoardState boardState, required Character character,}) {
+//   final allOptions = character.inventory.items.map((i) => boardState.items.itemByCode(i.code)).where((i) => i.type == ItemType.weapon).toList();
+//   if (character.equipmentLoadout.weapon.itemCode != null) {
+//     allOptions.add(boardState.items.itemByCode(character.equipmentLoadout.weapon.itemCode!));
+//   }
+// }
+}
+
+class OptimalLoadoutResult with EquatableMixin {
+  final EquipmentLoadout loadout;
+  final FightPrediction result;
+
+  OptimalLoadoutResult({required this.loadout, required this.result});
+
+  @override
+  List<Object?> get props => [loadout, result];
 }
