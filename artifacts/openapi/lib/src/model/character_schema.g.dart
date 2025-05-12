@@ -80,7 +80,9 @@ class _$CharacterSchema extends CharacterSchema {
   @override
   final int criticalStrike;
   @override
-  final int stamina;
+  final int wisdom;
+  @override
+  final int prospecting;
   @override
   final int attackFire;
   @override
@@ -89,6 +91,8 @@ class _$CharacterSchema extends CharacterSchema {
   final int attackWater;
   @override
   final int attackAir;
+  @override
+  final int dmg;
   @override
   final int dmgFire;
   @override
@@ -113,6 +117,8 @@ class _$CharacterSchema extends CharacterSchema {
   final int cooldown;
   @override
   final String weaponSlot;
+  @override
+  final String runeSlot;
   @override
   final String shieldSlot;
   @override
@@ -143,6 +149,8 @@ class _$CharacterSchema extends CharacterSchema {
   final String utility2Slot;
   @override
   final int utility2SlotQuantity;
+  @override
+  final String bagSlot;
   @override
   final String task;
   @override
@@ -198,11 +206,13 @@ class _$CharacterSchema extends CharacterSchema {
       required this.maxHp,
       required this.haste,
       required this.criticalStrike,
-      required this.stamina,
+      required this.wisdom,
+      required this.prospecting,
       required this.attackFire,
       required this.attackEarth,
       required this.attackWater,
       required this.attackAir,
+      required this.dmg,
       required this.dmgFire,
       required this.dmgEarth,
       required this.dmgWater,
@@ -215,6 +225,7 @@ class _$CharacterSchema extends CharacterSchema {
       required this.y,
       required this.cooldown,
       required this.weaponSlot,
+      required this.runeSlot,
       required this.shieldSlot,
       required this.helmetSlot,
       required this.bodyArmorSlot,
@@ -230,6 +241,7 @@ class _$CharacterSchema extends CharacterSchema {
       required this.utility1SlotQuantity,
       required this.utility2Slot,
       required this.utility2SlotQuantity,
+      required this.bagSlot,
       required this.task,
       required this.taskType,
       required this.taskProgress,
@@ -300,8 +312,9 @@ class _$CharacterSchema extends CharacterSchema {
     BuiltValueNullFieldError.checkNotNull(haste, r'CharacterSchema', 'haste');
     BuiltValueNullFieldError.checkNotNull(
         criticalStrike, r'CharacterSchema', 'criticalStrike');
+    BuiltValueNullFieldError.checkNotNull(wisdom, r'CharacterSchema', 'wisdom');
     BuiltValueNullFieldError.checkNotNull(
-        stamina, r'CharacterSchema', 'stamina');
+        prospecting, r'CharacterSchema', 'prospecting');
     BuiltValueNullFieldError.checkNotNull(
         attackFire, r'CharacterSchema', 'attackFire');
     BuiltValueNullFieldError.checkNotNull(
@@ -310,6 +323,7 @@ class _$CharacterSchema extends CharacterSchema {
         attackWater, r'CharacterSchema', 'attackWater');
     BuiltValueNullFieldError.checkNotNull(
         attackAir, r'CharacterSchema', 'attackAir');
+    BuiltValueNullFieldError.checkNotNull(dmg, r'CharacterSchema', 'dmg');
     BuiltValueNullFieldError.checkNotNull(
         dmgFire, r'CharacterSchema', 'dmgFire');
     BuiltValueNullFieldError.checkNotNull(
@@ -330,6 +344,8 @@ class _$CharacterSchema extends CharacterSchema {
         cooldown, r'CharacterSchema', 'cooldown');
     BuiltValueNullFieldError.checkNotNull(
         weaponSlot, r'CharacterSchema', 'weaponSlot');
+    BuiltValueNullFieldError.checkNotNull(
+        runeSlot, r'CharacterSchema', 'runeSlot');
     BuiltValueNullFieldError.checkNotNull(
         shieldSlot, r'CharacterSchema', 'shieldSlot');
     BuiltValueNullFieldError.checkNotNull(
@@ -360,6 +376,8 @@ class _$CharacterSchema extends CharacterSchema {
         utility2Slot, r'CharacterSchema', 'utility2Slot');
     BuiltValueNullFieldError.checkNotNull(
         utility2SlotQuantity, r'CharacterSchema', 'utility2SlotQuantity');
+    BuiltValueNullFieldError.checkNotNull(
+        bagSlot, r'CharacterSchema', 'bagSlot');
     BuiltValueNullFieldError.checkNotNull(task, r'CharacterSchema', 'task');
     BuiltValueNullFieldError.checkNotNull(
         taskType, r'CharacterSchema', 'taskType');
@@ -419,11 +437,13 @@ class _$CharacterSchema extends CharacterSchema {
         maxHp == other.maxHp &&
         haste == other.haste &&
         criticalStrike == other.criticalStrike &&
-        stamina == other.stamina &&
+        wisdom == other.wisdom &&
+        prospecting == other.prospecting &&
         attackFire == other.attackFire &&
         attackEarth == other.attackEarth &&
         attackWater == other.attackWater &&
         attackAir == other.attackAir &&
+        dmg == other.dmg &&
         dmgFire == other.dmgFire &&
         dmgEarth == other.dmgEarth &&
         dmgWater == other.dmgWater &&
@@ -436,6 +456,7 @@ class _$CharacterSchema extends CharacterSchema {
         y == other.y &&
         cooldown == other.cooldown &&
         weaponSlot == other.weaponSlot &&
+        runeSlot == other.runeSlot &&
         shieldSlot == other.shieldSlot &&
         helmetSlot == other.helmetSlot &&
         bodyArmorSlot == other.bodyArmorSlot &&
@@ -451,6 +472,7 @@ class _$CharacterSchema extends CharacterSchema {
         utility1SlotQuantity == other.utility1SlotQuantity &&
         utility2Slot == other.utility2Slot &&
         utility2SlotQuantity == other.utility2SlotQuantity &&
+        bagSlot == other.bagSlot &&
         task == other.task &&
         taskType == other.taskType &&
         taskProgress == other.taskProgress &&
@@ -499,11 +521,13 @@ class _$CharacterSchema extends CharacterSchema {
     _$hash = $jc(_$hash, maxHp.hashCode);
     _$hash = $jc(_$hash, haste.hashCode);
     _$hash = $jc(_$hash, criticalStrike.hashCode);
-    _$hash = $jc(_$hash, stamina.hashCode);
+    _$hash = $jc(_$hash, wisdom.hashCode);
+    _$hash = $jc(_$hash, prospecting.hashCode);
     _$hash = $jc(_$hash, attackFire.hashCode);
     _$hash = $jc(_$hash, attackEarth.hashCode);
     _$hash = $jc(_$hash, attackWater.hashCode);
     _$hash = $jc(_$hash, attackAir.hashCode);
+    _$hash = $jc(_$hash, dmg.hashCode);
     _$hash = $jc(_$hash, dmgFire.hashCode);
     _$hash = $jc(_$hash, dmgEarth.hashCode);
     _$hash = $jc(_$hash, dmgWater.hashCode);
@@ -516,6 +540,7 @@ class _$CharacterSchema extends CharacterSchema {
     _$hash = $jc(_$hash, y.hashCode);
     _$hash = $jc(_$hash, cooldown.hashCode);
     _$hash = $jc(_$hash, weaponSlot.hashCode);
+    _$hash = $jc(_$hash, runeSlot.hashCode);
     _$hash = $jc(_$hash, shieldSlot.hashCode);
     _$hash = $jc(_$hash, helmetSlot.hashCode);
     _$hash = $jc(_$hash, bodyArmorSlot.hashCode);
@@ -531,6 +556,7 @@ class _$CharacterSchema extends CharacterSchema {
     _$hash = $jc(_$hash, utility1SlotQuantity.hashCode);
     _$hash = $jc(_$hash, utility2Slot.hashCode);
     _$hash = $jc(_$hash, utility2SlotQuantity.hashCode);
+    _$hash = $jc(_$hash, bagSlot.hashCode);
     _$hash = $jc(_$hash, task.hashCode);
     _$hash = $jc(_$hash, taskType.hashCode);
     _$hash = $jc(_$hash, taskProgress.hashCode);
@@ -581,11 +607,13 @@ class _$CharacterSchema extends CharacterSchema {
           ..add('maxHp', maxHp)
           ..add('haste', haste)
           ..add('criticalStrike', criticalStrike)
-          ..add('stamina', stamina)
+          ..add('wisdom', wisdom)
+          ..add('prospecting', prospecting)
           ..add('attackFire', attackFire)
           ..add('attackEarth', attackEarth)
           ..add('attackWater', attackWater)
           ..add('attackAir', attackAir)
+          ..add('dmg', dmg)
           ..add('dmgFire', dmgFire)
           ..add('dmgEarth', dmgEarth)
           ..add('dmgWater', dmgWater)
@@ -598,6 +626,7 @@ class _$CharacterSchema extends CharacterSchema {
           ..add('y', y)
           ..add('cooldown', cooldown)
           ..add('weaponSlot', weaponSlot)
+          ..add('runeSlot', runeSlot)
           ..add('shieldSlot', shieldSlot)
           ..add('helmetSlot', helmetSlot)
           ..add('bodyArmorSlot', bodyArmorSlot)
@@ -613,6 +642,7 @@ class _$CharacterSchema extends CharacterSchema {
           ..add('utility1SlotQuantity', utility1SlotQuantity)
           ..add('utility2Slot', utility2Slot)
           ..add('utility2SlotQuantity', utility2SlotQuantity)
+          ..add('bagSlot', bagSlot)
           ..add('task', task)
           ..add('taskType', taskType)
           ..add('taskProgress', taskProgress)
@@ -785,9 +815,13 @@ class CharacterSchemaBuilder
   set criticalStrike(int? criticalStrike) =>
       _$this._criticalStrike = criticalStrike;
 
-  int? _stamina;
-  int? get stamina => _$this._stamina;
-  set stamina(int? stamina) => _$this._stamina = stamina;
+  int? _wisdom;
+  int? get wisdom => _$this._wisdom;
+  set wisdom(int? wisdom) => _$this._wisdom = wisdom;
+
+  int? _prospecting;
+  int? get prospecting => _$this._prospecting;
+  set prospecting(int? prospecting) => _$this._prospecting = prospecting;
 
   int? _attackFire;
   int? get attackFire => _$this._attackFire;
@@ -804,6 +838,10 @@ class CharacterSchemaBuilder
   int? _attackAir;
   int? get attackAir => _$this._attackAir;
   set attackAir(int? attackAir) => _$this._attackAir = attackAir;
+
+  int? _dmg;
+  int? get dmg => _$this._dmg;
+  set dmg(int? dmg) => _$this._dmg = dmg;
 
   int? _dmgFire;
   int? get dmgFire => _$this._dmgFire;
@@ -852,6 +890,10 @@ class CharacterSchemaBuilder
   String? _weaponSlot;
   String? get weaponSlot => _$this._weaponSlot;
   set weaponSlot(String? weaponSlot) => _$this._weaponSlot = weaponSlot;
+
+  String? _runeSlot;
+  String? get runeSlot => _$this._runeSlot;
+  set runeSlot(String? runeSlot) => _$this._runeSlot = runeSlot;
 
   String? _shieldSlot;
   String? get shieldSlot => _$this._shieldSlot;
@@ -918,6 +960,10 @@ class CharacterSchemaBuilder
   int? get utility2SlotQuantity => _$this._utility2SlotQuantity;
   set utility2SlotQuantity(int? utility2SlotQuantity) =>
       _$this._utility2SlotQuantity = utility2SlotQuantity;
+
+  String? _bagSlot;
+  String? get bagSlot => _$this._bagSlot;
+  set bagSlot(String? bagSlot) => _$this._bagSlot = bagSlot;
 
   String? _task;
   String? get task => _$this._task;
@@ -994,11 +1040,13 @@ class CharacterSchemaBuilder
       _maxHp = $v.maxHp;
       _haste = $v.haste;
       _criticalStrike = $v.criticalStrike;
-      _stamina = $v.stamina;
+      _wisdom = $v.wisdom;
+      _prospecting = $v.prospecting;
       _attackFire = $v.attackFire;
       _attackEarth = $v.attackEarth;
       _attackWater = $v.attackWater;
       _attackAir = $v.attackAir;
+      _dmg = $v.dmg;
       _dmgFire = $v.dmgFire;
       _dmgEarth = $v.dmgEarth;
       _dmgWater = $v.dmgWater;
@@ -1011,6 +1059,7 @@ class CharacterSchemaBuilder
       _y = $v.y;
       _cooldown = $v.cooldown;
       _weaponSlot = $v.weaponSlot;
+      _runeSlot = $v.runeSlot;
       _shieldSlot = $v.shieldSlot;
       _helmetSlot = $v.helmetSlot;
       _bodyArmorSlot = $v.bodyArmorSlot;
@@ -1026,6 +1075,7 @@ class CharacterSchemaBuilder
       _utility1SlotQuantity = $v.utility1SlotQuantity;
       _utility2Slot = $v.utility2Slot;
       _utility2SlotQuantity = $v.utility2SlotQuantity;
+      _bagSlot = $v.bagSlot;
       _task = $v.task;
       _taskType = $v.taskType;
       _taskProgress = $v.taskProgress;
@@ -1102,11 +1152,13 @@ class CharacterSchemaBuilder
               maxHp: BuiltValueNullFieldError.checkNotNull(maxHp, r'CharacterSchema', 'maxHp'),
               haste: BuiltValueNullFieldError.checkNotNull(haste, r'CharacterSchema', 'haste'),
               criticalStrike: BuiltValueNullFieldError.checkNotNull(criticalStrike, r'CharacterSchema', 'criticalStrike'),
-              stamina: BuiltValueNullFieldError.checkNotNull(stamina, r'CharacterSchema', 'stamina'),
+              wisdom: BuiltValueNullFieldError.checkNotNull(wisdom, r'CharacterSchema', 'wisdom'),
+              prospecting: BuiltValueNullFieldError.checkNotNull(prospecting, r'CharacterSchema', 'prospecting'),
               attackFire: BuiltValueNullFieldError.checkNotNull(attackFire, r'CharacterSchema', 'attackFire'),
               attackEarth: BuiltValueNullFieldError.checkNotNull(attackEarth, r'CharacterSchema', 'attackEarth'),
               attackWater: BuiltValueNullFieldError.checkNotNull(attackWater, r'CharacterSchema', 'attackWater'),
               attackAir: BuiltValueNullFieldError.checkNotNull(attackAir, r'CharacterSchema', 'attackAir'),
+              dmg: BuiltValueNullFieldError.checkNotNull(dmg, r'CharacterSchema', 'dmg'),
               dmgFire: BuiltValueNullFieldError.checkNotNull(dmgFire, r'CharacterSchema', 'dmgFire'),
               dmgEarth: BuiltValueNullFieldError.checkNotNull(dmgEarth, r'CharacterSchema', 'dmgEarth'),
               dmgWater: BuiltValueNullFieldError.checkNotNull(dmgWater, r'CharacterSchema', 'dmgWater'),
@@ -1119,6 +1171,7 @@ class CharacterSchemaBuilder
               y: BuiltValueNullFieldError.checkNotNull(y, r'CharacterSchema', 'y'),
               cooldown: BuiltValueNullFieldError.checkNotNull(cooldown, r'CharacterSchema', 'cooldown'),
               weaponSlot: BuiltValueNullFieldError.checkNotNull(weaponSlot, r'CharacterSchema', 'weaponSlot'),
+              runeSlot: BuiltValueNullFieldError.checkNotNull(runeSlot, r'CharacterSchema', 'runeSlot'),
               shieldSlot: BuiltValueNullFieldError.checkNotNull(shieldSlot, r'CharacterSchema', 'shieldSlot'),
               helmetSlot: BuiltValueNullFieldError.checkNotNull(helmetSlot, r'CharacterSchema', 'helmetSlot'),
               bodyArmorSlot: BuiltValueNullFieldError.checkNotNull(bodyArmorSlot, r'CharacterSchema', 'bodyArmorSlot'),
@@ -1134,6 +1187,7 @@ class CharacterSchemaBuilder
               utility1SlotQuantity: BuiltValueNullFieldError.checkNotNull(utility1SlotQuantity, r'CharacterSchema', 'utility1SlotQuantity'),
               utility2Slot: BuiltValueNullFieldError.checkNotNull(utility2Slot, r'CharacterSchema', 'utility2Slot'),
               utility2SlotQuantity: BuiltValueNullFieldError.checkNotNull(utility2SlotQuantity, r'CharacterSchema', 'utility2SlotQuantity'),
+              bagSlot: BuiltValueNullFieldError.checkNotNull(bagSlot, r'CharacterSchema', 'bagSlot'),
               task: BuiltValueNullFieldError.checkNotNull(task, r'CharacterSchema', 'task'),
               taskType: BuiltValueNullFieldError.checkNotNull(taskType, r'CharacterSchema', 'taskType'),
               taskProgress: BuiltValueNullFieldError.checkNotNull(taskProgress, r'CharacterSchema', 'taskProgress'),

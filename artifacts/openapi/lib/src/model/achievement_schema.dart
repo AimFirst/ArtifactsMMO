@@ -43,7 +43,7 @@ abstract class AchievementSchema
   /// Type of achievement.
   @BuiltValueField(wireName: r'type')
   AchievementType get type;
-  // enum typeEnum {  combat_kill,  combat_drop,  combat_level,  gathering,  crafting,  recycling,  task,  other,  };
+  // enum typeEnum {  combat_kill,  combat_drop,  combat_level,  gathering,  crafting,  recycling,  task,  other,  use,  };
 
   @BuiltValueField(wireName: r'target')
   String? get target;

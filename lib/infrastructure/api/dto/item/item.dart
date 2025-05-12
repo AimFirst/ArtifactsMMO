@@ -72,6 +72,8 @@ enum ItemType {
   artifact,
   currency,
   consumable,
+  bag,
+  rune,
   unknown,
 }
 

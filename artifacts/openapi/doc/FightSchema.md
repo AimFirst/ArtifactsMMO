@@ -8,9 +8,9 @@ import 'package:artifacts_api/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**xp** | **int** | The amount of xp gained by the fight. | 
-**gold** | **int** | The amount of gold gained by the fight. | 
-**drops** | [**BuiltList&lt;DropSchema&gt;**](DropSchema.md) | The items dropped by the fight. | 
+**xp** | **int** | The amount of xp gained from the fight. | 
+**gold** | **int** | The amount of gold gained from the fight. | 
+**drops** | [**BuiltList&lt;DropSchema&gt;**](DropSchema.md) | The items dropped from the fight. | 
 **turns** | **int** | Numbers of the turns of the combat. | 
 **monsterBlockedHits** | [**BlockedHitsSchema**](BlockedHitsSchema.md) | The amount of blocked hits by the monster. | 
 **playerBlockedHits** | [**BlockedHitsSchema**](BlockedHitsSchema.md) | The amount of blocked hits by the player. | 

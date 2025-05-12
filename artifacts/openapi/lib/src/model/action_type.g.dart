@@ -12,6 +12,8 @@ const ActionType _$crafting = const ActionType._('crafting');
 const ActionType _$gathering = const ActionType._('gathering');
 const ActionType _$buyGe = const ActionType._('buyGe');
 const ActionType _$sellGe = const ActionType._('sellGe');
+const ActionType _$buyNpc = const ActionType._('buyNpc');
+const ActionType _$sellNpc = const ActionType._('sellNpc');
 const ActionType _$cancelGe = const ActionType._('cancelGe');
 const ActionType _$deleteItem = const ActionType._('deleteItem');
 const ActionType _$deposit = const ActionType._('deposit');
@@ -41,6 +43,10 @@ ActionType _$valueOf(String name) {
       return _$buyGe;
     case 'sellGe':
       return _$sellGe;
+    case 'buyNpc':
+      return _$buyNpc;
+    case 'sellNpc':
+      return _$sellNpc;
     case 'cancelGe':
       return _$cancelGe;
     case 'deleteItem':
@@ -82,6 +88,8 @@ final BuiltSet<ActionType> _$values =
   _$gathering,
   _$buyGe,
   _$sellGe,
+  _$buyNpc,
+  _$sellNpc,
   _$cancelGe,
   _$deleteItem,
   _$deposit,
@@ -106,6 +114,8 @@ class _$ActionTypeMeta {
   ActionType get gathering => _$gathering;
   ActionType get buyGe => _$buyGe;
   ActionType get sellGe => _$sellGe;
+  ActionType get buyNpc => _$buyNpc;
+  ActionType get sellNpc => _$sellNpc;
   ActionType get cancelGe => _$cancelGe;
   ActionType get deleteItem => _$deleteItem;
   ActionType get deposit => _$deposit;
@@ -139,6 +149,8 @@ class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
     'gathering': 'gathering',
     'buyGe': 'buy_ge',
     'sellGe': 'sell_ge',
+    'buyNpc': 'buy_npc',
+    'sellNpc': 'sell_npc',
     'cancelGe': 'cancel_ge',
     'deleteItem': 'delete_item',
     'deposit': 'deposit',
@@ -161,6 +173,8 @@ class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
     'gathering': 'gathering',
     'buy_ge': 'buyGe',
     'sell_ge': 'sellGe',
+    'buy_npc': 'buyNpc',
+    'sell_npc': 'sellNpc',
     'cancel_ge': 'cancelGe',
     'delete_item': 'deleteItem',
     'deposit': 'deposit',

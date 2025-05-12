@@ -28,7 +28,7 @@ class AcceptTaskTarget extends Target {
 
     // Find taskmaster location
     final locations = boardState.contentLocations[
-        Content(type: ContentType.tasksMaster, code: 'monsters')];
+        Content(type: ContentType.tasksmaster, code: 'monsters')];
     if (locations == null || locations.isEmpty) {
       throw ArtifactsException(
           errorMessage: 'Failed to get task master location');

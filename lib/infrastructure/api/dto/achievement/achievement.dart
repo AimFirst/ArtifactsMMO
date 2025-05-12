@@ -35,5 +35,6 @@ enum AchievementType {
   crafting,
   recycling,
   task,
-  other
+  other,
+  use
 }

@@ -15,6 +15,8 @@ class _$AccountLeaderboardSchema extends AccountLeaderboardSchema {
   final AccountStatus status;
   @override
   final int achievementsPoints;
+  @override
+  final int gold;
 
   factory _$AccountLeaderboardSchema(
           [void Function(AccountLeaderboardSchemaBuilder)? updates]) =>
@@ -24,7 +26,8 @@ class _$AccountLeaderboardSchema extends AccountLeaderboardSchema {
       {required this.position,
       required this.account,
       required this.status,
-      required this.achievementsPoints})
+      required this.achievementsPoints,
+      required this.gold})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         position, r'AccountLeaderboardSchema', 'position');
@@ -34,6 +37,8 @@ class _$AccountLeaderboardSchema extends AccountLeaderboardSchema {
         status, r'AccountLeaderboardSchema', 'status');
     BuiltValueNullFieldError.checkNotNull(
         achievementsPoints, r'AccountLeaderboardSchema', 'achievementsPoints');
+    BuiltValueNullFieldError.checkNotNull(
+        gold, r'AccountLeaderboardSchema', 'gold');
   }
 
   @override
@@ -52,7 +57,8 @@ class _$AccountLeaderboardSchema extends AccountLeaderboardSchema {
         position == other.position &&
         account == other.account &&
         status == other.status &&
-        achievementsPoints == other.achievementsPoints;
+        achievementsPoints == other.achievementsPoints &&
+        gold == other.gold;
   }
 
   @override
@@ -62,6 +68,7 @@ class _$AccountLeaderboardSchema extends AccountLeaderboardSchema {
     _$hash = $jc(_$hash, account.hashCode);
     _$hash = $jc(_$hash, status.hashCode);
     _$hash = $jc(_$hash, achievementsPoints.hashCode);
+    _$hash = $jc(_$hash, gold.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -72,7 +79,8 @@ class _$AccountLeaderboardSchema extends AccountLeaderboardSchema {
           ..add('position', position)
           ..add('account', account)
           ..add('status', status)
-          ..add('achievementsPoints', achievementsPoints))
+          ..add('achievementsPoints', achievementsPoints)
+          ..add('gold', gold))
         .toString();
   }
 }
@@ -99,6 +107,10 @@ class AccountLeaderboardSchemaBuilder
   set achievementsPoints(int? achievementsPoints) =>
       _$this._achievementsPoints = achievementsPoints;
 
+  int? _gold;
+  int? get gold => _$this._gold;
+  set gold(int? gold) => _$this._gold = gold;
+
   AccountLeaderboardSchemaBuilder() {
     AccountLeaderboardSchema._defaults(this);
   }
@@ -110,6 +122,7 @@ class AccountLeaderboardSchemaBuilder
       _account = $v.account;
       _status = $v.status;
       _achievementsPoints = $v.achievementsPoints;
+      _gold = $v.gold;
       _$v = null;
     }
     return this;
@@ -141,7 +154,9 @@ class AccountLeaderboardSchemaBuilder
             achievementsPoints: BuiltValueNullFieldError.checkNotNull(
                 achievementsPoints,
                 r'AccountLeaderboardSchema',
-                'achievementsPoints'));
+                'achievementsPoints'),
+            gold: BuiltValueNullFieldError.checkNotNull(
+                gold, r'AccountLeaderboardSchema', 'gold'));
     replace(_$result);
     return _$result;
   }

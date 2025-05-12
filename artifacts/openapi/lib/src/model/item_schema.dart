@@ -3,9 +3,9 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:artifacts_api/src/model/simple_effect_schema.dart';
 import 'package:artifacts_api/src/model/craft_schema.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:artifacts_api/src/model/item_effect_schema.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -55,7 +55,7 @@ abstract class ItemSchema implements Built<ItemSchema, ItemSchemaBuilder> {
 
   /// List of object effects. For equipment, it will include item stats.
   @BuiltValueField(wireName: r'effects')
-  BuiltList<ItemEffectSchema>? get effects;
+  BuiltList<SimpleEffectSchema>? get effects;
 
   @BuiltValueField(wireName: r'craft')
   CraftSchema? get craft;
@@ -122,7 +122,8 @@ class _$ItemSchemaSerializer implements PrimitiveSerializer<ItemSchema> {
       yield r'effects';
       yield serializers.serialize(
         object.effects,
-        specifiedType: const FullType(BuiltList, [FullType(ItemEffectSchema)]),
+        specifiedType:
+            const FullType(BuiltList, [FullType(SimpleEffectSchema)]),
       );
     }
     if (object.craft != null) {
@@ -210,8 +211,8 @@ class _$ItemSchemaSerializer implements PrimitiveSerializer<ItemSchema> {
           final valueDes = serializers.deserialize(
             value,
             specifiedType:
-                const FullType(BuiltList, [FullType(ItemEffectSchema)]),
-          ) as BuiltList<ItemEffectSchema>;
+                const FullType(BuiltList, [FullType(SimpleEffectSchema)]),
+          ) as BuiltList<SimpleEffectSchema>;
           result.effects.replace(valueDes);
           break;
         case r'craft':

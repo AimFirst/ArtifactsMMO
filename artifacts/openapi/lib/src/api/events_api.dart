@@ -11,6 +11,7 @@ import 'package:dio/dio.dart';
 import 'package:artifacts_api/src/api_util.dart';
 import 'package:artifacts_api/src/model/data_page_active_event_schema.dart';
 import 'package:artifacts_api/src/model/data_page_event_schema.dart';
+import 'package:artifacts_api/src/model/map_content_type.dart';
 
 class EventsApi {
   final Dio _dio;
@@ -110,6 +111,7 @@ class EventsApi {
   /// Fetch events details.
   ///
   /// Parameters:
+  /// * [type] - Type of event.
   /// * [page] - Page number
   /// * [size] - Page size
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -122,6 +124,7 @@ class EventsApi {
   /// Returns a [Future] containing a [Response] with a [DataPageEventSchema] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DataPageEventSchema>> getAllEventsEventsGet({
+    MapContentType? type,
     int? page = 1,
     int? size = 50,
     CancelToken? cancelToken,
@@ -145,6 +148,9 @@ class EventsApi {
     );
 
     final _queryParameters = <String, dynamic>{
+      if (type != null)
+        r'type': encodeQueryParameter(
+            _serializers, type, const FullType(MapContentType)),
       if (page != null)
         r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
       if (size != null)

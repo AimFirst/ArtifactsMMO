@@ -17,7 +17,7 @@ extension MapConversion on MapSchema {
 extension MapContentSchemaConversion on MapContentSchema {
   Content convert() {
     return Content(
-      type: ContentType.values.byName(type.toCamelCase().toUnknownIfEmpty()),
+      type: ContentType.values.byName(type.name.toCamelCase().toUnknownIfEmpty()),
       code: code,
     );
   }

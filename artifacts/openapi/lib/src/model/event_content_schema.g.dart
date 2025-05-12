@@ -8,7 +8,7 @@ part of 'event_content_schema.dart';
 
 class _$EventContentSchema extends EventContentSchema {
   @override
-  final String type;
+  final MapContentType type;
   @override
   final String code;
 
@@ -60,9 +60,9 @@ class EventContentSchemaBuilder
     implements Builder<EventContentSchema, EventContentSchemaBuilder> {
   _$EventContentSchema? _$v;
 
-  String? _type;
-  String? get type => _$this._type;
-  set type(String? type) => _$this._type = type;
+  MapContentType? _type;
+  MapContentType? get type => _$this._type;
+  set type(MapContentType? type) => _$this._type = type;
 
   String? _code;
   String? get code => _$this._code;

@@ -15,9 +15,9 @@ part 'fight_schema.g.dart';
 /// FightSchema
 ///
 /// Properties:
-/// * [xp] - The amount of xp gained by the fight.
-/// * [gold] - The amount of gold gained by the fight.
-/// * [drops] - The items dropped by the fight.
+/// * [xp] - The amount of xp gained from the fight.
+/// * [gold] - The amount of gold gained from the fight.
+/// * [drops] - The items dropped from the fight.
 /// * [turns] - Numbers of the turns of the combat.
 /// * [monsterBlockedHits] - The amount of blocked hits by the monster.
 /// * [playerBlockedHits] - The amount of blocked hits by the player.
@@ -25,15 +25,15 @@ part 'fight_schema.g.dart';
 /// * [result] - The result of the fight.
 @BuiltValue()
 abstract class FightSchema implements Built<FightSchema, FightSchemaBuilder> {
-  /// The amount of xp gained by the fight.
+  /// The amount of xp gained from the fight.
   @BuiltValueField(wireName: r'xp')
   int get xp;
 
-  /// The amount of gold gained by the fight.
+  /// The amount of gold gained from the fight.
   @BuiltValueField(wireName: r'gold')
   int get gold;
 
-  /// The items dropped by the fight.
+  /// The items dropped from the fight.
   @BuiltValueField(wireName: r'drops')
   BuiltList<DropSchema> get drops;
 

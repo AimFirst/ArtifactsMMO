@@ -12,7 +12,10 @@ abstract class Target {
   final Target? parentTarget;
   final CharacterLog characterLog;
 
-  Target({required this.parentTarget, required this.characterLog,});
+  Target({
+    required this.parentTarget,
+    required this.characterLog,
+  });
 
   TargetProcessResult update({
     required Character character,
@@ -40,11 +43,12 @@ class TargetProcessResult with EquatableMixin {
   final String description;
   final String? imageUrl;
 
-  TargetProcessResult(
-      {required this.progress,
-      required this.action,
-      required this.description,
-      required this.imageUrl});
+  TargetProcessResult({
+    required this.progress,
+    required this.action,
+    required this.description,
+    required this.imageUrl,
+  });
 
   TargetProcessResult.empty()
       : progress = Progress.empty(),

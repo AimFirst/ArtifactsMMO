@@ -24,6 +24,10 @@ class LogType extends EnumClass {
   static const LogType buyGe = _$buyGe;
   @BuiltValueEnumConst(wireName: r'sell_ge')
   static const LogType sellGe = _$sellGe;
+  @BuiltValueEnumConst(wireName: r'buy_npc')
+  static const LogType buyNpc = _$buyNpc;
+  @BuiltValueEnumConst(wireName: r'sell_npc')
+  static const LogType sellNpc = _$sellNpc;
   @BuiltValueEnumConst(wireName: r'cancel_ge')
   static const LogType cancelGe = _$cancelGe;
   @BuiltValueEnumConst(wireName: r'delete_item')

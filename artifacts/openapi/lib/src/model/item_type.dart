@@ -36,6 +36,10 @@ class ItemType extends EnumClass {
   static const ItemType currency = _$currency;
   @BuiltValueEnumConst(wireName: r'consumable')
   static const ItemType consumable = _$consumable;
+  @BuiltValueEnumConst(wireName: r'rune')
+  static const ItemType rune = _$rune;
+  @BuiltValueEnumConst(wireName: r'bag')
+  static const ItemType bag = _$bag;
 
   static Serializer<ItemType> get serializer => _$itemTypeSerializer;
 

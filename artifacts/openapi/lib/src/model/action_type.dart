@@ -22,6 +22,10 @@ class ActionType extends EnumClass {
   static const ActionType buyGe = _$buyGe;
   @BuiltValueEnumConst(wireName: r'sell_ge')
   static const ActionType sellGe = _$sellGe;
+  @BuiltValueEnumConst(wireName: r'buy_npc')
+  static const ActionType buyNpc = _$buyNpc;
+  @BuiltValueEnumConst(wireName: r'sell_npc')
+  static const ActionType sellNpc = _$sellNpc;
   @BuiltValueEnumConst(wireName: r'cancel_ge')
   static const ActionType cancelGe = _$cancelGe;
   @BuiltValueEnumConst(wireName: r'delete_item')

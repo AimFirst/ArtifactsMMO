@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:artifacts_api/src/model/simple_effect_schema.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:artifacts_api/src/model/drop_rate_schema.dart';
 import 'package:built_value/built_value.dart';
@@ -25,9 +26,11 @@ part 'monster_schema.g.dart';
 /// * [resEarth] - Monster % earth resistance.
 /// * [resWater] - Monster % water resistance.
 /// * [resAir] - Monster % air resistance.
+/// * [criticalStrike] - Monster % critical strike.
 /// * [minGold] - Monster minimum gold drop.
 /// * [maxGold] - Monster maximum gold drop.
 /// * [drops] - Monster drops. This is a list of items that the monster drops after killing the monster.
+/// * [effects] - List of effects.
 @BuiltValue()
 abstract class MonsterSchema
     implements Built<MonsterSchema, MonsterSchemaBuilder> {
@@ -79,6 +82,10 @@ abstract class MonsterSchema
   @BuiltValueField(wireName: r'res_air')
   int get resAir;
 
+  /// Monster % critical strike.
+  @BuiltValueField(wireName: r'critical_strike')
+  int get criticalStrike;
+
   /// Monster minimum gold drop.
   @BuiltValueField(wireName: r'min_gold')
   int get minGold;
@@ -90,6 +97,10 @@ abstract class MonsterSchema
   /// Monster drops. This is a list of items that the monster drops after killing the monster.
   @BuiltValueField(wireName: r'drops')
   BuiltList<DropRateSchema> get drops;
+
+  /// List of effects.
+  @BuiltValueField(wireName: r'effects')
+  BuiltList<SimpleEffectSchema>? get effects;
 
   MonsterSchema._();
 
@@ -176,6 +187,11 @@ class _$MonsterSchemaSerializer implements PrimitiveSerializer<MonsterSchema> {
       object.resAir,
       specifiedType: const FullType(int),
     );
+    yield r'critical_strike';
+    yield serializers.serialize(
+      object.criticalStrike,
+      specifiedType: const FullType(int),
+    );
     yield r'min_gold';
     yield serializers.serialize(
       object.minGold,
@@ -191,6 +207,14 @@ class _$MonsterSchemaSerializer implements PrimitiveSerializer<MonsterSchema> {
       object.drops,
       specifiedType: const FullType(BuiltList, [FullType(DropRateSchema)]),
     );
+    if (object.effects != null) {
+      yield r'effects';
+      yield serializers.serialize(
+        object.effects,
+        specifiedType:
+            const FullType(BuiltList, [FullType(SimpleEffectSchema)]),
+      );
+    }
   }
 
   @override
@@ -300,6 +324,13 @@ class _$MonsterSchemaSerializer implements PrimitiveSerializer<MonsterSchema> {
           ) as int;
           result.resAir = valueDes;
           break;
+        case r'critical_strike':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.criticalStrike = valueDes;
+          break;
         case r'min_gold':
           final valueDes = serializers.deserialize(
             value,
@@ -321,6 +352,14 @@ class _$MonsterSchemaSerializer implements PrimitiveSerializer<MonsterSchema> {
                 const FullType(BuiltList, [FullType(DropRateSchema)]),
           ) as BuiltList<DropRateSchema>;
           result.drops.replace(valueDes);
+          break;
+        case r'effects':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType:
+                const FullType(BuiltList, [FullType(SimpleEffectSchema)]),
+          ) as BuiltList<SimpleEffectSchema>;
+          result.effects.replace(valueDes);
           break;
         default:
           unhandled.add(key);

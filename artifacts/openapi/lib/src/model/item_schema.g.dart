@@ -22,7 +22,7 @@ class _$ItemSchema extends ItemSchema {
   @override
   final bool tradeable;
   @override
-  final BuiltList<ItemEffectSchema>? effects;
+  final BuiltList<SimpleEffectSchema>? effects;
   @override
   final CraftSchema? craft;
 
@@ -136,10 +136,10 @@ class ItemSchemaBuilder implements Builder<ItemSchema, ItemSchemaBuilder> {
   bool? get tradeable => _$this._tradeable;
   set tradeable(bool? tradeable) => _$this._tradeable = tradeable;
 
-  ListBuilder<ItemEffectSchema>? _effects;
-  ListBuilder<ItemEffectSchema> get effects =>
-      _$this._effects ??= new ListBuilder<ItemEffectSchema>();
-  set effects(ListBuilder<ItemEffectSchema>? effects) =>
+  ListBuilder<SimpleEffectSchema>? _effects;
+  ListBuilder<SimpleEffectSchema> get effects =>
+      _$this._effects ??= new ListBuilder<SimpleEffectSchema>();
+  set effects(ListBuilder<SimpleEffectSchema>? effects) =>
       _$this._effects = effects;
 
   CraftSchemaBuilder? _craft;

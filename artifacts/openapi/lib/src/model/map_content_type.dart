@@ -22,6 +22,8 @@ class MapContentType extends EnumClass {
   static const MapContentType grandExchange = _$grandExchange;
   @BuiltValueEnumConst(wireName: r'tasks_master')
   static const MapContentType tasksMaster = _$tasksMaster;
+  @BuiltValueEnumConst(wireName: r'npc')
+  static const MapContentType npc = _$npc;
 
   static Serializer<MapContentType> get serializer =>
       _$mapContentTypeSerializer;

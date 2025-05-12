@@ -20,9 +20,11 @@ Name | Type | Description | Notes
 **resEarth** | **int** | Monster % earth resistance. | 
 **resWater** | **int** | Monster % water resistance. | 
 **resAir** | **int** | Monster % air resistance. | 
+**criticalStrike** | **int** | Monster % critical strike. | 
 **minGold** | **int** | Monster minimum gold drop.  | 
 **maxGold** | **int** | Monster maximum gold drop.  | 
 **drops** | [**BuiltList&lt;DropRateSchema&gt;**](DropRateSchema.md) | Monster drops. This is a list of items that the monster drops after killing the monster.  | 
+**effects** | [**BuiltList&lt;SimpleEffectSchema&gt;**](SimpleEffectSchema.md) | List of effects. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

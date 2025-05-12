@@ -38,6 +38,10 @@ class ItemSlot extends EnumClass {
   static const ItemSlot utility1 = _$utility1;
   @BuiltValueEnumConst(wireName: r'utility2')
   static const ItemSlot utility2 = _$utility2;
+  @BuiltValueEnumConst(wireName: r'bag')
+  static const ItemSlot bag = _$bag;
+  @BuiltValueEnumConst(wireName: r'rune')
+  static const ItemSlot rune = _$rune;
 
   static Serializer<ItemSlot> get serializer => _$itemSlotSerializer;
 

@@ -8,7 +8,7 @@ part of 'map_content_schema.dart';
 
 class _$MapContentSchema extends MapContentSchema {
   @override
-  final String type;
+  final MapContentType type;
   @override
   final String code;
 
@@ -59,9 +59,9 @@ class MapContentSchemaBuilder
     implements Builder<MapContentSchema, MapContentSchemaBuilder> {
   _$MapContentSchema? _$v;
 
-  String? _type;
-  String? get type => _$this._type;
-  set type(String? type) => _$this._type = type;
+  MapContentType? _type;
+  MapContentType? get type => _$this._type;
+  set type(MapContentType? type) => _$this._type = type;
 
   String? _code;
   String? get code => _$this._code;

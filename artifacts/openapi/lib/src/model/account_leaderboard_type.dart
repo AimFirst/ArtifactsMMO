@@ -12,6 +12,8 @@ part 'account_leaderboard_type.g.dart';
 class AccountLeaderboardType extends EnumClass {
   @BuiltValueEnumConst(wireName: r'achievements_points')
   static const AccountLeaderboardType achievementsPoints = _$achievementsPoints;
+  @BuiltValueEnumConst(wireName: r'gold')
+  static const AccountLeaderboardType gold = _$gold;
 
   static Serializer<AccountLeaderboardType> get serializer =>
       _$accountLeaderboardTypeSerializer;

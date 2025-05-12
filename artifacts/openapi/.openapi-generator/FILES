@@ -45,6 +45,7 @@ doc/CharacterRestResponseSchema.md
 doc/CharacterSchema.md
 doc/CharacterSkin.md
 doc/CharactersApi.md
+doc/CharactersListSchema.md
 doc/CooldownSchema.md
 doc/CraftSchema.md
 doc/CraftSkill.md
@@ -56,6 +57,7 @@ doc/DataPageActiveEventSchema.md
 doc/DataPageBadgeSchema.md
 doc/DataPageCharacterLeaderboardSchema.md
 doc/DataPageDropRateSchema.md
+doc/DataPageEffectSchema.md
 doc/DataPageEventSchema.md
 doc/DataPageGEOrderSchema.md
 doc/DataPageGeOrderHistorySchema.md
@@ -63,6 +65,8 @@ doc/DataPageItemSchema.md
 doc/DataPageLogSchema.md
 doc/DataPageMapSchema.md
 doc/DataPageMonsterSchema.md
+doc/DataPageNPCItem.md
+doc/DataPageNPCSchema.md
 doc/DataPageResourceSchema.md
 doc/DataPageSimpleItemSchema.md
 doc/DataPageTaskFullSchema.md
@@ -74,6 +78,11 @@ doc/DepositWithdrawGoldSchema.md
 doc/DestinationSchema.md
 doc/DropRateSchema.md
 doc/DropSchema.md
+doc/EffectResponseSchema.md
+doc/EffectSchema.md
+doc/EffectSubtype.md
+doc/EffectType.md
+doc/EffectsApi.md
 doc/EquipRequestSchema.md
 doc/EquipSchema.md
 doc/EquipmentResponseSchema.md
@@ -100,7 +109,6 @@ doc/GoldSchema.md
 doc/GrandExchangeApi.md
 doc/HTTPValidationError.md
 doc/InventorySlot.md
-doc/ItemEffectSchema.md
 doc/ItemResponseSchema.md
 doc/ItemSchema.md
 doc/ItemSlot.md
@@ -122,6 +130,15 @@ doc/MyAccountDetails.md
 doc/MyAccountDetailsSchema.md
 doc/MyCharactersApi.md
 doc/MyCharactersListSchema.md
+doc/NPCItem.md
+doc/NPCResponseSchema.md
+doc/NPCSchema.md
+doc/NPCType.md
+doc/NPCsApi.md
+doc/NpcItemTransactionSchema.md
+doc/NpcMerchantBuySchema.md
+doc/NpcMerchantTransactionResponseSchema.md
+doc/NpcMerchantTransactionSchema.md
 doc/RecyclingDataSchema.md
 doc/RecyclingItemsSchema.md
 doc/RecyclingResponseSchema.md
@@ -134,6 +151,7 @@ doc/RewardDataResponseSchema.md
 doc/RewardDataSchema.md
 doc/RewardResponseSchema.md
 doc/RewardsSchema.md
+doc/SimpleEffectSchema.md
 doc/SimpleItemSchema.md
 doc/Skill.md
 doc/SkillDataSchema.md
@@ -167,6 +185,7 @@ lib/src/api/achievements_api.dart
 lib/src/api/badges_api.dart
 lib/src/api/characters_api.dart
 lib/src/api/default_api.dart
+lib/src/api/effects_api.dart
 lib/src/api/events_api.dart
 lib/src/api/grand_exchange_api.dart
 lib/src/api/items_api.dart
@@ -175,6 +194,7 @@ lib/src/api/maps_api.dart
 lib/src/api/monsters_api.dart
 lib/src/api/my_account_api.dart
 lib/src/api/my_characters_api.dart
+lib/src/api/npcs_api.dart
 lib/src/api/resources_api.dart
 lib/src/api/tasks_api.dart
 lib/src/api/token_api.dart
@@ -225,6 +245,7 @@ lib/src/model/character_rest_data_schema.dart
 lib/src/model/character_rest_response_schema.dart
 lib/src/model/character_schema.dart
 lib/src/model/character_skin.dart
+lib/src/model/characters_list_schema.dart
 lib/src/model/cooldown_schema.dart
 lib/src/model/craft_schema.dart
 lib/src/model/craft_skill.dart
@@ -236,6 +257,7 @@ lib/src/model/data_page_active_event_schema.dart
 lib/src/model/data_page_badge_schema.dart
 lib/src/model/data_page_character_leaderboard_schema.dart
 lib/src/model/data_page_drop_rate_schema.dart
+lib/src/model/data_page_effect_schema.dart
 lib/src/model/data_page_event_schema.dart
 lib/src/model/data_page_ge_order_history_schema.dart
 lib/src/model/data_page_ge_order_schema.dart
@@ -243,6 +265,8 @@ lib/src/model/data_page_item_schema.dart
 lib/src/model/data_page_log_schema.dart
 lib/src/model/data_page_map_schema.dart
 lib/src/model/data_page_monster_schema.dart
+lib/src/model/data_page_npc_item.dart
+lib/src/model/data_page_npc_schema.dart
 lib/src/model/data_page_resource_schema.dart
 lib/src/model/data_page_simple_item_schema.dart
 lib/src/model/data_page_task_full_schema.dart
@@ -254,6 +278,10 @@ lib/src/model/deposit_withdraw_gold_schema.dart
 lib/src/model/destination_schema.dart
 lib/src/model/drop_rate_schema.dart
 lib/src/model/drop_schema.dart
+lib/src/model/effect_response_schema.dart
+lib/src/model/effect_schema.dart
+lib/src/model/effect_subtype.dart
+lib/src/model/effect_type.dart
 lib/src/model/equip_request_schema.dart
 lib/src/model/equip_schema.dart
 lib/src/model/equipment_response_schema.dart
@@ -278,7 +306,6 @@ lib/src/model/ge_transaction_schema.dart
 lib/src/model/gold_schema.dart
 lib/src/model/http_validation_error.dart
 lib/src/model/inventory_slot.dart
-lib/src/model/item_effect_schema.dart
 lib/src/model/item_response_schema.dart
 lib/src/model/item_schema.dart
 lib/src/model/item_slot.dart
@@ -294,6 +321,14 @@ lib/src/model/monster_schema.dart
 lib/src/model/my_account_details.dart
 lib/src/model/my_account_details_schema.dart
 lib/src/model/my_characters_list_schema.dart
+lib/src/model/npc_item.dart
+lib/src/model/npc_item_transaction_schema.dart
+lib/src/model/npc_merchant_buy_schema.dart
+lib/src/model/npc_merchant_transaction_response_schema.dart
+lib/src/model/npc_merchant_transaction_schema.dart
+lib/src/model/npc_response_schema.dart
+lib/src/model/npc_schema.dart
+lib/src/model/npc_type.dart
 lib/src/model/recycling_data_schema.dart
 lib/src/model/recycling_items_schema.dart
 lib/src/model/recycling_response_schema.dart
@@ -305,6 +340,7 @@ lib/src/model/reward_data_response_schema.dart
 lib/src/model/reward_data_schema.dart
 lib/src/model/reward_response_schema.dart
 lib/src/model/rewards_schema.dart
+lib/src/model/simple_effect_schema.dart
 lib/src/model/simple_item_schema.dart
 lib/src/model/skill.dart
 lib/src/model/skill_data_schema.dart
@@ -331,3 +367,22 @@ lib/src/model/validation_error.dart
 lib/src/model/validation_error_loc_inner.dart
 lib/src/serializers.dart
 pubspec.yaml
+test/characters_list_schema_test.dart
+test/data_page_effect_schema_test.dart
+test/data_page_npc_item_test.dart
+test/data_page_npc_schema_test.dart
+test/effect_response_schema_test.dart
+test/effect_schema_test.dart
+test/effect_subtype_test.dart
+test/effect_type_test.dart
+test/effects_api_test.dart
+test/npc_item_test.dart
+test/npc_item_transaction_schema_test.dart
+test/npc_merchant_buy_schema_test.dart
+test/npc_merchant_transaction_response_schema_test.dart
+test/npc_merchant_transaction_schema_test.dart
+test/npc_response_schema_test.dart
+test/npc_schema_test.dart
+test/npc_type_test.dart
+test/npcs_api_test.dart
+test/simple_effect_schema_test.dart

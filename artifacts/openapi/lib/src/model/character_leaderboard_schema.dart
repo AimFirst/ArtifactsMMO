@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:artifacts_api/src/model/account_status.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -14,6 +15,7 @@ part 'character_leaderboard_schema.g.dart';
 /// * [position] - Position in the leaderboard.
 /// * [name] - Character name.
 /// * [account] - Account name.
+/// * [status] - Member status.
 /// * [skin] - Character skin code.
 /// * [level] - Combat level.
 /// * [totalXp] - Total XP of your character.
@@ -49,6 +51,11 @@ abstract class CharacterLeaderboardSchema
   /// Account name.
   @BuiltValueField(wireName: r'account')
   String get account;
+
+  /// Member status.
+  @BuiltValueField(wireName: r'status')
+  AccountStatus get status;
+  // enum statusEnum {  standard,  founder,  gold_founder,  vip_founder,  };
 
   /// Character skin code.
   @BuiltValueField(wireName: r'skin')
@@ -174,6 +181,11 @@ class _$CharacterLeaderboardSchemaSerializer
     yield serializers.serialize(
       object.account,
       specifiedType: const FullType(String),
+    );
+    yield r'status';
+    yield serializers.serialize(
+      object.status,
+      specifiedType: const FullType(AccountStatus),
     );
     yield r'skin';
     yield serializers.serialize(
@@ -320,6 +332,13 @@ class _$CharacterLeaderboardSchemaSerializer
             specifiedType: const FullType(String),
           ) as String;
           result.account = valueDes;
+          break;
+        case r'status':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(AccountStatus),
+          ) as AccountStatus;
+          result.status = valueDes;
           break;
         case r'skin':
           final valueDes = serializers.deserialize(

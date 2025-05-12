@@ -14,6 +14,8 @@ class _$CharacterLeaderboardSchema extends CharacterLeaderboardSchema {
   @override
   final String account;
   @override
+  final AccountStatus status;
+  @override
   final String skin;
   @override
   final int level;
@@ -62,6 +64,7 @@ class _$CharacterLeaderboardSchema extends CharacterLeaderboardSchema {
       {required this.position,
       required this.name,
       required this.account,
+      required this.status,
       required this.skin,
       required this.level,
       required this.totalXp,
@@ -89,6 +92,8 @@ class _$CharacterLeaderboardSchema extends CharacterLeaderboardSchema {
         name, r'CharacterLeaderboardSchema', 'name');
     BuiltValueNullFieldError.checkNotNull(
         account, r'CharacterLeaderboardSchema', 'account');
+    BuiltValueNullFieldError.checkNotNull(
+        status, r'CharacterLeaderboardSchema', 'status');
     BuiltValueNullFieldError.checkNotNull(
         skin, r'CharacterLeaderboardSchema', 'skin');
     BuiltValueNullFieldError.checkNotNull(
@@ -147,6 +152,7 @@ class _$CharacterLeaderboardSchema extends CharacterLeaderboardSchema {
         position == other.position &&
         name == other.name &&
         account == other.account &&
+        status == other.status &&
         skin == other.skin &&
         level == other.level &&
         totalXp == other.totalXp &&
@@ -175,6 +181,7 @@ class _$CharacterLeaderboardSchema extends CharacterLeaderboardSchema {
     _$hash = $jc(_$hash, position.hashCode);
     _$hash = $jc(_$hash, name.hashCode);
     _$hash = $jc(_$hash, account.hashCode);
+    _$hash = $jc(_$hash, status.hashCode);
     _$hash = $jc(_$hash, skin.hashCode);
     _$hash = $jc(_$hash, level.hashCode);
     _$hash = $jc(_$hash, totalXp.hashCode);
@@ -205,6 +212,7 @@ class _$CharacterLeaderboardSchema extends CharacterLeaderboardSchema {
           ..add('position', position)
           ..add('name', name)
           ..add('account', account)
+          ..add('status', status)
           ..add('skin', skin)
           ..add('level', level)
           ..add('totalXp', totalXp)
@@ -245,6 +253,10 @@ class CharacterLeaderboardSchemaBuilder
   String? _account;
   String? get account => _$this._account;
   set account(String? account) => _$this._account = account;
+
+  AccountStatus? _status;
+  AccountStatus? get status => _$this._status;
+  set status(AccountStatus? status) => _$this._status = status;
 
   String? _skin;
   String? get skin => _$this._skin;
@@ -348,6 +360,7 @@ class CharacterLeaderboardSchemaBuilder
       _position = $v.position;
       _name = $v.name;
       _account = $v.account;
+      _status = $v.status;
       _skin = $v.skin;
       _level = $v.level;
       _totalXp = $v.totalXp;
@@ -396,6 +409,8 @@ class CharacterLeaderboardSchemaBuilder
                 name, r'CharacterLeaderboardSchema', 'name'),
             account: BuiltValueNullFieldError.checkNotNull(
                 account, r'CharacterLeaderboardSchema', 'account'),
+            status: BuiltValueNullFieldError.checkNotNull(
+                status, r'CharacterLeaderboardSchema', 'status'),
             skin: BuiltValueNullFieldError.checkNotNull(
                 skin, r'CharacterLeaderboardSchema', 'skin'),
             level: BuiltValueNullFieldError.checkNotNull(
@@ -404,8 +419,7 @@ class CharacterLeaderboardSchemaBuilder
                 totalXp, r'CharacterLeaderboardSchema', 'totalXp'),
             miningLevel: BuiltValueNullFieldError.checkNotNull(
                 miningLevel, r'CharacterLeaderboardSchema', 'miningLevel'),
-            miningTotalXp: BuiltValueNullFieldError.checkNotNull(
-                miningTotalXp, r'CharacterLeaderboardSchema', 'miningTotalXp'),
+            miningTotalXp: BuiltValueNullFieldError.checkNotNull(miningTotalXp, r'CharacterLeaderboardSchema', 'miningTotalXp'),
             woodcuttingLevel: BuiltValueNullFieldError.checkNotNull(woodcuttingLevel, r'CharacterLeaderboardSchema', 'woodcuttingLevel'),
             woodcuttingTotalXp: BuiltValueNullFieldError.checkNotNull(woodcuttingTotalXp, r'CharacterLeaderboardSchema', 'woodcuttingTotalXp'),
             fishingLevel: BuiltValueNullFieldError.checkNotNull(fishingLevel, r'CharacterLeaderboardSchema', 'fishingLevel'),

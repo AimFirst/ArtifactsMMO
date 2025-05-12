@@ -12,6 +12,7 @@ const MapContentType _$workshop = const MapContentType._('workshop');
 const MapContentType _$bank = const MapContentType._('bank');
 const MapContentType _$grandExchange = const MapContentType._('grandExchange');
 const MapContentType _$tasksMaster = const MapContentType._('tasksMaster');
+const MapContentType _$npc = const MapContentType._('npc');
 
 MapContentType _$valueOf(String name) {
   switch (name) {
@@ -27,6 +28,8 @@ MapContentType _$valueOf(String name) {
       return _$grandExchange;
     case 'tasksMaster':
       return _$tasksMaster;
+    case 'npc':
+      return _$npc;
     default:
       throw new ArgumentError(name);
   }
@@ -40,6 +43,7 @@ final BuiltSet<MapContentType> _$values =
   _$bank,
   _$grandExchange,
   _$tasksMaster,
+  _$npc,
 ]);
 
 class _$MapContentTypeMeta {
@@ -50,6 +54,7 @@ class _$MapContentTypeMeta {
   MapContentType get bank => _$bank;
   MapContentType get grandExchange => _$grandExchange;
   MapContentType get tasksMaster => _$tasksMaster;
+  MapContentType get npc => _$npc;
   MapContentType valueOf(String name) => _$valueOf(name);
   BuiltSet<MapContentType> get values => _$values;
 }
@@ -71,6 +76,7 @@ class _$MapContentTypeSerializer
     'bank': 'bank',
     'grandExchange': 'grand_exchange',
     'tasksMaster': 'tasks_master',
+    'npc': 'npc',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'monster': 'monster',
@@ -79,6 +85,7 @@ class _$MapContentTypeSerializer
     'bank': 'bank',
     'grand_exchange': 'grandExchange',
     'tasks_master': 'tasksMaster',
+    'npc': 'npc',
   };
 
   @override

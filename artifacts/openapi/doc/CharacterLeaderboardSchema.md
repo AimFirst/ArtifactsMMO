@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **position** | **int** | Position in the leaderboard. | 
 **name** | **String** | Character name. | 
 **account** | **String** | Account name. | 
+**status** | [**AccountStatus**](AccountStatus.md) | Member status. | 
 **skin** | **String** | Character skin code. | 
 **level** | **int** | Combat level. | 
 **totalXp** | **int** | Total XP of your character. | 

@@ -28,8 +28,6 @@ class CharacterLeaderboardType extends EnumClass {
   static const CharacterLeaderboardType cooking = _$cooking;
   @BuiltValueEnumConst(wireName: r'alchemy')
   static const CharacterLeaderboardType alchemy = _$alchemy;
-  @BuiltValueEnumConst(wireName: r'gold')
-  static const CharacterLeaderboardType gold = _$gold;
 
   static Serializer<CharacterLeaderboardType> get serializer =>
       _$characterLeaderboardTypeSerializer;

@@ -17,7 +17,7 @@ part 'ge_order_created_schema.g.dart';
 /// * [quantity] - Item quantity.
 /// * [price] - Item price per unit.
 /// * [totalPrice] - Total price.
-/// * [tax] - Order creation tax (5%, minimum 1)
+/// * [tax] - Listing tax (3%, minimum 1)
 @BuiltValue()
 abstract class GEOrderCreatedSchema
     implements Built<GEOrderCreatedSchema, GEOrderCreatedSchemaBuilder> {
@@ -45,7 +45,7 @@ abstract class GEOrderCreatedSchema
   @BuiltValueField(wireName: r'total_price')
   int get totalPrice;
 
-  /// Order creation tax (5%, minimum 1)
+  /// Listing tax (3%, minimum 1)
   @BuiltValueField(wireName: r'tax')
   int get tax;
 

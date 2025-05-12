@@ -47,6 +47,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(CharacterRestResponseSchema.serializer)
       ..add(CharacterSchema.serializer)
       ..add(CharacterSkin.serializer)
+      ..add(CharactersListSchema.serializer)
       ..add(CooldownSchema.serializer)
       ..add(CraftSchema.serializer)
       ..add(CraftSkill.serializer)
@@ -58,6 +59,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(DataPageBadgeSchema.serializer)
       ..add(DataPageCharacterLeaderboardSchema.serializer)
       ..add(DataPageDropRateSchema.serializer)
+      ..add(DataPageEffectSchema.serializer)
       ..add(DataPageEventSchema.serializer)
       ..add(DataPageGEOrderSchema.serializer)
       ..add(DataPageGeOrderHistorySchema.serializer)
@@ -65,6 +67,8 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(DataPageLogSchema.serializer)
       ..add(DataPageMapSchema.serializer)
       ..add(DataPageMonsterSchema.serializer)
+      ..add(DataPageNPCItem.serializer)
+      ..add(DataPageNPCSchema.serializer)
       ..add(DataPageResourceSchema.serializer)
       ..add(DataPageSimpleItemSchema.serializer)
       ..add(DataPageTaskFullSchema.serializer)
@@ -75,6 +79,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(DestinationSchema.serializer)
       ..add(DropRateSchema.serializer)
       ..add(DropSchema.serializer)
+      ..add(EffectResponseSchema.serializer)
+      ..add(EffectSchema.serializer)
+      ..add(EffectSubtype.serializer)
+      ..add(EffectType.serializer)
       ..add(EquipRequestSchema.serializer)
       ..add(EquipSchema.serializer)
       ..add(EquipmentResponseSchema.serializer)
@@ -99,7 +107,6 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GoldSchema.serializer)
       ..add(HTTPValidationError.serializer)
       ..add(InventorySlot.serializer)
-      ..add(ItemEffectSchema.serializer)
       ..add(ItemResponseSchema.serializer)
       ..add(ItemSchema.serializer)
       ..add(ItemSlot.serializer)
@@ -115,6 +122,14 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(MyAccountDetails.serializer)
       ..add(MyAccountDetailsSchema.serializer)
       ..add(MyCharactersListSchema.serializer)
+      ..add(NPCItem.serializer)
+      ..add(NPCResponseSchema.serializer)
+      ..add(NPCSchema.serializer)
+      ..add(NPCType.serializer)
+      ..add(NpcItemTransactionSchema.serializer)
+      ..add(NpcMerchantBuySchema.serializer)
+      ..add(NpcMerchantTransactionResponseSchema.serializer)
+      ..add(NpcMerchantTransactionSchema.serializer)
       ..add(RecyclingDataSchema.serializer)
       ..add(RecyclingItemsSchema.serializer)
       ..add(RecyclingResponseSchema.serializer)
@@ -126,6 +141,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(RewardDataSchema.serializer)
       ..add(RewardResponseSchema.serializer)
       ..add(RewardsSchema.serializer)
+      ..add(SimpleEffectSchema.serializer)
       ..add(SimpleItemSchema.serializer)
       ..add(Skill.serializer)
       ..add(SkillDataSchema.serializer)
@@ -182,14 +198,20 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(CharacterSchema)]),
           () => new ListBuilder<CharacterSchema>())
       ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(DropRateSchema)]),
-          () => new ListBuilder<DropRateSchema>())
+          const FullType(BuiltList, const [const FullType(CharacterSchema)]),
+          () => new ListBuilder<CharacterSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(DropRateSchema)]),
           () => new ListBuilder<DropRateSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(DropRateSchema)]),
           () => new ListBuilder<DropRateSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(DropRateSchema)]),
+          () => new ListBuilder<DropRateSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SimpleEffectSchema)]),
+          () => new ListBuilder<SimpleEffectSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(DropSchema)]),
           () => new ListBuilder<DropSchema>())
@@ -202,6 +224,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(EffectSchema)]),
+          () => new ListBuilder<EffectSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(EventMapSchema)]),
           () => new ListBuilder<EventMapSchema>())
@@ -219,9 +244,6 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(InventorySlot)]),
           () => new ListBuilder<InventorySlot>())
       ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(ItemEffectSchema)]),
-          () => new ListBuilder<ItemEffectSchema>())
-      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(ItemSchema)]),
           () => new ListBuilder<ItemSchema>())
       ..addBuilderFactory(
@@ -234,8 +256,17 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(MonsterSchema)]),
           () => new ListBuilder<MonsterSchema>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(NPCItem)]),
+          () => new ListBuilder<NPCItem>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(NPCSchema)]),
+          () => new ListBuilder<NPCSchema>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(ResourceSchema)]),
           () => new ListBuilder<ResourceSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SimpleEffectSchema)]),
+          () => new ListBuilder<SimpleEffectSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
           () => new ListBuilder<SimpleItemSchema>())

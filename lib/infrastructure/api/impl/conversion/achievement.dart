@@ -44,6 +44,8 @@ extension AchievementTypConversion on AchievementType {
         return dto.AchievementType.task;
       case AchievementType.other:
         return dto.AchievementType.other;
+      case AchievementType.use:
+        return dto.AchievementType.use;
     }
 
     throw ArtifactsException(errorMessage: 'Unable to convert: $this');

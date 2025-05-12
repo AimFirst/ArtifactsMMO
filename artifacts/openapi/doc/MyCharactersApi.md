@@ -11,7 +11,6 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**actionAcceptNewTaskMyNameActionTaskNewPost**](MyCharactersApi.md#actionacceptnewtaskmynameactiontasknewpost) | **POST** /my/{name}/action/task/new | Action Accept New Task
 [**actionBuyBankExpansionMyNameActionBankBuyExpansionPost**](MyCharactersApi.md#actionbuybankexpansionmynameactionbankbuyexpansionpost) | **POST** /my/{name}/action/bank/buy_expansion | Action Buy Bank Expansion
-[**actionChristmasExchangeMyNameActionChristmasExchangePost**](MyCharactersApi.md#actionchristmasexchangemynameactionchristmasexchangepost) | **POST** /my/{name}/action/christmas/exchange | Action Christmas Exchange
 [**actionCompleteTaskMyNameActionTaskCompletePost**](MyCharactersApi.md#actioncompletetaskmynameactiontaskcompletepost) | **POST** /my/{name}/action/task/complete | Action Complete Task
 [**actionCraftingMyNameActionCraftingPost**](MyCharactersApi.md#actioncraftingmynameactioncraftingpost) | **POST** /my/{name}/action/crafting | Action Crafting
 [**actionDeleteItemMyNameActionDeletePost**](MyCharactersApi.md#actiondeleteitemmynameactiondeletepost) | **POST** /my/{name}/action/delete | Action Delete Item
@@ -24,6 +23,8 @@ Method | HTTP request | Description
 [**actionGeCancelSellOrderMyNameActionGrandexchangeCancelPost**](MyCharactersApi.md#actiongecancelsellordermynameactiongrandexchangecancelpost) | **POST** /my/{name}/action/grandexchange/cancel | Action Ge Cancel Sell Order
 [**actionGeCreateSellOrderMyNameActionGrandexchangeSellPost**](MyCharactersApi.md#actiongecreatesellordermynameactiongrandexchangesellpost) | **POST** /my/{name}/action/grandexchange/sell | Action Ge Create Sell Order
 [**actionMoveMyNameActionMovePost**](MyCharactersApi.md#actionmovemynameactionmovepost) | **POST** /my/{name}/action/move | Action Move
+[**actionNpcBuyItemMyNameActionNpcBuyPost**](MyCharactersApi.md#actionnpcbuyitemmynameactionnpcbuypost) | **POST** /my/{name}/action/npc/buy | Action Npc Buy Item
+[**actionNpcSellItemMyNameActionNpcSellPost**](MyCharactersApi.md#actionnpcsellitemmynameactionnpcsellpost) | **POST** /my/{name}/action/npc/sell | Action Npc Sell Item
 [**actionRecyclingMyNameActionRecyclingPost**](MyCharactersApi.md#actionrecyclingmynameactionrecyclingpost) | **POST** /my/{name}/action/recycling | Action Recycling
 [**actionRestMyNameActionRestPost**](MyCharactersApi.md#actionrestmynameactionrestpost) | **POST** /my/{name}/action/rest | Action Rest
 [**actionTaskCancelMyNameActionTaskCancelPost**](MyCharactersApi.md#actiontaskcancelmynameactiontaskcancelpost) | **POST** /my/{name}/action/task/cancel | Action Task Cancel
@@ -34,6 +35,7 @@ Method | HTTP request | Description
 [**actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost**](MyCharactersApi.md#actionwithdrawbankgoldmynameactionbankwithdrawgoldpost) | **POST** /my/{name}/action/bank/withdraw/gold | Action Withdraw Bank Gold
 [**actionWithdrawBankMyNameActionBankWithdrawPost**](MyCharactersApi.md#actionwithdrawbankmynameactionbankwithdrawpost) | **POST** /my/{name}/action/bank/withdraw | Action Withdraw Bank
 [**getAllCharactersLogsMyLogsGet**](MyCharactersApi.md#getallcharacterslogsmylogsget) | **GET** /my/logs | Get All Characters Logs
+[**getCharacterLogsMyLogsNameGet**](MyCharactersApi.md#getcharacterlogsmylogsnameget) | **GET** /my/logs/{name} | Get Character Logs
 [**getMyCharactersMyCharactersGet**](MyCharactersApi.md#getmycharactersmycharactersget) | **GET** /my/characters | Get My Characters
 
 
@@ -111,49 +113,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**BankExtensionTransactionResponseSchema**](BankExtensionTransactionResponseSchema.md)
-
-### Authorization
-
-[JWTBearer](../README.md#JWTBearer)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **actionChristmasExchangeMyNameActionChristmasExchangePost**
-> RewardDataResponseSchema actionChristmasExchangeMyNameActionChristmasExchangePost(name)
-
-Action Christmas Exchange
-
-Exchange 1 gift for a random reward.
-
-### Example
-```dart
-import 'package:artifacts_api/api.dart';
-
-final api = ArtifactsApi().getMyCharactersApi();
-final String name = name_example; // String | Name of your character.
-
-try {
-    final response = api.actionChristmasExchangeMyNameActionChristmasExchangePost(name);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling MyCharactersApi->actionChristmasExchangeMyNameActionChristmasExchangePost: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **name** | **String**| Name of your character. | 
-
-### Return type
-
-[**RewardDataResponseSchema**](RewardDataResponseSchema.md)
 
 ### Authorization
 
@@ -615,7 +574,7 @@ Name | Type | Description  | Notes
 
 Action Ge Create Sell Order
 
-Create a sell order at the Grand Exchange on the character's map. Please note that a 5% sales tax is charged.
+Create a sell order at the Grand Exchange on the character's map. Please note there is a 3% listing tax, charged at the time of posting, on the total price.
 
 ### Example
 ```dart
@@ -688,6 +647,96 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CharacterMovementResponseSchema**](CharacterMovementResponseSchema.md)
+
+### Authorization
+
+[JWTBearer](../README.md#JWTBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **actionNpcBuyItemMyNameActionNpcBuyPost**
+> NpcMerchantTransactionResponseSchema actionNpcBuyItemMyNameActionNpcBuyPost(name, npcMerchantBuySchema)
+
+Action Npc Buy Item
+
+Buy an item from an NPC on the character's map.
+
+### Example
+```dart
+import 'package:artifacts_api/api.dart';
+
+final api = ArtifactsApi().getMyCharactersApi();
+final String name = name_example; // String | Name of your character.
+final NpcMerchantBuySchema npcMerchantBuySchema = ; // NpcMerchantBuySchema | 
+
+try {
+    final response = api.actionNpcBuyItemMyNameActionNpcBuyPost(name, npcMerchantBuySchema);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MyCharactersApi->actionNpcBuyItemMyNameActionNpcBuyPost: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **String**| Name of your character. | 
+ **npcMerchantBuySchema** | [**NpcMerchantBuySchema**](NpcMerchantBuySchema.md)|  | 
+
+### Return type
+
+[**NpcMerchantTransactionResponseSchema**](NpcMerchantTransactionResponseSchema.md)
+
+### Authorization
+
+[JWTBearer](../README.md#JWTBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **actionNpcSellItemMyNameActionNpcSellPost**
+> NpcMerchantTransactionResponseSchema actionNpcSellItemMyNameActionNpcSellPost(name, npcMerchantBuySchema)
+
+Action Npc Sell Item
+
+Sell an item to an NPC on the character's map.
+
+### Example
+```dart
+import 'package:artifacts_api/api.dart';
+
+final api = ArtifactsApi().getMyCharactersApi();
+final String name = name_example; // String | Name of your character.
+final NpcMerchantBuySchema npcMerchantBuySchema = ; // NpcMerchantBuySchema | 
+
+try {
+    final response = api.actionNpcSellItemMyNameActionNpcSellPost(name, npcMerchantBuySchema);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MyCharactersApi->actionNpcSellItemMyNameActionNpcSellPost: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **String**| Name of your character. | 
+ **npcMerchantBuySchema** | [**NpcMerchantBuySchema**](NpcMerchantBuySchema.md)|  | 
+
+### Return type
+
+[**NpcMerchantTransactionResponseSchema**](NpcMerchantTransactionResponseSchema.md)
 
 ### Authorization
 
@@ -1104,7 +1153,7 @@ Name | Type | Description  | Notes
 
 Get All Characters Logs
 
-History of the last 100 actions of all your characters.
+History of the last 250 actions of all your characters.
 
 ### Example
 ```dart
@@ -1144,12 +1193,59 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **getCharacterLogsMyLogsNameGet**
+> DataPageLogSchema getCharacterLogsMyLogsNameGet(name, page, size)
+
+Get Character Logs
+
+History of the last actions of your character.
+
+### Example
+```dart
+import 'package:artifacts_api/api.dart';
+
+final api = ArtifactsApi().getMyCharactersApi();
+final String name = name_example; // String | Name of your character.
+final int page = 56; // int | Page number
+final int size = 56; // int | Page size
+
+try {
+    final response = api.getCharacterLogsMyLogsNameGet(name, page, size);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MyCharactersApi->getCharacterLogsMyLogsNameGet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **String**| Name of your character. | 
+ **page** | **int**| Page number | [optional] [default to 1]
+ **size** | **int**| Page size | [optional] [default to 50]
+
+### Return type
+
+[**DataPageLogSchema**](DataPageLogSchema.md)
+
+### Authorization
+
+[JWTBearer](../README.md#JWTBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getMyCharactersMyCharactersGet**
 > MyCharactersListSchema getMyCharactersMyCharactersGet()
 
 Get My Characters
 
-List of your characters.
+List of your characters. This endpoint is deprecated and will be removed in a future version. Please use accounts/{account}/characters.
 
 ### Example
 ```dart

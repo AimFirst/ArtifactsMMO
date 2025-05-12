@@ -15,21 +15,25 @@ part 'event_schema.g.dart';
 ///
 /// Properties:
 /// * [name] - Name of the event.
-/// * [code] - Code of the event. This is the event's unique identifier (ID).
+/// * [code] - Code of the event.
+/// * [content] - Content of the event.
 /// * [maps] - Map list of the event.
 /// * [skin] - Map skin of the event.
 /// * [duration] - Duration in minutes.
 /// * [rate] - Rate spawn of the event. (1/rate every minute)
-/// * [content] - Content of the event.
 @BuiltValue()
 abstract class EventSchema implements Built<EventSchema, EventSchemaBuilder> {
   /// Name of the event.
   @BuiltValueField(wireName: r'name')
   String get name;
 
-  /// Code of the event. This is the event's unique identifier (ID).
+  /// Code of the event.
   @BuiltValueField(wireName: r'code')
   String get code;
+
+  /// Content of the event.
+  @BuiltValueField(wireName: r'content')
+  EventContentSchema get content;
 
   /// Map list of the event.
   @BuiltValueField(wireName: r'maps')
@@ -46,10 +50,6 @@ abstract class EventSchema implements Built<EventSchema, EventSchemaBuilder> {
   /// Rate spawn of the event. (1/rate every minute)
   @BuiltValueField(wireName: r'rate')
   int get rate;
-
-  /// Content of the event.
-  @BuiltValueField(wireName: r'content')
-  EventContentSchema get content;
 
   EventSchema._();
 
@@ -84,6 +84,11 @@ class _$EventSchemaSerializer implements PrimitiveSerializer<EventSchema> {
       object.code,
       specifiedType: const FullType(String),
     );
+    yield r'content';
+    yield serializers.serialize(
+      object.content,
+      specifiedType: const FullType(EventContentSchema),
+    );
     yield r'maps';
     yield serializers.serialize(
       object.maps,
@@ -103,11 +108,6 @@ class _$EventSchemaSerializer implements PrimitiveSerializer<EventSchema> {
     yield serializers.serialize(
       object.rate,
       specifiedType: const FullType(int),
-    );
-    yield r'content';
-    yield serializers.serialize(
-      object.content,
-      specifiedType: const FullType(EventContentSchema),
     );
   }
 
@@ -148,6 +148,13 @@ class _$EventSchemaSerializer implements PrimitiveSerializer<EventSchema> {
           ) as String;
           result.code = valueDes;
           break;
+        case r'content':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(EventContentSchema),
+          ) as EventContentSchema;
+          result.content.replace(valueDes);
+          break;
         case r'maps':
           final valueDes = serializers.deserialize(
             value,
@@ -176,13 +183,6 @@ class _$EventSchemaSerializer implements PrimitiveSerializer<EventSchema> {
             specifiedType: const FullType(int),
           ) as int;
           result.rate = valueDes;
-          break;
-        case r'content':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(EventContentSchema),
-          ) as EventContentSchema;
-          result.content.replace(valueDes);
           break;
         default:
           unhandled.add(key);

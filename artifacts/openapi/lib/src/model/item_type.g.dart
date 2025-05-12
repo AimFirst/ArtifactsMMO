@@ -19,6 +19,8 @@ const ItemType _$ring = const ItemType._('ring');
 const ItemType _$artifact = const ItemType._('artifact');
 const ItemType _$currency = const ItemType._('currency');
 const ItemType _$consumable = const ItemType._('consumable');
+const ItemType _$rune = const ItemType._('rune');
+const ItemType _$bag = const ItemType._('bag');
 
 ItemType _$valueOf(String name) {
   switch (name) {
@@ -48,6 +50,10 @@ ItemType _$valueOf(String name) {
       return _$currency;
     case 'consumable':
       return _$consumable;
+    case 'rune':
+      return _$rune;
+    case 'bag':
+      return _$bag;
     default:
       throw new ArgumentError(name);
   }
@@ -67,6 +73,8 @@ final BuiltSet<ItemType> _$values = new BuiltSet<ItemType>(const <ItemType>[
   _$artifact,
   _$currency,
   _$consumable,
+  _$rune,
+  _$bag,
 ]);
 
 class _$ItemTypeMeta {
@@ -84,6 +92,8 @@ class _$ItemTypeMeta {
   ItemType get artifact => _$artifact;
   ItemType get currency => _$currency;
   ItemType get consumable => _$consumable;
+  ItemType get rune => _$rune;
+  ItemType get bag => _$bag;
   ItemType valueOf(String name) => _$valueOf(name);
   BuiltSet<ItemType> get values => _$values;
 }
@@ -110,6 +120,8 @@ class _$ItemTypeSerializer implements PrimitiveSerializer<ItemType> {
     'artifact': 'artifact',
     'currency': 'currency',
     'consumable': 'consumable',
+    'rune': 'rune',
+    'bag': 'bag',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'utility': 'utility',
@@ -125,6 +137,8 @@ class _$ItemTypeSerializer implements PrimitiveSerializer<ItemType> {
     'artifact': 'artifact',
     'currency': 'currency',
     'consumable': 'consumable',
+    'rune': 'rune',
+    'bag': 'bag',
   };
 
   @override

@@ -8,11 +8,14 @@ part of 'account_leaderboard_type.dart';
 
 const AccountLeaderboardType _$achievementsPoints =
     const AccountLeaderboardType._('achievementsPoints');
+const AccountLeaderboardType _$gold = const AccountLeaderboardType._('gold');
 
 AccountLeaderboardType _$valueOf(String name) {
   switch (name) {
     case 'achievementsPoints':
       return _$achievementsPoints;
+    case 'gold':
+      return _$gold;
     default:
       throw new ArgumentError(name);
   }
@@ -21,11 +24,13 @@ AccountLeaderboardType _$valueOf(String name) {
 final BuiltSet<AccountLeaderboardType> _$values =
     new BuiltSet<AccountLeaderboardType>(const <AccountLeaderboardType>[
   _$achievementsPoints,
+  _$gold,
 ]);
 
 class _$AccountLeaderboardTypeMeta {
   const _$AccountLeaderboardTypeMeta();
   AccountLeaderboardType get achievementsPoints => _$achievementsPoints;
+  AccountLeaderboardType get gold => _$gold;
   AccountLeaderboardType valueOf(String name) => _$valueOf(name);
   BuiltSet<AccountLeaderboardType> get values => _$values;
 }
@@ -43,9 +48,11 @@ class _$AccountLeaderboardTypeSerializer
     implements PrimitiveSerializer<AccountLeaderboardType> {
   static const Map<String, Object> _toWire = const <String, Object>{
     'achievementsPoints': 'achievements_points',
+    'gold': 'gold',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'achievements_points': 'achievementsPoints',
+    'gold': 'gold',
   };
 
   @override

@@ -12,6 +12,7 @@ Method | HTTP request | Description
 [**createAccountAccountsCreatePost**](AccountsApi.md#createaccountaccountscreatepost) | **POST** /accounts/create | Create Account
 [**getAccountAccountsAccountGet**](AccountsApi.md#getaccountaccountsaccountget) | **GET** /accounts/{account} | Get Account
 [**getAccountAchievementsAccountsAccountAchievementsGet**](AccountsApi.md#getaccountachievementsaccountsaccountachievementsget) | **GET** /accounts/{account}/achievements | Get Account Achievements
+[**getAccountCharactersAccountsAccountCharactersGet**](AccountsApi.md#getaccountcharactersaccountsaccountcharactersget) | **GET** /accounts/{account}/characters | Get Account Characters
 
 
 # **createAccountAccountsCreatePost**
@@ -137,6 +138,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**DataPageAccountAchievementSchema**](DataPageAccountAchievementSchema.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getAccountCharactersAccountsAccountCharactersGet**
+> CharactersListSchema getAccountCharactersAccountsAccountCharactersGet(account)
+
+Get Account Characters
+
+Account character lists.
+
+### Example
+```dart
+import 'package:artifacts_api/api.dart';
+
+final api = ArtifactsApi().getAccountsApi();
+final String account = account_example; // String | The character name.
+
+try {
+    final response = api.getAccountCharactersAccountsAccountCharactersGet(account);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AccountsApi->getAccountCharactersAccountsAccountCharactersGet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **account** | **String**| The character name. | 
+
+### Return type
+
+[**CharactersListSchema**](CharactersListSchema.md)
 
 ### Authorization
 

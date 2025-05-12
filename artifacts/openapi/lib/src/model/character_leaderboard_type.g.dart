@@ -24,8 +24,6 @@ const CharacterLeaderboardType _$cooking =
     const CharacterLeaderboardType._('cooking');
 const CharacterLeaderboardType _$alchemy =
     const CharacterLeaderboardType._('alchemy');
-const CharacterLeaderboardType _$gold =
-    const CharacterLeaderboardType._('gold');
 
 CharacterLeaderboardType _$valueOf(String name) {
   switch (name) {
@@ -47,8 +45,6 @@ CharacterLeaderboardType _$valueOf(String name) {
       return _$cooking;
     case 'alchemy':
       return _$alchemy;
-    case 'gold':
-      return _$gold;
     default:
       throw new ArgumentError(name);
   }
@@ -65,7 +61,6 @@ final BuiltSet<CharacterLeaderboardType> _$values =
   _$jewelrycrafting,
   _$cooking,
   _$alchemy,
-  _$gold,
 ]);
 
 class _$CharacterLeaderboardTypeMeta {
@@ -79,7 +74,6 @@ class _$CharacterLeaderboardTypeMeta {
   CharacterLeaderboardType get jewelrycrafting => _$jewelrycrafting;
   CharacterLeaderboardType get cooking => _$cooking;
   CharacterLeaderboardType get alchemy => _$alchemy;
-  CharacterLeaderboardType get gold => _$gold;
   CharacterLeaderboardType valueOf(String name) => _$valueOf(name);
   BuiltSet<CharacterLeaderboardType> get values => _$values;
 }
@@ -105,7 +99,6 @@ class _$CharacterLeaderboardTypeSerializer
     'jewelrycrafting': 'jewelrycrafting',
     'cooking': 'cooking',
     'alchemy': 'alchemy',
-    'gold': 'gold',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'combat': 'combat',
@@ -117,7 +110,6 @@ class _$CharacterLeaderboardTypeSerializer
     'jewelrycrafting': 'jewelrycrafting',
     'cooking': 'cooking',
     'alchemy': 'alchemy',
-    'gold': 'gold',
   };
 
   @override

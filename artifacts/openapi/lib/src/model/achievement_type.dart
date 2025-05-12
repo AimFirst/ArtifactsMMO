@@ -26,6 +26,8 @@ class AchievementType extends EnumClass {
   static const AchievementType task = _$task;
   @BuiltValueEnumConst(wireName: r'other')
   static const AchievementType other = _$other;
+  @BuiltValueEnumConst(wireName: r'use')
+  static const AchievementType use = _$use;
 
   static Serializer<AchievementType> get serializer =>
       _$achievementTypeSerializer;

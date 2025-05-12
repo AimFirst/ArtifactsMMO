@@ -14,6 +14,7 @@ import 'package:artifacts_api/src/api/achievements_api.dart';
 import 'package:artifacts_api/src/api/badges_api.dart';
 import 'package:artifacts_api/src/api/characters_api.dart';
 import 'package:artifacts_api/src/api/default_api.dart';
+import 'package:artifacts_api/src/api/effects_api.dart';
 import 'package:artifacts_api/src/api/events_api.dart';
 import 'package:artifacts_api/src/api/grand_exchange_api.dart';
 import 'package:artifacts_api/src/api/items_api.dart';
@@ -22,6 +23,7 @@ import 'package:artifacts_api/src/api/maps_api.dart';
 import 'package:artifacts_api/src/api/monsters_api.dart';
 import 'package:artifacts_api/src/api/my_account_api.dart';
 import 'package:artifacts_api/src/api/my_characters_api.dart';
+import 'package:artifacts_api/src/api/npcs_api.dart';
 import 'package:artifacts_api/src/api/resources_api.dart';
 import 'package:artifacts_api/src/api/tasks_api.dart';
 import 'package:artifacts_api/src/api/token_api.dart';
@@ -121,6 +123,12 @@ class ArtifactsApi {
     return DefaultApi(dio, serializers);
   }
 
+  /// Get EffectsApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  EffectsApi getEffectsApi() {
+    return EffectsApi(dio, serializers);
+  }
+
   /// Get EventsApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   EventsApi getEventsApi() {
@@ -167,6 +175,12 @@ class ArtifactsApi {
   /// by doing that all interceptors will not be executed
   MyCharactersApi getMyCharactersApi() {
     return MyCharactersApi(dio, serializers);
+  }
+
+  /// Get NPCsApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  NPCsApi getNPCsApi() {
+    return NPCsApi(dio, serializers);
   }
 
   /// Get ResourcesApi instance, base route and serializer can be overridden by a given but be careful,

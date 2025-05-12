@@ -9,7 +9,7 @@ import 'package:artifacts_api/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **String** | Name of the event. | 
-**code** | **String** | Code of the event. This is the event's unique identifier (ID). | 
+**code** | **String** | Code of the event. | 
 **map** | [**MapSchema**](MapSchema.md) | Map of the event. | 
 **previousSkin** | **String** | Previous map skin. | 
 **duration** | **int** | Duration in minutes. | 

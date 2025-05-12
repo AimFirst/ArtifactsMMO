@@ -16,6 +16,7 @@ part 'account_leaderboard_schema.g.dart';
 /// * [account] - Account name.
 /// * [status] - Member status.
 /// * [achievementsPoints] - Achievements points.
+/// * [gold] - Gold in the account.
 @BuiltValue()
 abstract class AccountLeaderboardSchema
     implements
@@ -36,6 +37,10 @@ abstract class AccountLeaderboardSchema
   /// Achievements points.
   @BuiltValueField(wireName: r'achievements_points')
   int get achievementsPoints;
+
+  /// Gold in the account.
+  @BuiltValueField(wireName: r'gold')
+  int get gold;
 
   AccountLeaderboardSchema._();
 
@@ -85,6 +90,11 @@ class _$AccountLeaderboardSchemaSerializer
     yield r'achievements_points';
     yield serializers.serialize(
       object.achievementsPoints,
+      specifiedType: const FullType(int),
+    );
+    yield r'gold';
+    yield serializers.serialize(
+      object.gold,
       specifiedType: const FullType(int),
     );
   }
@@ -139,6 +149,13 @@ class _$AccountLeaderboardSchemaSerializer
             specifiedType: const FullType(int),
           ) as int;
           result.achievementsPoints = valueDes;
+          break;
+        case r'gold':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.gold = valueDes;
           break;
         default:
           unhandled.add(key);

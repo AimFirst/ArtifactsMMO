@@ -14,6 +14,7 @@ const AchievementType _$crafting = const AchievementType._('crafting');
 const AchievementType _$recycling = const AchievementType._('recycling');
 const AchievementType _$task = const AchievementType._('task');
 const AchievementType _$other = const AchievementType._('other');
+const AchievementType _$use = const AchievementType._('use');
 
 AchievementType _$valueOf(String name) {
   switch (name) {
@@ -33,6 +34,8 @@ AchievementType _$valueOf(String name) {
       return _$task;
     case 'other':
       return _$other;
+    case 'use':
+      return _$use;
     default:
       throw new ArgumentError(name);
   }
@@ -48,6 +51,7 @@ final BuiltSet<AchievementType> _$values =
   _$recycling,
   _$task,
   _$other,
+  _$use,
 ]);
 
 class _$AchievementTypeMeta {
@@ -60,6 +64,7 @@ class _$AchievementTypeMeta {
   AchievementType get recycling => _$recycling;
   AchievementType get task => _$task;
   AchievementType get other => _$other;
+  AchievementType get use => _$use;
   AchievementType valueOf(String name) => _$valueOf(name);
   BuiltSet<AchievementType> get values => _$values;
 }
@@ -83,6 +88,7 @@ class _$AchievementTypeSerializer
     'recycling': 'recycling',
     'task': 'task',
     'other': 'other',
+    'use': 'use',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'combat_kill': 'combatKill',
@@ -93,6 +99,7 @@ class _$AchievementTypeSerializer
     'recycling': 'recycling',
     'task': 'task',
     'other': 'other',
+    'use': 'use',
   };
 
   @override

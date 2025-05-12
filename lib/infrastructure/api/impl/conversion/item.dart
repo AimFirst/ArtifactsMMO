@@ -1,5 +1,5 @@
 import 'package:artifacts_api/artifacts_api.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/item/effect.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/effect.dart' as dto_effect;
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart'
     as dto_item;
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
@@ -30,10 +30,10 @@ extension ItemConversion on ItemSchema {
   }
 }
 
-extension EffectConversion on ItemEffectSchema {
-  Effect convert() {
-    return Effect(
-      effectType: EffectType.values.byName(name.toCamelCase()),
+extension EffectConversion on SimpleEffectSchema {
+  dto_effect.Effect convert() {
+    return dto_effect.Effect(
+      effectType: dto_effect.EffectType.values.byName(code.toCamelCase()),
       value: value,
     );
   }

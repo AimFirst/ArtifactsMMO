@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **quantity** | **int** | Item quantity. | 
 **price** | **int** | Item price per unit. | 
 **totalPrice** | **int** | Total price. | 
-**tax** | **int** | Order creation tax (5%, minimum 1) | 
+**tax** | **int** | Listing tax (3%, minimum 1) | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

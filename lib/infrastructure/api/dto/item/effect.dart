@@ -44,5 +44,13 @@ enum EffectType {
   teleportX,
   teleportY,
   inventorySpace,
+  criticalStrike,
+  wisdom,
+  dmg,
+  prospecting,
+  antipoison,
+  lifesteal,
+  burn,
+  healing,
   unknown,
 }

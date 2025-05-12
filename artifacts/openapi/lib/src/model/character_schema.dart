@@ -48,25 +48,28 @@ part 'character_schema.g.dart';
 /// * [alchemyMaxXp] - Alchemy XP required to level up the skill.
 /// * [hp] - Character actual HP.
 /// * [maxHp] - Character max HP.
-/// * [haste] - *Character Haste. Increase speed attack (reduce fight cooldown)
-/// * [criticalStrike] - *Not available, on the roadmap. Character Critical   Strike. Critical strikes increase the attack's damage.
-/// * [stamina] - *Not available, on the roadmap. Regenerates life at the start of each turn.
+/// * [haste] - *Increase speed attack (reduce fight cooldown)
+/// * [criticalStrike] - % Critical strike. Critical strikes adds 50% extra damage to an attack (1.5x).
+/// * [wisdom] - Wisdom increases the amount of XP gained from fights (1% extra per 10 wisdom).
+/// * [prospecting] - Prospecting increases the chances of getting better loot (1% extra per 10 PP).
 /// * [attackFire] - Fire attack.
 /// * [attackEarth] - Earth attack.
 /// * [attackWater] - Water attack.
 /// * [attackAir] - Air attack.
-/// * [dmgFire] - % Fire damage.
-/// * [dmgEarth] - % Earth damage.
-/// * [dmgWater] - % Water damage.
-/// * [dmgAir] - % Air damage.
-/// * [resFire] - % Fire resistance.
-/// * [resEarth] - % Earth resistance.
-/// * [resWater] - % Water resistance.
-/// * [resAir] - % Air resistance.
+/// * [dmg] - % Damage. Damage increases your attack in all elements.
+/// * [dmgFire] - % Fire damage. Damage increases your fire attack.
+/// * [dmgEarth] - % Earth damage. Damage increases your earth attack.
+/// * [dmgWater] - % Water damage. Damage increases your water attack.
+/// * [dmgAir] - % Air damage. Damage increases your air attack.
+/// * [resFire] - % Fire resistance. Reduces fire attack.
+/// * [resEarth] - % Earth resistance. Reduces earth attack.
+/// * [resWater] - % Water resistance. Reduces water attack.
+/// * [resAir] - % Air resistance. Reduces air attack.
 /// * [x] - Character x coordinate.
 /// * [y] - Character y coordinate.
 /// * [cooldown] - Cooldown in seconds.
 /// * [weaponSlot] - Weapon slot.
+/// * [runeSlot] - Rune slot.
 /// * [shieldSlot] - Shield slot.
 /// * [helmetSlot] - Helmet slot.
 /// * [bodyArmorSlot] - Body armor slot.
@@ -82,6 +85,7 @@ part 'character_schema.g.dart';
 /// * [utility1SlotQuantity] - Utility 1 quantity.
 /// * [utility2Slot] - Utility 2 slot.
 /// * [utility2SlotQuantity] - Utility 2 quantity.
+/// * [bagSlot] - Bag slot.
 /// * [task] - Task in progress.
 /// * [taskType] - Task type.
 /// * [taskProgress] - Task progression.
@@ -229,17 +233,21 @@ abstract class CharacterSchema
   @BuiltValueField(wireName: r'max_hp')
   int get maxHp;
 
-  /// *Character Haste. Increase speed attack (reduce fight cooldown)
+  /// *Increase speed attack (reduce fight cooldown)
   @BuiltValueField(wireName: r'haste')
   int get haste;
 
-  /// *Not available, on the roadmap. Character Critical   Strike. Critical strikes increase the attack's damage.
+  /// % Critical strike. Critical strikes adds 50% extra damage to an attack (1.5x).
   @BuiltValueField(wireName: r'critical_strike')
   int get criticalStrike;
 
-  /// *Not available, on the roadmap. Regenerates life at the start of each turn.
-  @BuiltValueField(wireName: r'stamina')
-  int get stamina;
+  /// Wisdom increases the amount of XP gained from fights (1% extra per 10 wisdom).
+  @BuiltValueField(wireName: r'wisdom')
+  int get wisdom;
+
+  /// Prospecting increases the chances of getting better loot (1% extra per 10 PP).
+  @BuiltValueField(wireName: r'prospecting')
+  int get prospecting;
 
   /// Fire attack.
   @BuiltValueField(wireName: r'attack_fire')
@@ -257,35 +265,39 @@ abstract class CharacterSchema
   @BuiltValueField(wireName: r'attack_air')
   int get attackAir;
 
-  /// % Fire damage.
+  /// % Damage. Damage increases your attack in all elements.
+  @BuiltValueField(wireName: r'dmg')
+  int get dmg;
+
+  /// % Fire damage. Damage increases your fire attack.
   @BuiltValueField(wireName: r'dmg_fire')
   int get dmgFire;
 
-  /// % Earth damage.
+  /// % Earth damage. Damage increases your earth attack.
   @BuiltValueField(wireName: r'dmg_earth')
   int get dmgEarth;
 
-  /// % Water damage.
+  /// % Water damage. Damage increases your water attack.
   @BuiltValueField(wireName: r'dmg_water')
   int get dmgWater;
 
-  /// % Air damage.
+  /// % Air damage. Damage increases your air attack.
   @BuiltValueField(wireName: r'dmg_air')
   int get dmgAir;
 
-  /// % Fire resistance.
+  /// % Fire resistance. Reduces fire attack.
   @BuiltValueField(wireName: r'res_fire')
   int get resFire;
 
-  /// % Earth resistance.
+  /// % Earth resistance. Reduces earth attack.
   @BuiltValueField(wireName: r'res_earth')
   int get resEarth;
 
-  /// % Water resistance.
+  /// % Water resistance. Reduces water attack.
   @BuiltValueField(wireName: r'res_water')
   int get resWater;
 
-  /// % Air resistance.
+  /// % Air resistance. Reduces air attack.
   @BuiltValueField(wireName: r'res_air')
   int get resAir;
 
@@ -304,6 +316,10 @@ abstract class CharacterSchema
   /// Weapon slot.
   @BuiltValueField(wireName: r'weapon_slot')
   String get weaponSlot;
+
+  /// Rune slot.
+  @BuiltValueField(wireName: r'rune_slot')
+  String get runeSlot;
 
   /// Shield slot.
   @BuiltValueField(wireName: r'shield_slot')
@@ -364,6 +380,10 @@ abstract class CharacterSchema
   /// Utility 2 quantity.
   @BuiltValueField(wireName: r'utility2_slot_quantity')
   int get utility2SlotQuantity;
+
+  /// Bag slot.
+  @BuiltValueField(wireName: r'bag_slot')
+  String get bagSlot;
 
   /// Task in progress.
   @BuiltValueField(wireName: r'task')
@@ -599,9 +619,14 @@ class _$CharacterSchemaSerializer
       object.criticalStrike,
       specifiedType: const FullType(int),
     );
-    yield r'stamina';
+    yield r'wisdom';
     yield serializers.serialize(
-      object.stamina,
+      object.wisdom,
+      specifiedType: const FullType(int),
+    );
+    yield r'prospecting';
+    yield serializers.serialize(
+      object.prospecting,
       specifiedType: const FullType(int),
     );
     yield r'attack_fire';
@@ -622,6 +647,11 @@ class _$CharacterSchemaSerializer
     yield r'attack_air';
     yield serializers.serialize(
       object.attackAir,
+      specifiedType: const FullType(int),
+    );
+    yield r'dmg';
+    yield serializers.serialize(
+      object.dmg,
       specifiedType: const FullType(int),
     );
     yield r'dmg_fire';
@@ -682,6 +712,11 @@ class _$CharacterSchemaSerializer
     yield r'weapon_slot';
     yield serializers.serialize(
       object.weaponSlot,
+      specifiedType: const FullType(String),
+    );
+    yield r'rune_slot';
+    yield serializers.serialize(
+      object.runeSlot,
       specifiedType: const FullType(String),
     );
     yield r'shield_slot';
@@ -758,6 +793,11 @@ class _$CharacterSchemaSerializer
     yield serializers.serialize(
       object.utility2SlotQuantity,
       specifiedType: const FullType(int),
+    );
+    yield r'bag_slot';
+    yield serializers.serialize(
+      object.bagSlot,
+      specifiedType: const FullType(String),
     );
     yield r'task';
     yield serializers.serialize(
@@ -1075,12 +1115,19 @@ class _$CharacterSchemaSerializer
           ) as int;
           result.criticalStrike = valueDes;
           break;
-        case r'stamina':
+        case r'wisdom':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(int),
           ) as int;
-          result.stamina = valueDes;
+          result.wisdom = valueDes;
+          break;
+        case r'prospecting':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.prospecting = valueDes;
           break;
         case r'attack_fire':
           final valueDes = serializers.deserialize(
@@ -1109,6 +1156,13 @@ class _$CharacterSchemaSerializer
             specifiedType: const FullType(int),
           ) as int;
           result.attackAir = valueDes;
+          break;
+        case r'dmg':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.dmg = valueDes;
           break;
         case r'dmg_fire':
           final valueDes = serializers.deserialize(
@@ -1193,6 +1247,13 @@ class _$CharacterSchemaSerializer
             specifiedType: const FullType(String),
           ) as String;
           result.weaponSlot = valueDes;
+          break;
+        case r'rune_slot':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.runeSlot = valueDes;
           break;
         case r'shield_slot':
           final valueDes = serializers.deserialize(
@@ -1298,6 +1359,13 @@ class _$CharacterSchemaSerializer
             specifiedType: const FullType(int),
           ) as int;
           result.utility2SlotQuantity = valueDes;
+          break;
+        case r'bag_slot':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.bagSlot = valueDes;
           break;
         case r'task':
           final valueDes = serializers.deserialize(

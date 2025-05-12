@@ -20,6 +20,8 @@ const ItemSlot _$artifact2 = const ItemSlot._('artifact2');
 const ItemSlot _$artifact3 = const ItemSlot._('artifact3');
 const ItemSlot _$utility1 = const ItemSlot._('utility1');
 const ItemSlot _$utility2 = const ItemSlot._('utility2');
+const ItemSlot _$bag = const ItemSlot._('bag');
+const ItemSlot _$rune = const ItemSlot._('rune');
 
 ItemSlot _$valueOf(String name) {
   switch (name) {
@@ -51,6 +53,10 @@ ItemSlot _$valueOf(String name) {
       return _$utility1;
     case 'utility2':
       return _$utility2;
+    case 'bag':
+      return _$bag;
+    case 'rune':
+      return _$rune;
     default:
       throw new ArgumentError(name);
   }
@@ -71,6 +77,8 @@ final BuiltSet<ItemSlot> _$values = new BuiltSet<ItemSlot>(const <ItemSlot>[
   _$artifact3,
   _$utility1,
   _$utility2,
+  _$bag,
+  _$rune,
 ]);
 
 class _$ItemSlotMeta {
@@ -89,6 +97,8 @@ class _$ItemSlotMeta {
   ItemSlot get artifact3 => _$artifact3;
   ItemSlot get utility1 => _$utility1;
   ItemSlot get utility2 => _$utility2;
+  ItemSlot get bag => _$bag;
+  ItemSlot get rune => _$rune;
   ItemSlot valueOf(String name) => _$valueOf(name);
   BuiltSet<ItemSlot> get values => _$values;
 }
@@ -116,6 +126,8 @@ class _$ItemSlotSerializer implements PrimitiveSerializer<ItemSlot> {
     'artifact3': 'artifact3',
     'utility1': 'utility1',
     'utility2': 'utility2',
+    'bag': 'bag',
+    'rune': 'rune',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'weapon': 'weapon',
@@ -132,6 +144,8 @@ class _$ItemSlotSerializer implements PrimitiveSerializer<ItemSlot> {
     'artifact3': 'artifact3',
     'utility1': 'utility1',
     'utility2': 'utility2',
+    'bag': 'bag',
+    'rune': 'rune',
   };
 
   @override

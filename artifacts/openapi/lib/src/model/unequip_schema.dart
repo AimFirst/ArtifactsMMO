@@ -13,16 +13,16 @@ part 'unequip_schema.g.dart';
 ///
 /// Properties:
 /// * [slot] - Item slot.
-/// * [quantity] - Item quantity. Applicable to utilitys only.
+/// * [quantity] - Item quantity. Applicable to utilities only.
 @BuiltValue()
 abstract class UnequipSchema
     implements Built<UnequipSchema, UnequipSchemaBuilder> {
   /// Item slot.
   @BuiltValueField(wireName: r'slot')
   ItemSlot get slot;
-  // enum slotEnum {  weapon,  shield,  helmet,  body_armor,  leg_armor,  boots,  ring1,  ring2,  amulet,  artifact1,  artifact2,  artifact3,  utility1,  utility2,  };
+  // enum slotEnum {  weapon,  shield,  helmet,  body_armor,  leg_armor,  boots,  ring1,  ring2,  amulet,  artifact1,  artifact2,  artifact3,  utility1,  utility2,  bag,  rune,  };
 
-  /// Item quantity. Applicable to utilitys only.
+  /// Item quantity. Applicable to utilities only.
   @BuiltValueField(wireName: r'quantity')
   int? get quantity;
 

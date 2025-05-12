@@ -32,11 +32,15 @@ class _$MonsterSchema extends MonsterSchema {
   @override
   final int resAir;
   @override
+  final int criticalStrike;
+  @override
   final int minGold;
   @override
   final int maxGold;
   @override
   final BuiltList<DropRateSchema> drops;
+  @override
+  final BuiltList<SimpleEffectSchema>? effects;
 
   factory _$MonsterSchema([void Function(MonsterSchemaBuilder)? updates]) =>
       (new MonsterSchemaBuilder()..update(updates))._build();
@@ -54,9 +58,11 @@ class _$MonsterSchema extends MonsterSchema {
       required this.resEarth,
       required this.resWater,
       required this.resAir,
+      required this.criticalStrike,
       required this.minGold,
       required this.maxGold,
-      required this.drops})
+      required this.drops,
+      this.effects})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(name, r'MonsterSchema', 'name');
     BuiltValueNullFieldError.checkNotNull(code, r'MonsterSchema', 'code');
@@ -76,6 +82,8 @@ class _$MonsterSchema extends MonsterSchema {
     BuiltValueNullFieldError.checkNotNull(
         resWater, r'MonsterSchema', 'resWater');
     BuiltValueNullFieldError.checkNotNull(resAir, r'MonsterSchema', 'resAir');
+    BuiltValueNullFieldError.checkNotNull(
+        criticalStrike, r'MonsterSchema', 'criticalStrike');
     BuiltValueNullFieldError.checkNotNull(minGold, r'MonsterSchema', 'minGold');
     BuiltValueNullFieldError.checkNotNull(maxGold, r'MonsterSchema', 'maxGold');
     BuiltValueNullFieldError.checkNotNull(drops, r'MonsterSchema', 'drops');
@@ -104,9 +112,11 @@ class _$MonsterSchema extends MonsterSchema {
         resEarth == other.resEarth &&
         resWater == other.resWater &&
         resAir == other.resAir &&
+        criticalStrike == other.criticalStrike &&
         minGold == other.minGold &&
         maxGold == other.maxGold &&
-        drops == other.drops;
+        drops == other.drops &&
+        effects == other.effects;
   }
 
   @override
@@ -124,9 +134,11 @@ class _$MonsterSchema extends MonsterSchema {
     _$hash = $jc(_$hash, resEarth.hashCode);
     _$hash = $jc(_$hash, resWater.hashCode);
     _$hash = $jc(_$hash, resAir.hashCode);
+    _$hash = $jc(_$hash, criticalStrike.hashCode);
     _$hash = $jc(_$hash, minGold.hashCode);
     _$hash = $jc(_$hash, maxGold.hashCode);
     _$hash = $jc(_$hash, drops.hashCode);
+    _$hash = $jc(_$hash, effects.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -146,9 +158,11 @@ class _$MonsterSchema extends MonsterSchema {
           ..add('resEarth', resEarth)
           ..add('resWater', resWater)
           ..add('resAir', resAir)
+          ..add('criticalStrike', criticalStrike)
           ..add('minGold', minGold)
           ..add('maxGold', maxGold)
-          ..add('drops', drops))
+          ..add('drops', drops)
+          ..add('effects', effects))
         .toString();
   }
 }
@@ -205,6 +219,11 @@ class MonsterSchemaBuilder
   int? get resAir => _$this._resAir;
   set resAir(int? resAir) => _$this._resAir = resAir;
 
+  int? _criticalStrike;
+  int? get criticalStrike => _$this._criticalStrike;
+  set criticalStrike(int? criticalStrike) =>
+      _$this._criticalStrike = criticalStrike;
+
   int? _minGold;
   int? get minGold => _$this._minGold;
   set minGold(int? minGold) => _$this._minGold = minGold;
@@ -217,6 +236,12 @@ class MonsterSchemaBuilder
   ListBuilder<DropRateSchema> get drops =>
       _$this._drops ??= new ListBuilder<DropRateSchema>();
   set drops(ListBuilder<DropRateSchema>? drops) => _$this._drops = drops;
+
+  ListBuilder<SimpleEffectSchema>? _effects;
+  ListBuilder<SimpleEffectSchema> get effects =>
+      _$this._effects ??= new ListBuilder<SimpleEffectSchema>();
+  set effects(ListBuilder<SimpleEffectSchema>? effects) =>
+      _$this._effects = effects;
 
   MonsterSchemaBuilder() {
     MonsterSchema._defaults(this);
@@ -237,9 +262,11 @@ class MonsterSchemaBuilder
       _resEarth = $v.resEarth;
       _resWater = $v.resWater;
       _resAir = $v.resAir;
+      _criticalStrike = $v.criticalStrike;
       _minGold = $v.minGold;
       _maxGold = $v.maxGold;
       _drops = $v.drops.toBuilder();
+      _effects = $v.effects?.toBuilder();
       _$v = null;
     }
     return this;
@@ -286,14 +313,18 @@ class MonsterSchemaBuilder
                   BuiltValueNullFieldError.checkNotNull(resEarth, r'MonsterSchema', 'resEarth'),
               resWater: BuiltValueNullFieldError.checkNotNull(resWater, r'MonsterSchema', 'resWater'),
               resAir: BuiltValueNullFieldError.checkNotNull(resAir, r'MonsterSchema', 'resAir'),
+              criticalStrike: BuiltValueNullFieldError.checkNotNull(criticalStrike, r'MonsterSchema', 'criticalStrike'),
               minGold: BuiltValueNullFieldError.checkNotNull(minGold, r'MonsterSchema', 'minGold'),
               maxGold: BuiltValueNullFieldError.checkNotNull(maxGold, r'MonsterSchema', 'maxGold'),
-              drops: drops.build());
+              drops: drops.build(),
+              effects: _effects?.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'drops';
         drops.build();
+        _$failedField = 'effects';
+        _effects?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             r'MonsterSchema', _$failedField, e.toString());

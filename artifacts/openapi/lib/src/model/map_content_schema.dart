@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:artifacts_api/src/model/map_content_type.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -18,7 +19,8 @@ abstract class MapContentSchema
     implements Built<MapContentSchema, MapContentSchemaBuilder> {
   /// Type of the content.
   @BuiltValueField(wireName: r'type')
-  String get type;
+  MapContentType get type;
+  // enum typeEnum {  monster,  resource,  workshop,  bank,  grand_exchange,  tasks_master,  npc,  };
 
   /// Code of the content.
   @BuiltValueField(wireName: r'code')
@@ -53,7 +55,7 @@ class _$MapContentSchemaSerializer
     yield r'type';
     yield serializers.serialize(
       object.type,
-      specifiedType: const FullType(String),
+      specifiedType: const FullType(MapContentType),
     );
     yield r'code';
     yield serializers.serialize(
@@ -88,8 +90,8 @@ class _$MapContentSchemaSerializer
         case r'type':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType(MapContentType),
+          ) as MapContentType;
           result.type = valueDes;
           break;
         case r'code':

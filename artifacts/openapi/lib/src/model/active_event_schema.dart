@@ -13,7 +13,7 @@ part 'active_event_schema.g.dart';
 ///
 /// Properties:
 /// * [name] - Name of the event.
-/// * [code] - Code of the event. This is the event's unique identifier (ID).
+/// * [code] - Code of the event.
 /// * [map] - Map of the event.
 /// * [previousSkin] - Previous map skin.
 /// * [duration] - Duration in minutes.
@@ -26,7 +26,7 @@ abstract class ActiveEventSchema
   @BuiltValueField(wireName: r'name')
   String get name;
 
-  /// Code of the event. This is the event's unique identifier (ID).
+  /// Code of the event.
   @BuiltValueField(wireName: r'code')
   String get code;
 

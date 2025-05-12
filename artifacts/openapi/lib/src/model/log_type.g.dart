@@ -13,6 +13,8 @@ const LogType _$crafting = const LogType._('crafting');
 const LogType _$gathering = const LogType._('gathering');
 const LogType _$buyGe = const LogType._('buyGe');
 const LogType _$sellGe = const LogType._('sellGe');
+const LogType _$buyNpc = const LogType._('buyNpc');
+const LogType _$sellNpc = const LogType._('sellNpc');
 const LogType _$cancelGe = const LogType._('cancelGe');
 const LogType _$deleteItem = const LogType._('deleteItem');
 const LogType _$deposit = const LogType._('deposit');
@@ -49,6 +51,10 @@ LogType _$valueOf(String name) {
       return _$buyGe;
     case 'sellGe':
       return _$sellGe;
+    case 'buyNpc':
+      return _$buyNpc;
+    case 'sellNpc':
+      return _$sellNpc;
     case 'cancelGe':
       return _$cancelGe;
     case 'deleteItem':
@@ -100,6 +106,8 @@ final BuiltSet<LogType> _$values = new BuiltSet<LogType>(const <LogType>[
   _$gathering,
   _$buyGe,
   _$sellGe,
+  _$buyNpc,
+  _$sellNpc,
   _$cancelGe,
   _$deleteItem,
   _$deposit,
@@ -130,6 +138,8 @@ class _$LogTypeMeta {
   LogType get gathering => _$gathering;
   LogType get buyGe => _$buyGe;
   LogType get sellGe => _$sellGe;
+  LogType get buyNpc => _$buyNpc;
+  LogType get sellNpc => _$sellNpc;
   LogType get cancelGe => _$cancelGe;
   LogType get deleteItem => _$deleteItem;
   LogType get deposit => _$deposit;
@@ -169,6 +179,8 @@ class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
     'gathering': 'gathering',
     'buyGe': 'buy_ge',
     'sellGe': 'sell_ge',
+    'buyNpc': 'buy_npc',
+    'sellNpc': 'sell_npc',
     'cancelGe': 'cancel_ge',
     'deleteItem': 'delete_item',
     'deposit': 'deposit',
@@ -197,6 +209,8 @@ class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
     'gathering': 'gathering',
     'buy_ge': 'buyGe',
     'sell_ge': 'sellGe',
+    'buy_npc': 'buyNpc',
+    'sell_npc': 'sellNpc',
     'cancel_ge': 'cancelGe',
     'delete_item': 'deleteItem',
     'deposit': 'deposit',

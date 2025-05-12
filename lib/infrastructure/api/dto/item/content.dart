@@ -26,7 +26,8 @@ enum ContentType {
   resource,
   workshop,
   bank,
-  grandExchange,
-  tasksMaster,
-  santaClaus,
+  grandexchange,
+  tasksmaster,
+  santaclaus,
+  npc,
 }

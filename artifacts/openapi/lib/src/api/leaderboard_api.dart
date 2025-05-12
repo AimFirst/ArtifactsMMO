@@ -26,6 +26,7 @@ class LeaderboardApi {
   ///
   /// Parameters:
   /// * [sort] - Default sort by achievements points.
+  /// * [name] - Find a account by name.
   /// * [page] - Page number
   /// * [size] - Page size
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -40,6 +41,7 @@ class LeaderboardApi {
   Future<Response<DataPageAccountLeaderboardSchema>>
       getAccountsLeaderboardLeaderboardAccountsGet({
     AccountLeaderboardType? sort,
+    String? name,
     int? page = 1,
     int? size = 50,
     CancelToken? cancelToken,
@@ -66,6 +68,9 @@ class LeaderboardApi {
       if (sort != null)
         r'sort': encodeQueryParameter(
             _serializers, sort, const FullType(AccountLeaderboardType)),
+      if (name != null)
+        r'name':
+            encodeQueryParameter(_serializers, name, const FullType(String)),
       if (page != null)
         r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
       if (size != null)
@@ -118,6 +123,7 @@ class LeaderboardApi {
   ///
   /// Parameters:
   /// * [sort] - Default sort by combat total XP.
+  /// * [name] - Find a character by name.
   /// * [page] - Page number
   /// * [size] - Page size
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -132,6 +138,7 @@ class LeaderboardApi {
   Future<Response<DataPageCharacterLeaderboardSchema>>
       getCharactersLeaderboardLeaderboardCharactersGet({
     CharacterLeaderboardType? sort,
+    String? name,
     int? page = 1,
     int? size = 50,
     CancelToken? cancelToken,
@@ -158,6 +165,9 @@ class LeaderboardApi {
       if (sort != null)
         r'sort': encodeQueryParameter(
             _serializers, sort, const FullType(CharacterLeaderboardType)),
+      if (name != null)
+        r'name':
+            encodeQueryParameter(_serializers, name, const FullType(String)),
       if (page != null)
         r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
       if (size != null)

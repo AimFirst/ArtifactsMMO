@@ -54,6 +54,7 @@ import 'package:artifacts_api/src/model/character_rest_data_schema.dart';
 import 'package:artifacts_api/src/model/character_rest_response_schema.dart';
 import 'package:artifacts_api/src/model/character_schema.dart';
 import 'package:artifacts_api/src/model/character_skin.dart';
+import 'package:artifacts_api/src/model/characters_list_schema.dart';
 import 'package:artifacts_api/src/model/cooldown_schema.dart';
 import 'package:artifacts_api/src/model/craft_schema.dart';
 import 'package:artifacts_api/src/model/craft_skill.dart';
@@ -65,6 +66,7 @@ import 'package:artifacts_api/src/model/data_page_active_event_schema.dart';
 import 'package:artifacts_api/src/model/data_page_badge_schema.dart';
 import 'package:artifacts_api/src/model/data_page_character_leaderboard_schema.dart';
 import 'package:artifacts_api/src/model/data_page_drop_rate_schema.dart';
+import 'package:artifacts_api/src/model/data_page_effect_schema.dart';
 import 'package:artifacts_api/src/model/data_page_event_schema.dart';
 import 'package:artifacts_api/src/model/data_page_ge_order_schema.dart';
 import 'package:artifacts_api/src/model/data_page_ge_order_history_schema.dart';
@@ -72,6 +74,8 @@ import 'package:artifacts_api/src/model/data_page_item_schema.dart';
 import 'package:artifacts_api/src/model/data_page_log_schema.dart';
 import 'package:artifacts_api/src/model/data_page_map_schema.dart';
 import 'package:artifacts_api/src/model/data_page_monster_schema.dart';
+import 'package:artifacts_api/src/model/data_page_npc_item.dart';
+import 'package:artifacts_api/src/model/data_page_npc_schema.dart';
 import 'package:artifacts_api/src/model/data_page_resource_schema.dart';
 import 'package:artifacts_api/src/model/data_page_simple_item_schema.dart';
 import 'package:artifacts_api/src/model/data_page_task_full_schema.dart';
@@ -82,6 +86,10 @@ import 'package:artifacts_api/src/model/deposit_withdraw_gold_schema.dart';
 import 'package:artifacts_api/src/model/destination_schema.dart';
 import 'package:artifacts_api/src/model/drop_rate_schema.dart';
 import 'package:artifacts_api/src/model/drop_schema.dart';
+import 'package:artifacts_api/src/model/effect_response_schema.dart';
+import 'package:artifacts_api/src/model/effect_schema.dart';
+import 'package:artifacts_api/src/model/effect_subtype.dart';
+import 'package:artifacts_api/src/model/effect_type.dart';
 import 'package:artifacts_api/src/model/equip_request_schema.dart';
 import 'package:artifacts_api/src/model/equip_schema.dart';
 import 'package:artifacts_api/src/model/equipment_response_schema.dart';
@@ -106,7 +114,6 @@ import 'package:artifacts_api/src/model/ge_order_history_schema.dart';
 import 'package:artifacts_api/src/model/gold_schema.dart';
 import 'package:artifacts_api/src/model/http_validation_error.dart';
 import 'package:artifacts_api/src/model/inventory_slot.dart';
-import 'package:artifacts_api/src/model/item_effect_schema.dart';
 import 'package:artifacts_api/src/model/item_response_schema.dart';
 import 'package:artifacts_api/src/model/item_schema.dart';
 import 'package:artifacts_api/src/model/item_slot.dart';
@@ -122,6 +129,14 @@ import 'package:artifacts_api/src/model/monster_schema.dart';
 import 'package:artifacts_api/src/model/my_account_details.dart';
 import 'package:artifacts_api/src/model/my_account_details_schema.dart';
 import 'package:artifacts_api/src/model/my_characters_list_schema.dart';
+import 'package:artifacts_api/src/model/npc_item.dart';
+import 'package:artifacts_api/src/model/npc_response_schema.dart';
+import 'package:artifacts_api/src/model/npc_schema.dart';
+import 'package:artifacts_api/src/model/npc_type.dart';
+import 'package:artifacts_api/src/model/npc_item_transaction_schema.dart';
+import 'package:artifacts_api/src/model/npc_merchant_buy_schema.dart';
+import 'package:artifacts_api/src/model/npc_merchant_transaction_response_schema.dart';
+import 'package:artifacts_api/src/model/npc_merchant_transaction_schema.dart';
 import 'package:artifacts_api/src/model/recycling_data_schema.dart';
 import 'package:artifacts_api/src/model/recycling_items_schema.dart';
 import 'package:artifacts_api/src/model/recycling_response_schema.dart';
@@ -133,6 +148,7 @@ import 'package:artifacts_api/src/model/reward_data_response_schema.dart';
 import 'package:artifacts_api/src/model/reward_data_schema.dart';
 import 'package:artifacts_api/src/model/reward_response_schema.dart';
 import 'package:artifacts_api/src/model/rewards_schema.dart';
+import 'package:artifacts_api/src/model/simple_effect_schema.dart';
 import 'package:artifacts_api/src/model/simple_item_schema.dart';
 import 'package:artifacts_api/src/model/skill.dart';
 import 'package:artifacts_api/src/model/skill_data_schema.dart';
@@ -201,6 +217,7 @@ part 'serializers.g.dart';
   CharacterRestResponseSchema,
   CharacterSchema,
   CharacterSkin,
+  CharactersListSchema,
   CooldownSchema,
   CraftSchema,
   CraftSkill,
@@ -212,6 +229,7 @@ part 'serializers.g.dart';
   DataPageBadgeSchema,
   DataPageCharacterLeaderboardSchema,
   DataPageDropRateSchema,
+  DataPageEffectSchema,
   DataPageEventSchema,
   DataPageGEOrderSchema,
   DataPageGeOrderHistorySchema,
@@ -219,6 +237,8 @@ part 'serializers.g.dart';
   DataPageLogSchema,
   DataPageMapSchema,
   DataPageMonsterSchema,
+  DataPageNPCItem,
+  DataPageNPCSchema,
   DataPageResourceSchema,
   DataPageSimpleItemSchema,
   DataPageTaskFullSchema,
@@ -229,6 +249,10 @@ part 'serializers.g.dart';
   DestinationSchema,
   DropRateSchema,
   DropSchema,
+  EffectResponseSchema,
+  EffectSchema,
+  EffectSubtype,
+  EffectType,
   EquipRequestSchema,
   EquipSchema,
   EquipmentResponseSchema,
@@ -253,7 +277,6 @@ part 'serializers.g.dart';
   GoldSchema,
   HTTPValidationError,
   InventorySlot,
-  ItemEffectSchema,
   ItemResponseSchema,
   ItemSchema,
   ItemSlot,
@@ -269,6 +292,14 @@ part 'serializers.g.dart';
   MyAccountDetails,
   MyAccountDetailsSchema,
   MyCharactersListSchema,
+  NPCItem,
+  NPCResponseSchema,
+  NPCSchema,
+  NPCType,
+  NpcItemTransactionSchema,
+  NpcMerchantBuySchema,
+  NpcMerchantTransactionResponseSchema,
+  NpcMerchantTransactionSchema,
   RecyclingDataSchema,
   RecyclingItemsSchema,
   RecyclingResponseSchema,
@@ -280,6 +311,7 @@ part 'serializers.g.dart';
   RewardDataSchema,
   RewardResponseSchema,
   RewardsSchema,
+  SimpleEffectSchema,
   SimpleItemSchema,
   Skill,
   SkillDataSchema,
