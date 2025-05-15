@@ -56,4 +56,6 @@ class Monster with EquatableMixin {
         maxGold,
         drops,
       ];
+
+  String get imageUrl => 'https://www.artifactsmmo.com/images/monsters/${name.toLowerCase()}.png';
 }

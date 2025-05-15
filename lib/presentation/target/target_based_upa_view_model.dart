@@ -26,7 +26,7 @@ class TargetBasedUpaViewModel extends BaseViewModel<TargetBasedUpaModel> {
   final _menuOptions = {
     MenuItemType.logs: MenuOption(
       type: MenuItemType.logs,
-      url: 'https://artifactsmmo.com/images/items/gift.png',
+      url: 'https://www.artifactsmmo.com/images/items/book_from_hell.png',
       name: 'Logs',
     ),
     MenuItemType.skills: MenuOption(

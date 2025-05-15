@@ -63,8 +63,7 @@ abstract class FightTarget extends Target {
             action: artifactsClient.fight(
                 action: ActionFight(characterName: character.name)),
             description: 'Fighting $monster',
-            imageUrl:
-                'https://artifactsmmo.com/images/items/christmas_star.png');
+            imageUrl: monster.imageUrl,);
       }
     }
     return FightLevelTarget(level: character.overall.level + 1, parentTarget: this, characterLog: characterLog).update(

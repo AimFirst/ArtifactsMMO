@@ -1,3 +1,4 @@
+import 'package:artifacts_mmo/business/state/target/team/role/item_full_quantity.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/equipment_slot.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -109,6 +110,89 @@ class EquipmentLoadout with EquatableMixin {
         artifacts.count(code: code) +
         rings.count(code: code) +
         utilities.count(code: code);
+  }
+
+  EquipmentLoadout copyWithEquipment({required EquipmentSlot slot, required ItemFullQuantity item}) {
+    switch (slot) {
+
+      case EquipmentSlot.weapon:
+        return copyWith(weapon: EquipmentSlotItem(equipmentType: EquipmentType.weapon, equipmentSlot: slot, itemCode: item.item.code));
+      case EquipmentSlot.shield:
+        return copyWith(shield: EquipmentSlotItem(equipmentType: EquipmentType.shield, equipmentSlot: slot, itemCode: item.item.code));
+      case EquipmentSlot.helmet:
+        return copyWith(helmet: EquipmentSlotItem(equipmentType: EquipmentType.helmet, equipmentSlot: slot, itemCode: item.item.code));
+      case EquipmentSlot.bodyArmor:
+        return copyWith(bodyArmor: EquipmentSlotItem(equipmentType: EquipmentType.bodyArmor, equipmentSlot: slot, itemCode: item.item.code));
+      case EquipmentSlot.legArmor:
+        return copyWith(legArmor: EquipmentSlotItem(equipmentType: EquipmentType.legArmor, equipmentSlot: slot, itemCode: item.item.code));
+      case EquipmentSlot.boots:
+        return copyWith(boots: EquipmentSlotItem(equipmentType: EquipmentType.boots, equipmentSlot: slot, itemCode: item.item.code));
+      case EquipmentSlot.ring1:
+        final ring = EquipmentSlotItem(equipmentType: EquipmentType.ring, equipmentSlot: slot, itemCode: item.item.code);
+        final newRings = [...rings];
+        if (newRings.isNotEmpty) {
+          newRings[0] = ring;
+        } else {
+          newRings.add(ring);
+        }
+        return copyWith(rings: newRings);
+      case EquipmentSlot.ring2:
+        final ring = EquipmentSlotItem(equipmentType: EquipmentType.ring, equipmentSlot: slot, itemCode: item.item.code);
+        final newRings = [...rings];
+        if (newRings.length > 1) {
+          newRings[1] = ring;
+        } else {
+          newRings.add(ring);
+        }
+        return copyWith(rings: newRings);
+      case EquipmentSlot.amulet:
+        return copyWith(amulet: EquipmentSlotItem(equipmentType: EquipmentType.amulet, equipmentSlot: slot, itemCode: item.item.code));
+      case EquipmentSlot.artifact1:
+        final artifact = EquipmentSlotItem(equipmentType: EquipmentType.artifact, equipmentSlot: slot, itemCode: item.item.code);
+        final newArtifacts = [...artifacts];
+        if (newArtifacts.isNotEmpty) {
+          newArtifacts[0] = artifact;
+        } else {
+          newArtifacts.add(artifact);
+        }
+        return copyWith(artifacts: newArtifacts);
+      case EquipmentSlot.artifact2:
+        final artifact = EquipmentSlotItem(equipmentType: EquipmentType.artifact, equipmentSlot: slot, itemCode: item.item.code);
+        final newArtifacts = [...artifacts];
+        if (newArtifacts.length > 1) {
+          newArtifacts[1] = artifact;
+        } else {
+          newArtifacts.add(artifact);
+        }
+        return copyWith(artifacts: newArtifacts);
+      case EquipmentSlot.artifact3:
+        final artifact = EquipmentSlotItem(equipmentType: EquipmentType.artifact, equipmentSlot: slot, itemCode: item.item.code);
+        final newArtifacts = [...artifacts];
+        if (newArtifacts.length > 2) {
+          newArtifacts[2] = artifact;
+        } else {
+          newArtifacts.add(artifact);
+        }
+        return copyWith(artifacts: newArtifacts);
+      case EquipmentSlot.utility1:
+        final utility = QuantityEquipmentSlot(equipmentType: EquipmentType.utility, equipmentSlot: slot, itemCode: item.item.code, quantity: item.quantity);
+        final newUtilities = [...utilities];
+        if (newUtilities.isNotEmpty) {
+          newUtilities[0] = utility;
+        } else {
+          newUtilities.add(utility);
+        }
+        return copyWith(utilities: newUtilities);
+      case EquipmentSlot.utility2:
+        final utility = QuantityEquipmentSlot(equipmentType: EquipmentType.utility, equipmentSlot: slot, itemCode: item.item.code, quantity: item.quantity);
+        final newUtilities = [...utilities];
+        if (newUtilities.length > 1) {
+          newUtilities[1] = utility;
+        } else {
+          newUtilities.add(utility);
+        }
+        return copyWith(utilities: newUtilities);
+    }
   }
 }
 

@@ -2,6 +2,7 @@ import 'package:artifacts_mmo/business/state/board/monster_manager.dart';
 import 'package:artifacts_mmo/business/state/state.dart';
 import 'package:artifacts_mmo/business/state/target/fight/fight_item_target.dart';
 import 'package:artifacts_mmo/business/state/target/fight/fight_level_target.dart';
+import 'package:artifacts_mmo/business/state/target/inventory/equipment_loadout_target.dart';
 import 'package:artifacts_mmo/business/state/target/inventory/mange_inventory_target.dart';
 import 'package:artifacts_mmo/business/state/target/target.dart';
 import 'package:artifacts_mmo/business/state/target/team/role/item_full_quantity.dart';
@@ -10,10 +11,8 @@ import 'package:artifacts_mmo/business/state/target/team/role/role.dart';
 import 'package:artifacts_mmo/business/state/target/team/team_manager.dart';
 import 'package:artifacts_mmo/business/util/fight_calculator.dart';
 import 'package:artifacts_mmo/infrastructure/api/artifacts_api.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/achievement/achievement.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/character/equipment.dart';
-import 'package:artifacts_mmo/infrastructure/api/dto/item/content.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/equipment_slot.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item_quantity.dart';
@@ -21,6 +20,9 @@ import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 import 'package:equatable/equatable.dart';
 
 class FightingRole extends Role {
+  final optimalMonsterLoadouts = <String, OptimalLoadoutResult>{};
+  final fightCalculator = FightCalculator();
+
   FightingRole({required super.characterLog});
 
   @override
@@ -168,16 +170,12 @@ class FightingRole extends Role {
     required Character character,
     required ItemQuantity itemQuantity,
   }) {
-    var quantityNeeded = itemQuantity.quantity;
-
-    // Can we fight for it?
-    final monsters =
-        boardState.monsters.monstersThatProvideItem(code: itemQuantity.code);
-    final monster = monsters
-        .where((m) => canDefeatMonster(
-            monster: m, character: character, boardState: boardState))
-        .firstOrNull;
-    if (monster != null) {
+    final targetMonster = _targetMonsterForItem(
+      boardState: boardState,
+      character: character,
+      itemQuantity: itemQuantity,
+    );
+    if (targetMonster != null) {
       return ProvideResult(
         providable: Providable.canProvideSoon,
         neededDependencies: [],
@@ -190,16 +188,39 @@ class FightingRole extends Role {
       providable: Providable.cannotProvide,
       neededDependencies: [],
       provideMethod: ProvideMethod.unknown,
-      countNeededAfterThis: quantityNeeded,
+      countNeededAfterThis: itemQuantity.quantity,
     );
   }
 
-  bool canDefeatMonster({
+  Monster? _targetMonsterForItem({
+    required BoardState boardState,
+    required Character character,
+    required ItemQuantity itemQuantity,
+  }) {
+    // Can we fight for it?
+    final monsters =
+        boardState.monsters.monstersThatProvideItem(code: itemQuantity.code);
+    final monster = monsters
+        .where((m) => _canDefeatMonster(
+            monster: m, character: character, boardState: boardState))
+        .firstOrNull;
+    if (monster != null) {
+      return monster;
+    }
+
+    return null;
+  }
+
+  bool _canDefeatMonster({
     required Monster monster,
     required Character character,
     required BoardState boardState,
   }) {
-    return monster.level <= character.overall.level - 10;
+    return _optimalLoadout(
+                boardState: boardState, character: character, monster: monster)
+            .result
+            .result ==
+        FightResult.win;
   }
 
   @override
@@ -224,6 +245,29 @@ class FightingRole extends Role {
 
     switch (canProvide.provideMethod) {
       case ProvideMethod.fight:
+        final targetMonster = _targetMonsterForItem(
+          boardState: boardState,
+          character: character,
+          itemQuantity: itemQuantity,
+        );
+        final optimalEquip = _optimalLoadout(
+          boardState: boardState,
+          character: character,
+          monster: targetMonster!,
+        );
+        final optimalEquipTarget = EquipmentLoadoutTarget(
+          targetLoadout: optimalEquip.loadout,
+          parentTarget: parentTarget,
+          characterLog: characterLog,
+        ).update(
+          character: character,
+          boardState: boardState,
+          artifactsClient: artifactsClient,
+        );
+        if (!optimalEquipTarget.progress.finished) {
+          return optimalEquipTarget;
+        }
+
         return FightItemTarget(
           itemQuantity: itemQuantity,
           parentTarget: parentTarget,
@@ -246,72 +290,127 @@ class FightingRole extends Role {
     }
   }
 
-  final optimalMonsterLoadouts = <String, EquipmentLoadout>{};
+  OptimalLoadoutResult _optimalLoadout({
+    required BoardState boardState,
+    required Character character,
+    required Monster monster,
+  }) {
+    // Get all items in our inventory, equipment, and bank.
+    var allPossibleItems = character.inventory.items
+        .map((i) => ItemFullQuantity(
+            item: boardState.items.itemByCode(i.code), quantity: i.quantity))
+        .toList();
+    allPossibleItems.addAll(boardState.bank.items.map((i) => ItemFullQuantity(
+        item: boardState.items.itemByCode(i.code), quantity: i.quantity)));
+    character.equipmentLoadout.equipmentSlots.forEach((k, v) {
+      if (v.itemCode != null && v.itemCode!.isNotEmpty) {
+        allPossibleItems.add(ItemFullQuantity(
+            item: boardState.items.itemByCode(v.itemCode!),
+            quantity: v.quantity));
+      }
+    });
 
-  // TargetProcessResult _optimizeEquipment({
-  //   required BoardState boardState,
-  //   required Character character,
-  //   required ArtifactsClient artifactsClient,
-  //   required Monster monster,
-  //   required Target? parentTarget,
-  // }) {
-  //   // Find our optimal loadout for this monster.
-  //   var optimalLoadout = optimalMonsterLoadouts[monster.code] ??
-  //       _optimalLoadout(
-  //         boardState: boardState,
-  //         character: character,
-  //         monster: monster,
-  //       );
-  //   optimalMonsterLoadouts[monster.code] = optimalLoadout;
-  //
-  //   return TargetProcessResult.noAction();
-  // }
+    // Limit it to items we can wear
+    allPossibleItems = allPossibleItems
+        .where((i) => i.item.level <= character.overall.level)
+        .toList();
 
-  // EquipmentLoadout _optimalLoadout({
-  //   required BoardState boardState,
-  //   required Character character,
-  //   required Monster monster,
-  // }) {
-  //   final allPossibleItems = character.inventory.items
-  //       .map((i) => ItemFullQuantity(
-  //           item: boardState.items.itemByCode(i.code), quantity: i.quantity))
-  //       .toList();
-  //   character.equipmentLoadout.equipmentSlots.forEach((k, v) {
-  //     if (v.itemCode != null) {
-  //       allPossibleItems.add(ItemFullQuantity(
-  //           item: boardState.items.itemByCode(v.itemCode!),
-  //           quantity: v.quantity));
-  //     }
-  //   });
-  //
-  //   EquipmentLoadout equipmentLoadout = EquipmentLoadout.empty();
-  //
-  //   final slotOptions = <EquipmentSlot, List<ItemFullQuantity>>{};
-  //
-  //   for (final slot in EquipmentSlot.values) {
-  //     slotOptions[slot] = _options(allOptions: allPossibleItems, itemType: slot.acceptedItemType);
-  //   }
-  // }
+    // Filter the items by slot
+    final slotOptions = <EquipmentSlot, List<ItemFullQuantity>>{};
+    for (final slot in EquipmentSlot.values) {
+      if (slot != EquipmentSlot.utility1 && slot != EquipmentSlot.utility2) {
+        slotOptions[slot] = _options(
+            allOptions: allPossibleItems, itemType: slot.acceptedItemType);
+      }
+    }
 
-  // OptimalLoadoutResult _tryAllLoadoutOptions({required Map<EquipmentSlot, List<ItemFullQuantity>> slotOptions, required EquipmentLoadout currentLoadout, required int slotIndex}) {
-  //   final keys = slotOptions.keys.toList();
-  //   final thisSlot = keys[slotIndex];
-  //   final values = slotOptions[thisSlot];
-  //   for (final val in values!) {
-  //     currentLoadout.
-  //   }
-  // }
+    // Try every combination.
+    final bestLoadout = _tryAllLoadoutOptions(
+      boardState: boardState,
+      character: character,
+      monster: monster,
+      slotOptions: slotOptions,
+      currentLoadout: EquipmentLoadout.empty(),
+      slotIndex: 0,
+    );
 
-  List<ItemFullQuantity> _options({required List<ItemFullQuantity> allOptions, required ItemType itemType}) {
-    return [ItemFullQuantity(item: Item.blank(type: itemType), quantity: 1), ...allOptions.where((i) => i.item.type == itemType)];
+    // Find our optimal loadout for this monster.
+    var optimalLoadout = optimalMonsterLoadouts[monster.code] ?? bestLoadout;
+    optimalMonsterLoadouts[monster.code] = optimalLoadout;
+
+    return bestLoadout;
   }
 
-// List<Item> weaponOptions({required BoardState boardState, required Character character,}) {
-//   final allOptions = character.inventory.items.map((i) => boardState.items.itemByCode(i.code)).where((i) => i.type == ItemType.weapon).toList();
-//   if (character.equipmentLoadout.weapon.itemCode != null) {
-//     allOptions.add(boardState.items.itemByCode(character.equipmentLoadout.weapon.itemCode!));
-//   }
-// }
+  OptimalLoadoutResult _tryAllLoadoutOptions(
+      {required BoardState boardState,
+      required Character character,
+      required Monster monster,
+      required Map<EquipmentSlot, List<ItemFullQuantity>> slotOptions,
+      required EquipmentLoadout currentLoadout,
+      required int slotIndex}) {
+
+    final keys = slotOptions.keys.toList();
+    final thisSlot = keys[slotIndex];
+    final values = slotOptions[thisSlot];
+    OptimalLoadoutResult bestLoadout = OptimalLoadoutResult.empty();
+    for (final val in values!) {
+      final newLoadout =
+          currentLoadout.copyWithEquipment(slot: thisSlot, item: val);
+      OptimalLoadoutResult result;
+      // This is the last item type, calculate our chances
+      if (slotIndex >= keys.length - 1) {
+        result = OptimalLoadoutResult(
+            loadout: newLoadout,
+            result: fightCalculator.predict(
+                character: FightingStats.fromEquipmentLoadout(
+                    boardState, character, newLoadout),
+                opponent: FightingStats.fromMonster(monster)));
+      } else {
+        result = _tryAllLoadoutOptions(
+            boardState: boardState,
+            character: character,
+            monster: monster,
+            slotOptions: slotOptions,
+            currentLoadout: newLoadout,
+            slotIndex: slotIndex + 1);
+      }
+      if (result.result.betterThan(bestLoadout.result)) {
+        bestLoadout = result;
+      }
+    }
+    return bestLoadout;
+  }
+
+  List<ItemFullQuantity> _options(
+      {required List<ItemFullQuantity> allOptions,
+      required ItemType itemType}) {
+    return [
+      ItemFullQuantity(item: Item.blank(type: itemType), quantity: 1),
+      ...allOptions.where((i) => i.item.type == itemType)
+    ];
+  }
+}
+
+extension FightPredictionExtension on FightPrediction {
+  bool betterThan(FightPrediction other) {
+    // If the results aren't the same, the pick the better result.
+    if (result != other.result) {
+      return result > other.result;
+    }
+
+    // Pick the one that leaves us with more health.
+    if (endHp != other.endHp) {
+      return endHp > other.endHp;
+    }
+
+    // Pick the one that took fewer turns since this will let us recover faster.
+    if (turns != other.turns) {
+      return turns > other.turns;
+    }
+
+    // Pick the one that leaves the opponent at least hp as a last tie-breaker.
+    return opponentEndHp > other.opponentEndHp;
+  }
 }
 
 class OptimalLoadoutResult with EquatableMixin {
@@ -319,6 +418,10 @@ class OptimalLoadoutResult with EquatableMixin {
   final FightPrediction result;
 
   OptimalLoadoutResult({required this.loadout, required this.result});
+
+  OptimalLoadoutResult.empty()
+      : loadout = EquipmentLoadout.empty(),
+        result = FightPrediction.empty();
 
   @override
   List<Object?> get props => [loadout, result];

@@ -1,6 +1,11 @@
 import 'dart:math';
 
+import 'package:artifacts_mmo/business/state/state.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/character/character.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/character/equipment.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/item/effect.dart';
 import 'package:artifacts_mmo/infrastructure/api/dto/item/item.dart';
+import 'package:artifacts_mmo/infrastructure/api/dto/monster/monster.dart';
 import 'package:equatable/equatable.dart';
 
 const _maxRounds = 100;
@@ -24,6 +29,8 @@ class FightPrediction with EquatableMixin {
     required this.consumablesUsed,
   });
 
+  FightPrediction.empty() : turns = _maxRounds, result = FightResult.loss, startHp = 0, endHp = 0, opponentStartHp = 10000, opponentEndHp = 10000, consumablesUsed = [];
+
   @override
   List<Object?> get props => [
         turns,
@@ -34,12 +41,13 @@ class FightPrediction with EquatableMixin {
         opponentEndHp,
         consumablesUsed,
       ];
+
 }
 
 enum FightResult {
-  win,
   loss,
   timeout,
+  win,
 }
 
 class RoundPrediction with EquatableMixin {
@@ -279,6 +287,148 @@ class FightingStats with EquatableMixin {
         resEarth = ElementalValue(element: Element.earth, value: resEarth),
         resWater = ElementalValue(element: Element.water, value: resWater),
         resAir = ElementalValue(element: Element.air, value: resAir);
+
+  factory FightingStats.fromMonster(Monster monster) {
+    return FightingStats(
+      hp: monster.hp,
+      crit: 0,
+      attackFire: monster.fireAttack.attack,
+      attackEarth: monster.earthAttack.attack,
+      attackWater: monster.waterAttack.attack,
+      attackAir: monster.airAttack.attack,
+      dmgFire: 0,
+      dmgEarth: 0,
+      dmgWater: 0,
+      dmgAir: 0,
+      resFire: monster.fireResistance.percentage,
+      resEarth: monster.earthResistance.percentage,
+      resWater: monster.waterResistance.percentage,
+      resAir: monster.airResistance.percentage,
+    );
+  }
+
+  factory FightingStats.fromEquipmentLoadout(BoardState boardState,Character character,
+      EquipmentLoadout loadout,) {
+    var hp = character.maxHp;
+    var attackFire = 0;
+    var attackEarth = 0;
+    var attackWater = 0;
+    var attackAir = 0;
+    var dmgFire = 0;
+    var dmgEarth = 0;
+    var dmgWater = 0;
+    var dmgAir = 0;
+    var resFire = 0;
+    var resEarth = 0;
+    var resWater = 0;
+    var resAir = 0;
+
+    // remove hp added by equipped items to get back to base hp.
+    character.equipmentLoadout.equipmentSlots.forEach((key, value) {
+      if (value.itemCode != null && value.itemCode!.isNotEmpty) {
+        final item = boardState.items.itemByCode(value.itemCode!);
+        hp -= item.effects.fold(0, (o, e) => o + (e.effectType == EffectType.hp || e.effectType == EffectType.boostHp ? e.value : 0));
+      }
+    });
+
+    // add up our stats
+    loadout.equipmentSlots.forEach((key, value) {
+      if (value.itemCode != null && value.itemCode!.isNotEmpty) {
+        final item = boardState.items.itemByCode(value.itemCode!);
+        for (final effect in item.effects) {
+          switch (effect.effectType) {
+            case EffectType.attackAir:
+              attackAir += effect.value;
+              break;
+            case EffectType.boostResAir:
+            case EffectType.resAir:
+              resAir += effect.value;
+              break;
+            case EffectType.boostDmgAir:
+            case EffectType.dmgAir:
+              dmgAir += effect.value;
+              break;
+            case EffectType.attackEarth:
+              attackEarth += effect.value;
+              break;
+            case EffectType.boostResEarth:
+            case EffectType.resEarth:
+              resEarth += effect.value;
+              break;
+            case EffectType.boostDmgEarth:
+            case EffectType.dmgEarth:
+              dmgEarth += effect.value;
+              break;
+            case EffectType.attackFire:
+              attackFire += effect.value;
+              break;
+            case EffectType.boostResFire:
+            case EffectType.resFire:
+              resFire += effect.value;
+              break;
+            case EffectType.boostDmgFire:
+            case EffectType.dmgFire:
+              dmgFire += effect.value;
+              break;
+            case EffectType.attackWater:
+              attackWater += effect.value;
+              break;
+            case EffectType.boostResWater:
+            case EffectType.resWater:
+              resWater += effect.value;
+              break;
+            case EffectType.boostDmgWater:
+            case EffectType.dmgWater:
+              dmgWater += effect.value;
+              break;
+            case EffectType.boostHp:
+            case EffectType.hp:
+              hp += effect.value;
+              break;
+            case EffectType.mining:
+            case EffectType.woodcutting:
+            case EffectType.fishing:
+            case EffectType.alchemy:
+            case EffectType.heal:
+            case EffectType.haste:
+            case EffectType.restore:
+            case EffectType.gold:
+            case EffectType.teleportX:
+            case EffectType.teleportY:
+            case EffectType.inventorySpace:
+            case EffectType.criticalStrike:
+            case EffectType.wisdom:
+            case EffectType.dmg:
+            case EffectType.prospecting:
+            case EffectType.antipoison:
+            case EffectType.lifesteal:
+            case EffectType.burn:
+            case EffectType.healing:
+            case EffectType.unknown:
+              // Do nothing
+              break;
+          }
+        }
+      }
+    });
+
+    return FightingStats(
+      hp: hp,
+      crit: 0,
+      attackFire: attackFire,
+      attackEarth: attackEarth,
+      attackWater: attackWater,
+      attackAir: attackAir,
+      dmgFire: dmgFire,
+      dmgEarth: dmgEarth,
+      dmgWater: dmgWater,
+      dmgAir: dmgAir,
+      resFire: resFire,
+      resEarth: resEarth,
+      resWater: resWater,
+      resAir: resAir,
+    );
+  }
 
   List<Element> get primaryAttackTypes {
     final elements = [attackFire, attackEarth, attackWater, attackAir]

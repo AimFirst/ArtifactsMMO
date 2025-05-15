@@ -31,7 +31,7 @@ class Skill with EquatableMixin {
 
 enum SkillType {
   overall(
-    'https://artifactsmmo.com/images/items/gift.png',
+    'https://www.artifactsmmo.com/images/items/book_from_hell.png',
     EffectType.unknown,
     ItemSubType.unknown,
   ),
