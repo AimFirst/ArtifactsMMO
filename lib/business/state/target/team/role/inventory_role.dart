@@ -29,7 +29,7 @@ class InventoryRole extends Role {
         character.inventory.items.count(code: itemQuantity.code);
     if (inventoryCount < itemQuantity.quantity) {
       return ProvideResult(
-          providable: Providable.canProvideImmediately,
+          providable: Providable.cannotProvide,
           neededDependencies: [],
           provideMethod: ProvideMethod.inventory,
           countNeededAfterThis: itemQuantity.quantity - inventoryCount);
