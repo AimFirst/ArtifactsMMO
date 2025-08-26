@@ -12,13 +12,9 @@ class _$CharacterFightResponseSchema extends CharacterFightResponseSchema {
 
   factory _$CharacterFightResponseSchema(
           [void Function(CharacterFightResponseSchemaBuilder)? updates]) =>
-      (new CharacterFightResponseSchemaBuilder()..update(updates))._build();
+      (CharacterFightResponseSchemaBuilder()..update(updates))._build();
 
-  _$CharacterFightResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'CharacterFightResponseSchema', 'data');
-  }
-
+  _$CharacterFightResponseSchema._({required this.data}) : super._();
   @override
   CharacterFightResponseSchema rebuild(
           void Function(CharacterFightResponseSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$CharacterFightResponseSchema extends CharacterFightResponseSchema {
 
   @override
   CharacterFightResponseSchemaBuilder toBuilder() =>
-      new CharacterFightResponseSchemaBuilder()..replace(this);
+      CharacterFightResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -58,7 +54,7 @@ class CharacterFightResponseSchemaBuilder
 
   CharacterFightDataSchemaBuilder? _data;
   CharacterFightDataSchemaBuilder get data =>
-      _$this._data ??= new CharacterFightDataSchemaBuilder();
+      _$this._data ??= CharacterFightDataSchemaBuilder();
   set data(CharacterFightDataSchemaBuilder? data) => _$this._data = data;
 
   CharacterFightResponseSchemaBuilder() {
@@ -76,7 +72,6 @@ class CharacterFightResponseSchemaBuilder
 
   @override
   void replace(CharacterFightResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CharacterFightResponseSchema;
   }
 
@@ -91,15 +86,17 @@ class CharacterFightResponseSchemaBuilder
   _$CharacterFightResponseSchema _build() {
     _$CharacterFightResponseSchema _$result;
     try {
-      _$result =
-          _$v ?? new _$CharacterFightResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$CharacterFightResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'CharacterFightResponseSchema', _$failedField, e.toString());
       }
       rethrow;

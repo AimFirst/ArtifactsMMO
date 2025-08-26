@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // Item quantity. Applicable to utilitys only.
+    // Item quantity. Applicable to utilities only.
     // int quantity (default value: 1)
     test('to test the property `quantity`', () async {
       // TODO

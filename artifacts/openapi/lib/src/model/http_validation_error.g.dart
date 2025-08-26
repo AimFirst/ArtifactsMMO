@@ -12,10 +12,9 @@ class _$HTTPValidationError extends HTTPValidationError {
 
   factory _$HTTPValidationError(
           [void Function(HTTPValidationErrorBuilder)? updates]) =>
-      (new HTTPValidationErrorBuilder()..update(updates))._build();
+      (HTTPValidationErrorBuilder()..update(updates))._build();
 
   _$HTTPValidationError._({this.detail}) : super._();
-
   @override
   HTTPValidationError rebuild(
           void Function(HTTPValidationErrorBuilder) updates) =>
@@ -23,7 +22,7 @@ class _$HTTPValidationError extends HTTPValidationError {
 
   @override
   HTTPValidationErrorBuilder toBuilder() =>
-      new HTTPValidationErrorBuilder()..replace(this);
+      HTTPValidationErrorBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -53,7 +52,7 @@ class HTTPValidationErrorBuilder
 
   ListBuilder<ValidationError>? _detail;
   ListBuilder<ValidationError> get detail =>
-      _$this._detail ??= new ListBuilder<ValidationError>();
+      _$this._detail ??= ListBuilder<ValidationError>();
   set detail(ListBuilder<ValidationError>? detail) => _$this._detail = detail;
 
   HTTPValidationErrorBuilder() {
@@ -71,7 +70,6 @@ class HTTPValidationErrorBuilder
 
   @override
   void replace(HTTPValidationError other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$HTTPValidationError;
   }
 
@@ -86,14 +84,17 @@ class HTTPValidationErrorBuilder
   _$HTTPValidationError _build() {
     _$HTTPValidationError _$result;
     try {
-      _$result = _$v ?? new _$HTTPValidationError._(detail: _detail?.build());
+      _$result = _$v ??
+          _$HTTPValidationError._(
+            detail: _detail?.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'detail';
         _detail?.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'HTTPValidationError', _$failedField, e.toString());
       }
       rethrow;

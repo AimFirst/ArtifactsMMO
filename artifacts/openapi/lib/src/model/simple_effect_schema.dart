@@ -13,6 +13,7 @@ part 'simple_effect_schema.g.dart';
 /// Properties:
 /// * [code] - Effect code.
 /// * [value] - Effect value.
+/// * [description] - Description of the effect.
 @BuiltValue()
 abstract class SimpleEffectSchema
     implements Built<SimpleEffectSchema, SimpleEffectSchemaBuilder> {
@@ -23,6 +24,10 @@ abstract class SimpleEffectSchema
   /// Effect value.
   @BuiltValueField(wireName: r'value')
   int get value;
+
+  /// Description of the effect.
+  @BuiltValueField(wireName: r'description')
+  String get description;
 
   SimpleEffectSchema._();
 
@@ -59,6 +64,11 @@ class _$SimpleEffectSchemaSerializer
     yield serializers.serialize(
       object.value,
       specifiedType: const FullType(int),
+    );
+    yield r'description';
+    yield serializers.serialize(
+      object.description,
+      specifiedType: const FullType(String),
     );
   }
 
@@ -98,6 +108,13 @@ class _$SimpleEffectSchemaSerializer
             specifiedType: const FullType(int),
           ) as int;
           result.value = valueDes;
+          break;
+        case r'description':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.description = valueDes;
           break;
         default:
           unhandled.add(key);

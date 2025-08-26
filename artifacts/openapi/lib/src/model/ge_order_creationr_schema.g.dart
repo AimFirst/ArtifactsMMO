@@ -16,19 +16,11 @@ class _$GEOrderCreationrSchema extends GEOrderCreationrSchema {
 
   factory _$GEOrderCreationrSchema(
           [void Function(GEOrderCreationrSchemaBuilder)? updates]) =>
-      (new GEOrderCreationrSchemaBuilder()..update(updates))._build();
+      (GEOrderCreationrSchemaBuilder()..update(updates))._build();
 
   _$GEOrderCreationrSchema._(
       {required this.code, required this.quantity, required this.price})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        code, r'GEOrderCreationrSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        quantity, r'GEOrderCreationrSchema', 'quantity');
-    BuiltValueNullFieldError.checkNotNull(
-        price, r'GEOrderCreationrSchema', 'price');
-  }
-
+      : super._();
   @override
   GEOrderCreationrSchema rebuild(
           void Function(GEOrderCreationrSchemaBuilder) updates) =>
@@ -36,7 +28,7 @@ class _$GEOrderCreationrSchema extends GEOrderCreationrSchema {
 
   @override
   GEOrderCreationrSchemaBuilder toBuilder() =>
-      new GEOrderCreationrSchemaBuilder()..replace(this);
+      GEOrderCreationrSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -100,7 +92,6 @@ class GEOrderCreationrSchemaBuilder
 
   @override
   void replace(GEOrderCreationrSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GEOrderCreationrSchema;
   }
 
@@ -114,13 +105,14 @@ class GEOrderCreationrSchemaBuilder
 
   _$GEOrderCreationrSchema _build() {
     final _$result = _$v ??
-        new _$GEOrderCreationrSchema._(
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'GEOrderCreationrSchema', 'code'),
-            quantity: BuiltValueNullFieldError.checkNotNull(
-                quantity, r'GEOrderCreationrSchema', 'quantity'),
-            price: BuiltValueNullFieldError.checkNotNull(
-                price, r'GEOrderCreationrSchema', 'price'));
+        _$GEOrderCreationrSchema._(
+          code: BuiltValueNullFieldError.checkNotNull(
+              code, r'GEOrderCreationrSchema', 'code'),
+          quantity: BuiltValueNullFieldError.checkNotNull(
+              quantity, r'GEOrderCreationrSchema', 'quantity'),
+          price: BuiltValueNullFieldError.checkNotNull(
+              price, r'GEOrderCreationrSchema', 'price'),
+        );
     replace(_$result);
     return _$result;
   }

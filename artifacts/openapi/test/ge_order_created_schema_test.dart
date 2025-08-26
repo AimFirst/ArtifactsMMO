@@ -43,7 +43,7 @@ void main() {
       // TODO
     });
 
-    // Order creation tax (5%, minimum 1)
+    // Listing tax (3%, minimum 1)
     // int tax
     test('to test the property `tax`', () async {
       // TODO

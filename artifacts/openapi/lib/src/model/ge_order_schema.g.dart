@@ -21,7 +21,7 @@ class _$GEOrderSchema extends GEOrderSchema {
   final DateTime createdAt;
 
   factory _$GEOrderSchema([void Function(GEOrderSchemaBuilder)? updates]) =>
-      (new GEOrderSchemaBuilder()..update(updates))._build();
+      (GEOrderSchemaBuilder()..update(updates))._build();
 
   _$GEOrderSchema._(
       {required this.id,
@@ -30,23 +30,13 @@ class _$GEOrderSchema extends GEOrderSchema {
       required this.quantity,
       required this.price,
       required this.createdAt})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(id, r'GEOrderSchema', 'id');
-    BuiltValueNullFieldError.checkNotNull(seller, r'GEOrderSchema', 'seller');
-    BuiltValueNullFieldError.checkNotNull(code, r'GEOrderSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        quantity, r'GEOrderSchema', 'quantity');
-    BuiltValueNullFieldError.checkNotNull(price, r'GEOrderSchema', 'price');
-    BuiltValueNullFieldError.checkNotNull(
-        createdAt, r'GEOrderSchema', 'createdAt');
-  }
-
+      : super._();
   @override
   GEOrderSchema rebuild(void Function(GEOrderSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  GEOrderSchemaBuilder toBuilder() => new GEOrderSchemaBuilder()..replace(this);
+  GEOrderSchemaBuilder toBuilder() => GEOrderSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -134,7 +124,6 @@ class GEOrderSchemaBuilder
 
   @override
   void replace(GEOrderSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GEOrderSchema;
   }
 
@@ -148,19 +137,19 @@ class GEOrderSchemaBuilder
 
   _$GEOrderSchema _build() {
     final _$result = _$v ??
-        new _$GEOrderSchema._(
-            id: BuiltValueNullFieldError.checkNotNull(
-                id, r'GEOrderSchema', 'id'),
-            seller: BuiltValueNullFieldError.checkNotNull(
-                seller, r'GEOrderSchema', 'seller'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'GEOrderSchema', 'code'),
-            quantity: BuiltValueNullFieldError.checkNotNull(
-                quantity, r'GEOrderSchema', 'quantity'),
-            price: BuiltValueNullFieldError.checkNotNull(
-                price, r'GEOrderSchema', 'price'),
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-                createdAt, r'GEOrderSchema', 'createdAt'));
+        _$GEOrderSchema._(
+          id: BuiltValueNullFieldError.checkNotNull(id, r'GEOrderSchema', 'id'),
+          seller: BuiltValueNullFieldError.checkNotNull(
+              seller, r'GEOrderSchema', 'seller'),
+          code: BuiltValueNullFieldError.checkNotNull(
+              code, r'GEOrderSchema', 'code'),
+          quantity: BuiltValueNullFieldError.checkNotNull(
+              quantity, r'GEOrderSchema', 'quantity'),
+          price: BuiltValueNullFieldError.checkNotNull(
+              price, r'GEOrderSchema', 'price'),
+          createdAt: BuiltValueNullFieldError.checkNotNull(
+              createdAt, r'GEOrderSchema', 'createdAt'),
+        );
     replace(_$result);
     return _$result;
   }

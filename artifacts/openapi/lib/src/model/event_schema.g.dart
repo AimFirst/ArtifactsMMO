@@ -16,39 +16,27 @@ class _$EventSchema extends EventSchema {
   @override
   final BuiltList<EventMapSchema> maps;
   @override
-  final String skin;
-  @override
   final int duration;
   @override
   final int rate;
 
   factory _$EventSchema([void Function(EventSchemaBuilder)? updates]) =>
-      (new EventSchemaBuilder()..update(updates))._build();
+      (EventSchemaBuilder()..update(updates))._build();
 
   _$EventSchema._(
       {required this.name,
       required this.code,
       required this.content,
       required this.maps,
-      required this.skin,
       required this.duration,
       required this.rate})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(name, r'EventSchema', 'name');
-    BuiltValueNullFieldError.checkNotNull(code, r'EventSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(content, r'EventSchema', 'content');
-    BuiltValueNullFieldError.checkNotNull(maps, r'EventSchema', 'maps');
-    BuiltValueNullFieldError.checkNotNull(skin, r'EventSchema', 'skin');
-    BuiltValueNullFieldError.checkNotNull(duration, r'EventSchema', 'duration');
-    BuiltValueNullFieldError.checkNotNull(rate, r'EventSchema', 'rate');
-  }
-
+      : super._();
   @override
   EventSchema rebuild(void Function(EventSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  EventSchemaBuilder toBuilder() => new EventSchemaBuilder()..replace(this);
+  EventSchemaBuilder toBuilder() => EventSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -58,7 +46,6 @@ class _$EventSchema extends EventSchema {
         code == other.code &&
         content == other.content &&
         maps == other.maps &&
-        skin == other.skin &&
         duration == other.duration &&
         rate == other.rate;
   }
@@ -70,7 +57,6 @@ class _$EventSchema extends EventSchema {
     _$hash = $jc(_$hash, code.hashCode);
     _$hash = $jc(_$hash, content.hashCode);
     _$hash = $jc(_$hash, maps.hashCode);
-    _$hash = $jc(_$hash, skin.hashCode);
     _$hash = $jc(_$hash, duration.hashCode);
     _$hash = $jc(_$hash, rate.hashCode);
     _$hash = $jf(_$hash);
@@ -84,7 +70,6 @@ class _$EventSchema extends EventSchema {
           ..add('code', code)
           ..add('content', content)
           ..add('maps', maps)
-          ..add('skin', skin)
           ..add('duration', duration)
           ..add('rate', rate))
         .toString();
@@ -104,17 +89,13 @@ class EventSchemaBuilder implements Builder<EventSchema, EventSchemaBuilder> {
 
   EventContentSchemaBuilder? _content;
   EventContentSchemaBuilder get content =>
-      _$this._content ??= new EventContentSchemaBuilder();
+      _$this._content ??= EventContentSchemaBuilder();
   set content(EventContentSchemaBuilder? content) => _$this._content = content;
 
   ListBuilder<EventMapSchema>? _maps;
   ListBuilder<EventMapSchema> get maps =>
-      _$this._maps ??= new ListBuilder<EventMapSchema>();
+      _$this._maps ??= ListBuilder<EventMapSchema>();
   set maps(ListBuilder<EventMapSchema>? maps) => _$this._maps = maps;
-
-  String? _skin;
-  String? get skin => _$this._skin;
-  set skin(String? skin) => _$this._skin = skin;
 
   int? _duration;
   int? get duration => _$this._duration;
@@ -135,7 +116,6 @@ class EventSchemaBuilder implements Builder<EventSchema, EventSchemaBuilder> {
       _code = $v.code;
       _content = $v.content.toBuilder();
       _maps = $v.maps.toBuilder();
-      _skin = $v.skin;
       _duration = $v.duration;
       _rate = $v.rate;
       _$v = null;
@@ -145,7 +125,6 @@ class EventSchemaBuilder implements Builder<EventSchema, EventSchemaBuilder> {
 
   @override
   void replace(EventSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EventSchema;
   }
 
@@ -161,19 +140,18 @@ class EventSchemaBuilder implements Builder<EventSchema, EventSchemaBuilder> {
     _$EventSchema _$result;
     try {
       _$result = _$v ??
-          new _$EventSchema._(
-              name: BuiltValueNullFieldError.checkNotNull(
-                  name, r'EventSchema', 'name'),
-              code: BuiltValueNullFieldError.checkNotNull(
-                  code, r'EventSchema', 'code'),
-              content: content.build(),
-              maps: maps.build(),
-              skin: BuiltValueNullFieldError.checkNotNull(
-                  skin, r'EventSchema', 'skin'),
-              duration: BuiltValueNullFieldError.checkNotNull(
-                  duration, r'EventSchema', 'duration'),
-              rate: BuiltValueNullFieldError.checkNotNull(
-                  rate, r'EventSchema', 'rate'));
+          _$EventSchema._(
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, r'EventSchema', 'name'),
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'EventSchema', 'code'),
+            content: content.build(),
+            maps: maps.build(),
+            duration: BuiltValueNullFieldError.checkNotNull(
+                duration, r'EventSchema', 'duration'),
+            rate: BuiltValueNullFieldError.checkNotNull(
+                rate, r'EventSchema', 'rate'),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -182,7 +160,7 @@ class EventSchemaBuilder implements Builder<EventSchema, EventSchemaBuilder> {
         _$failedField = 'maps';
         maps.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'EventSchema', _$failedField, e.toString());
       }
       rethrow;

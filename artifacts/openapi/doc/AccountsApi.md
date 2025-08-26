@@ -10,9 +10,11 @@ All URIs are relative to *http://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createAccountAccountsCreatePost**](AccountsApi.md#createaccountaccountscreatepost) | **POST** /accounts/create | Create Account
+[**forgotPasswordAccountsForgotPasswordPost**](AccountsApi.md#forgotpasswordaccountsforgotpasswordpost) | **POST** /accounts/forgot_password | Forgot Password
 [**getAccountAccountsAccountGet**](AccountsApi.md#getaccountaccountsaccountget) | **GET** /accounts/{account} | Get Account
 [**getAccountAchievementsAccountsAccountAchievementsGet**](AccountsApi.md#getaccountachievementsaccountsaccountachievementsget) | **GET** /accounts/{account}/achievements | Get Account Achievements
 [**getAccountCharactersAccountsAccountCharactersGet**](AccountsApi.md#getaccountcharactersaccountsaccountcharactersget) | **GET** /accounts/{account}/characters | Get Account Characters
+[**resetPasswordAccountsResetPasswordPost**](AccountsApi.md#resetpasswordaccountsresetpasswordpost) | **POST** /accounts/reset_password | Reset Password
 
 
 # **createAccountAccountsCreatePost**
@@ -44,6 +46,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ResponseSchema**](ResponseSchema.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **forgotPasswordAccountsForgotPasswordPost**
+> PasswordResetResponseSchema forgotPasswordAccountsForgotPasswordPost(passwordResetRequestSchema)
+
+Forgot Password
+
+Request a password reset.
+
+### Example
+```dart
+import 'package:artifacts_api/api.dart';
+
+final api = ArtifactsApi().getAccountsApi();
+final PasswordResetRequestSchema passwordResetRequestSchema = ; // PasswordResetRequestSchema | 
+
+try {
+    final response = api.forgotPasswordAccountsForgotPasswordPost(passwordResetRequestSchema);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AccountsApi->forgotPasswordAccountsForgotPasswordPost: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **passwordResetRequestSchema** | [**PasswordResetRequestSchema**](PasswordResetRequestSchema.md)|  | 
+
+### Return type
+
+[**PasswordResetResponseSchema**](PasswordResetResponseSchema.md)
 
 ### Authorization
 
@@ -189,6 +234,49 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **resetPasswordAccountsResetPasswordPost**
+> PasswordResetResponseSchema resetPasswordAccountsResetPasswordPost(passwordResetConfirmSchema)
+
+Reset Password
+
+Reset password with a token. Use /forgot_password to get a token by email.
+
+### Example
+```dart
+import 'package:artifacts_api/api.dart';
+
+final api = ArtifactsApi().getAccountsApi();
+final PasswordResetConfirmSchema passwordResetConfirmSchema = ; // PasswordResetConfirmSchema | 
+
+try {
+    final response = api.resetPasswordAccountsResetPasswordPost(passwordResetConfirmSchema);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AccountsApi->resetPasswordAccountsResetPasswordPost: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **passwordResetConfirmSchema** | [**PasswordResetConfirmSchema**](PasswordResetConfirmSchema.md)|  | 
+
+### Return type
+
+[**PasswordResetResponseSchema**](PasswordResetResponseSchema.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

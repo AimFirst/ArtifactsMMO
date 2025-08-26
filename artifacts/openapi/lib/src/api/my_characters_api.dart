@@ -12,6 +12,8 @@ import 'package:artifacts_api/src/api_util.dart';
 import 'package:artifacts_api/src/model/bank_extension_transaction_response_schema.dart';
 import 'package:artifacts_api/src/model/bank_gold_transaction_response_schema.dart';
 import 'package:artifacts_api/src/model/bank_item_transaction_response_schema.dart';
+import 'package:artifacts_api/src/model/change_skin_character_schema.dart';
+import 'package:artifacts_api/src/model/change_skin_response_schema.dart';
 import 'package:artifacts_api/src/model/character_fight_response_schema.dart';
 import 'package:artifacts_api/src/model/character_movement_response_schema.dart';
 import 'package:artifacts_api/src/model/character_rest_response_schema.dart';
@@ -27,6 +29,10 @@ import 'package:artifacts_api/src/model/ge_cancel_order_schema.dart';
 import 'package:artifacts_api/src/model/ge_create_order_transaction_response_schema.dart';
 import 'package:artifacts_api/src/model/ge_order_creationr_schema.dart';
 import 'package:artifacts_api/src/model/ge_transaction_response_schema.dart';
+import 'package:artifacts_api/src/model/give_gold_reponse_schema.dart';
+import 'package:artifacts_api/src/model/give_gold_schema.dart';
+import 'package:artifacts_api/src/model/give_item_reponse_schema.dart';
+import 'package:artifacts_api/src/model/give_items_schema.dart';
 import 'package:artifacts_api/src/model/my_characters_list_schema.dart';
 import 'package:artifacts_api/src/model/npc_merchant_buy_schema.dart';
 import 'package:artifacts_api/src/model/npc_merchant_transaction_response_schema.dart';
@@ -40,6 +46,7 @@ import 'package:artifacts_api/src/model/task_response_schema.dart';
 import 'package:artifacts_api/src/model/task_trade_response_schema.dart';
 import 'package:artifacts_api/src/model/unequip_schema.dart';
 import 'package:artifacts_api/src/model/use_item_response_schema.dart';
+import 'package:built_collection/built_collection.dart';
 
 class MyCharactersApi {
   final Dio _dio;
@@ -135,7 +142,7 @@ class MyCharactersApi {
   }
 
   /// Action Buy Bank Expansion
-  /// Buy a 20 slots bank expansion.
+  /// Buy a 25 slots bank expansion.
   ///
   /// Parameters:
   /// * [name] - Name of your character.
@@ -210,6 +217,114 @@ class MyCharactersApi {
     }
 
     return Response<BankExtensionTransactionResponseSchema>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// Action Change Skin
+  /// Change the skin of your character.
+  ///
+  /// Parameters:
+  /// * [name] - Name of your character.
+  /// * [changeSkinCharacterSchema]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [ChangeSkinResponseSchema] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<ChangeSkinResponseSchema>>
+      actionChangeSkinMyNameActionChangeSkinPost({
+    required String name,
+    required ChangeSkinCharacterSchema changeSkinCharacterSchema,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/my/{name}/action/change_skin'.replaceAll(
+        '{' r'name' '}',
+        encodeQueryParameter(_serializers, name, const FullType(String))
+            .toString());
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'JWTBearer',
+          },
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      const _type = FullType(ChangeSkinCharacterSchema);
+      _bodyData = _serializers.serialize(changeSkinCharacterSchema,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    ChangeSkinResponseSchema? _responseData;
+
+    try {
+      final rawResponse = _response.data;
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(ChangeSkinResponseSchema),
+            ) as ChangeSkinResponseSchema;
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<ChangeSkinResponseSchema>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -629,8 +744,8 @@ class MyCharactersApi {
     );
   }
 
-  /// Action Deposit Bank
-  /// Deposit an item in a bank on the character&#39;s map.
+  /// Action Deposit Bank Item
+  /// Deposit multiple items in a bank on the character&#39;s map. The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
   ///
   /// Parameters:
   /// * [name] - Name of your character.
@@ -645,9 +760,9 @@ class MyCharactersApi {
   /// Returns a [Future] containing a [Response] with a [BankItemTransactionResponseSchema] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<BankItemTransactionResponseSchema>>
-      actionDepositBankMyNameActionBankDepositPost({
+      actionDepositBankItemMyNameActionBankDepositItemPost({
     required String name,
-    required SimpleItemSchema simpleItemSchema,
+    required BuiltList<SimpleItemSchema> simpleItemSchema,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -655,7 +770,7 @@ class MyCharactersApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/my/{name}/action/bank/deposit'.replaceAll(
+    final _path = r'/my/{name}/action/bank/deposit/item'.replaceAll(
         '{' r'name' '}',
         encodeQueryParameter(_serializers, name, const FullType(String))
             .toString());
@@ -681,7 +796,7 @@ class MyCharactersApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(SimpleItemSchema);
+      const _type = FullType(BuiltList, [FullType(SimpleItemSchema)]);
       _bodyData =
           _serializers.serialize(simpleItemSchema, specifiedType: _type);
     } catch (error, stackTrace) {
@@ -1330,6 +1445,220 @@ class MyCharactersApi {
     }
 
     return Response<GECreateOrderTransactionResponseSchema>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// Action Give Gold
+  /// Give gold to another character in your account on the same map.
+  ///
+  /// Parameters:
+  /// * [name] - Name of your character.
+  /// * [giveGoldSchema]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [GiveGoldReponseSchema] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<GiveGoldReponseSchema>>
+      actionGiveGoldMyNameActionGiveGoldPost({
+    required String name,
+    required GiveGoldSchema giveGoldSchema,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/my/{name}/action/give/gold'.replaceAll(
+        '{' r'name' '}',
+        encodeQueryParameter(_serializers, name, const FullType(String))
+            .toString());
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'JWTBearer',
+          },
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      const _type = FullType(GiveGoldSchema);
+      _bodyData = _serializers.serialize(giveGoldSchema, specifiedType: _type);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    GiveGoldReponseSchema? _responseData;
+
+    try {
+      final rawResponse = _response.data;
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(GiveGoldReponseSchema),
+            ) as GiveGoldReponseSchema;
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<GiveGoldReponseSchema>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// Action Give Items
+  /// Give items to another character in your account on the same map. The cooldown will be 3 seconds multiplied by the number of different items given.
+  ///
+  /// Parameters:
+  /// * [name] - Name of your character.
+  /// * [giveItemsSchema]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [GiveItemReponseSchema] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<GiveItemReponseSchema>>
+      actionGiveItemsMyNameActionGiveItemPost({
+    required String name,
+    required GiveItemsSchema giveItemsSchema,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/my/{name}/action/give/item'.replaceAll(
+        '{' r'name' '}',
+        encodeQueryParameter(_serializers, name, const FullType(String))
+            .toString());
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'JWTBearer',
+          },
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      const _type = FullType(GiveItemsSchema);
+      _bodyData = _serializers.serialize(giveItemsSchema, specifiedType: _type);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    GiveItemReponseSchema? _responseData;
+
+    try {
+      final rawResponse = _response.data;
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(GiveItemReponseSchema),
+            ) as GiveItemReponseSchema;
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<GiveItemReponseSchema>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -2461,8 +2790,8 @@ class MyCharactersApi {
     );
   }
 
-  /// Action Withdraw Bank
-  /// Take an item from your bank and put it in the character&#39;s inventory.
+  /// Action Withdraw Bank Item
+  /// Take items from your bank and put them in the character&#39;s inventory. The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
   ///
   /// Parameters:
   /// * [name] - Name of your character.
@@ -2477,9 +2806,9 @@ class MyCharactersApi {
   /// Returns a [Future] containing a [Response] with a [BankItemTransactionResponseSchema] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<BankItemTransactionResponseSchema>>
-      actionWithdrawBankMyNameActionBankWithdrawPost({
+      actionWithdrawBankItemMyNameActionBankWithdrawItemPost({
     required String name,
-    required SimpleItemSchema simpleItemSchema,
+    required BuiltList<SimpleItemSchema> simpleItemSchema,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -2487,7 +2816,7 @@ class MyCharactersApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/my/{name}/action/bank/withdraw'.replaceAll(
+    final _path = r'/my/{name}/action/bank/withdraw/item'.replaceAll(
         '{' r'name' '}',
         encodeQueryParameter(_serializers, name, const FullType(String))
             .toString());
@@ -2513,7 +2842,7 @@ class MyCharactersApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(SimpleItemSchema);
+      const _type = FullType(BuiltList, [FullType(SimpleItemSchema)]);
       _bodyData =
           _serializers.serialize(simpleItemSchema, specifiedType: _type);
     } catch (error, stackTrace) {
@@ -2759,7 +3088,7 @@ class MyCharactersApi {
   }
 
   /// Get My Characters
-  /// List of your characters. This endpoint is deprecated and will be removed in a future version. Please use accounts/{account}/characters.
+  /// List of your characters.
   ///
   /// Parameters:
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation

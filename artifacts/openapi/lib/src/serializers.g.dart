@@ -6,7 +6,7 @@ part of 'serializers.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializers _$serializers = (new Serializers().toBuilder()
+Serializers _$serializers = (Serializers().toBuilder()
       ..add(AccountAchievementSchema.serializer)
       ..add(AccountDetails.serializer)
       ..add(AccountDetailsSchema.serializer)
@@ -34,8 +34,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(BankItemTransactionSchema.serializer)
       ..add(BankResponseSchema.serializer)
       ..add(BankSchema.serializer)
-      ..add(BlockedHitsSchema.serializer)
       ..add(ChangePassword.serializer)
+      ..add(ChangeSkinCharacterDataSchema.serializer)
+      ..add(ChangeSkinCharacterSchema.serializer)
+      ..add(ChangeSkinResponseSchema.serializer)
       ..add(CharacterFightDataSchema.serializer)
       ..add(CharacterFightResponseSchema.serializer)
       ..add(CharacterLeaderboardSchema.serializer)
@@ -48,6 +50,8 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(CharacterSchema.serializer)
       ..add(CharacterSkin.serializer)
       ..add(CharactersListSchema.serializer)
+      ..add(ConditionOperator.serializer)
+      ..add(ConditionSchema.serializer)
       ..add(CooldownSchema.serializer)
       ..add(CraftSchema.serializer)
       ..add(CraftSkill.serializer)
@@ -104,6 +108,12 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GETransactionSchema.serializer)
       ..add(GatheringSkill.serializer)
       ..add(GeOrderHistorySchema.serializer)
+      ..add(GiveGoldDataSchema.serializer)
+      ..add(GiveGoldReponseSchema.serializer)
+      ..add(GiveGoldSchema.serializer)
+      ..add(GiveItemDataSchema.serializer)
+      ..add(GiveItemReponseSchema.serializer)
+      ..add(GiveItemsSchema.serializer)
       ..add(GoldSchema.serializer)
       ..add(HTTPValidationError.serializer)
       ..add(InventorySlot.serializer)
@@ -130,6 +140,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(NpcMerchantBuySchema.serializer)
       ..add(NpcMerchantTransactionResponseSchema.serializer)
       ..add(NpcMerchantTransactionSchema.serializer)
+      ..add(PasswordResetConfirmSchema.serializer)
+      ..add(PasswordResetRequestSchema.serializer)
+      ..add(PasswordResetResponseSchema.serializer)
+      ..add(RateLimitSchema.serializer)
       ..add(RecyclingDataSchema.serializer)
       ..add(RecyclingItemsSchema.serializer)
       ..add(RecyclingResponseSchema.serializer)
@@ -141,6 +155,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(RewardDataSchema.serializer)
       ..add(RewardResponseSchema.serializer)
       ..add(RewardsSchema.serializer)
+      ..add(SeasonBadgeSchema.serializer)
+      ..add(SeasonSchema.serializer)
+      ..add(SeasonSkinSchema.serializer)
       ..add(SimpleEffectSchema.serializer)
       ..add(SimpleItemSchema.serializer)
       ..add(Skill.serializer)
@@ -169,134 +186,163 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(AccountAchievementSchema)]),
-          () => new ListBuilder<AccountAchievementSchema>())
+          () => ListBuilder<AccountAchievementSchema>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(AccountLeaderboardSchema)]),
-          () => new ListBuilder<AccountLeaderboardSchema>())
+          () => ListBuilder<AccountLeaderboardSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(AchievementSchema)]),
-          () => new ListBuilder<AchievementSchema>())
+          () => ListBuilder<AchievementSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(ActiveEventSchema)]),
-          () => new ListBuilder<ActiveEventSchema>())
+          () => ListBuilder<ActiveEventSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(AnnouncementSchema)]),
-          () => new ListBuilder<AnnouncementSchema>())
+          () => ListBuilder<AnnouncementSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(RateLimitSchema)]),
+          () => ListBuilder<RateLimitSchema>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(BadgeConditionSchema)]),
-          () => new ListBuilder<BadgeConditionSchema>())
+          () => ListBuilder<BadgeConditionSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(BadgeSchema)]),
-          () => new ListBuilder<BadgeSchema>())
+          () => ListBuilder<BadgeSchema>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(CharacterLeaderboardSchema)]),
-          () => new ListBuilder<CharacterLeaderboardSchema>())
+          () => ListBuilder<CharacterLeaderboardSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(CharacterSchema)]),
-          () => new ListBuilder<CharacterSchema>())
+          () => ListBuilder<CharacterSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(CharacterSchema)]),
-          () => new ListBuilder<CharacterSchema>())
+          () => ListBuilder<CharacterSchema>())
       ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(DropRateSchema)]),
-          () => new ListBuilder<DropRateSchema>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(DropRateSchema)]),
-          () => new ListBuilder<DropRateSchema>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(DropRateSchema)]),
-          () => new ListBuilder<DropRateSchema>())
+          const FullType(BuiltList, const [const FullType(ConditionSchema)]),
+          () => ListBuilder<ConditionSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SimpleEffectSchema)]),
-          () => new ListBuilder<SimpleEffectSchema>())
+          () => ListBuilder<SimpleEffectSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(DropRateSchema)]),
+          () => ListBuilder<DropRateSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(DropRateSchema)]),
+          () => ListBuilder<DropRateSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(DropRateSchema)]),
+          () => ListBuilder<DropRateSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SimpleEffectSchema)]),
+          () => ListBuilder<SimpleEffectSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(DropSchema)]),
-          () => new ListBuilder<DropSchema>())
+          () => ListBuilder<DropSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(DropSchema)]),
-          () => new ListBuilder<DropSchema>())
+          () => ListBuilder<DropSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(DropSchema)]),
-          () => new ListBuilder<DropSchema>())
+          () => ListBuilder<DropSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
-          () => new ListBuilder<String>())
+          () => ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(EffectSchema)]),
-          () => new ListBuilder<EffectSchema>())
+          () => ListBuilder<EffectSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(EventMapSchema)]),
-          () => new ListBuilder<EventMapSchema>())
+          () => ListBuilder<EventMapSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(EventSchema)]),
-          () => new ListBuilder<EventSchema>())
+          () => ListBuilder<EventSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GEOrderSchema)]),
-          () => new ListBuilder<GEOrderSchema>())
+          () => ListBuilder<GEOrderSchema>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(GeOrderHistorySchema)]),
-          () => new ListBuilder<GeOrderHistorySchema>())
+          () => ListBuilder<GeOrderHistorySchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(InventorySlot)]),
-          () => new ListBuilder<InventorySlot>())
+          () => ListBuilder<InventorySlot>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(ItemSchema)]),
-          () => new ListBuilder<ItemSchema>())
+          () => ListBuilder<ItemSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(LogSchema)]),
-          () => new ListBuilder<LogSchema>())
+          () => ListBuilder<LogSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(MapSchema)]),
-          () => new ListBuilder<MapSchema>())
+          () => ListBuilder<MapSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(MonsterSchema)]),
-          () => new ListBuilder<MonsterSchema>())
+          () => ListBuilder<MonsterSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(NPCItem)]),
-          () => new ListBuilder<NPCItem>())
+          () => ListBuilder<NPCItem>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(NPCSchema)]),
-          () => new ListBuilder<NPCSchema>())
+          () => ListBuilder<NPCSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(ResourceSchema)]),
-          () => new ListBuilder<ResourceSchema>())
+          () => ListBuilder<ResourceSchema>())
       ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(SimpleEffectSchema)]),
-          () => new ListBuilder<SimpleEffectSchema>())
+          const FullType(BuiltList, const [const FullType(SeasonBadgeSchema)]),
+          () => ListBuilder<SeasonBadgeSchema>())
       ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
-          () => new ListBuilder<SimpleItemSchema>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
-          () => new ListBuilder<SimpleItemSchema>())
+          const FullType(BuiltList, const [const FullType(SeasonSkinSchema)]),
+          () => ListBuilder<SeasonSkinSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
-          () => new ListBuilder<SimpleItemSchema>())
+          () => ListBuilder<SimpleItemSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
-          () => new ListBuilder<SimpleItemSchema>())
+          () => ListBuilder<SimpleItemSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
+          () => ListBuilder<SimpleItemSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
+          () => ListBuilder<SimpleItemSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
+          () => ListBuilder<SimpleItemSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
+          () => ListBuilder<SimpleItemSchema>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SimpleItemSchema)]),
+          () => ListBuilder<SimpleItemSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(TaskFullSchema)]),
-          () => new ListBuilder<TaskFullSchema>())
+          () => ListBuilder<TaskFullSchema>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(ValidationError)]),
-          () => new ListBuilder<ValidationError>())
+          () => ListBuilder<ValidationError>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(ValidationErrorLocInner)]),
-          () => new ListBuilder<ValidationErrorLocInner>())
+          () => ListBuilder<ValidationErrorLocInner>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType.nullable(JsonObject)]),
-          () => new ListBuilder<JsonObject?>())
+          () => ListBuilder<JsonObject?>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType.nullable(JsonObject)]),
-          () => new ListBuilder<JsonObject?>()))
+          () => ListBuilder<JsonObject?>())
+      ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType.nullable(JsonObject)]),
+          () => ListBuilder<JsonObject?>())
+      ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType.nullable(JsonObject)]),
+          () => ListBuilder<JsonObject?>()))
     .build();
 
 // ignore_for_file: deprecated_member_use_from_same_package,type=lint

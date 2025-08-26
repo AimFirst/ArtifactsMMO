@@ -12,13 +12,9 @@ class _$TaskFullResponseSchema extends TaskFullResponseSchema {
 
   factory _$TaskFullResponseSchema(
           [void Function(TaskFullResponseSchemaBuilder)? updates]) =>
-      (new TaskFullResponseSchemaBuilder()..update(updates))._build();
+      (TaskFullResponseSchemaBuilder()..update(updates))._build();
 
-  _$TaskFullResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'TaskFullResponseSchema', 'data');
-  }
-
+  _$TaskFullResponseSchema._({required this.data}) : super._();
   @override
   TaskFullResponseSchema rebuild(
           void Function(TaskFullResponseSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$TaskFullResponseSchema extends TaskFullResponseSchema {
 
   @override
   TaskFullResponseSchemaBuilder toBuilder() =>
-      new TaskFullResponseSchemaBuilder()..replace(this);
+      TaskFullResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -55,8 +51,7 @@ class TaskFullResponseSchemaBuilder
   _$TaskFullResponseSchema? _$v;
 
   TaskFullSchemaBuilder? _data;
-  TaskFullSchemaBuilder get data =>
-      _$this._data ??= new TaskFullSchemaBuilder();
+  TaskFullSchemaBuilder get data => _$this._data ??= TaskFullSchemaBuilder();
   set data(TaskFullSchemaBuilder? data) => _$this._data = data;
 
   TaskFullResponseSchemaBuilder() {
@@ -74,7 +69,6 @@ class TaskFullResponseSchemaBuilder
 
   @override
   void replace(TaskFullResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskFullResponseSchema;
   }
 
@@ -89,14 +83,17 @@ class TaskFullResponseSchemaBuilder
   _$TaskFullResponseSchema _build() {
     _$TaskFullResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$TaskFullResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$TaskFullResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'TaskFullResponseSchema', _$failedField, e.toString());
       }
       rethrow;

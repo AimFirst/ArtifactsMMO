@@ -25,6 +25,12 @@ void main() {
       // TODO
     });
 
+    // Member status.
+    // AccountStatus status
+    test('to test the property `status`', () async {
+      // TODO
+    });
+
     // Character skin code.
     // String skin
     test('to test the property `skin`', () async {

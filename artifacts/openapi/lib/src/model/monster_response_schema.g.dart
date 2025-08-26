@@ -12,13 +12,9 @@ class _$MonsterResponseSchema extends MonsterResponseSchema {
 
   factory _$MonsterResponseSchema(
           [void Function(MonsterResponseSchemaBuilder)? updates]) =>
-      (new MonsterResponseSchemaBuilder()..update(updates))._build();
+      (MonsterResponseSchemaBuilder()..update(updates))._build();
 
-  _$MonsterResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'MonsterResponseSchema', 'data');
-  }
-
+  _$MonsterResponseSchema._({required this.data}) : super._();
   @override
   MonsterResponseSchema rebuild(
           void Function(MonsterResponseSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$MonsterResponseSchema extends MonsterResponseSchema {
 
   @override
   MonsterResponseSchemaBuilder toBuilder() =>
-      new MonsterResponseSchemaBuilder()..replace(this);
+      MonsterResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -55,7 +51,7 @@ class MonsterResponseSchemaBuilder
   _$MonsterResponseSchema? _$v;
 
   MonsterSchemaBuilder? _data;
-  MonsterSchemaBuilder get data => _$this._data ??= new MonsterSchemaBuilder();
+  MonsterSchemaBuilder get data => _$this._data ??= MonsterSchemaBuilder();
   set data(MonsterSchemaBuilder? data) => _$this._data = data;
 
   MonsterResponseSchemaBuilder() {
@@ -73,7 +69,6 @@ class MonsterResponseSchemaBuilder
 
   @override
   void replace(MonsterResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$MonsterResponseSchema;
   }
 
@@ -88,14 +83,17 @@ class MonsterResponseSchemaBuilder
   _$MonsterResponseSchema _build() {
     _$MonsterResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$MonsterResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$MonsterResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'MonsterResponseSchema', _$failedField, e.toString());
       }
       rethrow;

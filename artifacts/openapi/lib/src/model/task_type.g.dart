@@ -16,11 +16,11 @@ TaskType _$valueOf(String name) {
     case 'items':
       return _$items;
     default:
-      throw new ArgumentError(name);
+      throw ArgumentError(name);
   }
 }
 
-final BuiltSet<TaskType> _$values = new BuiltSet<TaskType>(const <TaskType>[
+final BuiltSet<TaskType> _$values = BuiltSet<TaskType>(const <TaskType>[
   _$monsters,
   _$items,
 ]);
@@ -38,7 +38,7 @@ abstract class _$TaskTypeMixin {
   _$TaskTypeMeta get TaskType => const _$TaskTypeMeta();
 }
 
-Serializer<TaskType> _$taskTypeSerializer = new _$TaskTypeSerializer();
+Serializer<TaskType> _$taskTypeSerializer = _$TaskTypeSerializer();
 
 class _$TaskTypeSerializer implements PrimitiveSerializer<TaskType> {
   static const Map<String, Object> _toWire = const <String, Object>{

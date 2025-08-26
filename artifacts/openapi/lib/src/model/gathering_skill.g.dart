@@ -22,12 +22,12 @@ GatheringSkill _$valueOf(String name) {
     case 'alchemy':
       return _$alchemy;
     default:
-      throw new ArgumentError(name);
+      throw ArgumentError(name);
   }
 }
 
 final BuiltSet<GatheringSkill> _$values =
-    new BuiltSet<GatheringSkill>(const <GatheringSkill>[
+    BuiltSet<GatheringSkill>(const <GatheringSkill>[
   _$mining,
   _$woodcutting,
   _$fishing,
@@ -50,7 +50,7 @@ abstract class _$GatheringSkillMixin {
 }
 
 Serializer<GatheringSkill> _$gatheringSkillSerializer =
-    new _$GatheringSkillSerializer();
+    _$GatheringSkillSerializer();
 
 class _$GatheringSkillSerializer
     implements PrimitiveSerializer<GatheringSkill> {

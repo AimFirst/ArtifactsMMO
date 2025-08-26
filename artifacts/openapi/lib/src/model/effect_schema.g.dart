@@ -19,7 +19,7 @@ class _$EffectSchema extends EffectSchema {
   final EffectSubtype subtype;
 
   factory _$EffectSchema([void Function(EffectSchemaBuilder)? updates]) =>
-      (new EffectSchemaBuilder()..update(updates))._build();
+      (EffectSchemaBuilder()..update(updates))._build();
 
   _$EffectSchema._(
       {required this.name,
@@ -27,21 +27,13 @@ class _$EffectSchema extends EffectSchema {
       required this.description,
       required this.type,
       required this.subtype})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(name, r'EffectSchema', 'name');
-    BuiltValueNullFieldError.checkNotNull(code, r'EffectSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        description, r'EffectSchema', 'description');
-    BuiltValueNullFieldError.checkNotNull(type, r'EffectSchema', 'type');
-    BuiltValueNullFieldError.checkNotNull(subtype, r'EffectSchema', 'subtype');
-  }
-
+      : super._();
   @override
   EffectSchema rebuild(void Function(EffectSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  EffectSchemaBuilder toBuilder() => new EffectSchemaBuilder()..replace(this);
+  EffectSchemaBuilder toBuilder() => EffectSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -121,7 +113,6 @@ class EffectSchemaBuilder
 
   @override
   void replace(EffectSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EffectSchema;
   }
 
@@ -135,17 +126,18 @@ class EffectSchemaBuilder
 
   _$EffectSchema _build() {
     final _$result = _$v ??
-        new _$EffectSchema._(
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'EffectSchema', 'name'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'EffectSchema', 'code'),
-            description: BuiltValueNullFieldError.checkNotNull(
-                description, r'EffectSchema', 'description'),
-            type: BuiltValueNullFieldError.checkNotNull(
-                type, r'EffectSchema', 'type'),
-            subtype: BuiltValueNullFieldError.checkNotNull(
-                subtype, r'EffectSchema', 'subtype'));
+        _$EffectSchema._(
+          name: BuiltValueNullFieldError.checkNotNull(
+              name, r'EffectSchema', 'name'),
+          code: BuiltValueNullFieldError.checkNotNull(
+              code, r'EffectSchema', 'code'),
+          description: BuiltValueNullFieldError.checkNotNull(
+              description, r'EffectSchema', 'description'),
+          type: BuiltValueNullFieldError.checkNotNull(
+              type, r'EffectSchema', 'type'),
+          subtype: BuiltValueNullFieldError.checkNotNull(
+              subtype, r'EffectSchema', 'subtype'),
+        );
     replace(_$result);
     return _$result;
   }

@@ -13,21 +13,21 @@ void main() {
       // TODO
     });
 
-    // Code of the event. This is the event's unique identifier (ID).
+    // Code of the event.
     // String code
     test('to test the property `code`', () async {
+      // TODO
+    });
+
+    // Content of the event.
+    // EventContentSchema content
+    test('to test the property `content`', () async {
       // TODO
     });
 
     // Map list of the event.
     // BuiltList<EventMapSchema> maps
     test('to test the property `maps`', () async {
-      // TODO
-    });
-
-    // Map skin of the event.
-    // String skin
-    test('to test the property `skin`', () async {
       // TODO
     });
 
@@ -40,12 +40,6 @@ void main() {
     // Rate spawn of the event. (1/rate every minute)
     // int rate
     test('to test the property `rate`', () async {
-      // TODO
-    });
-
-    // Content of the event.
-    // EventContentSchema content
-    test('to test the property `content`', () async {
       // TODO
     });
   });

@@ -30,5 +30,11 @@ void main() {
     test('to test the property `achievementsPoints`', () async {
       // TODO
     });
+
+    // Gold in the account.
+    // int gold
+    test('to test the property `gold`', () async {
+      // TODO
+    });
   });
 }

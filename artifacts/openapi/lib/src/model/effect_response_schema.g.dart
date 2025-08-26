@@ -12,13 +12,9 @@ class _$EffectResponseSchema extends EffectResponseSchema {
 
   factory _$EffectResponseSchema(
           [void Function(EffectResponseSchemaBuilder)? updates]) =>
-      (new EffectResponseSchemaBuilder()..update(updates))._build();
+      (EffectResponseSchemaBuilder()..update(updates))._build();
 
-  _$EffectResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'EffectResponseSchema', 'data');
-  }
-
+  _$EffectResponseSchema._({required this.data}) : super._();
   @override
   EffectResponseSchema rebuild(
           void Function(EffectResponseSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$EffectResponseSchema extends EffectResponseSchema {
 
   @override
   EffectResponseSchemaBuilder toBuilder() =>
-      new EffectResponseSchemaBuilder()..replace(this);
+      EffectResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -55,7 +51,7 @@ class EffectResponseSchemaBuilder
   _$EffectResponseSchema? _$v;
 
   EffectSchemaBuilder? _data;
-  EffectSchemaBuilder get data => _$this._data ??= new EffectSchemaBuilder();
+  EffectSchemaBuilder get data => _$this._data ??= EffectSchemaBuilder();
   set data(EffectSchemaBuilder? data) => _$this._data = data;
 
   EffectResponseSchemaBuilder() {
@@ -73,7 +69,6 @@ class EffectResponseSchemaBuilder
 
   @override
   void replace(EffectResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EffectResponseSchema;
   }
 
@@ -88,14 +83,17 @@ class EffectResponseSchemaBuilder
   _$EffectResponseSchema _build() {
     _$EffectResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$EffectResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$EffectResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'EffectResponseSchema', _$failedField, e.toString());
       }
       rethrow;

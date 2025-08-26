@@ -19,7 +19,7 @@ void main() {
     //
     // Fetch events details.
     //
-    //Future<DataPageEventSchema> getAllEventsEventsGet({ int page, int size }) async
+    //Future<DataPageEventSchema> getAllEventsEventsGet({ MapContentType type, int page, int size }) async
     test('test getAllEventsEventsGet', () async {
       // TODO
     });

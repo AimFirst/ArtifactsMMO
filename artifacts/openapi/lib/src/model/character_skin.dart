@@ -22,6 +22,10 @@ class CharacterSkin extends EnumClass {
   static const CharacterSkin women2 = _$women2;
   @BuiltValueEnumConst(wireName: r'women3')
   static const CharacterSkin women3 = _$women3;
+  @BuiltValueEnumConst(wireName: r'corrupted1')
+  static const CharacterSkin corrupted1 = _$corrupted1;
+  @BuiltValueEnumConst(wireName: r'zombie1')
+  static const CharacterSkin zombie1 = _$zombie1;
 
   static Serializer<CharacterSkin> get serializer => _$characterSkinSerializer;
 

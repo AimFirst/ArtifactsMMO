@@ -13,19 +13,15 @@ class _$DropSchema extends DropSchema {
   final int quantity;
 
   factory _$DropSchema([void Function(DropSchemaBuilder)? updates]) =>
-      (new DropSchemaBuilder()..update(updates))._build();
+      (DropSchemaBuilder()..update(updates))._build();
 
-  _$DropSchema._({required this.code, required this.quantity}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(code, r'DropSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(quantity, r'DropSchema', 'quantity');
-  }
-
+  _$DropSchema._({required this.code, required this.quantity}) : super._();
   @override
   DropSchema rebuild(void Function(DropSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  DropSchemaBuilder toBuilder() => new DropSchemaBuilder()..replace(this);
+  DropSchemaBuilder toBuilder() => DropSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -80,7 +76,6 @@ class DropSchemaBuilder implements Builder<DropSchema, DropSchemaBuilder> {
 
   @override
   void replace(DropSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DropSchema;
   }
 
@@ -94,11 +89,12 @@ class DropSchemaBuilder implements Builder<DropSchema, DropSchemaBuilder> {
 
   _$DropSchema _build() {
     final _$result = _$v ??
-        new _$DropSchema._(
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'DropSchema', 'code'),
-            quantity: BuiltValueNullFieldError.checkNotNull(
-                quantity, r'DropSchema', 'quantity'));
+        _$DropSchema._(
+          code: BuiltValueNullFieldError.checkNotNull(
+              code, r'DropSchema', 'code'),
+          quantity: BuiltValueNullFieldError.checkNotNull(
+              quantity, r'DropSchema', 'quantity'),
+        );
     replace(_$result);
     return _$result;
   }

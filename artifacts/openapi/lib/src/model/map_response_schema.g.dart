@@ -12,19 +12,16 @@ class _$MapResponseSchema extends MapResponseSchema {
 
   factory _$MapResponseSchema(
           [void Function(MapResponseSchemaBuilder)? updates]) =>
-      (new MapResponseSchemaBuilder()..update(updates))._build();
+      (MapResponseSchemaBuilder()..update(updates))._build();
 
-  _$MapResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(data, r'MapResponseSchema', 'data');
-  }
-
+  _$MapResponseSchema._({required this.data}) : super._();
   @override
   MapResponseSchema rebuild(void Function(MapResponseSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   MapResponseSchemaBuilder toBuilder() =>
-      new MapResponseSchemaBuilder()..replace(this);
+      MapResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -53,7 +50,7 @@ class MapResponseSchemaBuilder
   _$MapResponseSchema? _$v;
 
   MapSchemaBuilder? _data;
-  MapSchemaBuilder get data => _$this._data ??= new MapSchemaBuilder();
+  MapSchemaBuilder get data => _$this._data ??= MapSchemaBuilder();
   set data(MapSchemaBuilder? data) => _$this._data = data;
 
   MapResponseSchemaBuilder() {
@@ -71,7 +68,6 @@ class MapResponseSchemaBuilder
 
   @override
   void replace(MapResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$MapResponseSchema;
   }
 
@@ -86,14 +82,17 @@ class MapResponseSchemaBuilder
   _$MapResponseSchema _build() {
     _$MapResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$MapResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$MapResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'MapResponseSchema', _$failedField, e.toString());
       }
       rethrow;

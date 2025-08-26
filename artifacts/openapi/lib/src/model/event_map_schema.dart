@@ -13,6 +13,7 @@ part 'event_map_schema.g.dart';
 /// Properties:
 /// * [x] - Position X of the map.
 /// * [y] - Position Y of the map.
+/// * [skin] - Map skin of the map
 @BuiltValue()
 abstract class EventMapSchema
     implements Built<EventMapSchema, EventMapSchemaBuilder> {
@@ -23,6 +24,10 @@ abstract class EventMapSchema
   /// Position Y of the map.
   @BuiltValueField(wireName: r'y')
   int get y;
+
+  /// Map skin of the map
+  @BuiltValueField(wireName: r'skin')
+  String get skin;
 
   EventMapSchema._();
 
@@ -59,6 +64,11 @@ class _$EventMapSchemaSerializer
     yield serializers.serialize(
       object.y,
       specifiedType: const FullType(int),
+    );
+    yield r'skin';
+    yield serializers.serialize(
+      object.skin,
+      specifiedType: const FullType(String),
     );
   }
 
@@ -98,6 +108,13 @@ class _$EventMapSchemaSerializer
             specifiedType: const FullType(int),
           ) as int;
           result.y = valueDes;
+          break;
+        case r'skin':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.skin = valueDes;
           break;
         default:
           unhandled.add(key);

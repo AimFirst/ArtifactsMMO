@@ -12,6 +12,8 @@ const CharacterSkin _$men3 = const CharacterSkin._('men3');
 const CharacterSkin _$women1 = const CharacterSkin._('women1');
 const CharacterSkin _$women2 = const CharacterSkin._('women2');
 const CharacterSkin _$women3 = const CharacterSkin._('women3');
+const CharacterSkin _$corrupted1 = const CharacterSkin._('corrupted1');
+const CharacterSkin _$zombie1 = const CharacterSkin._('zombie1');
 
 CharacterSkin _$valueOf(String name) {
   switch (name) {
@@ -27,19 +29,25 @@ CharacterSkin _$valueOf(String name) {
       return _$women2;
     case 'women3':
       return _$women3;
+    case 'corrupted1':
+      return _$corrupted1;
+    case 'zombie1':
+      return _$zombie1;
     default:
-      throw new ArgumentError(name);
+      throw ArgumentError(name);
   }
 }
 
 final BuiltSet<CharacterSkin> _$values =
-    new BuiltSet<CharacterSkin>(const <CharacterSkin>[
+    BuiltSet<CharacterSkin>(const <CharacterSkin>[
   _$men1,
   _$men2,
   _$men3,
   _$women1,
   _$women2,
   _$women3,
+  _$corrupted1,
+  _$zombie1,
 ]);
 
 class _$CharacterSkinMeta {
@@ -50,6 +58,8 @@ class _$CharacterSkinMeta {
   CharacterSkin get women1 => _$women1;
   CharacterSkin get women2 => _$women2;
   CharacterSkin get women3 => _$women3;
+  CharacterSkin get corrupted1 => _$corrupted1;
+  CharacterSkin get zombie1 => _$zombie1;
   CharacterSkin valueOf(String name) => _$valueOf(name);
   BuiltSet<CharacterSkin> get values => _$values;
 }
@@ -60,7 +70,7 @@ abstract class _$CharacterSkinMixin {
 }
 
 Serializer<CharacterSkin> _$characterSkinSerializer =
-    new _$CharacterSkinSerializer();
+    _$CharacterSkinSerializer();
 
 class _$CharacterSkinSerializer implements PrimitiveSerializer<CharacterSkin> {
   static const Map<String, Object> _toWire = const <String, Object>{
@@ -70,6 +80,8 @@ class _$CharacterSkinSerializer implements PrimitiveSerializer<CharacterSkin> {
     'women1': 'women1',
     'women2': 'women2',
     'women3': 'women3',
+    'corrupted1': 'corrupted1',
+    'zombie1': 'zombie1',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'men1': 'men1',
@@ -78,6 +90,8 @@ class _$CharacterSkinSerializer implements PrimitiveSerializer<CharacterSkin> {
     'women1': 'women1',
     'women2': 'women2',
     'women3': 'women3',
+    'corrupted1': 'corrupted1',
+    'zombie1': 'zombie1',
   };
 
   @override

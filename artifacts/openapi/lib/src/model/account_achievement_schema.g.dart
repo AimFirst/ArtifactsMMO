@@ -30,7 +30,7 @@ class _$AccountAchievementSchema extends AccountAchievementSchema {
 
   factory _$AccountAchievementSchema(
           [void Function(AccountAchievementSchemaBuilder)? updates]) =>
-      (new AccountAchievementSchemaBuilder()..update(updates))._build();
+      (AccountAchievementSchemaBuilder()..update(updates))._build();
 
   _$AccountAchievementSchema._(
       {required this.name,
@@ -43,25 +43,7 @@ class _$AccountAchievementSchema extends AccountAchievementSchema {
       required this.rewards,
       required this.current,
       this.completedAt})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        name, r'AccountAchievementSchema', 'name');
-    BuiltValueNullFieldError.checkNotNull(
-        code, r'AccountAchievementSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        description, r'AccountAchievementSchema', 'description');
-    BuiltValueNullFieldError.checkNotNull(
-        points, r'AccountAchievementSchema', 'points');
-    BuiltValueNullFieldError.checkNotNull(
-        type, r'AccountAchievementSchema', 'type');
-    BuiltValueNullFieldError.checkNotNull(
-        total, r'AccountAchievementSchema', 'total');
-    BuiltValueNullFieldError.checkNotNull(
-        rewards, r'AccountAchievementSchema', 'rewards');
-    BuiltValueNullFieldError.checkNotNull(
-        current, r'AccountAchievementSchema', 'current');
-  }
-
+      : super._();
   @override
   AccountAchievementSchema rebuild(
           void Function(AccountAchievementSchemaBuilder) updates) =>
@@ -69,7 +51,7 @@ class _$AccountAchievementSchema extends AccountAchievementSchema {
 
   @override
   AccountAchievementSchemaBuilder toBuilder() =>
-      new AccountAchievementSchemaBuilder()..replace(this);
+      AccountAchievementSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -156,7 +138,7 @@ class AccountAchievementSchemaBuilder
 
   AchievementRewardsSchemaBuilder? _rewards;
   AchievementRewardsSchemaBuilder get rewards =>
-      _$this._rewards ??= new AchievementRewardsSchemaBuilder();
+      _$this._rewards ??= AchievementRewardsSchemaBuilder();
   set rewards(AchievementRewardsSchemaBuilder? rewards) =>
       _$this._rewards = rewards;
 
@@ -192,7 +174,6 @@ class AccountAchievementSchemaBuilder
 
   @override
   void replace(AccountAchievementSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AccountAchievementSchema;
   }
 
@@ -208,31 +189,32 @@ class AccountAchievementSchemaBuilder
     _$AccountAchievementSchema _$result;
     try {
       _$result = _$v ??
-          new _$AccountAchievementSchema._(
-              name: BuiltValueNullFieldError.checkNotNull(
-                  name, r'AccountAchievementSchema', 'name'),
-              code: BuiltValueNullFieldError.checkNotNull(
-                  code, r'AccountAchievementSchema', 'code'),
-              description: BuiltValueNullFieldError.checkNotNull(
-                  description, r'AccountAchievementSchema', 'description'),
-              points: BuiltValueNullFieldError.checkNotNull(
-                  points, r'AccountAchievementSchema', 'points'),
-              type: BuiltValueNullFieldError.checkNotNull(
-                  type, r'AccountAchievementSchema', 'type'),
-              target: target,
-              total: BuiltValueNullFieldError.checkNotNull(
-                  total, r'AccountAchievementSchema', 'total'),
-              rewards: rewards.build(),
-              current: BuiltValueNullFieldError.checkNotNull(
-                  current, r'AccountAchievementSchema', 'current'),
-              completedAt: completedAt);
+          _$AccountAchievementSchema._(
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, r'AccountAchievementSchema', 'name'),
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'AccountAchievementSchema', 'code'),
+            description: BuiltValueNullFieldError.checkNotNull(
+                description, r'AccountAchievementSchema', 'description'),
+            points: BuiltValueNullFieldError.checkNotNull(
+                points, r'AccountAchievementSchema', 'points'),
+            type: BuiltValueNullFieldError.checkNotNull(
+                type, r'AccountAchievementSchema', 'type'),
+            target: target,
+            total: BuiltValueNullFieldError.checkNotNull(
+                total, r'AccountAchievementSchema', 'total'),
+            rewards: rewards.build(),
+            current: BuiltValueNullFieldError.checkNotNull(
+                current, r'AccountAchievementSchema', 'current'),
+            completedAt: completedAt,
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'rewards';
         rewards.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'AccountAchievementSchema', _$failedField, e.toString());
       }
       rethrow;

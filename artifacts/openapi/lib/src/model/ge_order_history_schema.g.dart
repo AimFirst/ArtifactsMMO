@@ -24,7 +24,7 @@ class _$GeOrderHistorySchema extends GeOrderHistorySchema {
 
   factory _$GeOrderHistorySchema(
           [void Function(GeOrderHistorySchemaBuilder)? updates]) =>
-      (new GeOrderHistorySchemaBuilder()..update(updates))._build();
+      (GeOrderHistorySchemaBuilder()..update(updates))._build();
 
   _$GeOrderHistorySchema._(
       {required this.orderId,
@@ -34,23 +34,7 @@ class _$GeOrderHistorySchema extends GeOrderHistorySchema {
       required this.quantity,
       required this.price,
       required this.soldAt})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        orderId, r'GeOrderHistorySchema', 'orderId');
-    BuiltValueNullFieldError.checkNotNull(
-        seller, r'GeOrderHistorySchema', 'seller');
-    BuiltValueNullFieldError.checkNotNull(
-        buyer, r'GeOrderHistorySchema', 'buyer');
-    BuiltValueNullFieldError.checkNotNull(
-        code, r'GeOrderHistorySchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        quantity, r'GeOrderHistorySchema', 'quantity');
-    BuiltValueNullFieldError.checkNotNull(
-        price, r'GeOrderHistorySchema', 'price');
-    BuiltValueNullFieldError.checkNotNull(
-        soldAt, r'GeOrderHistorySchema', 'soldAt');
-  }
-
+      : super._();
   @override
   GeOrderHistorySchema rebuild(
           void Function(GeOrderHistorySchemaBuilder) updates) =>
@@ -58,7 +42,7 @@ class _$GeOrderHistorySchema extends GeOrderHistorySchema {
 
   @override
   GeOrderHistorySchemaBuilder toBuilder() =>
-      new GeOrderHistorySchemaBuilder()..replace(this);
+      GeOrderHistorySchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -154,7 +138,6 @@ class GeOrderHistorySchemaBuilder
 
   @override
   void replace(GeOrderHistorySchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GeOrderHistorySchema;
   }
 
@@ -168,21 +151,22 @@ class GeOrderHistorySchemaBuilder
 
   _$GeOrderHistorySchema _build() {
     final _$result = _$v ??
-        new _$GeOrderHistorySchema._(
-            orderId: BuiltValueNullFieldError.checkNotNull(
-                orderId, r'GeOrderHistorySchema', 'orderId'),
-            seller: BuiltValueNullFieldError.checkNotNull(
-                seller, r'GeOrderHistorySchema', 'seller'),
-            buyer: BuiltValueNullFieldError.checkNotNull(
-                buyer, r'GeOrderHistorySchema', 'buyer'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'GeOrderHistorySchema', 'code'),
-            quantity: BuiltValueNullFieldError.checkNotNull(
-                quantity, r'GeOrderHistorySchema', 'quantity'),
-            price: BuiltValueNullFieldError.checkNotNull(
-                price, r'GeOrderHistorySchema', 'price'),
-            soldAt: BuiltValueNullFieldError.checkNotNull(
-                soldAt, r'GeOrderHistorySchema', 'soldAt'));
+        _$GeOrderHistorySchema._(
+          orderId: BuiltValueNullFieldError.checkNotNull(
+              orderId, r'GeOrderHistorySchema', 'orderId'),
+          seller: BuiltValueNullFieldError.checkNotNull(
+              seller, r'GeOrderHistorySchema', 'seller'),
+          buyer: BuiltValueNullFieldError.checkNotNull(
+              buyer, r'GeOrderHistorySchema', 'buyer'),
+          code: BuiltValueNullFieldError.checkNotNull(
+              code, r'GeOrderHistorySchema', 'code'),
+          quantity: BuiltValueNullFieldError.checkNotNull(
+              quantity, r'GeOrderHistorySchema', 'quantity'),
+          price: BuiltValueNullFieldError.checkNotNull(
+              price, r'GeOrderHistorySchema', 'price'),
+          soldAt: BuiltValueNullFieldError.checkNotNull(
+              soldAt, r'GeOrderHistorySchema', 'soldAt'),
+        );
     replace(_$result);
     return _$result;
   }

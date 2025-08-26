@@ -6,21 +6,30 @@ void main() {
   final instance = ArtifactsApi().getNPCsApi();
 
   group(NPCsApi, () {
+    // Get All Npcs Items
+    //
+    // Retrieve the list of all NPC items.
+    //
+    //Future<DataPageNPCItem> getAllNpcsItemsNpcsItemsGet({ String code, String npc, String currency, int page, int size }) async
+    test('test getAllNpcsItemsNpcsItemsGet', () async {
+      // TODO
+    });
+
     // Get All Npcs
     //
     // Fetch NPCs details.
     //
-    //Future<DataPageNPCSchema> getAllNpcsNpcsGet({ NPCType type, int page, int size }) async
-    test('test getAllNpcsNpcsGet', () async {
+    //Future<DataPageNPCSchema> getAllNpcsNpcsDetailsGet({ String name, NPCType type, int page, int size }) async
+    test('test getAllNpcsNpcsDetailsGet', () async {
       // TODO
     });
 
     // Get Npc Items
     //
-    // Retrieve the items list of a NPC. If the NPC has items to buy or sell, they will be displayed.
+    // Retrieve the items list of a NPC. If the NPC has items to buy, sell or trade, they will be displayed.
     //
-    //Future<DataPageNPCItem> getNpcItemsNpcsCodeItemsGet(String code, { int page, int size }) async
-    test('test getNpcItemsNpcsCodeItemsGet', () async {
+    //Future<DataPageNPCItem> getNpcItemsNpcsItemsCodeGet(String code, { int page, int size }) async
+    test('test getNpcItemsNpcsItemsCodeGet', () async {
       // TODO
     });
 
@@ -28,8 +37,8 @@ void main() {
     //
     // Retrieve the details of a NPC.
     //
-    //Future<NPCResponseSchema> getNpcNpcsCodeGet(String code) async
-    test('test getNpcNpcsCodeGet', () async {
+    //Future<NPCResponseSchema> getNpcNpcsDetailsCodeGet(String code) async
+    test('test getNpcNpcsDetailsCodeGet', () async {
       // TODO
     });
   });

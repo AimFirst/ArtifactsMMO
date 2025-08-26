@@ -16,19 +16,11 @@ class _$GEOrderTransactionSchema extends GEOrderTransactionSchema {
 
   factory _$GEOrderTransactionSchema(
           [void Function(GEOrderTransactionSchemaBuilder)? updates]) =>
-      (new GEOrderTransactionSchemaBuilder()..update(updates))._build();
+      (GEOrderTransactionSchemaBuilder()..update(updates))._build();
 
   _$GEOrderTransactionSchema._(
       {required this.cooldown, required this.order, required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'GEOrderTransactionSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(
-        order, r'GEOrderTransactionSchema', 'order');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'GEOrderTransactionSchema', 'character');
-  }
-
+      : super._();
   @override
   GEOrderTransactionSchema rebuild(
           void Function(GEOrderTransactionSchemaBuilder) updates) =>
@@ -36,7 +28,7 @@ class _$GEOrderTransactionSchema extends GEOrderTransactionSchema {
 
   @override
   GEOrderTransactionSchemaBuilder toBuilder() =>
-      new GEOrderTransactionSchemaBuilder()..replace(this);
+      GEOrderTransactionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -74,17 +66,17 @@ class GEOrderTransactionSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   GEOrderCreatedSchemaBuilder? _order;
   GEOrderCreatedSchemaBuilder get order =>
-      _$this._order ??= new GEOrderCreatedSchemaBuilder();
+      _$this._order ??= GEOrderCreatedSchemaBuilder();
   set order(GEOrderCreatedSchemaBuilder? order) => _$this._order = order;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -105,7 +97,6 @@ class GEOrderTransactionSchemaBuilder
 
   @override
   void replace(GEOrderTransactionSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GEOrderTransactionSchema;
   }
 
@@ -121,10 +112,11 @@ class GEOrderTransactionSchemaBuilder
     _$GEOrderTransactionSchema _$result;
     try {
       _$result = _$v ??
-          new _$GEOrderTransactionSchema._(
-              cooldown: cooldown.build(),
-              order: order.build(),
-              character: character.build());
+          _$GEOrderTransactionSchema._(
+            cooldown: cooldown.build(),
+            order: order.build(),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -135,7 +127,7 @@ class GEOrderTransactionSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'GEOrderTransactionSchema', _$failedField, e.toString());
       }
       rethrow;

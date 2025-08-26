@@ -12,13 +12,9 @@ class _$AchievementResponseSchema extends AchievementResponseSchema {
 
   factory _$AchievementResponseSchema(
           [void Function(AchievementResponseSchemaBuilder)? updates]) =>
-      (new AchievementResponseSchemaBuilder()..update(updates))._build();
+      (AchievementResponseSchemaBuilder()..update(updates))._build();
 
-  _$AchievementResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'AchievementResponseSchema', 'data');
-  }
-
+  _$AchievementResponseSchema._({required this.data}) : super._();
   @override
   AchievementResponseSchema rebuild(
           void Function(AchievementResponseSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$AchievementResponseSchema extends AchievementResponseSchema {
 
   @override
   AchievementResponseSchemaBuilder toBuilder() =>
-      new AchievementResponseSchemaBuilder()..replace(this);
+      AchievementResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -57,7 +53,7 @@ class AchievementResponseSchemaBuilder
 
   AchievementSchemaBuilder? _data;
   AchievementSchemaBuilder get data =>
-      _$this._data ??= new AchievementSchemaBuilder();
+      _$this._data ??= AchievementSchemaBuilder();
   set data(AchievementSchemaBuilder? data) => _$this._data = data;
 
   AchievementResponseSchemaBuilder() {
@@ -75,7 +71,6 @@ class AchievementResponseSchemaBuilder
 
   @override
   void replace(AchievementResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AchievementResponseSchema;
   }
 
@@ -90,14 +85,17 @@ class AchievementResponseSchemaBuilder
   _$AchievementResponseSchema _build() {
     _$AchievementResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$AchievementResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$AchievementResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'AchievementResponseSchema', _$failedField, e.toString());
       }
       rethrow;

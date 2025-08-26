@@ -12,26 +12,28 @@ class _$NPCItem extends NPCItem {
   @override
   final String npc;
   @override
+  final String currency;
+  @override
   final int? buyPrice;
   @override
   final int? sellPrice;
 
   factory _$NPCItem([void Function(NPCItemBuilder)? updates]) =>
-      (new NPCItemBuilder()..update(updates))._build();
+      (NPCItemBuilder()..update(updates))._build();
 
   _$NPCItem._(
-      {required this.code, required this.npc, this.buyPrice, this.sellPrice})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(code, r'NPCItem', 'code');
-    BuiltValueNullFieldError.checkNotNull(npc, r'NPCItem', 'npc');
-  }
-
+      {required this.code,
+      required this.npc,
+      required this.currency,
+      this.buyPrice,
+      this.sellPrice})
+      : super._();
   @override
   NPCItem rebuild(void Function(NPCItemBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  NPCItemBuilder toBuilder() => new NPCItemBuilder()..replace(this);
+  NPCItemBuilder toBuilder() => NPCItemBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -39,6 +41,7 @@ class _$NPCItem extends NPCItem {
     return other is NPCItem &&
         code == other.code &&
         npc == other.npc &&
+        currency == other.currency &&
         buyPrice == other.buyPrice &&
         sellPrice == other.sellPrice;
   }
@@ -48,6 +51,7 @@ class _$NPCItem extends NPCItem {
     var _$hash = 0;
     _$hash = $jc(_$hash, code.hashCode);
     _$hash = $jc(_$hash, npc.hashCode);
+    _$hash = $jc(_$hash, currency.hashCode);
     _$hash = $jc(_$hash, buyPrice.hashCode);
     _$hash = $jc(_$hash, sellPrice.hashCode);
     _$hash = $jf(_$hash);
@@ -59,6 +63,7 @@ class _$NPCItem extends NPCItem {
     return (newBuiltValueToStringHelper(r'NPCItem')
           ..add('code', code)
           ..add('npc', npc)
+          ..add('currency', currency)
           ..add('buyPrice', buyPrice)
           ..add('sellPrice', sellPrice))
         .toString();
@@ -75,6 +80,10 @@ class NPCItemBuilder implements Builder<NPCItem, NPCItemBuilder> {
   String? _npc;
   String? get npc => _$this._npc;
   set npc(String? npc) => _$this._npc = npc;
+
+  String? _currency;
+  String? get currency => _$this._currency;
+  set currency(String? currency) => _$this._currency = currency;
 
   int? _buyPrice;
   int? get buyPrice => _$this._buyPrice;
@@ -93,6 +102,7 @@ class NPCItemBuilder implements Builder<NPCItem, NPCItemBuilder> {
     if ($v != null) {
       _code = $v.code;
       _npc = $v.npc;
+      _currency = $v.currency;
       _buyPrice = $v.buyPrice;
       _sellPrice = $v.sellPrice;
       _$v = null;
@@ -102,7 +112,6 @@ class NPCItemBuilder implements Builder<NPCItem, NPCItemBuilder> {
 
   @override
   void replace(NPCItem other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NPCItem;
   }
 
@@ -116,12 +125,14 @@ class NPCItemBuilder implements Builder<NPCItem, NPCItemBuilder> {
 
   _$NPCItem _build() {
     final _$result = _$v ??
-        new _$NPCItem._(
-            code:
-                BuiltValueNullFieldError.checkNotNull(code, r'NPCItem', 'code'),
-            npc: BuiltValueNullFieldError.checkNotNull(npc, r'NPCItem', 'npc'),
-            buyPrice: buyPrice,
-            sellPrice: sellPrice);
+        _$NPCItem._(
+          code: BuiltValueNullFieldError.checkNotNull(code, r'NPCItem', 'code'),
+          npc: BuiltValueNullFieldError.checkNotNull(npc, r'NPCItem', 'npc'),
+          currency: BuiltValueNullFieldError.checkNotNull(
+              currency, r'NPCItem', 'currency'),
+          buyPrice: buyPrice,
+          sellPrice: sellPrice,
+        );
     replace(_$result);
     return _$result;
   }

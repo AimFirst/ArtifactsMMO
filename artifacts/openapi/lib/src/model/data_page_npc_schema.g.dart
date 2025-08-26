@@ -20,21 +20,18 @@ class _$DataPageNPCSchema extends DataPageNPCSchema {
 
   factory _$DataPageNPCSchema(
           [void Function(DataPageNPCSchemaBuilder)? updates]) =>
-      (new DataPageNPCSchemaBuilder()..update(updates))._build();
+      (DataPageNPCSchemaBuilder()..update(updates))._build();
 
   _$DataPageNPCSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(data, r'DataPageNPCSchema', 'data');
-  }
-
+      : super._();
   @override
   DataPageNPCSchema rebuild(void Function(DataPageNPCSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   DataPageNPCSchemaBuilder toBuilder() =>
-      new DataPageNPCSchemaBuilder()..replace(this);
+      DataPageNPCSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -76,8 +73,7 @@ class DataPageNPCSchemaBuilder
   _$DataPageNPCSchema? _$v;
 
   ListBuilder<NPCSchema>? _data;
-  ListBuilder<NPCSchema> get data =>
-      _$this._data ??= new ListBuilder<NPCSchema>();
+  ListBuilder<NPCSchema> get data => _$this._data ??= ListBuilder<NPCSchema>();
   set data(ListBuilder<NPCSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -115,7 +111,6 @@ class DataPageNPCSchemaBuilder
 
   @override
   void replace(DataPageNPCSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageNPCSchema;
   }
 
@@ -131,19 +126,20 @@ class DataPageNPCSchemaBuilder
     _$DataPageNPCSchema _$result;
     try {
       _$result = _$v ??
-          new _$DataPageNPCSchema._(
-              data: data.build(),
-              total: total,
-              page: page,
-              size: size,
-              pages: pages);
+          _$DataPageNPCSchema._(
+            data: data.build(),
+            total: total,
+            page: page,
+            size: size,
+            pages: pages,
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'DataPageNPCSchema', _$failedField, e.toString());
       }
       rethrow;

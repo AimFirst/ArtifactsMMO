@@ -16,19 +16,11 @@ class _$CharacterFightDataSchema extends CharacterFightDataSchema {
 
   factory _$CharacterFightDataSchema(
           [void Function(CharacterFightDataSchemaBuilder)? updates]) =>
-      (new CharacterFightDataSchemaBuilder()..update(updates))._build();
+      (CharacterFightDataSchemaBuilder()..update(updates))._build();
 
   _$CharacterFightDataSchema._(
       {required this.cooldown, required this.fight, required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'CharacterFightDataSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(
-        fight, r'CharacterFightDataSchema', 'fight');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'CharacterFightDataSchema', 'character');
-  }
-
+      : super._();
   @override
   CharacterFightDataSchema rebuild(
           void Function(CharacterFightDataSchemaBuilder) updates) =>
@@ -36,7 +28,7 @@ class _$CharacterFightDataSchema extends CharacterFightDataSchema {
 
   @override
   CharacterFightDataSchemaBuilder toBuilder() =>
-      new CharacterFightDataSchemaBuilder()..replace(this);
+      CharacterFightDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -74,16 +66,16 @@ class CharacterFightDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   FightSchemaBuilder? _fight;
-  FightSchemaBuilder get fight => _$this._fight ??= new FightSchemaBuilder();
+  FightSchemaBuilder get fight => _$this._fight ??= FightSchemaBuilder();
   set fight(FightSchemaBuilder? fight) => _$this._fight = fight;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -104,7 +96,6 @@ class CharacterFightDataSchemaBuilder
 
   @override
   void replace(CharacterFightDataSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CharacterFightDataSchema;
   }
 
@@ -120,10 +111,11 @@ class CharacterFightDataSchemaBuilder
     _$CharacterFightDataSchema _$result;
     try {
       _$result = _$v ??
-          new _$CharacterFightDataSchema._(
-              cooldown: cooldown.build(),
-              fight: fight.build(),
-              character: character.build());
+          _$CharacterFightDataSchema._(
+            cooldown: cooldown.build(),
+            fight: fight.build(),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -134,7 +126,7 @@ class CharacterFightDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'CharacterFightDataSchema', _$failedField, e.toString());
       }
       rethrow;

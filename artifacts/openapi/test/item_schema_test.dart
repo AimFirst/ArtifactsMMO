@@ -49,8 +49,14 @@ void main() {
       // TODO
     });
 
+    // Item conditions. If applicable. Conditions for using or equipping the item.
+    // BuiltList<ConditionSchema> conditions
+    test('to test the property `conditions`', () async {
+      // TODO
+    });
+
     // List of object effects. For equipment, it will include item stats.
-    // BuiltList<ItemEffectSchema> effects
+    // BuiltList<SimpleEffectSchema> effects
     test('to test the property `effects`', () async {
       // TODO
     });

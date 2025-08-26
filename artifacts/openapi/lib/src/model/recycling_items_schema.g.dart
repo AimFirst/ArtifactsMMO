@@ -12,13 +12,9 @@ class _$RecyclingItemsSchema extends RecyclingItemsSchema {
 
   factory _$RecyclingItemsSchema(
           [void Function(RecyclingItemsSchemaBuilder)? updates]) =>
-      (new RecyclingItemsSchemaBuilder()..update(updates))._build();
+      (RecyclingItemsSchemaBuilder()..update(updates))._build();
 
-  _$RecyclingItemsSchema._({required this.items}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        items, r'RecyclingItemsSchema', 'items');
-  }
-
+  _$RecyclingItemsSchema._({required this.items}) : super._();
   @override
   RecyclingItemsSchema rebuild(
           void Function(RecyclingItemsSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$RecyclingItemsSchema extends RecyclingItemsSchema {
 
   @override
   RecyclingItemsSchemaBuilder toBuilder() =>
-      new RecyclingItemsSchemaBuilder()..replace(this);
+      RecyclingItemsSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -56,7 +52,7 @@ class RecyclingItemsSchemaBuilder
 
   ListBuilder<DropSchema>? _items;
   ListBuilder<DropSchema> get items =>
-      _$this._items ??= new ListBuilder<DropSchema>();
+      _$this._items ??= ListBuilder<DropSchema>();
   set items(ListBuilder<DropSchema>? items) => _$this._items = items;
 
   RecyclingItemsSchemaBuilder() {
@@ -74,7 +70,6 @@ class RecyclingItemsSchemaBuilder
 
   @override
   void replace(RecyclingItemsSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RecyclingItemsSchema;
   }
 
@@ -89,14 +84,17 @@ class RecyclingItemsSchemaBuilder
   _$RecyclingItemsSchema _build() {
     _$RecyclingItemsSchema _$result;
     try {
-      _$result = _$v ?? new _$RecyclingItemsSchema._(items: items.build());
+      _$result = _$v ??
+          _$RecyclingItemsSchema._(
+            items: items.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'items';
         items.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'RecyclingItemsSchema', _$failedField, e.toString());
       }
       rethrow;

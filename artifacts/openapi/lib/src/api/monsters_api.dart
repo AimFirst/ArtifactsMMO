@@ -23,6 +23,7 @@ class MonstersApi {
   /// Fetch monsters details.
   ///
   /// Parameters:
+  /// * [name] - Name of the monster.
   /// * [minLevel] - Monster minimum level.
   /// * [maxLevel] - Monster maximum level.
   /// * [drop] - Item code of the drop.
@@ -38,6 +39,7 @@ class MonstersApi {
   /// Returns a [Future] containing a [Response] with a [DataPageMonsterSchema] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DataPageMonsterSchema>> getAllMonstersMonstersGet({
+    String? name,
     int? minLevel,
     int? maxLevel,
     String? drop,
@@ -64,6 +66,9 @@ class MonstersApi {
     );
 
     final _queryParameters = <String, dynamic>{
+      if (name != null)
+        r'name':
+            encodeQueryParameter(_serializers, name, const FullType(String)),
       if (minLevel != null)
         r'min_level':
             encodeQueryParameter(_serializers, minLevel, const FullType(int)),

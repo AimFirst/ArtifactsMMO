@@ -20,15 +20,11 @@ class _$DataPageDropRateSchema extends DataPageDropRateSchema {
 
   factory _$DataPageDropRateSchema(
           [void Function(DataPageDropRateSchemaBuilder)? updates]) =>
-      (new DataPageDropRateSchemaBuilder()..update(updates))._build();
+      (DataPageDropRateSchemaBuilder()..update(updates))._build();
 
   _$DataPageDropRateSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'DataPageDropRateSchema', 'data');
-  }
-
+      : super._();
   @override
   DataPageDropRateSchema rebuild(
           void Function(DataPageDropRateSchemaBuilder) updates) =>
@@ -36,7 +32,7 @@ class _$DataPageDropRateSchema extends DataPageDropRateSchema {
 
   @override
   DataPageDropRateSchemaBuilder toBuilder() =>
-      new DataPageDropRateSchemaBuilder()..replace(this);
+      DataPageDropRateSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -79,7 +75,7 @@ class DataPageDropRateSchemaBuilder
 
   ListBuilder<DropRateSchema>? _data;
   ListBuilder<DropRateSchema> get data =>
-      _$this._data ??= new ListBuilder<DropRateSchema>();
+      _$this._data ??= ListBuilder<DropRateSchema>();
   set data(ListBuilder<DropRateSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -117,7 +113,6 @@ class DataPageDropRateSchemaBuilder
 
   @override
   void replace(DataPageDropRateSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageDropRateSchema;
   }
 
@@ -133,19 +128,20 @@ class DataPageDropRateSchemaBuilder
     _$DataPageDropRateSchema _$result;
     try {
       _$result = _$v ??
-          new _$DataPageDropRateSchema._(
-              data: data.build(),
-              total: total,
-              page: page,
-              size: size,
-              pages: pages);
+          _$DataPageDropRateSchema._(
+            data: data.build(),
+            total: total,
+            page: page,
+            size: size,
+            pages: pages,
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'DataPageDropRateSchema', _$failedField, e.toString());
       }
       rethrow;

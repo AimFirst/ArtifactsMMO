@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **code** | **String** | Item code. | 
 **quantity** | **int** | Item quantity. | 
+**currency** | **String** | Currency used for the transaction. | 
 **price** | **int** | Item price. | 
 **totalPrice** | **int** | Total price of the transaction. | 
 

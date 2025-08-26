@@ -31,12 +31,11 @@ CraftSkill _$valueOf(String name) {
     case 'alchemy':
       return _$alchemy;
     default:
-      throw new ArgumentError(name);
+      throw ArgumentError(name);
   }
 }
 
-final BuiltSet<CraftSkill> _$values =
-    new BuiltSet<CraftSkill>(const <CraftSkill>[
+final BuiltSet<CraftSkill> _$values = BuiltSet<CraftSkill>(const <CraftSkill>[
   _$weaponcrafting,
   _$gearcrafting,
   _$jewelrycrafting,
@@ -64,7 +63,7 @@ abstract class _$CraftSkillMixin {
   _$CraftSkillMeta get CraftSkill => const _$CraftSkillMeta();
 }
 
-Serializer<CraftSkill> _$craftSkillSerializer = new _$CraftSkillSerializer();
+Serializer<CraftSkill> _$craftSkillSerializer = _$CraftSkillSerializer();
 
 class _$CraftSkillSerializer implements PrimitiveSerializer<CraftSkill> {
   static const Map<String, Object> _toWire = const <String, Object>{

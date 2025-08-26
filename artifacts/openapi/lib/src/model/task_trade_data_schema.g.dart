@@ -16,19 +16,11 @@ class _$TaskTradeDataSchema extends TaskTradeDataSchema {
 
   factory _$TaskTradeDataSchema(
           [void Function(TaskTradeDataSchemaBuilder)? updates]) =>
-      (new TaskTradeDataSchemaBuilder()..update(updates))._build();
+      (TaskTradeDataSchemaBuilder()..update(updates))._build();
 
   _$TaskTradeDataSchema._(
       {required this.cooldown, required this.trade, required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'TaskTradeDataSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(
-        trade, r'TaskTradeDataSchema', 'trade');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'TaskTradeDataSchema', 'character');
-  }
-
+      : super._();
   @override
   TaskTradeDataSchema rebuild(
           void Function(TaskTradeDataSchemaBuilder) updates) =>
@@ -36,7 +28,7 @@ class _$TaskTradeDataSchema extends TaskTradeDataSchema {
 
   @override
   TaskTradeDataSchemaBuilder toBuilder() =>
-      new TaskTradeDataSchemaBuilder()..replace(this);
+      TaskTradeDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -73,17 +65,17 @@ class TaskTradeDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   TaskTradeSchemaBuilder? _trade;
   TaskTradeSchemaBuilder get trade =>
-      _$this._trade ??= new TaskTradeSchemaBuilder();
+      _$this._trade ??= TaskTradeSchemaBuilder();
   set trade(TaskTradeSchemaBuilder? trade) => _$this._trade = trade;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -104,7 +96,6 @@ class TaskTradeDataSchemaBuilder
 
   @override
   void replace(TaskTradeDataSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskTradeDataSchema;
   }
 
@@ -120,10 +111,11 @@ class TaskTradeDataSchemaBuilder
     _$TaskTradeDataSchema _$result;
     try {
       _$result = _$v ??
-          new _$TaskTradeDataSchema._(
-              cooldown: cooldown.build(),
-              trade: trade.build(),
-              character: character.build());
+          _$TaskTradeDataSchema._(
+            cooldown: cooldown.build(),
+            trade: trade.build(),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -134,7 +126,7 @@ class TaskTradeDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'TaskTradeDataSchema', _$failedField, e.toString());
       }
       rethrow;

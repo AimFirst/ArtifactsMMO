@@ -37,7 +37,7 @@ void main() {
     //
     // Retrieve the details of a tasks reward.
     //
-    //Future<TasksRewardResponseSchema> getTasksRewardTasksRewardsCodeGet(String code) async
+    //Future<RewardResponseSchema> getTasksRewardTasksRewardsCodeGet(String code) async
     test('test getTasksRewardTasksRewardsCodeGet', () async {
       // TODO
     });

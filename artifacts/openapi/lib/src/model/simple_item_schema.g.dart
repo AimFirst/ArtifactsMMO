@@ -14,22 +14,17 @@ class _$SimpleItemSchema extends SimpleItemSchema {
 
   factory _$SimpleItemSchema(
           [void Function(SimpleItemSchemaBuilder)? updates]) =>
-      (new SimpleItemSchemaBuilder()..update(updates))._build();
+      (SimpleItemSchemaBuilder()..update(updates))._build();
 
   _$SimpleItemSchema._({required this.code, required this.quantity})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(code, r'SimpleItemSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        quantity, r'SimpleItemSchema', 'quantity');
-  }
-
+      : super._();
   @override
   SimpleItemSchema rebuild(void Function(SimpleItemSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   SimpleItemSchemaBuilder toBuilder() =>
-      new SimpleItemSchemaBuilder()..replace(this);
+      SimpleItemSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -85,7 +80,6 @@ class SimpleItemSchemaBuilder
 
   @override
   void replace(SimpleItemSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SimpleItemSchema;
   }
 
@@ -99,11 +93,12 @@ class SimpleItemSchemaBuilder
 
   _$SimpleItemSchema _build() {
     final _$result = _$v ??
-        new _$SimpleItemSchema._(
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'SimpleItemSchema', 'code'),
-            quantity: BuiltValueNullFieldError.checkNotNull(
-                quantity, r'SimpleItemSchema', 'quantity'));
+        _$SimpleItemSchema._(
+          code: BuiltValueNullFieldError.checkNotNull(
+              code, r'SimpleItemSchema', 'code'),
+          quantity: BuiltValueNullFieldError.checkNotNull(
+              quantity, r'SimpleItemSchema', 'quantity'),
+        );
     replace(_$result);
     return _$result;
   }

@@ -15,26 +15,17 @@ class _$SkillDataSchema extends SkillDataSchema {
   final CharacterSchema character;
 
   factory _$SkillDataSchema([void Function(SkillDataSchemaBuilder)? updates]) =>
-      (new SkillDataSchemaBuilder()..update(updates))._build();
+      (SkillDataSchemaBuilder()..update(updates))._build();
 
   _$SkillDataSchema._(
       {required this.cooldown, required this.details, required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'SkillDataSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(
-        details, r'SkillDataSchema', 'details');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'SkillDataSchema', 'character');
-  }
-
+      : super._();
   @override
   SkillDataSchema rebuild(void Function(SkillDataSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  SkillDataSchemaBuilder toBuilder() =>
-      new SkillDataSchemaBuilder()..replace(this);
+  SkillDataSchemaBuilder toBuilder() => SkillDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -71,17 +62,17 @@ class SkillDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   SkillInfoSchemaBuilder? _details;
   SkillInfoSchemaBuilder get details =>
-      _$this._details ??= new SkillInfoSchemaBuilder();
+      _$this._details ??= SkillInfoSchemaBuilder();
   set details(SkillInfoSchemaBuilder? details) => _$this._details = details;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -102,7 +93,6 @@ class SkillDataSchemaBuilder
 
   @override
   void replace(SkillDataSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SkillDataSchema;
   }
 
@@ -118,10 +108,11 @@ class SkillDataSchemaBuilder
     _$SkillDataSchema _$result;
     try {
       _$result = _$v ??
-          new _$SkillDataSchema._(
-              cooldown: cooldown.build(),
-              details: details.build(),
-              character: character.build());
+          _$SkillDataSchema._(
+            cooldown: cooldown.build(),
+            details: details.build(),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -132,7 +123,7 @@ class SkillDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'SkillDataSchema', _$failedField, e.toString());
       }
       rethrow;

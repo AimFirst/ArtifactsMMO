@@ -16,8 +16,8 @@ const ActionType _$buyNpc = const ActionType._('buyNpc');
 const ActionType _$sellNpc = const ActionType._('sellNpc');
 const ActionType _$cancelGe = const ActionType._('cancelGe');
 const ActionType _$deleteItem = const ActionType._('deleteItem');
-const ActionType _$deposit = const ActionType._('deposit');
-const ActionType _$withdraw = const ActionType._('withdraw');
+const ActionType _$depositItem = const ActionType._('depositItem');
+const ActionType _$withdrawItem = const ActionType._('withdrawItem');
 const ActionType _$depositGold = const ActionType._('depositGold');
 const ActionType _$withdrawGold = const ActionType._('withdrawGold');
 const ActionType _$equip = const ActionType._('equip');
@@ -28,6 +28,10 @@ const ActionType _$recycling = const ActionType._('recycling');
 const ActionType _$rest = const ActionType._('rest');
 const ActionType _$use = const ActionType._('use');
 const ActionType _$buyBankExpansion = const ActionType._('buyBankExpansion');
+const ActionType _$giveItem = const ActionType._('giveItem');
+const ActionType _$giveGold = const ActionType._('giveGold');
+const ActionType _$changeSkin = const ActionType._('changeSkin');
+const ActionType _$rename = const ActionType._('rename');
 
 ActionType _$valueOf(String name) {
   switch (name) {
@@ -51,10 +55,10 @@ ActionType _$valueOf(String name) {
       return _$cancelGe;
     case 'deleteItem':
       return _$deleteItem;
-    case 'deposit':
-      return _$deposit;
-    case 'withdraw':
-      return _$withdraw;
+    case 'depositItem':
+      return _$depositItem;
+    case 'withdrawItem':
+      return _$withdrawItem;
     case 'depositGold':
       return _$depositGold;
     case 'withdrawGold':
@@ -75,13 +79,20 @@ ActionType _$valueOf(String name) {
       return _$use;
     case 'buyBankExpansion':
       return _$buyBankExpansion;
+    case 'giveItem':
+      return _$giveItem;
+    case 'giveGold':
+      return _$giveGold;
+    case 'changeSkin':
+      return _$changeSkin;
+    case 'rename':
+      return _$rename;
     default:
-      throw new ArgumentError(name);
+      throw ArgumentError(name);
   }
 }
 
-final BuiltSet<ActionType> _$values =
-    new BuiltSet<ActionType>(const <ActionType>[
+final BuiltSet<ActionType> _$values = BuiltSet<ActionType>(const <ActionType>[
   _$movement,
   _$fight,
   _$crafting,
@@ -92,8 +103,8 @@ final BuiltSet<ActionType> _$values =
   _$sellNpc,
   _$cancelGe,
   _$deleteItem,
-  _$deposit,
-  _$withdraw,
+  _$depositItem,
+  _$withdrawItem,
   _$depositGold,
   _$withdrawGold,
   _$equip,
@@ -104,6 +115,10 @@ final BuiltSet<ActionType> _$values =
   _$rest,
   _$use,
   _$buyBankExpansion,
+  _$giveItem,
+  _$giveGold,
+  _$changeSkin,
+  _$rename,
 ]);
 
 class _$ActionTypeMeta {
@@ -118,8 +133,8 @@ class _$ActionTypeMeta {
   ActionType get sellNpc => _$sellNpc;
   ActionType get cancelGe => _$cancelGe;
   ActionType get deleteItem => _$deleteItem;
-  ActionType get deposit => _$deposit;
-  ActionType get withdraw => _$withdraw;
+  ActionType get depositItem => _$depositItem;
+  ActionType get withdrawItem => _$withdrawItem;
   ActionType get depositGold => _$depositGold;
   ActionType get withdrawGold => _$withdrawGold;
   ActionType get equip => _$equip;
@@ -130,6 +145,10 @@ class _$ActionTypeMeta {
   ActionType get rest => _$rest;
   ActionType get use => _$use;
   ActionType get buyBankExpansion => _$buyBankExpansion;
+  ActionType get giveItem => _$giveItem;
+  ActionType get giveGold => _$giveGold;
+  ActionType get changeSkin => _$changeSkin;
+  ActionType get rename => _$rename;
   ActionType valueOf(String name) => _$valueOf(name);
   BuiltSet<ActionType> get values => _$values;
 }
@@ -139,7 +158,7 @@ abstract class _$ActionTypeMixin {
   _$ActionTypeMeta get ActionType => const _$ActionTypeMeta();
 }
 
-Serializer<ActionType> _$actionTypeSerializer = new _$ActionTypeSerializer();
+Serializer<ActionType> _$actionTypeSerializer = _$ActionTypeSerializer();
 
 class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
   static const Map<String, Object> _toWire = const <String, Object>{
@@ -153,8 +172,8 @@ class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
     'sellNpc': 'sell_npc',
     'cancelGe': 'cancel_ge',
     'deleteItem': 'delete_item',
-    'deposit': 'deposit',
-    'withdraw': 'withdraw',
+    'depositItem': 'deposit_item',
+    'withdrawItem': 'withdraw_item',
     'depositGold': 'deposit_gold',
     'withdrawGold': 'withdraw_gold',
     'equip': 'equip',
@@ -165,6 +184,10 @@ class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
     'rest': 'rest',
     'use': 'use',
     'buyBankExpansion': 'buy_bank_expansion',
+    'giveItem': 'give_item',
+    'giveGold': 'give_gold',
+    'changeSkin': 'change_skin',
+    'rename': 'rename',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'movement': 'movement',
@@ -177,8 +200,8 @@ class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
     'sell_npc': 'sellNpc',
     'cancel_ge': 'cancelGe',
     'delete_item': 'deleteItem',
-    'deposit': 'deposit',
-    'withdraw': 'withdraw',
+    'deposit_item': 'depositItem',
+    'withdraw_item': 'withdrawItem',
     'deposit_gold': 'depositGold',
     'withdraw_gold': 'withdrawGold',
     'equip': 'equip',
@@ -189,6 +212,10 @@ class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
     'rest': 'rest',
     'use': 'use',
     'buy_bank_expansion': 'buyBankExpansion',
+    'give_item': 'giveItem',
+    'give_gold': 'giveGold',
+    'change_skin': 'changeSkin',
+    'rename': 'rename',
   };
 
   @override

@@ -10,7 +10,7 @@ void main() {
     //
     // Fetch monsters details.
     //
-    //Future<DataPageMonsterSchema> getAllMonstersMonstersGet({ int minLevel, int maxLevel, String drop, int page, int size }) async
+    //Future<DataPageMonsterSchema> getAllMonstersMonstersGet({ String name, int minLevel, int maxLevel, String drop, int page, int size }) async
     test('test getAllMonstersMonstersGet', () async {
       // TODO
     });

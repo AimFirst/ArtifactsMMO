@@ -21,11 +21,13 @@ class NPCsApi {
 
   const NPCsApi(this._dio, this._serializers);
 
-  /// Get All Npcs
-  /// Fetch NPCs details.
+  /// Get All Npcs Items
+  /// Retrieve the list of all NPC items.
   ///
   /// Parameters:
-  /// * [type] - The type of the NPC.
+  /// * [code] - The code of the item.
+  /// * [npc] - The code of the npc.
+  /// * [currency] - The code of the currency.
   /// * [page] - Page number
   /// * [size] - Page size
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -35,10 +37,12 @@ class NPCsApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DataPageNPCSchema] as data
+  /// Returns a [Future] containing a [Response] with a [DataPageNPCItem] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DataPageNPCSchema>> getAllNpcsNpcsGet({
-    NPCType? type,
+  Future<Response<DataPageNPCItem>> getAllNpcsItemsNpcsItemsGet({
+    String? code,
+    String? npc,
+    String? currency,
     int? page = 1,
     int? size = 50,
     CancelToken? cancelToken,
@@ -48,7 +52,7 @@ class NPCsApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/npcs';
+    final _path = r'/npcs/items';
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -62,6 +66,107 @@ class NPCsApi {
     );
 
     final _queryParameters = <String, dynamic>{
+      if (code != null)
+        r'code':
+            encodeQueryParameter(_serializers, code, const FullType(String)),
+      if (npc != null)
+        r'npc': encodeQueryParameter(_serializers, npc, const FullType(String)),
+      if (currency != null)
+        r'currency': encodeQueryParameter(
+            _serializers, currency, const FullType(String)),
+      if (page != null)
+        r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
+      if (size != null)
+        r'size': encodeQueryParameter(_serializers, size, const FullType(int)),
+    };
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    DataPageNPCItem? _responseData;
+
+    try {
+      final rawResponse = _response.data;
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(DataPageNPCItem),
+            ) as DataPageNPCItem;
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<DataPageNPCItem>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// Get All Npcs
+  /// Fetch NPCs details.
+  ///
+  /// Parameters:
+  /// * [name] - Name of the npc.
+  /// * [type] - The type of the NPC.
+  /// * [page] - Page number
+  /// * [size] - Page size
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [DataPageNPCSchema] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<DataPageNPCSchema>> getAllNpcsNpcsDetailsGet({
+    String? name,
+    NPCType? type,
+    int? page = 1,
+    int? size = 50,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/npcs/details';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (name != null)
+        r'name':
+            encodeQueryParameter(_serializers, name, const FullType(String)),
       if (type != null)
         r'type':
             encodeQueryParameter(_serializers, type, const FullType(NPCType)),
@@ -113,7 +218,7 @@ class NPCsApi {
   }
 
   /// Get Npc Items
-  /// Retrieve the items list of a NPC. If the NPC has items to buy or sell, they will be displayed.
+  /// Retrieve the items list of a NPC. If the NPC has items to buy, sell or trade, they will be displayed.
   ///
   /// Parameters:
   /// * [code] - The code of the NPC.
@@ -128,7 +233,7 @@ class NPCsApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DataPageNPCItem] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DataPageNPCItem>> getNpcItemsNpcsCodeItemsGet({
+  Future<Response<DataPageNPCItem>> getNpcItemsNpcsItemsCodeGet({
     required String code,
     int? page = 1,
     int? size = 50,
@@ -139,7 +244,7 @@ class NPCsApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/npcs/{code}/items'.replaceAll(
+    final _path = r'/npcs/items/{code}'.replaceAll(
         '{' r'code' '}',
         encodeQueryParameter(_serializers, code, const FullType(String))
             .toString());
@@ -217,7 +322,7 @@ class NPCsApi {
   ///
   /// Returns a [Future] containing a [Response] with a [NPCResponseSchema] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<NPCResponseSchema>> getNpcNpcsCodeGet({
+  Future<Response<NPCResponseSchema>> getNpcNpcsDetailsCodeGet({
     required String code,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -226,7 +331,7 @@ class NPCsApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/npcs/{code}'.replaceAll(
+    final _path = r'/npcs/details/{code}'.replaceAll(
         '{' r'code' '}',
         encodeQueryParameter(_serializers, code, const FullType(String))
             .toString());

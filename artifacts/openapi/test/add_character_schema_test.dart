@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // Your desired skin.
+    // Your desired skin. Skins unlocked by default: 'men1', 'men2', 'men3', 'women1', 'women2', 'women3'.
     // CharacterSkin skin
     test('to test the property `skin`', () async {
       // TODO

@@ -12,12 +12,9 @@ class _$GECancelOrderSchema extends GECancelOrderSchema {
 
   factory _$GECancelOrderSchema(
           [void Function(GECancelOrderSchemaBuilder)? updates]) =>
-      (new GECancelOrderSchemaBuilder()..update(updates))._build();
+      (GECancelOrderSchemaBuilder()..update(updates))._build();
 
-  _$GECancelOrderSchema._({required this.id}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(id, r'GECancelOrderSchema', 'id');
-  }
-
+  _$GECancelOrderSchema._({required this.id}) : super._();
   @override
   GECancelOrderSchema rebuild(
           void Function(GECancelOrderSchemaBuilder) updates) =>
@@ -25,7 +22,7 @@ class _$GECancelOrderSchema extends GECancelOrderSchema {
 
   @override
   GECancelOrderSchemaBuilder toBuilder() =>
-      new GECancelOrderSchemaBuilder()..replace(this);
+      GECancelOrderSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -71,7 +68,6 @@ class GECancelOrderSchemaBuilder
 
   @override
   void replace(GECancelOrderSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GECancelOrderSchema;
   }
 
@@ -85,9 +81,10 @@ class GECancelOrderSchemaBuilder
 
   _$GECancelOrderSchema _build() {
     final _$result = _$v ??
-        new _$GECancelOrderSchema._(
-            id: BuiltValueNullFieldError.checkNotNull(
-                id, r'GECancelOrderSchema', 'id'));
+        _$GECancelOrderSchema._(
+          id: BuiltValueNullFieldError.checkNotNull(
+              id, r'GECancelOrderSchema', 'id'),
+        );
     replace(_$result);
     return _$result;
   }

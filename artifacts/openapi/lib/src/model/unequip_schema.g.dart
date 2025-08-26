@@ -13,18 +13,15 @@ class _$UnequipSchema extends UnequipSchema {
   final int? quantity;
 
   factory _$UnequipSchema([void Function(UnequipSchemaBuilder)? updates]) =>
-      (new UnequipSchemaBuilder()..update(updates))._build();
+      (UnequipSchemaBuilder()..update(updates))._build();
 
-  _$UnequipSchema._({required this.slot, this.quantity}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(slot, r'UnequipSchema', 'slot');
-  }
-
+  _$UnequipSchema._({required this.slot, this.quantity}) : super._();
   @override
   UnequipSchema rebuild(void Function(UnequipSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  UnequipSchemaBuilder toBuilder() => new UnequipSchemaBuilder()..replace(this);
+  UnequipSchemaBuilder toBuilder() => UnequipSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -80,7 +77,6 @@ class UnequipSchemaBuilder
 
   @override
   void replace(UnequipSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$UnequipSchema;
   }
 
@@ -94,10 +90,11 @@ class UnequipSchemaBuilder
 
   _$UnequipSchema _build() {
     final _$result = _$v ??
-        new _$UnequipSchema._(
-            slot: BuiltValueNullFieldError.checkNotNull(
-                slot, r'UnequipSchema', 'slot'),
-            quantity: quantity);
+        _$UnequipSchema._(
+          slot: BuiltValueNullFieldError.checkNotNull(
+              slot, r'UnequipSchema', 'slot'),
+          quantity: quantity,
+        );
     replace(_$result);
     return _$result;
   }

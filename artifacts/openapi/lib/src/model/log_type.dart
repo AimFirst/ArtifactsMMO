@@ -32,10 +32,10 @@ class LogType extends EnumClass {
   static const LogType cancelGe = _$cancelGe;
   @BuiltValueEnumConst(wireName: r'delete_item')
   static const LogType deleteItem = _$deleteItem;
-  @BuiltValueEnumConst(wireName: r'deposit')
-  static const LogType deposit = _$deposit;
-  @BuiltValueEnumConst(wireName: r'withdraw')
-  static const LogType withdraw = _$withdraw;
+  @BuiltValueEnumConst(wireName: r'deposit_item')
+  static const LogType depositItem = _$depositItem;
+  @BuiltValueEnumConst(wireName: r'withdraw_item')
+  static const LogType withdrawItem = _$withdrawItem;
   @BuiltValueEnumConst(wireName: r'deposit_gold')
   static const LogType depositGold = _$depositGold;
   @BuiltValueEnumConst(wireName: r'withdraw_gold')
@@ -66,6 +66,18 @@ class LogType extends EnumClass {
   static const LogType buyBankExpansion = _$buyBankExpansion;
   @BuiltValueEnumConst(wireName: r'achievement')
   static const LogType achievement = _$achievement;
+  @BuiltValueEnumConst(wireName: r'give_item')
+  static const LogType giveItem = _$giveItem;
+  @BuiltValueEnumConst(wireName: r'give_gold')
+  static const LogType giveGold = _$giveGold;
+  @BuiltValueEnumConst(wireName: r'receive_item')
+  static const LogType receiveItem = _$receiveItem;
+  @BuiltValueEnumConst(wireName: r'receive_gold')
+  static const LogType receiveGold = _$receiveGold;
+  @BuiltValueEnumConst(wireName: r'change_skin')
+  static const LogType changeSkin = _$changeSkin;
+  @BuiltValueEnumConst(wireName: r'rename')
+  static const LogType rename = _$rename;
 
   static Serializer<LogType> get serializer => _$logTypeSerializer;
 

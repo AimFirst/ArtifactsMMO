@@ -18,5 +18,11 @@ void main() {
     test('to test the property `y`', () async {
       // TODO
     });
+
+    // Map skin of the map
+    // String skin
+    test('to test the property `skin`', () async {
+      // TODO
+    });
   });
 }

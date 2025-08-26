@@ -15,25 +15,17 @@ class _$TaskDataSchema extends TaskDataSchema {
   final CharacterSchema character;
 
   factory _$TaskDataSchema([void Function(TaskDataSchemaBuilder)? updates]) =>
-      (new TaskDataSchemaBuilder()..update(updates))._build();
+      (TaskDataSchemaBuilder()..update(updates))._build();
 
   _$TaskDataSchema._(
       {required this.cooldown, required this.task, required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'TaskDataSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(task, r'TaskDataSchema', 'task');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'TaskDataSchema', 'character');
-  }
-
+      : super._();
   @override
   TaskDataSchema rebuild(void Function(TaskDataSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  TaskDataSchemaBuilder toBuilder() =>
-      new TaskDataSchemaBuilder()..replace(this);
+  TaskDataSchemaBuilder toBuilder() => TaskDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -70,16 +62,16 @@ class TaskDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   TaskSchemaBuilder? _task;
-  TaskSchemaBuilder get task => _$this._task ??= new TaskSchemaBuilder();
+  TaskSchemaBuilder get task => _$this._task ??= TaskSchemaBuilder();
   set task(TaskSchemaBuilder? task) => _$this._task = task;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -100,7 +92,6 @@ class TaskDataSchemaBuilder
 
   @override
   void replace(TaskDataSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskDataSchema;
   }
 
@@ -116,10 +107,11 @@ class TaskDataSchemaBuilder
     _$TaskDataSchema _$result;
     try {
       _$result = _$v ??
-          new _$TaskDataSchema._(
-              cooldown: cooldown.build(),
-              task: task.build(),
-              character: character.build());
+          _$TaskDataSchema._(
+            cooldown: cooldown.build(),
+            task: task.build(),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -130,7 +122,7 @@ class TaskDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'TaskDataSchema', _$failedField, e.toString());
       }
       rethrow;

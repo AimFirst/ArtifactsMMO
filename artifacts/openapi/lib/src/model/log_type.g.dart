@@ -17,8 +17,8 @@ const LogType _$buyNpc = const LogType._('buyNpc');
 const LogType _$sellNpc = const LogType._('sellNpc');
 const LogType _$cancelGe = const LogType._('cancelGe');
 const LogType _$deleteItem = const LogType._('deleteItem');
-const LogType _$deposit = const LogType._('deposit');
-const LogType _$withdraw = const LogType._('withdraw');
+const LogType _$depositItem = const LogType._('depositItem');
+const LogType _$withdrawItem = const LogType._('withdrawItem');
 const LogType _$depositGold = const LogType._('depositGold');
 const LogType _$withdrawGold = const LogType._('withdrawGold');
 const LogType _$equip = const LogType._('equip');
@@ -34,6 +34,12 @@ const LogType _$rest = const LogType._('rest');
 const LogType _$use = const LogType._('use');
 const LogType _$buyBankExpansion = const LogType._('buyBankExpansion');
 const LogType _$achievement = const LogType._('achievement');
+const LogType _$giveItem = const LogType._('giveItem');
+const LogType _$giveGold = const LogType._('giveGold');
+const LogType _$receiveItem = const LogType._('receiveItem');
+const LogType _$receiveGold = const LogType._('receiveGold');
+const LogType _$changeSkin = const LogType._('changeSkin');
+const LogType _$rename = const LogType._('rename');
 
 LogType _$valueOf(String name) {
   switch (name) {
@@ -59,10 +65,10 @@ LogType _$valueOf(String name) {
       return _$cancelGe;
     case 'deleteItem':
       return _$deleteItem;
-    case 'deposit':
-      return _$deposit;
-    case 'withdraw':
-      return _$withdraw;
+    case 'depositItem':
+      return _$depositItem;
+    case 'withdrawItem':
+      return _$withdrawItem;
     case 'depositGold':
       return _$depositGold;
     case 'withdrawGold':
@@ -93,12 +99,24 @@ LogType _$valueOf(String name) {
       return _$buyBankExpansion;
     case 'achievement':
       return _$achievement;
+    case 'giveItem':
+      return _$giveItem;
+    case 'giveGold':
+      return _$giveGold;
+    case 'receiveItem':
+      return _$receiveItem;
+    case 'receiveGold':
+      return _$receiveGold;
+    case 'changeSkin':
+      return _$changeSkin;
+    case 'rename':
+      return _$rename;
     default:
-      throw new ArgumentError(name);
+      throw ArgumentError(name);
   }
 }
 
-final BuiltSet<LogType> _$values = new BuiltSet<LogType>(const <LogType>[
+final BuiltSet<LogType> _$values = BuiltSet<LogType>(const <LogType>[
   _$spawn,
   _$movement,
   _$fight,
@@ -110,8 +128,8 @@ final BuiltSet<LogType> _$values = new BuiltSet<LogType>(const <LogType>[
   _$sellNpc,
   _$cancelGe,
   _$deleteItem,
-  _$deposit,
-  _$withdraw,
+  _$depositItem,
+  _$withdrawItem,
   _$depositGold,
   _$withdrawGold,
   _$equip,
@@ -127,6 +145,12 @@ final BuiltSet<LogType> _$values = new BuiltSet<LogType>(const <LogType>[
   _$use,
   _$buyBankExpansion,
   _$achievement,
+  _$giveItem,
+  _$giveGold,
+  _$receiveItem,
+  _$receiveGold,
+  _$changeSkin,
+  _$rename,
 ]);
 
 class _$LogTypeMeta {
@@ -142,8 +166,8 @@ class _$LogTypeMeta {
   LogType get sellNpc => _$sellNpc;
   LogType get cancelGe => _$cancelGe;
   LogType get deleteItem => _$deleteItem;
-  LogType get deposit => _$deposit;
-  LogType get withdraw => _$withdraw;
+  LogType get depositItem => _$depositItem;
+  LogType get withdrawItem => _$withdrawItem;
   LogType get depositGold => _$depositGold;
   LogType get withdrawGold => _$withdrawGold;
   LogType get equip => _$equip;
@@ -159,6 +183,12 @@ class _$LogTypeMeta {
   LogType get use => _$use;
   LogType get buyBankExpansion => _$buyBankExpansion;
   LogType get achievement => _$achievement;
+  LogType get giveItem => _$giveItem;
+  LogType get giveGold => _$giveGold;
+  LogType get receiveItem => _$receiveItem;
+  LogType get receiveGold => _$receiveGold;
+  LogType get changeSkin => _$changeSkin;
+  LogType get rename => _$rename;
   LogType valueOf(String name) => _$valueOf(name);
   BuiltSet<LogType> get values => _$values;
 }
@@ -168,7 +198,7 @@ abstract class _$LogTypeMixin {
   _$LogTypeMeta get LogType => const _$LogTypeMeta();
 }
 
-Serializer<LogType> _$logTypeSerializer = new _$LogTypeSerializer();
+Serializer<LogType> _$logTypeSerializer = _$LogTypeSerializer();
 
 class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
   static const Map<String, Object> _toWire = const <String, Object>{
@@ -183,8 +213,8 @@ class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
     'sellNpc': 'sell_npc',
     'cancelGe': 'cancel_ge',
     'deleteItem': 'delete_item',
-    'deposit': 'deposit',
-    'withdraw': 'withdraw',
+    'depositItem': 'deposit_item',
+    'withdrawItem': 'withdraw_item',
     'depositGold': 'deposit_gold',
     'withdrawGold': 'withdraw_gold',
     'equip': 'equip',
@@ -200,6 +230,12 @@ class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
     'use': 'use',
     'buyBankExpansion': 'buy_bank_expansion',
     'achievement': 'achievement',
+    'giveItem': 'give_item',
+    'giveGold': 'give_gold',
+    'receiveItem': 'receive_item',
+    'receiveGold': 'receive_gold',
+    'changeSkin': 'change_skin',
+    'rename': 'rename',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'spawn': 'spawn',
@@ -213,8 +249,8 @@ class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
     'sell_npc': 'sellNpc',
     'cancel_ge': 'cancelGe',
     'delete_item': 'deleteItem',
-    'deposit': 'deposit',
-    'withdraw': 'withdraw',
+    'deposit_item': 'depositItem',
+    'withdraw_item': 'withdrawItem',
     'deposit_gold': 'depositGold',
     'withdraw_gold': 'withdrawGold',
     'equip': 'equip',
@@ -230,6 +266,12 @@ class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
     'use': 'use',
     'buy_bank_expansion': 'buyBankExpansion',
     'achievement': 'achievement',
+    'give_item': 'giveItem',
+    'give_gold': 'giveGold',
+    'receive_item': 'receiveItem',
+    'receive_gold': 'receiveGold',
+    'change_skin': 'changeSkin',
+    'rename': 'rename',
   };
 
   @override

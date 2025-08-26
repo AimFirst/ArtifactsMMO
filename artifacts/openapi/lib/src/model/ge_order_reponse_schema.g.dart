@@ -12,13 +12,9 @@ class _$GEOrderReponseSchema extends GEOrderReponseSchema {
 
   factory _$GEOrderReponseSchema(
           [void Function(GEOrderReponseSchemaBuilder)? updates]) =>
-      (new GEOrderReponseSchemaBuilder()..update(updates))._build();
+      (GEOrderReponseSchemaBuilder()..update(updates))._build();
 
-  _$GEOrderReponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'GEOrderReponseSchema', 'data');
-  }
-
+  _$GEOrderReponseSchema._({required this.data}) : super._();
   @override
   GEOrderReponseSchema rebuild(
           void Function(GEOrderReponseSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$GEOrderReponseSchema extends GEOrderReponseSchema {
 
   @override
   GEOrderReponseSchemaBuilder toBuilder() =>
-      new GEOrderReponseSchemaBuilder()..replace(this);
+      GEOrderReponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -55,7 +51,7 @@ class GEOrderReponseSchemaBuilder
   _$GEOrderReponseSchema? _$v;
 
   GEOrderSchemaBuilder? _data;
-  GEOrderSchemaBuilder get data => _$this._data ??= new GEOrderSchemaBuilder();
+  GEOrderSchemaBuilder get data => _$this._data ??= GEOrderSchemaBuilder();
   set data(GEOrderSchemaBuilder? data) => _$this._data = data;
 
   GEOrderReponseSchemaBuilder() {
@@ -73,7 +69,6 @@ class GEOrderReponseSchemaBuilder
 
   @override
   void replace(GEOrderReponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GEOrderReponseSchema;
   }
 
@@ -88,14 +83,17 @@ class GEOrderReponseSchemaBuilder
   _$GEOrderReponseSchema _build() {
     _$GEOrderReponseSchema _$result;
     try {
-      _$result = _$v ?? new _$GEOrderReponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$GEOrderReponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'GEOrderReponseSchema', _$failedField, e.toString());
       }
       rethrow;

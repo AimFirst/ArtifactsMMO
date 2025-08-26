@@ -14,14 +14,10 @@ class _$BankExtensionTransactionResponseSchema
   factory _$BankExtensionTransactionResponseSchema(
           [void Function(BankExtensionTransactionResponseSchemaBuilder)?
               updates]) =>
-      (new BankExtensionTransactionResponseSchemaBuilder()..update(updates))
+      (BankExtensionTransactionResponseSchemaBuilder()..update(updates))
           ._build();
 
-  _$BankExtensionTransactionResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'BankExtensionTransactionResponseSchema', 'data');
-  }
-
+  _$BankExtensionTransactionResponseSchema._({required this.data}) : super._();
   @override
   BankExtensionTransactionResponseSchema rebuild(
           void Function(BankExtensionTransactionResponseSchemaBuilder)
@@ -30,7 +26,7 @@ class _$BankExtensionTransactionResponseSchema
 
   @override
   BankExtensionTransactionResponseSchemaBuilder toBuilder() =>
-      new BankExtensionTransactionResponseSchemaBuilder()..replace(this);
+      BankExtensionTransactionResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -64,7 +60,7 @@ class BankExtensionTransactionResponseSchemaBuilder
 
   BankExtensionTransactionSchemaBuilder? _data;
   BankExtensionTransactionSchemaBuilder get data =>
-      _$this._data ??= new BankExtensionTransactionSchemaBuilder();
+      _$this._data ??= BankExtensionTransactionSchemaBuilder();
   set data(BankExtensionTransactionSchemaBuilder? data) => _$this._data = data;
 
   BankExtensionTransactionResponseSchemaBuilder() {
@@ -82,7 +78,6 @@ class BankExtensionTransactionResponseSchemaBuilder
 
   @override
   void replace(BankExtensionTransactionResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BankExtensionTransactionResponseSchema;
   }
 
@@ -99,14 +94,16 @@ class BankExtensionTransactionResponseSchemaBuilder
     _$BankExtensionTransactionResponseSchema _$result;
     try {
       _$result = _$v ??
-          new _$BankExtensionTransactionResponseSchema._(data: data.build());
+          _$BankExtensionTransactionResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'BankExtensionTransactionResponseSchema',
             _$failedField,
             e.toString());

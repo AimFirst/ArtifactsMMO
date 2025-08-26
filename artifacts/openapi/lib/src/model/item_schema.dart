@@ -6,6 +6,7 @@
 import 'package:artifacts_api/src/model/simple_effect_schema.dart';
 import 'package:artifacts_api/src/model/craft_schema.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:artifacts_api/src/model/condition_schema.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -21,6 +22,7 @@ part 'item_schema.g.dart';
 /// * [subtype] - Item subtype.
 /// * [description] - Item description.
 /// * [tradeable] - Item tradeable status. A non-tradeable item cannot be exchanged or sold.
+/// * [conditions] - Item conditions. If applicable. Conditions for using or equipping the item.
 /// * [effects] - List of object effects. For equipment, it will include item stats.
 /// * [craft]
 @BuiltValue()
@@ -52,6 +54,10 @@ abstract class ItemSchema implements Built<ItemSchema, ItemSchemaBuilder> {
   /// Item tradeable status. A non-tradeable item cannot be exchanged or sold.
   @BuiltValueField(wireName: r'tradeable')
   bool get tradeable;
+
+  /// Item conditions. If applicable. Conditions for using or equipping the item.
+  @BuiltValueField(wireName: r'conditions')
+  BuiltList<ConditionSchema>? get conditions;
 
   /// List of object effects. For equipment, it will include item stats.
   @BuiltValueField(wireName: r'effects')
@@ -118,6 +124,13 @@ class _$ItemSchemaSerializer implements PrimitiveSerializer<ItemSchema> {
       object.tradeable,
       specifiedType: const FullType(bool),
     );
+    if (object.conditions != null) {
+      yield r'conditions';
+      yield serializers.serialize(
+        object.conditions,
+        specifiedType: const FullType(BuiltList, [FullType(ConditionSchema)]),
+      );
+    }
     if (object.effects != null) {
       yield r'effects';
       yield serializers.serialize(
@@ -206,6 +219,14 @@ class _$ItemSchemaSerializer implements PrimitiveSerializer<ItemSchema> {
             specifiedType: const FullType(bool),
           ) as bool;
           result.tradeable = valueDes;
+          break;
+        case r'conditions':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType:
+                const FullType(BuiltList, [FullType(ConditionSchema)]),
+          ) as BuiltList<ConditionSchema>;
+          result.conditions.replace(valueDes);
           break;
         case r'effects':
           final valueDes = serializers.deserialize(

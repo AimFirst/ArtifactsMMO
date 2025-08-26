@@ -9,8 +9,9 @@ import 'package:artifacts_api/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **username** | **String** | Username. | 
-**subscribed** | **bool** | Subscribed for the current season. | 
-**status** | [**AccountStatus**](AccountStatus.md) | Member status. | 
+**member** | **bool** | Member status. | 
+**status** | [**AccountStatus**](AccountStatus.md) | Account status. | 
+**skins** | [**BuiltList&lt;JsonObject&gt;**](JsonObject.md) | Skins owned. | 
 **achievementsPoints** | **int** | Achievement points. | 
 **banned** | **bool** | Banned. | 
 **badges** | [**BuiltList&lt;JsonObject&gt;**](JsonObject.md) | Account badges. | [optional] 

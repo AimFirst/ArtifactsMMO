@@ -30,10 +30,10 @@ class ActionType extends EnumClass {
   static const ActionType cancelGe = _$cancelGe;
   @BuiltValueEnumConst(wireName: r'delete_item')
   static const ActionType deleteItem = _$deleteItem;
-  @BuiltValueEnumConst(wireName: r'deposit')
-  static const ActionType deposit = _$deposit;
-  @BuiltValueEnumConst(wireName: r'withdraw')
-  static const ActionType withdraw = _$withdraw;
+  @BuiltValueEnumConst(wireName: r'deposit_item')
+  static const ActionType depositItem = _$depositItem;
+  @BuiltValueEnumConst(wireName: r'withdraw_item')
+  static const ActionType withdrawItem = _$withdrawItem;
   @BuiltValueEnumConst(wireName: r'deposit_gold')
   static const ActionType depositGold = _$depositGold;
   @BuiltValueEnumConst(wireName: r'withdraw_gold')
@@ -54,6 +54,14 @@ class ActionType extends EnumClass {
   static const ActionType use = _$use;
   @BuiltValueEnumConst(wireName: r'buy_bank_expansion')
   static const ActionType buyBankExpansion = _$buyBankExpansion;
+  @BuiltValueEnumConst(wireName: r'give_item')
+  static const ActionType giveItem = _$giveItem;
+  @BuiltValueEnumConst(wireName: r'give_gold')
+  static const ActionType giveGold = _$giveGold;
+  @BuiltValueEnumConst(wireName: r'change_skin')
+  static const ActionType changeSkin = _$changeSkin;
+  @BuiltValueEnumConst(wireName: r'rename')
+  static const ActionType rename = _$rename;
 
   static Serializer<ActionType> get serializer => _$actionTypeSerializer;
 

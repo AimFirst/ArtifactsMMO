@@ -12,6 +12,8 @@ part 'npc_type.g.dart';
 class NPCType extends EnumClass {
   @BuiltValueEnumConst(wireName: r'merchant')
   static const NPCType merchant = _$merchant;
+  @BuiltValueEnumConst(wireName: r'trader')
+  static const NPCType trader = _$trader;
 
   static Serializer<NPCType> get serializer => _$nPCTypeSerializer;
 

@@ -15,24 +15,17 @@ class _$UseItemSchema extends UseItemSchema {
   final CharacterSchema character;
 
   factory _$UseItemSchema([void Function(UseItemSchemaBuilder)? updates]) =>
-      (new UseItemSchemaBuilder()..update(updates))._build();
+      (UseItemSchemaBuilder()..update(updates))._build();
 
   _$UseItemSchema._(
       {required this.cooldown, required this.item, required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'UseItemSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(item, r'UseItemSchema', 'item');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'UseItemSchema', 'character');
-  }
-
+      : super._();
   @override
   UseItemSchema rebuild(void Function(UseItemSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  UseItemSchemaBuilder toBuilder() => new UseItemSchemaBuilder()..replace(this);
+  UseItemSchemaBuilder toBuilder() => UseItemSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -69,16 +62,16 @@ class UseItemSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   ItemSchemaBuilder? _item;
-  ItemSchemaBuilder get item => _$this._item ??= new ItemSchemaBuilder();
+  ItemSchemaBuilder get item => _$this._item ??= ItemSchemaBuilder();
   set item(ItemSchemaBuilder? item) => _$this._item = item;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -99,7 +92,6 @@ class UseItemSchemaBuilder
 
   @override
   void replace(UseItemSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$UseItemSchema;
   }
 
@@ -115,10 +107,11 @@ class UseItemSchemaBuilder
     _$UseItemSchema _$result;
     try {
       _$result = _$v ??
-          new _$UseItemSchema._(
-              cooldown: cooldown.build(),
-              item: item.build(),
-              character: character.build());
+          _$UseItemSchema._(
+            cooldown: cooldown.build(),
+            item: item.build(),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -129,7 +122,7 @@ class UseItemSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'UseItemSchema', _$failedField, e.toString());
       }
       rethrow;

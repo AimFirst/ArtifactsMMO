@@ -12,7 +12,6 @@ Name | Type | Description | Notes
 **code** | **String** | Code of the event. | 
 **content** | [**EventContentSchema**](EventContentSchema.md) | Content of the event. | 
 **maps** | [**BuiltList&lt;EventMapSchema&gt;**](EventMapSchema.md) | Map list of the event. | 
-**skin** | **String** | Map skin of the event. | 
 **duration** | **int** | Duration in minutes. | 
 **rate** | **int** | Rate spawn of the event. (1/rate every minute) | 
 

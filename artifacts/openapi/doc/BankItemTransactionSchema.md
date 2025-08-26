@@ -9,7 +9,7 @@ import 'package:artifacts_api/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **cooldown** | [**CooldownSchema**](CooldownSchema.md) | Cooldown details. | 
-**item** | [**ItemSchema**](ItemSchema.md) | Item details. | 
+**items** | [**BuiltList&lt;SimpleItemSchema&gt;**](SimpleItemSchema.md) | Items details. | 
 **bank** | [**BuiltList&lt;SimpleItemSchema&gt;**](SimpleItemSchema.md) | Items in your banks. | 
 **character** | [**CharacterSchema**](CharacterSchema.md) | Player details. | 
 

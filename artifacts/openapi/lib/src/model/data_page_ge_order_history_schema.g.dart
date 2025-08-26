@@ -20,15 +20,11 @@ class _$DataPageGeOrderHistorySchema extends DataPageGeOrderHistorySchema {
 
   factory _$DataPageGeOrderHistorySchema(
           [void Function(DataPageGeOrderHistorySchemaBuilder)? updates]) =>
-      (new DataPageGeOrderHistorySchemaBuilder()..update(updates))._build();
+      (DataPageGeOrderHistorySchemaBuilder()..update(updates))._build();
 
   _$DataPageGeOrderHistorySchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'DataPageGeOrderHistorySchema', 'data');
-  }
-
+      : super._();
   @override
   DataPageGeOrderHistorySchema rebuild(
           void Function(DataPageGeOrderHistorySchemaBuilder) updates) =>
@@ -36,7 +32,7 @@ class _$DataPageGeOrderHistorySchema extends DataPageGeOrderHistorySchema {
 
   @override
   DataPageGeOrderHistorySchemaBuilder toBuilder() =>
-      new DataPageGeOrderHistorySchemaBuilder()..replace(this);
+      DataPageGeOrderHistorySchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -81,7 +77,7 @@ class DataPageGeOrderHistorySchemaBuilder
 
   ListBuilder<GeOrderHistorySchema>? _data;
   ListBuilder<GeOrderHistorySchema> get data =>
-      _$this._data ??= new ListBuilder<GeOrderHistorySchema>();
+      _$this._data ??= ListBuilder<GeOrderHistorySchema>();
   set data(ListBuilder<GeOrderHistorySchema>? data) => _$this._data = data;
 
   int? _total;
@@ -119,7 +115,6 @@ class DataPageGeOrderHistorySchemaBuilder
 
   @override
   void replace(DataPageGeOrderHistorySchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageGeOrderHistorySchema;
   }
 
@@ -135,19 +130,20 @@ class DataPageGeOrderHistorySchemaBuilder
     _$DataPageGeOrderHistorySchema _$result;
     try {
       _$result = _$v ??
-          new _$DataPageGeOrderHistorySchema._(
-              data: data.build(),
-              total: total,
-              page: page,
-              size: size,
-              pages: pages);
+          _$DataPageGeOrderHistorySchema._(
+            data: data.build(),
+            total: total,
+            page: page,
+            size: size,
+            pages: pages,
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'DataPageGeOrderHistorySchema', _$failedField, e.toString());
       }
       rethrow;

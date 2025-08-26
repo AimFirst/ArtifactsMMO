@@ -12,19 +12,16 @@ class _$NPCResponseSchema extends NPCResponseSchema {
 
   factory _$NPCResponseSchema(
           [void Function(NPCResponseSchemaBuilder)? updates]) =>
-      (new NPCResponseSchemaBuilder()..update(updates))._build();
+      (NPCResponseSchemaBuilder()..update(updates))._build();
 
-  _$NPCResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(data, r'NPCResponseSchema', 'data');
-  }
-
+  _$NPCResponseSchema._({required this.data}) : super._();
   @override
   NPCResponseSchema rebuild(void Function(NPCResponseSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   NPCResponseSchemaBuilder toBuilder() =>
-      new NPCResponseSchemaBuilder()..replace(this);
+      NPCResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -53,7 +50,7 @@ class NPCResponseSchemaBuilder
   _$NPCResponseSchema? _$v;
 
   NPCSchemaBuilder? _data;
-  NPCSchemaBuilder get data => _$this._data ??= new NPCSchemaBuilder();
+  NPCSchemaBuilder get data => _$this._data ??= NPCSchemaBuilder();
   set data(NPCSchemaBuilder? data) => _$this._data = data;
 
   NPCResponseSchemaBuilder() {
@@ -71,7 +68,6 @@ class NPCResponseSchemaBuilder
 
   @override
   void replace(NPCResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NPCResponseSchema;
   }
 
@@ -86,14 +82,17 @@ class NPCResponseSchemaBuilder
   _$NPCResponseSchema _build() {
     _$NPCResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$NPCResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$NPCResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'NPCResponseSchema', _$failedField, e.toString());
       }
       rethrow;

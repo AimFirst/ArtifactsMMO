@@ -13,6 +13,7 @@ part 'npc_item.g.dart';
 /// Properties:
 /// * [code] - The code of the NPC. This is the NPC's unique identifier (ID).
 /// * [npc] - Code of the NPC that sells/buys the item.
+/// * [currency] - Currency used to buy/sell the item. If it's not gold, it's the item code.
 /// * [buyPrice]
 /// * [sellPrice]
 @BuiltValue()
@@ -24,6 +25,10 @@ abstract class NPCItem implements Built<NPCItem, NPCItemBuilder> {
   /// Code of the NPC that sells/buys the item.
   @BuiltValueField(wireName: r'npc')
   String get npc;
+
+  /// Currency used to buy/sell the item. If it's not gold, it's the item code.
+  @BuiltValueField(wireName: r'currency')
+  String get currency;
 
   @BuiltValueField(wireName: r'buy_price')
   int? get buyPrice;
@@ -62,6 +67,11 @@ class _$NPCItemSerializer implements PrimitiveSerializer<NPCItem> {
     yield r'npc';
     yield serializers.serialize(
       object.npc,
+      specifiedType: const FullType(String),
+    );
+    yield r'currency';
+    yield serializers.serialize(
+      object.currency,
       specifiedType: const FullType(String),
     );
     yield r'buy_price';
@@ -116,6 +126,13 @@ class _$NPCItemSerializer implements PrimitiveSerializer<NPCItem> {
             specifiedType: const FullType(String),
           ) as String;
           result.npc = valueDes;
+          break;
+        case r'currency':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.currency = valueDes;
           break;
         case r'buy_price':
           final valueDes = serializers.deserialize(

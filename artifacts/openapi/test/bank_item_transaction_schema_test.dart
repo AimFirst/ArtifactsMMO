@@ -13,9 +13,9 @@ void main() {
       // TODO
     });
 
-    // Item details.
-    // ItemSchema item
-    test('to test the property `item`', () async {
+    // Items details.
+    // BuiltList<SimpleItemSchema> items
+    test('to test the property `items`', () async {
       // TODO
     });
 

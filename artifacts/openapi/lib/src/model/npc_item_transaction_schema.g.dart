@@ -12,30 +12,23 @@ class _$NpcItemTransactionSchema extends NpcItemTransactionSchema {
   @override
   final int quantity;
   @override
+  final String currency;
+  @override
   final int price;
   @override
   final int totalPrice;
 
   factory _$NpcItemTransactionSchema(
           [void Function(NpcItemTransactionSchemaBuilder)? updates]) =>
-      (new NpcItemTransactionSchemaBuilder()..update(updates))._build();
+      (NpcItemTransactionSchemaBuilder()..update(updates))._build();
 
   _$NpcItemTransactionSchema._(
       {required this.code,
       required this.quantity,
+      required this.currency,
       required this.price,
       required this.totalPrice})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        code, r'NpcItemTransactionSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        quantity, r'NpcItemTransactionSchema', 'quantity');
-    BuiltValueNullFieldError.checkNotNull(
-        price, r'NpcItemTransactionSchema', 'price');
-    BuiltValueNullFieldError.checkNotNull(
-        totalPrice, r'NpcItemTransactionSchema', 'totalPrice');
-  }
-
+      : super._();
   @override
   NpcItemTransactionSchema rebuild(
           void Function(NpcItemTransactionSchemaBuilder) updates) =>
@@ -43,7 +36,7 @@ class _$NpcItemTransactionSchema extends NpcItemTransactionSchema {
 
   @override
   NpcItemTransactionSchemaBuilder toBuilder() =>
-      new NpcItemTransactionSchemaBuilder()..replace(this);
+      NpcItemTransactionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -51,6 +44,7 @@ class _$NpcItemTransactionSchema extends NpcItemTransactionSchema {
     return other is NpcItemTransactionSchema &&
         code == other.code &&
         quantity == other.quantity &&
+        currency == other.currency &&
         price == other.price &&
         totalPrice == other.totalPrice;
   }
@@ -60,6 +54,7 @@ class _$NpcItemTransactionSchema extends NpcItemTransactionSchema {
     var _$hash = 0;
     _$hash = $jc(_$hash, code.hashCode);
     _$hash = $jc(_$hash, quantity.hashCode);
+    _$hash = $jc(_$hash, currency.hashCode);
     _$hash = $jc(_$hash, price.hashCode);
     _$hash = $jc(_$hash, totalPrice.hashCode);
     _$hash = $jf(_$hash);
@@ -71,6 +66,7 @@ class _$NpcItemTransactionSchema extends NpcItemTransactionSchema {
     return (newBuiltValueToStringHelper(r'NpcItemTransactionSchema')
           ..add('code', code)
           ..add('quantity', quantity)
+          ..add('currency', currency)
           ..add('price', price)
           ..add('totalPrice', totalPrice))
         .toString();
@@ -90,6 +86,10 @@ class NpcItemTransactionSchemaBuilder
   int? get quantity => _$this._quantity;
   set quantity(int? quantity) => _$this._quantity = quantity;
 
+  String? _currency;
+  String? get currency => _$this._currency;
+  set currency(String? currency) => _$this._currency = currency;
+
   int? _price;
   int? get price => _$this._price;
   set price(int? price) => _$this._price = price;
@@ -107,6 +107,7 @@ class NpcItemTransactionSchemaBuilder
     if ($v != null) {
       _code = $v.code;
       _quantity = $v.quantity;
+      _currency = $v.currency;
       _price = $v.price;
       _totalPrice = $v.totalPrice;
       _$v = null;
@@ -116,7 +117,6 @@ class NpcItemTransactionSchemaBuilder
 
   @override
   void replace(NpcItemTransactionSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NpcItemTransactionSchema;
   }
 
@@ -130,15 +130,18 @@ class NpcItemTransactionSchemaBuilder
 
   _$NpcItemTransactionSchema _build() {
     final _$result = _$v ??
-        new _$NpcItemTransactionSchema._(
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'NpcItemTransactionSchema', 'code'),
-            quantity: BuiltValueNullFieldError.checkNotNull(
-                quantity, r'NpcItemTransactionSchema', 'quantity'),
-            price: BuiltValueNullFieldError.checkNotNull(
-                price, r'NpcItemTransactionSchema', 'price'),
-            totalPrice: BuiltValueNullFieldError.checkNotNull(
-                totalPrice, r'NpcItemTransactionSchema', 'totalPrice'));
+        _$NpcItemTransactionSchema._(
+          code: BuiltValueNullFieldError.checkNotNull(
+              code, r'NpcItemTransactionSchema', 'code'),
+          quantity: BuiltValueNullFieldError.checkNotNull(
+              quantity, r'NpcItemTransactionSchema', 'quantity'),
+          currency: BuiltValueNullFieldError.checkNotNull(
+              currency, r'NpcItemTransactionSchema', 'currency'),
+          price: BuiltValueNullFieldError.checkNotNull(
+              price, r'NpcItemTransactionSchema', 'price'),
+          totalPrice: BuiltValueNullFieldError.checkNotNull(
+              totalPrice, r'NpcItemTransactionSchema', 'totalPrice'),
+        );
     replace(_$result);
     return _$result;
   }

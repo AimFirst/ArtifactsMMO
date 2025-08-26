@@ -50,8 +50,8 @@ part 'character_schema.g.dart';
 /// * [maxHp] - Character max HP.
 /// * [haste] - *Increase speed attack (reduce fight cooldown)
 /// * [criticalStrike] - % Critical strike. Critical strikes adds 50% extra damage to an attack (1.5x).
-/// * [wisdom] - Wisdom increases the amount of XP gained from fights (1% extra per 10 wisdom).
-/// * [prospecting] - Prospecting increases the chances of getting better loot (1% extra per 10 PP).
+/// * [wisdom] - Wisdom increases the amount of XP gained from fights and skills (1% extra per 10 wisdom).
+/// * [prospecting] - Prospecting increases the chances of getting drops from fights and skills (1% extra per 10 PP).
 /// * [attackFire] - Fire attack.
 /// * [attackEarth] - Earth attack.
 /// * [attackWater] - Water attack.
@@ -107,7 +107,7 @@ abstract class CharacterSchema
   /// Character skin code.
   @BuiltValueField(wireName: r'skin')
   CharacterSkin get skin;
-  // enum skinEnum {  men1,  men2,  men3,  women1,  women2,  women3,  };
+  // enum skinEnum {  men1,  men2,  men3,  women1,  women2,  women3,  corrupted1,  zombie1,  };
 
   /// Combat level.
   @BuiltValueField(wireName: r'level')
@@ -241,11 +241,11 @@ abstract class CharacterSchema
   @BuiltValueField(wireName: r'critical_strike')
   int get criticalStrike;
 
-  /// Wisdom increases the amount of XP gained from fights (1% extra per 10 wisdom).
+  /// Wisdom increases the amount of XP gained from fights and skills (1% extra per 10 wisdom).
   @BuiltValueField(wireName: r'wisdom')
   int get wisdom;
 
-  /// Prospecting increases the chances of getting better loot (1% extra per 10 PP).
+  /// Prospecting increases the chances of getting drops from fights and skills (1% extra per 10 PP).
   @BuiltValueField(wireName: r'prospecting')
   int get prospecting;
 

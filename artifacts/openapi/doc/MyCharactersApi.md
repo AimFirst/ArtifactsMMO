@@ -11,17 +11,20 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**actionAcceptNewTaskMyNameActionTaskNewPost**](MyCharactersApi.md#actionacceptnewtaskmynameactiontasknewpost) | **POST** /my/{name}/action/task/new | Action Accept New Task
 [**actionBuyBankExpansionMyNameActionBankBuyExpansionPost**](MyCharactersApi.md#actionbuybankexpansionmynameactionbankbuyexpansionpost) | **POST** /my/{name}/action/bank/buy_expansion | Action Buy Bank Expansion
+[**actionChangeSkinMyNameActionChangeSkinPost**](MyCharactersApi.md#actionchangeskinmynameactionchangeskinpost) | **POST** /my/{name}/action/change_skin | Action Change Skin
 [**actionCompleteTaskMyNameActionTaskCompletePost**](MyCharactersApi.md#actioncompletetaskmynameactiontaskcompletepost) | **POST** /my/{name}/action/task/complete | Action Complete Task
 [**actionCraftingMyNameActionCraftingPost**](MyCharactersApi.md#actioncraftingmynameactioncraftingpost) | **POST** /my/{name}/action/crafting | Action Crafting
 [**actionDeleteItemMyNameActionDeletePost**](MyCharactersApi.md#actiondeleteitemmynameactiondeletepost) | **POST** /my/{name}/action/delete | Action Delete Item
 [**actionDepositBankGoldMyNameActionBankDepositGoldPost**](MyCharactersApi.md#actiondepositbankgoldmynameactionbankdepositgoldpost) | **POST** /my/{name}/action/bank/deposit/gold | Action Deposit Bank Gold
-[**actionDepositBankMyNameActionBankDepositPost**](MyCharactersApi.md#actiondepositbankmynameactionbankdepositpost) | **POST** /my/{name}/action/bank/deposit | Action Deposit Bank
+[**actionDepositBankItemMyNameActionBankDepositItemPost**](MyCharactersApi.md#actiondepositbankitemmynameactionbankdeposititempost) | **POST** /my/{name}/action/bank/deposit/item | Action Deposit Bank Item
 [**actionEquipItemMyNameActionEquipPost**](MyCharactersApi.md#actionequipitemmynameactionequippost) | **POST** /my/{name}/action/equip | Action Equip Item
 [**actionFightMyNameActionFightPost**](MyCharactersApi.md#actionfightmynameactionfightpost) | **POST** /my/{name}/action/fight | Action Fight
 [**actionGatheringMyNameActionGatheringPost**](MyCharactersApi.md#actiongatheringmynameactiongatheringpost) | **POST** /my/{name}/action/gathering | Action Gathering
 [**actionGeBuyItemMyNameActionGrandexchangeBuyPost**](MyCharactersApi.md#actiongebuyitemmynameactiongrandexchangebuypost) | **POST** /my/{name}/action/grandexchange/buy | Action Ge Buy Item
 [**actionGeCancelSellOrderMyNameActionGrandexchangeCancelPost**](MyCharactersApi.md#actiongecancelsellordermynameactiongrandexchangecancelpost) | **POST** /my/{name}/action/grandexchange/cancel | Action Ge Cancel Sell Order
 [**actionGeCreateSellOrderMyNameActionGrandexchangeSellPost**](MyCharactersApi.md#actiongecreatesellordermynameactiongrandexchangesellpost) | **POST** /my/{name}/action/grandexchange/sell | Action Ge Create Sell Order
+[**actionGiveGoldMyNameActionGiveGoldPost**](MyCharactersApi.md#actiongivegoldmynameactiongivegoldpost) | **POST** /my/{name}/action/give/gold | Action Give Gold
+[**actionGiveItemsMyNameActionGiveItemPost**](MyCharactersApi.md#actiongiveitemsmynameactiongiveitempost) | **POST** /my/{name}/action/give/item | Action Give Items
 [**actionMoveMyNameActionMovePost**](MyCharactersApi.md#actionmovemynameactionmovepost) | **POST** /my/{name}/action/move | Action Move
 [**actionNpcBuyItemMyNameActionNpcBuyPost**](MyCharactersApi.md#actionnpcbuyitemmynameactionnpcbuypost) | **POST** /my/{name}/action/npc/buy | Action Npc Buy Item
 [**actionNpcSellItemMyNameActionNpcSellPost**](MyCharactersApi.md#actionnpcsellitemmynameactionnpcsellpost) | **POST** /my/{name}/action/npc/sell | Action Npc Sell Item
@@ -33,7 +36,7 @@ Method | HTTP request | Description
 [**actionUnequipItemMyNameActionUnequipPost**](MyCharactersApi.md#actionunequipitemmynameactionunequippost) | **POST** /my/{name}/action/unequip | Action Unequip Item
 [**actionUseItemMyNameActionUsePost**](MyCharactersApi.md#actionuseitemmynameactionusepost) | **POST** /my/{name}/action/use | Action Use Item
 [**actionWithdrawBankGoldMyNameActionBankWithdrawGoldPost**](MyCharactersApi.md#actionwithdrawbankgoldmynameactionbankwithdrawgoldpost) | **POST** /my/{name}/action/bank/withdraw/gold | Action Withdraw Bank Gold
-[**actionWithdrawBankMyNameActionBankWithdrawPost**](MyCharactersApi.md#actionwithdrawbankmynameactionbankwithdrawpost) | **POST** /my/{name}/action/bank/withdraw | Action Withdraw Bank
+[**actionWithdrawBankItemMyNameActionBankWithdrawItemPost**](MyCharactersApi.md#actionwithdrawbankitemmynameactionbankwithdrawitempost) | **POST** /my/{name}/action/bank/withdraw/item | Action Withdraw Bank Item
 [**getAllCharactersLogsMyLogsGet**](MyCharactersApi.md#getallcharacterslogsmylogsget) | **GET** /my/logs | Get All Characters Logs
 [**getCharacterLogsMyLogsNameGet**](MyCharactersApi.md#getcharacterlogsmylogsnameget) | **GET** /my/logs/{name} | Get Character Logs
 [**getMyCharactersMyCharactersGet**](MyCharactersApi.md#getmycharactersmycharactersget) | **GET** /my/characters | Get My Characters
@@ -87,7 +90,7 @@ Name | Type | Description  | Notes
 
 Action Buy Bank Expansion
 
-Buy a 20 slots bank expansion.
+Buy a 25 slots bank expansion.
 
 ### Example
 ```dart
@@ -121,6 +124,51 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **actionChangeSkinMyNameActionChangeSkinPost**
+> ChangeSkinResponseSchema actionChangeSkinMyNameActionChangeSkinPost(name, changeSkinCharacterSchema)
+
+Action Change Skin
+
+Change the skin of your character.
+
+### Example
+```dart
+import 'package:artifacts_api/api.dart';
+
+final api = ArtifactsApi().getMyCharactersApi();
+final String name = name_example; // String | Name of your character.
+final ChangeSkinCharacterSchema changeSkinCharacterSchema = ; // ChangeSkinCharacterSchema | 
+
+try {
+    final response = api.actionChangeSkinMyNameActionChangeSkinPost(name, changeSkinCharacterSchema);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MyCharactersApi->actionChangeSkinMyNameActionChangeSkinPost: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **String**| Name of your character. | 
+ **changeSkinCharacterSchema** | [**ChangeSkinCharacterSchema**](ChangeSkinCharacterSchema.md)|  | 
+
+### Return type
+
+[**ChangeSkinResponseSchema**](ChangeSkinResponseSchema.md)
+
+### Authorization
+
+[JWTBearer](../README.md#JWTBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -303,12 +351,12 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **actionDepositBankMyNameActionBankDepositPost**
-> BankItemTransactionResponseSchema actionDepositBankMyNameActionBankDepositPost(name, simpleItemSchema)
+# **actionDepositBankItemMyNameActionBankDepositItemPost**
+> BankItemTransactionResponseSchema actionDepositBankItemMyNameActionBankDepositItemPost(name, simpleItemSchema)
 
-Action Deposit Bank
+Action Deposit Bank Item
 
-Deposit an item in a bank on the character's map.
+Deposit multiple items in a bank on the character's map. The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
 
 ### Example
 ```dart
@@ -316,13 +364,13 @@ import 'package:artifacts_api/api.dart';
 
 final api = ArtifactsApi().getMyCharactersApi();
 final String name = name_example; // String | Name of your character.
-final SimpleItemSchema simpleItemSchema = ; // SimpleItemSchema | 
+final BuiltList<SimpleItemSchema> simpleItemSchema = ; // BuiltList<SimpleItemSchema> | 
 
 try {
-    final response = api.actionDepositBankMyNameActionBankDepositPost(name, simpleItemSchema);
+    final response = api.actionDepositBankItemMyNameActionBankDepositItemPost(name, simpleItemSchema);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling MyCharactersApi->actionDepositBankMyNameActionBankDepositPost: $e\n');
+    print('Exception when calling MyCharactersApi->actionDepositBankItemMyNameActionBankDepositItemPost: $e\n');
 }
 ```
 
@@ -331,7 +379,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **name** | **String**| Name of your character. | 
- **simpleItemSchema** | [**SimpleItemSchema**](SimpleItemSchema.md)|  | 
+ **simpleItemSchema** | [**BuiltList&lt;SimpleItemSchema&gt;**](SimpleItemSchema.md)|  | 
 
 ### Return type
 
@@ -602,6 +650,96 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**GECreateOrderTransactionResponseSchema**](GECreateOrderTransactionResponseSchema.md)
+
+### Authorization
+
+[JWTBearer](../README.md#JWTBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **actionGiveGoldMyNameActionGiveGoldPost**
+> GiveGoldReponseSchema actionGiveGoldMyNameActionGiveGoldPost(name, giveGoldSchema)
+
+Action Give Gold
+
+Give gold to another character in your account on the same map.
+
+### Example
+```dart
+import 'package:artifacts_api/api.dart';
+
+final api = ArtifactsApi().getMyCharactersApi();
+final String name = name_example; // String | Name of your character.
+final GiveGoldSchema giveGoldSchema = ; // GiveGoldSchema | 
+
+try {
+    final response = api.actionGiveGoldMyNameActionGiveGoldPost(name, giveGoldSchema);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MyCharactersApi->actionGiveGoldMyNameActionGiveGoldPost: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **String**| Name of your character. | 
+ **giveGoldSchema** | [**GiveGoldSchema**](GiveGoldSchema.md)|  | 
+
+### Return type
+
+[**GiveGoldReponseSchema**](GiveGoldReponseSchema.md)
+
+### Authorization
+
+[JWTBearer](../README.md#JWTBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **actionGiveItemsMyNameActionGiveItemPost**
+> GiveItemReponseSchema actionGiveItemsMyNameActionGiveItemPost(name, giveItemsSchema)
+
+Action Give Items
+
+Give items to another character in your account on the same map. The cooldown will be 3 seconds multiplied by the number of different items given.
+
+### Example
+```dart
+import 'package:artifacts_api/api.dart';
+
+final api = ArtifactsApi().getMyCharactersApi();
+final String name = name_example; // String | Name of your character.
+final GiveItemsSchema giveItemsSchema = ; // GiveItemsSchema | 
+
+try {
+    final response = api.actionGiveItemsMyNameActionGiveItemPost(name, giveItemsSchema);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MyCharactersApi->actionGiveItemsMyNameActionGiveItemPost: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **String**| Name of your character. | 
+ **giveItemsSchema** | [**GiveItemsSchema**](GiveItemsSchema.md)|  | 
+
+### Return type
+
+[**GiveItemReponseSchema**](GiveItemReponseSchema.md)
 
 ### Authorization
 
@@ -1103,12 +1241,12 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **actionWithdrawBankMyNameActionBankWithdrawPost**
-> BankItemTransactionResponseSchema actionWithdrawBankMyNameActionBankWithdrawPost(name, simpleItemSchema)
+# **actionWithdrawBankItemMyNameActionBankWithdrawItemPost**
+> BankItemTransactionResponseSchema actionWithdrawBankItemMyNameActionBankWithdrawItemPost(name, simpleItemSchema)
 
-Action Withdraw Bank
+Action Withdraw Bank Item
 
-Take an item from your bank and put it in the character's inventory.
+Take items from your bank and put them in the character's inventory. The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
 
 ### Example
 ```dart
@@ -1116,13 +1254,13 @@ import 'package:artifacts_api/api.dart';
 
 final api = ArtifactsApi().getMyCharactersApi();
 final String name = name_example; // String | Name of your character.
-final SimpleItemSchema simpleItemSchema = ; // SimpleItemSchema | 
+final BuiltList<SimpleItemSchema> simpleItemSchema = ; // BuiltList<SimpleItemSchema> | 
 
 try {
-    final response = api.actionWithdrawBankMyNameActionBankWithdrawPost(name, simpleItemSchema);
+    final response = api.actionWithdrawBankItemMyNameActionBankWithdrawItemPost(name, simpleItemSchema);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling MyCharactersApi->actionWithdrawBankMyNameActionBankWithdrawPost: $e\n');
+    print('Exception when calling MyCharactersApi->actionWithdrawBankItemMyNameActionBankWithdrawItemPost: $e\n');
 }
 ```
 
@@ -1131,7 +1269,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **name** | **String**| Name of your character. | 
- **simpleItemSchema** | [**SimpleItemSchema**](SimpleItemSchema.md)|  | 
+ **simpleItemSchema** | [**BuiltList&lt;SimpleItemSchema&gt;**](SimpleItemSchema.md)|  | 
 
 ### Return type
 
@@ -1245,7 +1383,7 @@ Name | Type | Description  | Notes
 
 Get My Characters
 
-List of your characters. This endpoint is deprecated and will be removed in a future version. Please use accounts/{account}/characters.
+List of your characters.
 
 ### Example
 ```dart

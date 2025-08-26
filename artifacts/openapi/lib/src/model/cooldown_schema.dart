@@ -39,7 +39,7 @@ abstract class CooldownSchema
   /// The reason of the cooldown.
   @BuiltValueField(wireName: r'reason')
   ActionType get reason;
-  // enum reasonEnum {  movement,  fight,  crafting,  gathering,  buy_ge,  sell_ge,  buy_npc,  sell_npc,  cancel_ge,  delete_item,  deposit,  withdraw,  deposit_gold,  withdraw_gold,  equip,  unequip,  task,  christmas_exchange,  recycling,  rest,  use,  buy_bank_expansion,  };
+  // enum reasonEnum {  movement,  fight,  crafting,  gathering,  buy_ge,  sell_ge,  buy_npc,  sell_npc,  cancel_ge,  delete_item,  deposit_item,  withdraw_item,  deposit_gold,  withdraw_gold,  equip,  unequip,  task,  christmas_exchange,  recycling,  rest,  use,  buy_bank_expansion,  give_item,  give_gold,  change_skin,  rename,  };
 
   CooldownSchema._();
 

@@ -16,19 +16,11 @@ class _$RecyclingDataSchema extends RecyclingDataSchema {
 
   factory _$RecyclingDataSchema(
           [void Function(RecyclingDataSchemaBuilder)? updates]) =>
-      (new RecyclingDataSchemaBuilder()..update(updates))._build();
+      (RecyclingDataSchemaBuilder()..update(updates))._build();
 
   _$RecyclingDataSchema._(
       {required this.cooldown, required this.details, required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'RecyclingDataSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(
-        details, r'RecyclingDataSchema', 'details');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'RecyclingDataSchema', 'character');
-  }
-
+      : super._();
   @override
   RecyclingDataSchema rebuild(
           void Function(RecyclingDataSchemaBuilder) updates) =>
@@ -36,7 +28,7 @@ class _$RecyclingDataSchema extends RecyclingDataSchema {
 
   @override
   RecyclingDataSchemaBuilder toBuilder() =>
-      new RecyclingDataSchemaBuilder()..replace(this);
+      RecyclingDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -73,18 +65,18 @@ class RecyclingDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   RecyclingItemsSchemaBuilder? _details;
   RecyclingItemsSchemaBuilder get details =>
-      _$this._details ??= new RecyclingItemsSchemaBuilder();
+      _$this._details ??= RecyclingItemsSchemaBuilder();
   set details(RecyclingItemsSchemaBuilder? details) =>
       _$this._details = details;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -105,7 +97,6 @@ class RecyclingDataSchemaBuilder
 
   @override
   void replace(RecyclingDataSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RecyclingDataSchema;
   }
 
@@ -121,10 +112,11 @@ class RecyclingDataSchemaBuilder
     _$RecyclingDataSchema _$result;
     try {
       _$result = _$v ??
-          new _$RecyclingDataSchema._(
-              cooldown: cooldown.build(),
-              details: details.build(),
-              character: character.build());
+          _$RecyclingDataSchema._(
+            cooldown: cooldown.build(),
+            details: details.build(),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -135,7 +127,7 @@ class RecyclingDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'RecyclingDataSchema', _$failedField, e.toString());
       }
       rethrow;

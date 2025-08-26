@@ -3,7 +3,6 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:artifacts_api/src/model/item_schema.dart';
 import 'package:artifacts_api/src/model/cooldown_schema.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:artifacts_api/src/model/simple_item_schema.dart';
@@ -17,7 +16,7 @@ part 'bank_item_transaction_schema.g.dart';
 ///
 /// Properties:
 /// * [cooldown] - Cooldown details.
-/// * [item] - Item details.
+/// * [items] - Items details.
 /// * [bank] - Items in your banks.
 /// * [character] - Player details.
 @BuiltValue()
@@ -28,9 +27,9 @@ abstract class BankItemTransactionSchema
   @BuiltValueField(wireName: r'cooldown')
   CooldownSchema get cooldown;
 
-  /// Item details.
-  @BuiltValueField(wireName: r'item')
-  ItemSchema get item;
+  /// Items details.
+  @BuiltValueField(wireName: r'items')
+  BuiltList<SimpleItemSchema> get items;
 
   /// Items in your banks.
   @BuiltValueField(wireName: r'bank')
@@ -75,10 +74,10 @@ class _$BankItemTransactionSchemaSerializer
       object.cooldown,
       specifiedType: const FullType(CooldownSchema),
     );
-    yield r'item';
+    yield r'items';
     yield serializers.serialize(
-      object.item,
-      specifiedType: const FullType(ItemSchema),
+      object.items,
+      specifiedType: const FullType(BuiltList, [FullType(SimpleItemSchema)]),
     );
     yield r'bank';
     yield serializers.serialize(
@@ -122,12 +121,13 @@ class _$BankItemTransactionSchemaSerializer
           ) as CooldownSchema;
           result.cooldown.replace(valueDes);
           break;
-        case r'item':
+        case r'items':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(ItemSchema),
-          ) as ItemSchema;
-          result.item.replace(valueDes);
+            specifiedType:
+                const FullType(BuiltList, [FullType(SimpleItemSchema)]),
+          ) as BuiltList<SimpleItemSchema>;
+          result.items.replace(valueDes);
           break;
         case r'bank':
           final valueDes = serializers.deserialize(

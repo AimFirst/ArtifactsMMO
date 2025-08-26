@@ -20,15 +20,11 @@ class _$DataPageGEOrderSchema extends DataPageGEOrderSchema {
 
   factory _$DataPageGEOrderSchema(
           [void Function(DataPageGEOrderSchemaBuilder)? updates]) =>
-      (new DataPageGEOrderSchemaBuilder()..update(updates))._build();
+      (DataPageGEOrderSchemaBuilder()..update(updates))._build();
 
   _$DataPageGEOrderSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'DataPageGEOrderSchema', 'data');
-  }
-
+      : super._();
   @override
   DataPageGEOrderSchema rebuild(
           void Function(DataPageGEOrderSchemaBuilder) updates) =>
@@ -36,7 +32,7 @@ class _$DataPageGEOrderSchema extends DataPageGEOrderSchema {
 
   @override
   DataPageGEOrderSchemaBuilder toBuilder() =>
-      new DataPageGEOrderSchemaBuilder()..replace(this);
+      DataPageGEOrderSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -79,7 +75,7 @@ class DataPageGEOrderSchemaBuilder
 
   ListBuilder<GEOrderSchema>? _data;
   ListBuilder<GEOrderSchema> get data =>
-      _$this._data ??= new ListBuilder<GEOrderSchema>();
+      _$this._data ??= ListBuilder<GEOrderSchema>();
   set data(ListBuilder<GEOrderSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -117,7 +113,6 @@ class DataPageGEOrderSchemaBuilder
 
   @override
   void replace(DataPageGEOrderSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageGEOrderSchema;
   }
 
@@ -133,19 +128,20 @@ class DataPageGEOrderSchemaBuilder
     _$DataPageGEOrderSchema _$result;
     try {
       _$result = _$v ??
-          new _$DataPageGEOrderSchema._(
-              data: data.build(),
-              total: total,
-              page: page,
-              size: size,
-              pages: pages);
+          _$DataPageGEOrderSchema._(
+            data: data.build(),
+            total: total,
+            page: page,
+            size: size,
+            pages: pages,
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'DataPageGEOrderSchema', _$failedField, e.toString());
       }
       rethrow;

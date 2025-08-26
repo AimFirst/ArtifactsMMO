@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // Code of the event. This is the event's unique identifier (ID).
+    // Code of the event.
     // String code
     test('to test the property `code`', () async {
       // TODO
@@ -26,8 +26,8 @@ void main() {
     });
 
     // Previous map skin.
-    // String previousSkin
-    test('to test the property `previousSkin`', () async {
+    // MapSchema previousMap
+    test('to test the property `previousMap`', () async {
       // TODO
     });
 

@@ -17,7 +17,7 @@ void main() {
 
     // Action Buy Bank Expansion
     //
-    // Buy a 20 slots bank expansion.
+    // Buy a 25 slots bank expansion.
     //
     //Future<BankExtensionTransactionResponseSchema> actionBuyBankExpansionMyNameActionBankBuyExpansionPost(String name) async
     test('test actionBuyBankExpansionMyNameActionBankBuyExpansionPost',
@@ -25,11 +25,20 @@ void main() {
       // TODO
     });
 
+    // Action Change Skin
+    //
+    // Change the skin of your character.
+    //
+    //Future<ChangeSkinResponseSchema> actionChangeSkinMyNameActionChangeSkinPost(String name, ChangeSkinCharacterSchema changeSkinCharacterSchema) async
+    test('test actionChangeSkinMyNameActionChangeSkinPost', () async {
+      // TODO
+    });
+
     // Action Complete Task
     //
     // Complete a task.
     //
-    //Future<TasksRewardDataResponseSchema> actionCompleteTaskMyNameActionTaskCompletePost(String name) async
+    //Future<RewardDataResponseSchema> actionCompleteTaskMyNameActionTaskCompletePost(String name) async
     test('test actionCompleteTaskMyNameActionTaskCompletePost', () async {
       // TODO
     });
@@ -61,12 +70,12 @@ void main() {
       // TODO
     });
 
-    // Action Deposit Bank
+    // Action Deposit Bank Item
     //
-    // Deposit an item in a bank on the character's map.
+    // Deposit multiple items in a bank on the character's map. The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
     //
-    //Future<BankItemTransactionResponseSchema> actionDepositBankMyNameActionBankDepositPost(String name, SimpleItemSchema simpleItemSchema) async
-    test('test actionDepositBankMyNameActionBankDepositPost', () async {
+    //Future<BankItemTransactionResponseSchema> actionDepositBankItemMyNameActionBankDepositItemPost(String name, BuiltList<SimpleItemSchema> simpleItemSchema) async
+    test('test actionDepositBankItemMyNameActionBankDepositItemPost', () async {
       // TODO
     });
 
@@ -118,11 +127,29 @@ void main() {
 
     // Action Ge Create Sell Order
     //
-    // Create a sell order at the Grand Exchange on the character's map. Please note that a 5% sales tax is charged.
+    // Create a sell order at the Grand Exchange on the character's map. Please note there is a 3% listing tax, charged at the time of posting, on the total price.
     //
     //Future<GECreateOrderTransactionResponseSchema> actionGeCreateSellOrderMyNameActionGrandexchangeSellPost(String name, GEOrderCreationrSchema gEOrderCreationrSchema) async
     test('test actionGeCreateSellOrderMyNameActionGrandexchangeSellPost',
         () async {
+      // TODO
+    });
+
+    // Action Give Gold
+    //
+    // Give gold to another character in your account on the same map.
+    //
+    //Future<GiveGoldReponseSchema> actionGiveGoldMyNameActionGiveGoldPost(String name, GiveGoldSchema giveGoldSchema) async
+    test('test actionGiveGoldMyNameActionGiveGoldPost', () async {
+      // TODO
+    });
+
+    // Action Give Items
+    //
+    // Give items to another character in your account on the same map. The cooldown will be 3 seconds multiplied by the number of different items given.
+    //
+    //Future<GiveItemReponseSchema> actionGiveItemsMyNameActionGiveItemPost(String name, GiveItemsSchema giveItemsSchema) async
+    test('test actionGiveItemsMyNameActionGiveItemPost', () async {
       // TODO
     });
 
@@ -132,6 +159,24 @@ void main() {
     //
     //Future<CharacterMovementResponseSchema> actionMoveMyNameActionMovePost(String name, DestinationSchema destinationSchema) async
     test('test actionMoveMyNameActionMovePost', () async {
+      // TODO
+    });
+
+    // Action Npc Buy Item
+    //
+    // Buy an item from an NPC on the character's map.
+    //
+    //Future<NpcMerchantTransactionResponseSchema> actionNpcBuyItemMyNameActionNpcBuyPost(String name, NpcMerchantBuySchema npcMerchantBuySchema) async
+    test('test actionNpcBuyItemMyNameActionNpcBuyPost', () async {
+      // TODO
+    });
+
+    // Action Npc Sell Item
+    //
+    // Sell an item to an NPC on the character's map.
+    //
+    //Future<NpcMerchantTransactionResponseSchema> actionNpcSellItemMyNameActionNpcSellPost(String name, NpcMerchantBuySchema npcMerchantBuySchema) async
+    test('test actionNpcSellItemMyNameActionNpcSellPost', () async {
       // TODO
     });
 
@@ -166,7 +211,7 @@ void main() {
     //
     // Exchange 6 tasks coins for a random reward. Rewards are exclusive items or resources.
     //
-    //Future<TasksRewardDataResponseSchema> actionTaskExchangeMyNameActionTaskExchangePost(String name) async
+    //Future<RewardDataResponseSchema> actionTaskExchangeMyNameActionTaskExchangePost(String name) async
     test('test actionTaskExchangeMyNameActionTaskExchangePost', () async {
       // TODO
     });
@@ -208,21 +253,31 @@ void main() {
       // TODO
     });
 
-    // Action Withdraw Bank
+    // Action Withdraw Bank Item
     //
-    // Take an item from your bank and put it in the character's inventory.
+    // Take items from your bank and put them in the character's inventory. The cooldown will be 3 seconds multiplied by the number of different items withdrawn.
     //
-    //Future<BankItemTransactionResponseSchema> actionWithdrawBankMyNameActionBankWithdrawPost(String name, SimpleItemSchema simpleItemSchema) async
-    test('test actionWithdrawBankMyNameActionBankWithdrawPost', () async {
+    //Future<BankItemTransactionResponseSchema> actionWithdrawBankItemMyNameActionBankWithdrawItemPost(String name, BuiltList<SimpleItemSchema> simpleItemSchema) async
+    test('test actionWithdrawBankItemMyNameActionBankWithdrawItemPost',
+        () async {
       // TODO
     });
 
     // Get All Characters Logs
     //
-    // History of the last 100 actions of all your characters.
+    // History of the last 250 actions of all your characters.
     //
     //Future<DataPageLogSchema> getAllCharactersLogsMyLogsGet({ int page, int size }) async
     test('test getAllCharactersLogsMyLogsGet', () async {
+      // TODO
+    });
+
+    // Get Character Logs
+    //
+    // History of the last actions of your character.
+    //
+    //Future<DataPageLogSchema> getCharacterLogsMyLogsNameGet(String name, { int page, int size }) async
+    test('test getCharacterLogsMyLogsNameGet', () async {
       // TODO
     });
 

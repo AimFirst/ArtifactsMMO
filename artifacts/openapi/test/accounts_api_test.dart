@@ -13,6 +13,15 @@ void main() {
       // TODO
     });
 
+    // Forgot Password
+    //
+    // Request a password reset.
+    //
+    //Future<PasswordResetResponseSchema> forgotPasswordAccountsForgotPasswordPost(PasswordResetRequestSchema passwordResetRequestSchema) async
+    test('test forgotPasswordAccountsForgotPasswordPost', () async {
+      // TODO
+    });
+
     // Get Account
     //
     // Retrieve the details of a character.
@@ -28,6 +37,24 @@ void main() {
     //
     //Future<DataPageAccountAchievementSchema> getAccountAchievementsAccountsAccountAchievementsGet(String account, { AchievementType type, bool completed, int page, int size }) async
     test('test getAccountAchievementsAccountsAccountAchievementsGet', () async {
+      // TODO
+    });
+
+    // Get Account Characters
+    //
+    // Account character lists.
+    //
+    //Future<CharactersListSchema> getAccountCharactersAccountsAccountCharactersGet(String account) async
+    test('test getAccountCharactersAccountsAccountCharactersGet', () async {
+      // TODO
+    });
+
+    // Reset Password
+    //
+    // Reset password with a token. Use /forgot_password to get a token by email.
+    //
+    //Future<PasswordResetResponseSchema> resetPasswordAccountsResetPasswordPost(PasswordResetConfirmSchema passwordResetConfirmSchema) async
+    test('test resetPasswordAccountsResetPasswordPost', () async {
       // TODO
     });
   });

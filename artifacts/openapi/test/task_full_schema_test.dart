@@ -43,7 +43,7 @@ void main() {
     });
 
     // Rewards.
-    // TaskRewardsSchema rewards
+    // RewardsSchema rewards
     test('to test the property `rewards`', () async {
       // TODO
     });

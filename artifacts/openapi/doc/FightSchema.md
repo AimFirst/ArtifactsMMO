@@ -12,8 +12,6 @@ Name | Type | Description | Notes
 **gold** | **int** | The amount of gold gained from the fight. | 
 **drops** | [**BuiltList&lt;DropSchema&gt;**](DropSchema.md) | The items dropped from the fight. | 
 **turns** | **int** | Numbers of the turns of the combat. | 
-**monsterBlockedHits** | [**BlockedHitsSchema**](BlockedHitsSchema.md) | The amount of blocked hits by the monster. | 
-**playerBlockedHits** | [**BlockedHitsSchema**](BlockedHitsSchema.md) | The amount of blocked hits by the player. | 
 **logs** | **BuiltList&lt;String&gt;** | The fight logs. | 
 **result** | [**FightResult**](FightResult.md) | The result of the fight. | 
 

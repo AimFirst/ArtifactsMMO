@@ -41,8 +41,10 @@ import 'package:artifacts_api/src/model/bank_item_transaction_response_schema.da
 import 'package:artifacts_api/src/model/bank_item_transaction_schema.dart';
 import 'package:artifacts_api/src/model/bank_response_schema.dart';
 import 'package:artifacts_api/src/model/bank_schema.dart';
-import 'package:artifacts_api/src/model/blocked_hits_schema.dart';
 import 'package:artifacts_api/src/model/change_password.dart';
+import 'package:artifacts_api/src/model/change_skin_character_data_schema.dart';
+import 'package:artifacts_api/src/model/change_skin_character_schema.dart';
+import 'package:artifacts_api/src/model/change_skin_response_schema.dart';
 import 'package:artifacts_api/src/model/character_fight_data_schema.dart';
 import 'package:artifacts_api/src/model/character_fight_response_schema.dart';
 import 'package:artifacts_api/src/model/character_leaderboard_schema.dart';
@@ -55,6 +57,8 @@ import 'package:artifacts_api/src/model/character_rest_response_schema.dart';
 import 'package:artifacts_api/src/model/character_schema.dart';
 import 'package:artifacts_api/src/model/character_skin.dart';
 import 'package:artifacts_api/src/model/characters_list_schema.dart';
+import 'package:artifacts_api/src/model/condition_operator.dart';
+import 'package:artifacts_api/src/model/condition_schema.dart';
 import 'package:artifacts_api/src/model/cooldown_schema.dart';
 import 'package:artifacts_api/src/model/craft_schema.dart';
 import 'package:artifacts_api/src/model/craft_skill.dart';
@@ -111,6 +115,12 @@ import 'package:artifacts_api/src/model/ge_transaction_response_schema.dart';
 import 'package:artifacts_api/src/model/ge_transaction_schema.dart';
 import 'package:artifacts_api/src/model/gathering_skill.dart';
 import 'package:artifacts_api/src/model/ge_order_history_schema.dart';
+import 'package:artifacts_api/src/model/give_gold_data_schema.dart';
+import 'package:artifacts_api/src/model/give_gold_reponse_schema.dart';
+import 'package:artifacts_api/src/model/give_gold_schema.dart';
+import 'package:artifacts_api/src/model/give_item_data_schema.dart';
+import 'package:artifacts_api/src/model/give_item_reponse_schema.dart';
+import 'package:artifacts_api/src/model/give_items_schema.dart';
 import 'package:artifacts_api/src/model/gold_schema.dart';
 import 'package:artifacts_api/src/model/http_validation_error.dart';
 import 'package:artifacts_api/src/model/inventory_slot.dart';
@@ -137,6 +147,10 @@ import 'package:artifacts_api/src/model/npc_item_transaction_schema.dart';
 import 'package:artifacts_api/src/model/npc_merchant_buy_schema.dart';
 import 'package:artifacts_api/src/model/npc_merchant_transaction_response_schema.dart';
 import 'package:artifacts_api/src/model/npc_merchant_transaction_schema.dart';
+import 'package:artifacts_api/src/model/password_reset_confirm_schema.dart';
+import 'package:artifacts_api/src/model/password_reset_request_schema.dart';
+import 'package:artifacts_api/src/model/password_reset_response_schema.dart';
+import 'package:artifacts_api/src/model/rate_limit_schema.dart';
 import 'package:artifacts_api/src/model/recycling_data_schema.dart';
 import 'package:artifacts_api/src/model/recycling_items_schema.dart';
 import 'package:artifacts_api/src/model/recycling_response_schema.dart';
@@ -148,6 +162,9 @@ import 'package:artifacts_api/src/model/reward_data_response_schema.dart';
 import 'package:artifacts_api/src/model/reward_data_schema.dart';
 import 'package:artifacts_api/src/model/reward_response_schema.dart';
 import 'package:artifacts_api/src/model/rewards_schema.dart';
+import 'package:artifacts_api/src/model/season_badge_schema.dart';
+import 'package:artifacts_api/src/model/season_schema.dart';
+import 'package:artifacts_api/src/model/season_skin_schema.dart';
 import 'package:artifacts_api/src/model/simple_effect_schema.dart';
 import 'package:artifacts_api/src/model/simple_item_schema.dart';
 import 'package:artifacts_api/src/model/skill.dart';
@@ -204,8 +221,10 @@ part 'serializers.g.dart';
   BankItemTransactionSchema,
   BankResponseSchema,
   BankSchema,
-  BlockedHitsSchema,
   ChangePassword,
+  ChangeSkinCharacterDataSchema,
+  ChangeSkinCharacterSchema,
+  ChangeSkinResponseSchema,
   CharacterFightDataSchema,
   CharacterFightResponseSchema,
   CharacterLeaderboardSchema,
@@ -218,6 +237,8 @@ part 'serializers.g.dart';
   CharacterSchema,
   CharacterSkin,
   CharactersListSchema,
+  ConditionOperator,
+  ConditionSchema,
   CooldownSchema,
   CraftSchema,
   CraftSkill,
@@ -274,6 +295,12 @@ part 'serializers.g.dart';
   GETransactionSchema,
   GatheringSkill,
   GeOrderHistorySchema,
+  GiveGoldDataSchema,
+  GiveGoldReponseSchema,
+  GiveGoldSchema,
+  GiveItemDataSchema,
+  GiveItemReponseSchema,
+  GiveItemsSchema,
   GoldSchema,
   HTTPValidationError,
   InventorySlot,
@@ -300,6 +327,10 @@ part 'serializers.g.dart';
   NpcMerchantBuySchema,
   NpcMerchantTransactionResponseSchema,
   NpcMerchantTransactionSchema,
+  PasswordResetConfirmSchema,
+  PasswordResetRequestSchema,
+  PasswordResetResponseSchema,
+  RateLimitSchema,
   RecyclingDataSchema,
   RecyclingItemsSchema,
   RecyclingResponseSchema,
@@ -311,6 +342,9 @@ part 'serializers.g.dart';
   RewardDataSchema,
   RewardResponseSchema,
   RewardsSchema,
+  SeasonBadgeSchema,
+  SeasonSchema,
+  SeasonSkinSchema,
   SimpleEffectSchema,
   SimpleItemSchema,
   Skill,
@@ -338,6 +372,10 @@ part 'serializers.g.dart';
   ValidationErrorLocInner,
 ])
 Serializers serializers = (_$serializers.toBuilder()
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(SimpleItemSchema)]),
+        () => ListBuilder<SimpleItemSchema>(),
+      )
       ..add(const OneOfSerializer())
       ..add(const AnyOfSerializer())
       ..add(const DateSerializer())

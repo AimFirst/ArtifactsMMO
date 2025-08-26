@@ -43,7 +43,7 @@ class _$MonsterSchema extends MonsterSchema {
   final BuiltList<SimpleEffectSchema>? effects;
 
   factory _$MonsterSchema([void Function(MonsterSchemaBuilder)? updates]) =>
-      (new MonsterSchemaBuilder()..update(updates))._build();
+      (MonsterSchemaBuilder()..update(updates))._build();
 
   _$MonsterSchema._(
       {required this.name,
@@ -63,38 +63,13 @@ class _$MonsterSchema extends MonsterSchema {
       required this.maxGold,
       required this.drops,
       this.effects})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(name, r'MonsterSchema', 'name');
-    BuiltValueNullFieldError.checkNotNull(code, r'MonsterSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(level, r'MonsterSchema', 'level');
-    BuiltValueNullFieldError.checkNotNull(hp, r'MonsterSchema', 'hp');
-    BuiltValueNullFieldError.checkNotNull(
-        attackFire, r'MonsterSchema', 'attackFire');
-    BuiltValueNullFieldError.checkNotNull(
-        attackEarth, r'MonsterSchema', 'attackEarth');
-    BuiltValueNullFieldError.checkNotNull(
-        attackWater, r'MonsterSchema', 'attackWater');
-    BuiltValueNullFieldError.checkNotNull(
-        attackAir, r'MonsterSchema', 'attackAir');
-    BuiltValueNullFieldError.checkNotNull(resFire, r'MonsterSchema', 'resFire');
-    BuiltValueNullFieldError.checkNotNull(
-        resEarth, r'MonsterSchema', 'resEarth');
-    BuiltValueNullFieldError.checkNotNull(
-        resWater, r'MonsterSchema', 'resWater');
-    BuiltValueNullFieldError.checkNotNull(resAir, r'MonsterSchema', 'resAir');
-    BuiltValueNullFieldError.checkNotNull(
-        criticalStrike, r'MonsterSchema', 'criticalStrike');
-    BuiltValueNullFieldError.checkNotNull(minGold, r'MonsterSchema', 'minGold');
-    BuiltValueNullFieldError.checkNotNull(maxGold, r'MonsterSchema', 'maxGold');
-    BuiltValueNullFieldError.checkNotNull(drops, r'MonsterSchema', 'drops');
-  }
-
+      : super._();
   @override
   MonsterSchema rebuild(void Function(MonsterSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  MonsterSchemaBuilder toBuilder() => new MonsterSchemaBuilder()..replace(this);
+  MonsterSchemaBuilder toBuilder() => MonsterSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -234,12 +209,12 @@ class MonsterSchemaBuilder
 
   ListBuilder<DropRateSchema>? _drops;
   ListBuilder<DropRateSchema> get drops =>
-      _$this._drops ??= new ListBuilder<DropRateSchema>();
+      _$this._drops ??= ListBuilder<DropRateSchema>();
   set drops(ListBuilder<DropRateSchema>? drops) => _$this._drops = drops;
 
   ListBuilder<SimpleEffectSchema>? _effects;
   ListBuilder<SimpleEffectSchema> get effects =>
-      _$this._effects ??= new ListBuilder<SimpleEffectSchema>();
+      _$this._effects ??= ListBuilder<SimpleEffectSchema>();
   set effects(ListBuilder<SimpleEffectSchema>? effects) =>
       _$this._effects = effects;
 
@@ -274,7 +249,6 @@ class MonsterSchemaBuilder
 
   @override
   void replace(MonsterSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$MonsterSchema;
   }
 
@@ -290,34 +264,40 @@ class MonsterSchemaBuilder
     _$MonsterSchema _$result;
     try {
       _$result = _$v ??
-          new _$MonsterSchema._(
-              name: BuiltValueNullFieldError.checkNotNull(
-                  name, r'MonsterSchema', 'name'),
-              code: BuiltValueNullFieldError.checkNotNull(
-                  code, r'MonsterSchema', 'code'),
-              level: BuiltValueNullFieldError.checkNotNull(
-                  level, r'MonsterSchema', 'level'),
-              hp: BuiltValueNullFieldError.checkNotNull(
-                  hp, r'MonsterSchema', 'hp'),
-              attackFire: BuiltValueNullFieldError.checkNotNull(
-                  attackFire, r'MonsterSchema', 'attackFire'),
-              attackEarth: BuiltValueNullFieldError.checkNotNull(
-                  attackEarth, r'MonsterSchema', 'attackEarth'),
-              attackWater: BuiltValueNullFieldError.checkNotNull(
-                  attackWater, r'MonsterSchema', 'attackWater'),
-              attackAir: BuiltValueNullFieldError.checkNotNull(
-                  attackAir, r'MonsterSchema', 'attackAir'),
-              resFire: BuiltValueNullFieldError.checkNotNull(
-                  resFire, r'MonsterSchema', 'resFire'),
-              resEarth:
-                  BuiltValueNullFieldError.checkNotNull(resEarth, r'MonsterSchema', 'resEarth'),
-              resWater: BuiltValueNullFieldError.checkNotNull(resWater, r'MonsterSchema', 'resWater'),
-              resAir: BuiltValueNullFieldError.checkNotNull(resAir, r'MonsterSchema', 'resAir'),
-              criticalStrike: BuiltValueNullFieldError.checkNotNull(criticalStrike, r'MonsterSchema', 'criticalStrike'),
-              minGold: BuiltValueNullFieldError.checkNotNull(minGold, r'MonsterSchema', 'minGold'),
-              maxGold: BuiltValueNullFieldError.checkNotNull(maxGold, r'MonsterSchema', 'maxGold'),
-              drops: drops.build(),
-              effects: _effects?.build());
+          _$MonsterSchema._(
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, r'MonsterSchema', 'name'),
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'MonsterSchema', 'code'),
+            level: BuiltValueNullFieldError.checkNotNull(
+                level, r'MonsterSchema', 'level'),
+            hp: BuiltValueNullFieldError.checkNotNull(
+                hp, r'MonsterSchema', 'hp'),
+            attackFire: BuiltValueNullFieldError.checkNotNull(
+                attackFire, r'MonsterSchema', 'attackFire'),
+            attackEarth: BuiltValueNullFieldError.checkNotNull(
+                attackEarth, r'MonsterSchema', 'attackEarth'),
+            attackWater: BuiltValueNullFieldError.checkNotNull(
+                attackWater, r'MonsterSchema', 'attackWater'),
+            attackAir: BuiltValueNullFieldError.checkNotNull(
+                attackAir, r'MonsterSchema', 'attackAir'),
+            resFire: BuiltValueNullFieldError.checkNotNull(
+                resFire, r'MonsterSchema', 'resFire'),
+            resEarth: BuiltValueNullFieldError.checkNotNull(
+                resEarth, r'MonsterSchema', 'resEarth'),
+            resWater: BuiltValueNullFieldError.checkNotNull(
+                resWater, r'MonsterSchema', 'resWater'),
+            resAir: BuiltValueNullFieldError.checkNotNull(
+                resAir, r'MonsterSchema', 'resAir'),
+            criticalStrike: BuiltValueNullFieldError.checkNotNull(
+                criticalStrike, r'MonsterSchema', 'criticalStrike'),
+            minGold: BuiltValueNullFieldError.checkNotNull(
+                minGold, r'MonsterSchema', 'minGold'),
+            maxGold: BuiltValueNullFieldError.checkNotNull(
+                maxGold, r'MonsterSchema', 'maxGold'),
+            drops: drops.build(),
+            effects: _effects?.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -326,7 +306,7 @@ class MonsterSchemaBuilder
         _$failedField = 'effects';
         _effects?.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'MonsterSchema', _$failedField, e.toString());
       }
       rethrow;

@@ -10,7 +10,7 @@ void main() {
     //
     // Fetch leaderboard details.
     //
-    //Future<DataPageAccountLeaderboardSchema> getAccountsLeaderboardLeaderboardAccountsGet({ AccountLeaderboardType sort, int page, int size }) async
+    //Future<DataPageAccountLeaderboardSchema> getAccountsLeaderboardLeaderboardAccountsGet({ AccountLeaderboardType sort, String name, int page, int size }) async
     test('test getAccountsLeaderboardLeaderboardAccountsGet', () async {
       // TODO
     });
@@ -19,7 +19,7 @@ void main() {
     //
     // Fetch leaderboard details.
     //
-    //Future<DataPageCharacterLeaderboardSchema> getCharactersLeaderboardLeaderboardCharactersGet({ CharacterLeaderboardType sort, int page, int size }) async
+    //Future<DataPageCharacterLeaderboardSchema> getCharactersLeaderboardLeaderboardCharactersGet({ CharacterLeaderboardType sort, String name, int page, int size }) async
     test('test getCharactersLeaderboardLeaderboardCharactersGet', () async {
       // TODO
     });

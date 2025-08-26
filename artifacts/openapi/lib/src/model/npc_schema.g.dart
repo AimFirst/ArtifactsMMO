@@ -17,27 +17,20 @@ class _$NPCSchema extends NPCSchema {
   final NPCType type;
 
   factory _$NPCSchema([void Function(NPCSchemaBuilder)? updates]) =>
-      (new NPCSchemaBuilder()..update(updates))._build();
+      (NPCSchemaBuilder()..update(updates))._build();
 
   _$NPCSchema._(
       {required this.name,
       required this.code,
       required this.description,
       required this.type})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(name, r'NPCSchema', 'name');
-    BuiltValueNullFieldError.checkNotNull(code, r'NPCSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        description, r'NPCSchema', 'description');
-    BuiltValueNullFieldError.checkNotNull(type, r'NPCSchema', 'type');
-  }
-
+      : super._();
   @override
   NPCSchema rebuild(void Function(NPCSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  NPCSchemaBuilder toBuilder() => new NPCSchemaBuilder()..replace(this);
+  NPCSchemaBuilder toBuilder() => NPCSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -108,7 +101,6 @@ class NPCSchemaBuilder implements Builder<NPCSchema, NPCSchemaBuilder> {
 
   @override
   void replace(NPCSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NPCSchema;
   }
 
@@ -122,15 +114,16 @@ class NPCSchemaBuilder implements Builder<NPCSchema, NPCSchemaBuilder> {
 
   _$NPCSchema _build() {
     final _$result = _$v ??
-        new _$NPCSchema._(
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'NPCSchema', 'name'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'NPCSchema', 'code'),
-            description: BuiltValueNullFieldError.checkNotNull(
-                description, r'NPCSchema', 'description'),
-            type: BuiltValueNullFieldError.checkNotNull(
-                type, r'NPCSchema', 'type'));
+        _$NPCSchema._(
+          name:
+              BuiltValueNullFieldError.checkNotNull(name, r'NPCSchema', 'name'),
+          code:
+              BuiltValueNullFieldError.checkNotNull(code, r'NPCSchema', 'code'),
+          description: BuiltValueNullFieldError.checkNotNull(
+              description, r'NPCSchema', 'description'),
+          type:
+              BuiltValueNullFieldError.checkNotNull(type, r'NPCSchema', 'type'),
+        );
     replace(_$result);
     return _$result;
   }

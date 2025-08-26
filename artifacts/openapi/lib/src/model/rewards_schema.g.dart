@@ -13,19 +13,15 @@ class _$RewardsSchema extends RewardsSchema {
   final int gold;
 
   factory _$RewardsSchema([void Function(RewardsSchemaBuilder)? updates]) =>
-      (new RewardsSchemaBuilder()..update(updates))._build();
+      (RewardsSchemaBuilder()..update(updates))._build();
 
-  _$RewardsSchema._({required this.items, required this.gold}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(items, r'RewardsSchema', 'items');
-    BuiltValueNullFieldError.checkNotNull(gold, r'RewardsSchema', 'gold');
-  }
-
+  _$RewardsSchema._({required this.items, required this.gold}) : super._();
   @override
   RewardsSchema rebuild(void Function(RewardsSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  RewardsSchemaBuilder toBuilder() => new RewardsSchemaBuilder()..replace(this);
+  RewardsSchemaBuilder toBuilder() => RewardsSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -57,7 +53,7 @@ class RewardsSchemaBuilder
 
   ListBuilder<SimpleItemSchema>? _items;
   ListBuilder<SimpleItemSchema> get items =>
-      _$this._items ??= new ListBuilder<SimpleItemSchema>();
+      _$this._items ??= ListBuilder<SimpleItemSchema>();
   set items(ListBuilder<SimpleItemSchema>? items) => _$this._items = items;
 
   int? _gold;
@@ -80,7 +76,6 @@ class RewardsSchemaBuilder
 
   @override
   void replace(RewardsSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RewardsSchema;
   }
 
@@ -96,17 +91,18 @@ class RewardsSchemaBuilder
     _$RewardsSchema _$result;
     try {
       _$result = _$v ??
-          new _$RewardsSchema._(
-              items: items.build(),
-              gold: BuiltValueNullFieldError.checkNotNull(
-                  gold, r'RewardsSchema', 'gold'));
+          _$RewardsSchema._(
+            items: items.build(),
+            gold: BuiltValueNullFieldError.checkNotNull(
+                gold, r'RewardsSchema', 'gold'),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'items';
         items.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'RewardsSchema', _$failedField, e.toString());
       }
       rethrow;

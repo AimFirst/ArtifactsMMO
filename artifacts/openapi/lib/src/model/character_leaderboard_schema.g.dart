@@ -58,7 +58,7 @@ class _$CharacterLeaderboardSchema extends CharacterLeaderboardSchema {
 
   factory _$CharacterLeaderboardSchema(
           [void Function(CharacterLeaderboardSchemaBuilder)? updates]) =>
-      (new CharacterLeaderboardSchemaBuilder()..update(updates))._build();
+      (CharacterLeaderboardSchemaBuilder()..update(updates))._build();
 
   _$CharacterLeaderboardSchema._(
       {required this.position,
@@ -85,57 +85,7 @@ class _$CharacterLeaderboardSchema extends CharacterLeaderboardSchema {
       required this.alchemyLevel,
       required this.alchemyTotalXp,
       required this.gold})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        position, r'CharacterLeaderboardSchema', 'position');
-    BuiltValueNullFieldError.checkNotNull(
-        name, r'CharacterLeaderboardSchema', 'name');
-    BuiltValueNullFieldError.checkNotNull(
-        account, r'CharacterLeaderboardSchema', 'account');
-    BuiltValueNullFieldError.checkNotNull(
-        status, r'CharacterLeaderboardSchema', 'status');
-    BuiltValueNullFieldError.checkNotNull(
-        skin, r'CharacterLeaderboardSchema', 'skin');
-    BuiltValueNullFieldError.checkNotNull(
-        level, r'CharacterLeaderboardSchema', 'level');
-    BuiltValueNullFieldError.checkNotNull(
-        totalXp, r'CharacterLeaderboardSchema', 'totalXp');
-    BuiltValueNullFieldError.checkNotNull(
-        miningLevel, r'CharacterLeaderboardSchema', 'miningLevel');
-    BuiltValueNullFieldError.checkNotNull(
-        miningTotalXp, r'CharacterLeaderboardSchema', 'miningTotalXp');
-    BuiltValueNullFieldError.checkNotNull(
-        woodcuttingLevel, r'CharacterLeaderboardSchema', 'woodcuttingLevel');
-    BuiltValueNullFieldError.checkNotNull(woodcuttingTotalXp,
-        r'CharacterLeaderboardSchema', 'woodcuttingTotalXp');
-    BuiltValueNullFieldError.checkNotNull(
-        fishingLevel, r'CharacterLeaderboardSchema', 'fishingLevel');
-    BuiltValueNullFieldError.checkNotNull(
-        fishingTotalXp, r'CharacterLeaderboardSchema', 'fishingTotalXp');
-    BuiltValueNullFieldError.checkNotNull(weaponcraftingLevel,
-        r'CharacterLeaderboardSchema', 'weaponcraftingLevel');
-    BuiltValueNullFieldError.checkNotNull(weaponcraftingTotalXp,
-        r'CharacterLeaderboardSchema', 'weaponcraftingTotalXp');
-    BuiltValueNullFieldError.checkNotNull(
-        gearcraftingLevel, r'CharacterLeaderboardSchema', 'gearcraftingLevel');
-    BuiltValueNullFieldError.checkNotNull(gearcraftingTotalXp,
-        r'CharacterLeaderboardSchema', 'gearcraftingTotalXp');
-    BuiltValueNullFieldError.checkNotNull(jewelrycraftingLevel,
-        r'CharacterLeaderboardSchema', 'jewelrycraftingLevel');
-    BuiltValueNullFieldError.checkNotNull(jewelrycraftingTotalXp,
-        r'CharacterLeaderboardSchema', 'jewelrycraftingTotalXp');
-    BuiltValueNullFieldError.checkNotNull(
-        cookingLevel, r'CharacterLeaderboardSchema', 'cookingLevel');
-    BuiltValueNullFieldError.checkNotNull(
-        cookingTotalXp, r'CharacterLeaderboardSchema', 'cookingTotalXp');
-    BuiltValueNullFieldError.checkNotNull(
-        alchemyLevel, r'CharacterLeaderboardSchema', 'alchemyLevel');
-    BuiltValueNullFieldError.checkNotNull(
-        alchemyTotalXp, r'CharacterLeaderboardSchema', 'alchemyTotalXp');
-    BuiltValueNullFieldError.checkNotNull(
-        gold, r'CharacterLeaderboardSchema', 'gold');
-  }
-
+      : super._();
   @override
   CharacterLeaderboardSchema rebuild(
           void Function(CharacterLeaderboardSchemaBuilder) updates) =>
@@ -143,7 +93,7 @@ class _$CharacterLeaderboardSchema extends CharacterLeaderboardSchema {
 
   @override
   CharacterLeaderboardSchemaBuilder toBuilder() =>
-      new CharacterLeaderboardSchemaBuilder()..replace(this);
+      CharacterLeaderboardSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -388,7 +338,6 @@ class CharacterLeaderboardSchemaBuilder
 
   @override
   void replace(CharacterLeaderboardSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CharacterLeaderboardSchema;
   }
 
@@ -402,39 +351,72 @@ class CharacterLeaderboardSchemaBuilder
 
   _$CharacterLeaderboardSchema _build() {
     final _$result = _$v ??
-        new _$CharacterLeaderboardSchema._(
-            position: BuiltValueNullFieldError.checkNotNull(
-                position, r'CharacterLeaderboardSchema', 'position'),
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'CharacterLeaderboardSchema', 'name'),
-            account: BuiltValueNullFieldError.checkNotNull(
-                account, r'CharacterLeaderboardSchema', 'account'),
-            status: BuiltValueNullFieldError.checkNotNull(
-                status, r'CharacterLeaderboardSchema', 'status'),
-            skin: BuiltValueNullFieldError.checkNotNull(
-                skin, r'CharacterLeaderboardSchema', 'skin'),
-            level: BuiltValueNullFieldError.checkNotNull(
-                level, r'CharacterLeaderboardSchema', 'level'),
-            totalXp: BuiltValueNullFieldError.checkNotNull(
-                totalXp, r'CharacterLeaderboardSchema', 'totalXp'),
-            miningLevel: BuiltValueNullFieldError.checkNotNull(
-                miningLevel, r'CharacterLeaderboardSchema', 'miningLevel'),
-            miningTotalXp: BuiltValueNullFieldError.checkNotNull(miningTotalXp, r'CharacterLeaderboardSchema', 'miningTotalXp'),
-            woodcuttingLevel: BuiltValueNullFieldError.checkNotNull(woodcuttingLevel, r'CharacterLeaderboardSchema', 'woodcuttingLevel'),
-            woodcuttingTotalXp: BuiltValueNullFieldError.checkNotNull(woodcuttingTotalXp, r'CharacterLeaderboardSchema', 'woodcuttingTotalXp'),
-            fishingLevel: BuiltValueNullFieldError.checkNotNull(fishingLevel, r'CharacterLeaderboardSchema', 'fishingLevel'),
-            fishingTotalXp: BuiltValueNullFieldError.checkNotNull(fishingTotalXp, r'CharacterLeaderboardSchema', 'fishingTotalXp'),
-            weaponcraftingLevel: BuiltValueNullFieldError.checkNotNull(weaponcraftingLevel, r'CharacterLeaderboardSchema', 'weaponcraftingLevel'),
-            weaponcraftingTotalXp: BuiltValueNullFieldError.checkNotNull(weaponcraftingTotalXp, r'CharacterLeaderboardSchema', 'weaponcraftingTotalXp'),
-            gearcraftingLevel: BuiltValueNullFieldError.checkNotNull(gearcraftingLevel, r'CharacterLeaderboardSchema', 'gearcraftingLevel'),
-            gearcraftingTotalXp: BuiltValueNullFieldError.checkNotNull(gearcraftingTotalXp, r'CharacterLeaderboardSchema', 'gearcraftingTotalXp'),
-            jewelrycraftingLevel: BuiltValueNullFieldError.checkNotNull(jewelrycraftingLevel, r'CharacterLeaderboardSchema', 'jewelrycraftingLevel'),
-            jewelrycraftingTotalXp: BuiltValueNullFieldError.checkNotNull(jewelrycraftingTotalXp, r'CharacterLeaderboardSchema', 'jewelrycraftingTotalXp'),
-            cookingLevel: BuiltValueNullFieldError.checkNotNull(cookingLevel, r'CharacterLeaderboardSchema', 'cookingLevel'),
-            cookingTotalXp: BuiltValueNullFieldError.checkNotNull(cookingTotalXp, r'CharacterLeaderboardSchema', 'cookingTotalXp'),
-            alchemyLevel: BuiltValueNullFieldError.checkNotNull(alchemyLevel, r'CharacterLeaderboardSchema', 'alchemyLevel'),
-            alchemyTotalXp: BuiltValueNullFieldError.checkNotNull(alchemyTotalXp, r'CharacterLeaderboardSchema', 'alchemyTotalXp'),
-            gold: BuiltValueNullFieldError.checkNotNull(gold, r'CharacterLeaderboardSchema', 'gold'));
+        _$CharacterLeaderboardSchema._(
+          position: BuiltValueNullFieldError.checkNotNull(
+              position, r'CharacterLeaderboardSchema', 'position'),
+          name: BuiltValueNullFieldError.checkNotNull(
+              name, r'CharacterLeaderboardSchema', 'name'),
+          account: BuiltValueNullFieldError.checkNotNull(
+              account, r'CharacterLeaderboardSchema', 'account'),
+          status: BuiltValueNullFieldError.checkNotNull(
+              status, r'CharacterLeaderboardSchema', 'status'),
+          skin: BuiltValueNullFieldError.checkNotNull(
+              skin, r'CharacterLeaderboardSchema', 'skin'),
+          level: BuiltValueNullFieldError.checkNotNull(
+              level, r'CharacterLeaderboardSchema', 'level'),
+          totalXp: BuiltValueNullFieldError.checkNotNull(
+              totalXp, r'CharacterLeaderboardSchema', 'totalXp'),
+          miningLevel: BuiltValueNullFieldError.checkNotNull(
+              miningLevel, r'CharacterLeaderboardSchema', 'miningLevel'),
+          miningTotalXp: BuiltValueNullFieldError.checkNotNull(
+              miningTotalXp, r'CharacterLeaderboardSchema', 'miningTotalXp'),
+          woodcuttingLevel: BuiltValueNullFieldError.checkNotNull(
+              woodcuttingLevel,
+              r'CharacterLeaderboardSchema',
+              'woodcuttingLevel'),
+          woodcuttingTotalXp: BuiltValueNullFieldError.checkNotNull(
+              woodcuttingTotalXp,
+              r'CharacterLeaderboardSchema',
+              'woodcuttingTotalXp'),
+          fishingLevel: BuiltValueNullFieldError.checkNotNull(
+              fishingLevel, r'CharacterLeaderboardSchema', 'fishingLevel'),
+          fishingTotalXp: BuiltValueNullFieldError.checkNotNull(
+              fishingTotalXp, r'CharacterLeaderboardSchema', 'fishingTotalXp'),
+          weaponcraftingLevel: BuiltValueNullFieldError.checkNotNull(
+              weaponcraftingLevel,
+              r'CharacterLeaderboardSchema',
+              'weaponcraftingLevel'),
+          weaponcraftingTotalXp: BuiltValueNullFieldError.checkNotNull(
+              weaponcraftingTotalXp,
+              r'CharacterLeaderboardSchema',
+              'weaponcraftingTotalXp'),
+          gearcraftingLevel: BuiltValueNullFieldError.checkNotNull(
+              gearcraftingLevel,
+              r'CharacterLeaderboardSchema',
+              'gearcraftingLevel'),
+          gearcraftingTotalXp: BuiltValueNullFieldError.checkNotNull(
+              gearcraftingTotalXp,
+              r'CharacterLeaderboardSchema',
+              'gearcraftingTotalXp'),
+          jewelrycraftingLevel: BuiltValueNullFieldError.checkNotNull(
+              jewelrycraftingLevel,
+              r'CharacterLeaderboardSchema',
+              'jewelrycraftingLevel'),
+          jewelrycraftingTotalXp: BuiltValueNullFieldError.checkNotNull(
+              jewelrycraftingTotalXp,
+              r'CharacterLeaderboardSchema',
+              'jewelrycraftingTotalXp'),
+          cookingLevel: BuiltValueNullFieldError.checkNotNull(
+              cookingLevel, r'CharacterLeaderboardSchema', 'cookingLevel'),
+          cookingTotalXp: BuiltValueNullFieldError.checkNotNull(
+              cookingTotalXp, r'CharacterLeaderboardSchema', 'cookingTotalXp'),
+          alchemyLevel: BuiltValueNullFieldError.checkNotNull(
+              alchemyLevel, r'CharacterLeaderboardSchema', 'alchemyLevel'),
+          alchemyTotalXp: BuiltValueNullFieldError.checkNotNull(
+              alchemyTotalXp, r'CharacterLeaderboardSchema', 'alchemyTotalXp'),
+          gold: BuiltValueNullFieldError.checkNotNull(
+              gold, r'CharacterLeaderboardSchema', 'gold'),
+        );
     replace(_$result);
     return _$result;
   }

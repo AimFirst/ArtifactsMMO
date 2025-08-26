@@ -55,11 +55,11 @@ ItemType _$valueOf(String name) {
     case 'bag':
       return _$bag;
     default:
-      throw new ArgumentError(name);
+      throw ArgumentError(name);
   }
 }
 
-final BuiltSet<ItemType> _$values = new BuiltSet<ItemType>(const <ItemType>[
+final BuiltSet<ItemType> _$values = BuiltSet<ItemType>(const <ItemType>[
   _$utility,
   _$bodyArmor,
   _$weapon,
@@ -103,7 +103,7 @@ abstract class _$ItemTypeMixin {
   _$ItemTypeMeta get ItemType => const _$ItemTypeMeta();
 }
 
-Serializer<ItemType> _$itemTypeSerializer = new _$ItemTypeSerializer();
+Serializer<ItemType> _$itemTypeSerializer = _$ItemTypeSerializer();
 
 class _$ItemTypeSerializer implements PrimitiveSerializer<ItemType> {
   static const Map<String, Object> _toWire = const <String, Object>{

@@ -8,7 +8,7 @@ void main() {
 
   group(MapContentSchema, () {
     // Type of the content.
-    // String type
+    // MapContentType type
     test('to test the property `type`', () async {
       // TODO
     });

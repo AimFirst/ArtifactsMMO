@@ -16,12 +16,12 @@ FightResult _$valueOf(String name) {
     case 'loss':
       return _$loss;
     default:
-      throw new ArgumentError(name);
+      throw ArgumentError(name);
   }
 }
 
 final BuiltSet<FightResult> _$values =
-    new BuiltSet<FightResult>(const <FightResult>[
+    BuiltSet<FightResult>(const <FightResult>[
   _$win,
   _$loss,
 ]);
@@ -39,7 +39,7 @@ abstract class _$FightResultMixin {
   _$FightResultMeta get FightResult => const _$FightResultMeta();
 }
 
-Serializer<FightResult> _$fightResultSerializer = new _$FightResultSerializer();
+Serializer<FightResult> _$fightResultSerializer = _$FightResultSerializer();
 
 class _$FightResultSerializer implements PrimitiveSerializer<FightResult> {
   static const Map<String, Object> _toWire = const <String, Object>{

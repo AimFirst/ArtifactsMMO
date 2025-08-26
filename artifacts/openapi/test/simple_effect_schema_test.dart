@@ -18,5 +18,11 @@ void main() {
     test('to test the property `value`', () async {
       // TODO
     });
+
+    // Description of the effect.
+    // String description
+    test('to test the property `description`', () async {
+      // TODO
+    });
   });
 }

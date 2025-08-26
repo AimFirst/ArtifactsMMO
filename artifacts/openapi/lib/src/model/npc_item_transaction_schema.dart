@@ -13,6 +13,7 @@ part 'npc_item_transaction_schema.g.dart';
 /// Properties:
 /// * [code] - Item code.
 /// * [quantity] - Item quantity.
+/// * [currency] - Currency used for the transaction.
 /// * [price] - Item price.
 /// * [totalPrice] - Total price of the transaction.
 @BuiltValue()
@@ -26,6 +27,10 @@ abstract class NpcItemTransactionSchema
   /// Item quantity.
   @BuiltValueField(wireName: r'quantity')
   int get quantity;
+
+  /// Currency used for the transaction.
+  @BuiltValueField(wireName: r'currency')
+  String get currency;
 
   /// Item price.
   @BuiltValueField(wireName: r'price')
@@ -75,6 +80,11 @@ class _$NpcItemTransactionSchemaSerializer
       object.quantity,
       specifiedType: const FullType(int),
     );
+    yield r'currency';
+    yield serializers.serialize(
+      object.currency,
+      specifiedType: const FullType(String),
+    );
     yield r'price';
     yield serializers.serialize(
       object.price,
@@ -123,6 +133,13 @@ class _$NpcItemTransactionSchemaSerializer
             specifiedType: const FullType(int),
           ) as int;
           result.quantity = valueDes;
+          break;
+        case r'currency':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.currency = valueDes;
           break;
         case r'price':
           final valueDes = serializers.deserialize(

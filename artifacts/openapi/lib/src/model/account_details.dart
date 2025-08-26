@@ -15,8 +15,9 @@ part 'account_details.g.dart';
 ///
 /// Properties:
 /// * [username] - Username.
-/// * [subscribed] - Subscribed for the current season.
-/// * [status] - Member status.
+/// * [member] - Member status.
+/// * [status] - Account status.
+/// * [skins] - Skins owned.
 /// * [achievementsPoints] - Achievement points.
 /// * [banned] - Banned.
 /// * [badges] - Account badges.
@@ -28,14 +29,18 @@ abstract class AccountDetails
   @BuiltValueField(wireName: r'username')
   String get username;
 
-  /// Subscribed for the current season.
-  @BuiltValueField(wireName: r'subscribed')
-  bool get subscribed;
-
   /// Member status.
+  @BuiltValueField(wireName: r'member')
+  bool get member;
+
+  /// Account status.
   @BuiltValueField(wireName: r'status')
   AccountStatus get status;
   // enum statusEnum {  standard,  founder,  gold_founder,  vip_founder,  };
+
+  /// Skins owned.
+  @BuiltValueField(wireName: r'skins')
+  BuiltList<JsonObject?> get skins;
 
   /// Achievement points.
   @BuiltValueField(wireName: r'achievements_points')
@@ -84,15 +89,20 @@ class _$AccountDetailsSerializer
       object.username,
       specifiedType: const FullType(String),
     );
-    yield r'subscribed';
+    yield r'member';
     yield serializers.serialize(
-      object.subscribed,
+      object.member,
       specifiedType: const FullType(bool),
     );
     yield r'status';
     yield serializers.serialize(
       object.status,
       specifiedType: const FullType(AccountStatus),
+    );
+    yield r'skins';
+    yield serializers.serialize(
+      object.skins,
+      specifiedType: const FullType(BuiltList, [FullType.nullable(JsonObject)]),
     );
     yield r'achievements_points';
     yield serializers.serialize(
@@ -151,12 +161,12 @@ class _$AccountDetailsSerializer
           ) as String;
           result.username = valueDes;
           break;
-        case r'subscribed':
+        case r'member':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(bool),
           ) as bool;
-          result.subscribed = valueDes;
+          result.member = valueDes;
           break;
         case r'status':
           final valueDes = serializers.deserialize(
@@ -164,6 +174,14 @@ class _$AccountDetailsSerializer
             specifiedType: const FullType(AccountStatus),
           ) as AccountStatus;
           result.status = valueDes;
+          break;
+        case r'skins':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType:
+                const FullType(BuiltList, [FullType.nullable(JsonObject)]),
+          ) as BuiltList<JsonObject?>;
+          result.skins.replace(valueDes);
           break;
         case r'achievements_points':
           final valueDes = serializers.deserialize(

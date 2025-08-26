@@ -21,15 +21,11 @@ class _$DataPageAccountLeaderboardSchema
 
   factory _$DataPageAccountLeaderboardSchema(
           [void Function(DataPageAccountLeaderboardSchemaBuilder)? updates]) =>
-      (new DataPageAccountLeaderboardSchemaBuilder()..update(updates))._build();
+      (DataPageAccountLeaderboardSchemaBuilder()..update(updates))._build();
 
   _$DataPageAccountLeaderboardSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'DataPageAccountLeaderboardSchema', 'data');
-  }
-
+      : super._();
   @override
   DataPageAccountLeaderboardSchema rebuild(
           void Function(DataPageAccountLeaderboardSchemaBuilder) updates) =>
@@ -37,7 +33,7 @@ class _$DataPageAccountLeaderboardSchema
 
   @override
   DataPageAccountLeaderboardSchemaBuilder toBuilder() =>
-      new DataPageAccountLeaderboardSchemaBuilder()..replace(this);
+      DataPageAccountLeaderboardSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -82,7 +78,7 @@ class DataPageAccountLeaderboardSchemaBuilder
 
   ListBuilder<AccountLeaderboardSchema>? _data;
   ListBuilder<AccountLeaderboardSchema> get data =>
-      _$this._data ??= new ListBuilder<AccountLeaderboardSchema>();
+      _$this._data ??= ListBuilder<AccountLeaderboardSchema>();
   set data(ListBuilder<AccountLeaderboardSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -120,7 +116,6 @@ class DataPageAccountLeaderboardSchemaBuilder
 
   @override
   void replace(DataPageAccountLeaderboardSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageAccountLeaderboardSchema;
   }
 
@@ -136,19 +131,20 @@ class DataPageAccountLeaderboardSchemaBuilder
     _$DataPageAccountLeaderboardSchema _$result;
     try {
       _$result = _$v ??
-          new _$DataPageAccountLeaderboardSchema._(
-              data: data.build(),
-              total: total,
-              page: page,
-              size: size,
-              pages: pages);
+          _$DataPageAccountLeaderboardSchema._(
+            data: data.build(),
+            total: total,
+            page: page,
+            size: size,
+            pages: pages,
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'DataPageAccountLeaderboardSchema', _$failedField, e.toString());
       }
       rethrow;

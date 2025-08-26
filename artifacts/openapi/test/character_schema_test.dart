@@ -211,21 +211,27 @@ void main() {
       // TODO
     });
 
-    // *Character Haste. Increase speed attack (reduce fight cooldown)
+    // *Increase speed attack (reduce fight cooldown)
     // int haste
     test('to test the property `haste`', () async {
       // TODO
     });
 
-    // *Not available, on the roadmap. Character Critical   Strike. Critical strikes increase the attack's damage.
+    // % Critical strike. Critical strikes adds 50% extra damage to an attack (1.5x).
     // int criticalStrike
     test('to test the property `criticalStrike`', () async {
       // TODO
     });
 
-    // *Not available, on the roadmap. Regenerates life at the start of each turn.
-    // int stamina
-    test('to test the property `stamina`', () async {
+    // Wisdom increases the amount of XP gained from fights and skills (1% extra per 10 wisdom).
+    // int wisdom
+    test('to test the property `wisdom`', () async {
+      // TODO
+    });
+
+    // Prospecting increases the chances of getting drops from fights and skills (1% extra per 10 PP).
+    // int prospecting
+    test('to test the property `prospecting`', () async {
       // TODO
     });
 
@@ -253,49 +259,55 @@ void main() {
       // TODO
     });
 
-    // % Fire damage.
+    // % Damage. Damage increases your attack in all elements.
+    // int dmg
+    test('to test the property `dmg`', () async {
+      // TODO
+    });
+
+    // % Fire damage. Damage increases your fire attack.
     // int dmgFire
     test('to test the property `dmgFire`', () async {
       // TODO
     });
 
-    // % Earth damage.
+    // % Earth damage. Damage increases your earth attack.
     // int dmgEarth
     test('to test the property `dmgEarth`', () async {
       // TODO
     });
 
-    // % Water damage.
+    // % Water damage. Damage increases your water attack.
     // int dmgWater
     test('to test the property `dmgWater`', () async {
       // TODO
     });
 
-    // % Air damage.
+    // % Air damage. Damage increases your air attack.
     // int dmgAir
     test('to test the property `dmgAir`', () async {
       // TODO
     });
 
-    // % Fire resistance.
+    // % Fire resistance. Reduces fire attack.
     // int resFire
     test('to test the property `resFire`', () async {
       // TODO
     });
 
-    // % Earth resistance.
+    // % Earth resistance. Reduces earth attack.
     // int resEarth
     test('to test the property `resEarth`', () async {
       // TODO
     });
 
-    // % Water resistance.
+    // % Water resistance. Reduces water attack.
     // int resWater
     test('to test the property `resWater`', () async {
       // TODO
     });
 
-    // % Air resistance.
+    // % Air resistance. Reduces air attack.
     // int resAir
     test('to test the property `resAir`', () async {
       // TODO
@@ -322,6 +334,12 @@ void main() {
     // Weapon slot.
     // String weaponSlot
     test('to test the property `weaponSlot`', () async {
+      // TODO
+    });
+
+    // Rune slot.
+    // String runeSlot
+    test('to test the property `runeSlot`', () async {
       // TODO
     });
 
@@ -412,6 +430,12 @@ void main() {
     // Utility 2 quantity.
     // int utility2SlotQuantity
     test('to test the property `utility2SlotQuantity`', () async {
+      // TODO
+    });
+
+    // Bag slot.
+    // String bagSlot
+    test('to test the property `bagSlot`', () async {
       // TODO
     });
 

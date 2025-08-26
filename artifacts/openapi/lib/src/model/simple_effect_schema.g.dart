@@ -11,18 +11,16 @@ class _$SimpleEffectSchema extends SimpleEffectSchema {
   final String code;
   @override
   final int value;
+  @override
+  final String description;
 
   factory _$SimpleEffectSchema(
           [void Function(SimpleEffectSchemaBuilder)? updates]) =>
-      (new SimpleEffectSchemaBuilder()..update(updates))._build();
+      (SimpleEffectSchemaBuilder()..update(updates))._build();
 
-  _$SimpleEffectSchema._({required this.code, required this.value})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(code, r'SimpleEffectSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        value, r'SimpleEffectSchema', 'value');
-  }
-
+  _$SimpleEffectSchema._(
+      {required this.code, required this.value, required this.description})
+      : super._();
   @override
   SimpleEffectSchema rebuild(
           void Function(SimpleEffectSchemaBuilder) updates) =>
@@ -30,14 +28,15 @@ class _$SimpleEffectSchema extends SimpleEffectSchema {
 
   @override
   SimpleEffectSchemaBuilder toBuilder() =>
-      new SimpleEffectSchemaBuilder()..replace(this);
+      SimpleEffectSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is SimpleEffectSchema &&
         code == other.code &&
-        value == other.value;
+        value == other.value &&
+        description == other.description;
   }
 
   @override
@@ -45,6 +44,7 @@ class _$SimpleEffectSchema extends SimpleEffectSchema {
     var _$hash = 0;
     _$hash = $jc(_$hash, code.hashCode);
     _$hash = $jc(_$hash, value.hashCode);
+    _$hash = $jc(_$hash, description.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -53,7 +53,8 @@ class _$SimpleEffectSchema extends SimpleEffectSchema {
   String toString() {
     return (newBuiltValueToStringHelper(r'SimpleEffectSchema')
           ..add('code', code)
-          ..add('value', value))
+          ..add('value', value)
+          ..add('description', description))
         .toString();
   }
 }
@@ -70,6 +71,10 @@ class SimpleEffectSchemaBuilder
   int? get value => _$this._value;
   set value(int? value) => _$this._value = value;
 
+  String? _description;
+  String? get description => _$this._description;
+  set description(String? description) => _$this._description = description;
+
   SimpleEffectSchemaBuilder() {
     SimpleEffectSchema._defaults(this);
   }
@@ -79,6 +84,7 @@ class SimpleEffectSchemaBuilder
     if ($v != null) {
       _code = $v.code;
       _value = $v.value;
+      _description = $v.description;
       _$v = null;
     }
     return this;
@@ -86,7 +92,6 @@ class SimpleEffectSchemaBuilder
 
   @override
   void replace(SimpleEffectSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SimpleEffectSchema;
   }
 
@@ -100,11 +105,14 @@ class SimpleEffectSchemaBuilder
 
   _$SimpleEffectSchema _build() {
     final _$result = _$v ??
-        new _$SimpleEffectSchema._(
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'SimpleEffectSchema', 'code'),
-            value: BuiltValueNullFieldError.checkNotNull(
-                value, r'SimpleEffectSchema', 'value'));
+        _$SimpleEffectSchema._(
+          code: BuiltValueNullFieldError.checkNotNull(
+              code, r'SimpleEffectSchema', 'code'),
+          value: BuiltValueNullFieldError.checkNotNull(
+              value, r'SimpleEffectSchema', 'value'),
+          description: BuiltValueNullFieldError.checkNotNull(
+              description, r'SimpleEffectSchema', 'description'),
+        );
     replace(_$result);
     return _$result;
   }

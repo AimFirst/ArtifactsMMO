@@ -11,27 +11,28 @@ class _$EventMapSchema extends EventMapSchema {
   final int x;
   @override
   final int y;
+  @override
+  final String skin;
 
   factory _$EventMapSchema([void Function(EventMapSchemaBuilder)? updates]) =>
-      (new EventMapSchemaBuilder()..update(updates))._build();
+      (EventMapSchemaBuilder()..update(updates))._build();
 
-  _$EventMapSchema._({required this.x, required this.y}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(x, r'EventMapSchema', 'x');
-    BuiltValueNullFieldError.checkNotNull(y, r'EventMapSchema', 'y');
-  }
-
+  _$EventMapSchema._({required this.x, required this.y, required this.skin})
+      : super._();
   @override
   EventMapSchema rebuild(void Function(EventMapSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  EventMapSchemaBuilder toBuilder() =>
-      new EventMapSchemaBuilder()..replace(this);
+  EventMapSchemaBuilder toBuilder() => EventMapSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is EventMapSchema && x == other.x && y == other.y;
+    return other is EventMapSchema &&
+        x == other.x &&
+        y == other.y &&
+        skin == other.skin;
   }
 
   @override
@@ -39,6 +40,7 @@ class _$EventMapSchema extends EventMapSchema {
     var _$hash = 0;
     _$hash = $jc(_$hash, x.hashCode);
     _$hash = $jc(_$hash, y.hashCode);
+    _$hash = $jc(_$hash, skin.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -47,7 +49,8 @@ class _$EventMapSchema extends EventMapSchema {
   String toString() {
     return (newBuiltValueToStringHelper(r'EventMapSchema')
           ..add('x', x)
-          ..add('y', y))
+          ..add('y', y)
+          ..add('skin', skin))
         .toString();
   }
 }
@@ -64,6 +67,10 @@ class EventMapSchemaBuilder
   int? get y => _$this._y;
   set y(int? y) => _$this._y = y;
 
+  String? _skin;
+  String? get skin => _$this._skin;
+  set skin(String? skin) => _$this._skin = skin;
+
   EventMapSchemaBuilder() {
     EventMapSchema._defaults(this);
   }
@@ -73,6 +80,7 @@ class EventMapSchemaBuilder
     if ($v != null) {
       _x = $v.x;
       _y = $v.y;
+      _skin = $v.skin;
       _$v = null;
     }
     return this;
@@ -80,7 +88,6 @@ class EventMapSchemaBuilder
 
   @override
   void replace(EventMapSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EventMapSchema;
   }
 
@@ -94,10 +101,12 @@ class EventMapSchemaBuilder
 
   _$EventMapSchema _build() {
     final _$result = _$v ??
-        new _$EventMapSchema._(
-            x: BuiltValueNullFieldError.checkNotNull(x, r'EventMapSchema', 'x'),
-            y: BuiltValueNullFieldError.checkNotNull(
-                y, r'EventMapSchema', 'y'));
+        _$EventMapSchema._(
+          x: BuiltValueNullFieldError.checkNotNull(x, r'EventMapSchema', 'x'),
+          y: BuiltValueNullFieldError.checkNotNull(y, r'EventMapSchema', 'y'),
+          skin: BuiltValueNullFieldError.checkNotNull(
+              skin, r'EventMapSchema', 'skin'),
+        );
     replace(_$result);
     return _$result;
   }

@@ -33,7 +33,7 @@ abstract class NPCSchema implements Built<NPCSchema, NPCSchemaBuilder> {
   /// Type of the NPC.
   @BuiltValueField(wireName: r'type')
   NPCType get type;
-  // enum typeEnum {  merchant,  };
+  // enum typeEnum {  merchant,  trader,  };
 
   NPCSchema._();
 

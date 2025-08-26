@@ -12,13 +12,9 @@ class _$MyCharactersListSchema extends MyCharactersListSchema {
 
   factory _$MyCharactersListSchema(
           [void Function(MyCharactersListSchemaBuilder)? updates]) =>
-      (new MyCharactersListSchemaBuilder()..update(updates))._build();
+      (MyCharactersListSchemaBuilder()..update(updates))._build();
 
-  _$MyCharactersListSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'MyCharactersListSchema', 'data');
-  }
-
+  _$MyCharactersListSchema._({required this.data}) : super._();
   @override
   MyCharactersListSchema rebuild(
           void Function(MyCharactersListSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$MyCharactersListSchema extends MyCharactersListSchema {
 
   @override
   MyCharactersListSchemaBuilder toBuilder() =>
-      new MyCharactersListSchemaBuilder()..replace(this);
+      MyCharactersListSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -56,7 +52,7 @@ class MyCharactersListSchemaBuilder
 
   ListBuilder<CharacterSchema>? _data;
   ListBuilder<CharacterSchema> get data =>
-      _$this._data ??= new ListBuilder<CharacterSchema>();
+      _$this._data ??= ListBuilder<CharacterSchema>();
   set data(ListBuilder<CharacterSchema>? data) => _$this._data = data;
 
   MyCharactersListSchemaBuilder() {
@@ -74,7 +70,6 @@ class MyCharactersListSchemaBuilder
 
   @override
   void replace(MyCharactersListSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$MyCharactersListSchema;
   }
 
@@ -89,14 +84,17 @@ class MyCharactersListSchemaBuilder
   _$MyCharactersListSchema _build() {
     _$MyCharactersListSchema _$result;
     try {
-      _$result = _$v ?? new _$MyCharactersListSchema._(data: data.build());
+      _$result = _$v ??
+          _$MyCharactersListSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'MyCharactersListSchema', _$failedField, e.toString());
       }
       rethrow;

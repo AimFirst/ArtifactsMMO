@@ -25,7 +25,7 @@ class _$LogSchema extends LogSchema {
   final DateTime createdAt;
 
   factory _$LogSchema([void Function(LogSchemaBuilder)? updates]) =>
-      (new LogSchemaBuilder()..update(updates))._build();
+      (LogSchemaBuilder()..update(updates))._build();
 
   _$LogSchema._(
       {required this.character,
@@ -36,22 +36,13 @@ class _$LogSchema extends LogSchema {
       required this.cooldown,
       this.cooldownExpiration,
       required this.createdAt})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(character, r'LogSchema', 'character');
-    BuiltValueNullFieldError.checkNotNull(account, r'LogSchema', 'account');
-    BuiltValueNullFieldError.checkNotNull(type, r'LogSchema', 'type');
-    BuiltValueNullFieldError.checkNotNull(
-        description, r'LogSchema', 'description');
-    BuiltValueNullFieldError.checkNotNull(cooldown, r'LogSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(createdAt, r'LogSchema', 'createdAt');
-  }
-
+      : super._();
   @override
   LogSchema rebuild(void Function(LogSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  LogSchemaBuilder toBuilder() => new LogSchemaBuilder()..replace(this);
+  LogSchemaBuilder toBuilder() => LogSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -155,7 +146,6 @@ class LogSchemaBuilder implements Builder<LogSchema, LogSchemaBuilder> {
 
   @override
   void replace(LogSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$LogSchema;
   }
 
@@ -169,21 +159,22 @@ class LogSchemaBuilder implements Builder<LogSchema, LogSchemaBuilder> {
 
   _$LogSchema _build() {
     final _$result = _$v ??
-        new _$LogSchema._(
-            character: BuiltValueNullFieldError.checkNotNull(
-                character, r'LogSchema', 'character'),
-            account: BuiltValueNullFieldError.checkNotNull(
-                account, r'LogSchema', 'account'),
-            type: BuiltValueNullFieldError.checkNotNull(
-                type, r'LogSchema', 'type'),
-            description: BuiltValueNullFieldError.checkNotNull(
-                description, r'LogSchema', 'description'),
-            content: content,
-            cooldown: BuiltValueNullFieldError.checkNotNull(
-                cooldown, r'LogSchema', 'cooldown'),
-            cooldownExpiration: cooldownExpiration,
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-                createdAt, r'LogSchema', 'createdAt'));
+        _$LogSchema._(
+          character: BuiltValueNullFieldError.checkNotNull(
+              character, r'LogSchema', 'character'),
+          account: BuiltValueNullFieldError.checkNotNull(
+              account, r'LogSchema', 'account'),
+          type:
+              BuiltValueNullFieldError.checkNotNull(type, r'LogSchema', 'type'),
+          description: BuiltValueNullFieldError.checkNotNull(
+              description, r'LogSchema', 'description'),
+          content: content,
+          cooldown: BuiltValueNullFieldError.checkNotNull(
+              cooldown, r'LogSchema', 'cooldown'),
+          cooldownExpiration: cooldownExpiration,
+          createdAt: BuiltValueNullFieldError.checkNotNull(
+              createdAt, r'LogSchema', 'createdAt'),
+        );
     replace(_$result);
     return _$result;
   }

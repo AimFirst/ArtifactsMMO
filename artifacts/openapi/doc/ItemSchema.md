@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **subtype** | **String** | Item subtype. | 
 **description** | **String** | Item description. | 
 **tradeable** | **bool** | Item tradeable status. A non-tradeable item cannot be exchanged or sold. | 
+**conditions** | [**BuiltList&lt;ConditionSchema&gt;**](ConditionSchema.md) | Item conditions. If applicable. Conditions for using or equipping the item. | [optional] 
 **effects** | [**BuiltList&lt;SimpleEffectSchema&gt;**](SimpleEffectSchema.md) | List of object effects. For equipment, it will include item stats. | [optional] 
 **craft** | [**CraftSchema**](CraftSchema.md) |  | [optional] 
 

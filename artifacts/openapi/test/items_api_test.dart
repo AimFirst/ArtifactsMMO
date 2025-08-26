@@ -10,7 +10,7 @@ void main() {
     //
     // Fetch items details.
     //
-    //Future<DataPageItemSchema> getAllItemsItemsGet({ int minLevel, int maxLevel, String name, ItemType type, CraftSkill craftSkill, String craftMaterial, int page, int size }) async
+    //Future<DataPageItemSchema> getAllItemsItemsGet({ String name, int minLevel, int maxLevel, ItemType type, CraftSkill craftSkill, String craftMaterial, int page, int size }) async
     test('test getAllItemsItemsGet', () async {
       // TODO
     });

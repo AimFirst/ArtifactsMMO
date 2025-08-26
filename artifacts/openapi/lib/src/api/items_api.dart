@@ -25,9 +25,9 @@ class ItemsApi {
   /// Fetch items details.
   ///
   /// Parameters:
+  /// * [name] - Name of the item.
   /// * [minLevel] - Minimum level items.
   /// * [maxLevel] - Maximum level items.
-  /// * [name] - Name of the item.
   /// * [type] - Type of items.
   /// * [craftSkill] - Skill to craft items.
   /// * [craftMaterial] - Item code of items used as material for crafting.
@@ -43,9 +43,9 @@ class ItemsApi {
   /// Returns a [Future] containing a [Response] with a [DataPageItemSchema] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DataPageItemSchema>> getAllItemsItemsGet({
+    String? name,
     int? minLevel,
     int? maxLevel,
-    String? name,
     ItemType? type,
     CraftSkill? craftSkill,
     String? craftMaterial,
@@ -72,15 +72,15 @@ class ItemsApi {
     );
 
     final _queryParameters = <String, dynamic>{
+      if (name != null)
+        r'name':
+            encodeQueryParameter(_serializers, name, const FullType(String)),
       if (minLevel != null)
         r'min_level':
             encodeQueryParameter(_serializers, minLevel, const FullType(int)),
       if (maxLevel != null)
         r'max_level':
             encodeQueryParameter(_serializers, maxLevel, const FullType(int)),
-      if (name != null)
-        r'name':
-            encodeQueryParameter(_serializers, name, const FullType(String)),
       if (type != null)
         r'type':
             encodeQueryParameter(_serializers, type, const FullType(ItemType)),

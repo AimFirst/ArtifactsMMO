@@ -12,12 +12,9 @@ class _$SkillResponseSchema extends SkillResponseSchema {
 
   factory _$SkillResponseSchema(
           [void Function(SkillResponseSchemaBuilder)? updates]) =>
-      (new SkillResponseSchemaBuilder()..update(updates))._build();
+      (SkillResponseSchemaBuilder()..update(updates))._build();
 
-  _$SkillResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(data, r'SkillResponseSchema', 'data');
-  }
-
+  _$SkillResponseSchema._({required this.data}) : super._();
   @override
   SkillResponseSchema rebuild(
           void Function(SkillResponseSchemaBuilder) updates) =>
@@ -25,7 +22,7 @@ class _$SkillResponseSchema extends SkillResponseSchema {
 
   @override
   SkillResponseSchemaBuilder toBuilder() =>
-      new SkillResponseSchemaBuilder()..replace(this);
+      SkillResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -54,8 +51,7 @@ class SkillResponseSchemaBuilder
   _$SkillResponseSchema? _$v;
 
   SkillDataSchemaBuilder? _data;
-  SkillDataSchemaBuilder get data =>
-      _$this._data ??= new SkillDataSchemaBuilder();
+  SkillDataSchemaBuilder get data => _$this._data ??= SkillDataSchemaBuilder();
   set data(SkillDataSchemaBuilder? data) => _$this._data = data;
 
   SkillResponseSchemaBuilder() {
@@ -73,7 +69,6 @@ class SkillResponseSchemaBuilder
 
   @override
   void replace(SkillResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SkillResponseSchema;
   }
 
@@ -88,14 +83,17 @@ class SkillResponseSchemaBuilder
   _$SkillResponseSchema _build() {
     _$SkillResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$SkillResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$SkillResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'SkillResponseSchema', _$failedField, e.toString());
       }
       rethrow;

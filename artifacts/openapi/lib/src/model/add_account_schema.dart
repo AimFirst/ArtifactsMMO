@@ -13,7 +13,7 @@ part 'add_account_schema.g.dart';
 /// Properties:
 /// * [username] - Your desired username.
 /// * [password] - Your password.
-/// * [email]
+/// * [email] - Your email.
 @BuiltValue()
 abstract class AddAccountSchema
     implements Built<AddAccountSchema, AddAccountSchemaBuilder> {
@@ -25,8 +25,9 @@ abstract class AddAccountSchema
   @BuiltValueField(wireName: r'password')
   String get password;
 
+  /// Your email.
   @BuiltValueField(wireName: r'email')
-  String? get email;
+  String get email;
 
   AddAccountSchema._();
 
@@ -64,13 +65,11 @@ class _$AddAccountSchemaSerializer
       object.password,
       specifiedType: const FullType(String),
     );
-    if (object.email != null) {
-      yield r'email';
-      yield serializers.serialize(
-        object.email,
-        specifiedType: const FullType(String),
-      );
-    }
+    yield r'email';
+    yield serializers.serialize(
+      object.email,
+      specifiedType: const FullType(String),
+    );
   }
 
   @override

@@ -19,6 +19,12 @@ void main() {
       // TODO
     });
 
+    // Currency used for the transaction.
+    // String currency
+    test('to test the property `currency`', () async {
+      // TODO
+    });
+
     // Item price.
     // int price
     test('to test the property `price`', () async {

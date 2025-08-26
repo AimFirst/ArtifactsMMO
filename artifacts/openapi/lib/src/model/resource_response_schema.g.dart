@@ -12,13 +12,9 @@ class _$ResourceResponseSchema extends ResourceResponseSchema {
 
   factory _$ResourceResponseSchema(
           [void Function(ResourceResponseSchemaBuilder)? updates]) =>
-      (new ResourceResponseSchemaBuilder()..update(updates))._build();
+      (ResourceResponseSchemaBuilder()..update(updates))._build();
 
-  _$ResourceResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'ResourceResponseSchema', 'data');
-  }
-
+  _$ResourceResponseSchema._({required this.data}) : super._();
   @override
   ResourceResponseSchema rebuild(
           void Function(ResourceResponseSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$ResourceResponseSchema extends ResourceResponseSchema {
 
   @override
   ResourceResponseSchemaBuilder toBuilder() =>
-      new ResourceResponseSchemaBuilder()..replace(this);
+      ResourceResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -55,8 +51,7 @@ class ResourceResponseSchemaBuilder
   _$ResourceResponseSchema? _$v;
 
   ResourceSchemaBuilder? _data;
-  ResourceSchemaBuilder get data =>
-      _$this._data ??= new ResourceSchemaBuilder();
+  ResourceSchemaBuilder get data => _$this._data ??= ResourceSchemaBuilder();
   set data(ResourceSchemaBuilder? data) => _$this._data = data;
 
   ResourceResponseSchemaBuilder() {
@@ -74,7 +69,6 @@ class ResourceResponseSchemaBuilder
 
   @override
   void replace(ResourceResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ResourceResponseSchema;
   }
 
@@ -89,14 +83,17 @@ class ResourceResponseSchemaBuilder
   _$ResourceResponseSchema _build() {
     _$ResourceResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$ResourceResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$ResourceResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'ResourceResponseSchema', _$failedField, e.toString());
       }
       rethrow;

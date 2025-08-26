@@ -13,7 +13,7 @@ part 'add_character_schema.g.dart';
 ///
 /// Properties:
 /// * [name] - Your desired character name. It's unique and all players can see it.
-/// * [skin] - Your desired skin.
+/// * [skin] - Your desired skin. Skins unlocked by default: 'men1', 'men2', 'men3', 'women1', 'women2', 'women3'.
 @BuiltValue()
 abstract class AddCharacterSchema
     implements Built<AddCharacterSchema, AddCharacterSchemaBuilder> {
@@ -21,10 +21,10 @@ abstract class AddCharacterSchema
   @BuiltValueField(wireName: r'name')
   String get name;
 
-  /// Your desired skin.
+  /// Your desired skin. Skins unlocked by default: 'men1', 'men2', 'men3', 'women1', 'women2', 'women3'.
   @BuiltValueField(wireName: r'skin')
   CharacterSkin get skin;
-  // enum skinEnum {  men1,  men2,  men3,  women1,  women2,  women3,  };
+  // enum skinEnum {  men1,  men2,  men3,  women1,  women2,  women3,  corrupted1,  zombie1,  };
 
   AddCharacterSchema._();
 

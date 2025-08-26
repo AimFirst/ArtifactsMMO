@@ -8,7 +8,7 @@ void main() {
 
   group(EventContentSchema, () {
     // Type of the event.
-    // String type
+    // MapContentType type
     test('to test the property `type`', () async {
       // TODO
     });

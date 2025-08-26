@@ -13,20 +13,15 @@ class _$SkillInfoSchema extends SkillInfoSchema {
   final BuiltList<DropSchema> items;
 
   factory _$SkillInfoSchema([void Function(SkillInfoSchemaBuilder)? updates]) =>
-      (new SkillInfoSchemaBuilder()..update(updates))._build();
+      (SkillInfoSchemaBuilder()..update(updates))._build();
 
-  _$SkillInfoSchema._({required this.xp, required this.items}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(xp, r'SkillInfoSchema', 'xp');
-    BuiltValueNullFieldError.checkNotNull(items, r'SkillInfoSchema', 'items');
-  }
-
+  _$SkillInfoSchema._({required this.xp, required this.items}) : super._();
   @override
   SkillInfoSchema rebuild(void Function(SkillInfoSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  SkillInfoSchemaBuilder toBuilder() =>
-      new SkillInfoSchemaBuilder()..replace(this);
+  SkillInfoSchemaBuilder toBuilder() => SkillInfoSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -62,7 +57,7 @@ class SkillInfoSchemaBuilder
 
   ListBuilder<DropSchema>? _items;
   ListBuilder<DropSchema> get items =>
-      _$this._items ??= new ListBuilder<DropSchema>();
+      _$this._items ??= ListBuilder<DropSchema>();
   set items(ListBuilder<DropSchema>? items) => _$this._items = items;
 
   SkillInfoSchemaBuilder() {
@@ -81,7 +76,6 @@ class SkillInfoSchemaBuilder
 
   @override
   void replace(SkillInfoSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SkillInfoSchema;
   }
 
@@ -97,17 +91,18 @@ class SkillInfoSchemaBuilder
     _$SkillInfoSchema _$result;
     try {
       _$result = _$v ??
-          new _$SkillInfoSchema._(
-              xp: BuiltValueNullFieldError.checkNotNull(
-                  xp, r'SkillInfoSchema', 'xp'),
-              items: items.build());
+          _$SkillInfoSchema._(
+            xp: BuiltValueNullFieldError.checkNotNull(
+                xp, r'SkillInfoSchema', 'xp'),
+            items: items.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'items';
         items.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'SkillInfoSchema', _$failedField, e.toString());
       }
       rethrow;

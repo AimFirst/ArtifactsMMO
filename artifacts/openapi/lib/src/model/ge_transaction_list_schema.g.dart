@@ -16,19 +16,11 @@ class _$GETransactionListSchema extends GETransactionListSchema {
 
   factory _$GETransactionListSchema(
           [void Function(GETransactionListSchemaBuilder)? updates]) =>
-      (new GETransactionListSchemaBuilder()..update(updates))._build();
+      (GETransactionListSchemaBuilder()..update(updates))._build();
 
   _$GETransactionListSchema._(
       {required this.cooldown, required this.order, required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'GETransactionListSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(
-        order, r'GETransactionListSchema', 'order');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'GETransactionListSchema', 'character');
-  }
-
+      : super._();
   @override
   GETransactionListSchema rebuild(
           void Function(GETransactionListSchemaBuilder) updates) =>
@@ -36,7 +28,7 @@ class _$GETransactionListSchema extends GETransactionListSchema {
 
   @override
   GETransactionListSchemaBuilder toBuilder() =>
-      new GETransactionListSchemaBuilder()..replace(this);
+      GETransactionListSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -74,17 +66,17 @@ class GETransactionListSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   GETransactionSchemaBuilder? _order;
   GETransactionSchemaBuilder get order =>
-      _$this._order ??= new GETransactionSchemaBuilder();
+      _$this._order ??= GETransactionSchemaBuilder();
   set order(GETransactionSchemaBuilder? order) => _$this._order = order;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -105,7 +97,6 @@ class GETransactionListSchemaBuilder
 
   @override
   void replace(GETransactionListSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GETransactionListSchema;
   }
 
@@ -121,10 +112,11 @@ class GETransactionListSchemaBuilder
     _$GETransactionListSchema _$result;
     try {
       _$result = _$v ??
-          new _$GETransactionListSchema._(
-              cooldown: cooldown.build(),
-              order: order.build(),
-              character: character.build());
+          _$GETransactionListSchema._(
+            cooldown: cooldown.build(),
+            order: order.build(),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -135,7 +127,7 @@ class GETransactionListSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'GETransactionListSchema', _$failedField, e.toString());
       }
       rethrow;

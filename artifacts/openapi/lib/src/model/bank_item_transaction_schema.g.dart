@@ -10,7 +10,7 @@ class _$BankItemTransactionSchema extends BankItemTransactionSchema {
   @override
   final CooldownSchema cooldown;
   @override
-  final ItemSchema item;
+  final BuiltList<SimpleItemSchema> items;
   @override
   final BuiltList<SimpleItemSchema> bank;
   @override
@@ -18,24 +18,14 @@ class _$BankItemTransactionSchema extends BankItemTransactionSchema {
 
   factory _$BankItemTransactionSchema(
           [void Function(BankItemTransactionSchemaBuilder)? updates]) =>
-      (new BankItemTransactionSchemaBuilder()..update(updates))._build();
+      (BankItemTransactionSchemaBuilder()..update(updates))._build();
 
   _$BankItemTransactionSchema._(
       {required this.cooldown,
-      required this.item,
+      required this.items,
       required this.bank,
       required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'BankItemTransactionSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(
-        item, r'BankItemTransactionSchema', 'item');
-    BuiltValueNullFieldError.checkNotNull(
-        bank, r'BankItemTransactionSchema', 'bank');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'BankItemTransactionSchema', 'character');
-  }
-
+      : super._();
   @override
   BankItemTransactionSchema rebuild(
           void Function(BankItemTransactionSchemaBuilder) updates) =>
@@ -43,14 +33,14 @@ class _$BankItemTransactionSchema extends BankItemTransactionSchema {
 
   @override
   BankItemTransactionSchemaBuilder toBuilder() =>
-      new BankItemTransactionSchemaBuilder()..replace(this);
+      BankItemTransactionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is BankItemTransactionSchema &&
         cooldown == other.cooldown &&
-        item == other.item &&
+        items == other.items &&
         bank == other.bank &&
         character == other.character;
   }
@@ -59,7 +49,7 @@ class _$BankItemTransactionSchema extends BankItemTransactionSchema {
   int get hashCode {
     var _$hash = 0;
     _$hash = $jc(_$hash, cooldown.hashCode);
-    _$hash = $jc(_$hash, item.hashCode);
+    _$hash = $jc(_$hash, items.hashCode);
     _$hash = $jc(_$hash, bank.hashCode);
     _$hash = $jc(_$hash, character.hashCode);
     _$hash = $jf(_$hash);
@@ -70,7 +60,7 @@ class _$BankItemTransactionSchema extends BankItemTransactionSchema {
   String toString() {
     return (newBuiltValueToStringHelper(r'BankItemTransactionSchema')
           ..add('cooldown', cooldown)
-          ..add('item', item)
+          ..add('items', items)
           ..add('bank', bank)
           ..add('character', character))
         .toString();
@@ -84,21 +74,22 @@ class BankItemTransactionSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
-  ItemSchemaBuilder? _item;
-  ItemSchemaBuilder get item => _$this._item ??= new ItemSchemaBuilder();
-  set item(ItemSchemaBuilder? item) => _$this._item = item;
+  ListBuilder<SimpleItemSchema>? _items;
+  ListBuilder<SimpleItemSchema> get items =>
+      _$this._items ??= ListBuilder<SimpleItemSchema>();
+  set items(ListBuilder<SimpleItemSchema>? items) => _$this._items = items;
 
   ListBuilder<SimpleItemSchema>? _bank;
   ListBuilder<SimpleItemSchema> get bank =>
-      _$this._bank ??= new ListBuilder<SimpleItemSchema>();
+      _$this._bank ??= ListBuilder<SimpleItemSchema>();
   set bank(ListBuilder<SimpleItemSchema>? bank) => _$this._bank = bank;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -110,7 +101,7 @@ class BankItemTransactionSchemaBuilder
     final $v = _$v;
     if ($v != null) {
       _cooldown = $v.cooldown.toBuilder();
-      _item = $v.item.toBuilder();
+      _items = $v.items.toBuilder();
       _bank = $v.bank.toBuilder();
       _character = $v.character.toBuilder();
       _$v = null;
@@ -120,7 +111,6 @@ class BankItemTransactionSchemaBuilder
 
   @override
   void replace(BankItemTransactionSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BankItemTransactionSchema;
   }
 
@@ -136,24 +126,25 @@ class BankItemTransactionSchemaBuilder
     _$BankItemTransactionSchema _$result;
     try {
       _$result = _$v ??
-          new _$BankItemTransactionSchema._(
-              cooldown: cooldown.build(),
-              item: item.build(),
-              bank: bank.build(),
-              character: character.build());
+          _$BankItemTransactionSchema._(
+            cooldown: cooldown.build(),
+            items: items.build(),
+            bank: bank.build(),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'cooldown';
         cooldown.build();
-        _$failedField = 'item';
-        item.build();
+        _$failedField = 'items';
+        items.build();
         _$failedField = 'bank';
         bank.build();
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'BankItemTransactionSchema', _$failedField, e.toString());
       }
       rethrow;

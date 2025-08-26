@@ -7,19 +7,19 @@ void main() {
   // TODO add properties to the builder and call build()
 
   group(FightSchema, () {
-    // The amount of xp gained by the fight.
+    // The amount of xp gained from the fight.
     // int xp
     test('to test the property `xp`', () async {
       // TODO
     });
 
-    // The amount of gold gained by the fight.
+    // The amount of gold gained from the fight.
     // int gold
     test('to test the property `gold`', () async {
       // TODO
     });
 
-    // The items dropped by the fight.
+    // The items dropped from the fight.
     // BuiltList<DropSchema> drops
     test('to test the property `drops`', () async {
       // TODO
@@ -28,18 +28,6 @@ void main() {
     // Numbers of the turns of the combat.
     // int turns
     test('to test the property `turns`', () async {
-      // TODO
-    });
-
-    // The amount of blocked hits by the monster.
-    // BlockedHitsSchema monsterBlockedHits
-    test('to test the property `monsterBlockedHits`', () async {
-      // TODO
-    });
-
-    // The amount of blocked hits by the player.
-    // BlockedHitsSchema playerBlockedHits
-    test('to test the property `playerBlockedHits`', () async {
       // TODO
     });
 

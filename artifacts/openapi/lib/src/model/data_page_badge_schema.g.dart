@@ -20,14 +20,11 @@ class _$DataPageBadgeSchema extends DataPageBadgeSchema {
 
   factory _$DataPageBadgeSchema(
           [void Function(DataPageBadgeSchemaBuilder)? updates]) =>
-      (new DataPageBadgeSchemaBuilder()..update(updates))._build();
+      (DataPageBadgeSchemaBuilder()..update(updates))._build();
 
   _$DataPageBadgeSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(data, r'DataPageBadgeSchema', 'data');
-  }
-
+      : super._();
   @override
   DataPageBadgeSchema rebuild(
           void Function(DataPageBadgeSchemaBuilder) updates) =>
@@ -35,7 +32,7 @@ class _$DataPageBadgeSchema extends DataPageBadgeSchema {
 
   @override
   DataPageBadgeSchemaBuilder toBuilder() =>
-      new DataPageBadgeSchemaBuilder()..replace(this);
+      DataPageBadgeSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -78,7 +75,7 @@ class DataPageBadgeSchemaBuilder
 
   ListBuilder<BadgeSchema>? _data;
   ListBuilder<BadgeSchema> get data =>
-      _$this._data ??= new ListBuilder<BadgeSchema>();
+      _$this._data ??= ListBuilder<BadgeSchema>();
   set data(ListBuilder<BadgeSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -116,7 +113,6 @@ class DataPageBadgeSchemaBuilder
 
   @override
   void replace(DataPageBadgeSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageBadgeSchema;
   }
 
@@ -132,19 +128,20 @@ class DataPageBadgeSchemaBuilder
     _$DataPageBadgeSchema _$result;
     try {
       _$result = _$v ??
-          new _$DataPageBadgeSchema._(
-              data: data.build(),
-              total: total,
-              page: page,
-              size: size,
-              pages: pages);
+          _$DataPageBadgeSchema._(
+            data: data.build(),
+            total: total,
+            page: page,
+            size: size,
+            pages: pages,
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'DataPageBadgeSchema', _$failedField, e.toString());
       }
       rethrow;

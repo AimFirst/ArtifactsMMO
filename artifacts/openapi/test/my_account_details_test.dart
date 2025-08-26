@@ -19,15 +19,21 @@ void main() {
       // TODO
     });
 
-    // Subscribed for the current season.
-    // bool subscribed
-    test('to test the property `subscribed`', () async {
+    // Member status.
+    // bool member
+    test('to test the property `member`', () async {
       // TODO
     });
 
-    // Member status.
+    // Account status.
     // AccountStatus status
     test('to test the property `status`', () async {
+      // TODO
+    });
+
+    // Skins owned.
+    // BuiltList<JsonObject> skins
+    test('to test the property `skins`', () async {
       // TODO
     });
 
@@ -49,6 +55,12 @@ void main() {
       // TODO
     });
 
+    // DateTime memberExpiration
+    test('to test the property `memberExpiration`', () async {
+      // TODO
+    });
+
+    // Account badges.
     // BuiltList<JsonObject> badges
     test('to test the property `badges`', () async {
       // TODO

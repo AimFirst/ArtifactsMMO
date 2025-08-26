@@ -15,23 +15,17 @@ class _$InventorySlot extends InventorySlot {
   final int quantity;
 
   factory _$InventorySlot([void Function(InventorySlotBuilder)? updates]) =>
-      (new InventorySlotBuilder()..update(updates))._build();
+      (InventorySlotBuilder()..update(updates))._build();
 
   _$InventorySlot._(
       {required this.slot, required this.code, required this.quantity})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(slot, r'InventorySlot', 'slot');
-    BuiltValueNullFieldError.checkNotNull(code, r'InventorySlot', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        quantity, r'InventorySlot', 'quantity');
-  }
-
+      : super._();
   @override
   InventorySlot rebuild(void Function(InventorySlotBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  InventorySlotBuilder toBuilder() => new InventorySlotBuilder()..replace(this);
+  InventorySlotBuilder toBuilder() => InventorySlotBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -95,7 +89,6 @@ class InventorySlotBuilder
 
   @override
   void replace(InventorySlot other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$InventorySlot;
   }
 
@@ -109,13 +102,14 @@ class InventorySlotBuilder
 
   _$InventorySlot _build() {
     final _$result = _$v ??
-        new _$InventorySlot._(
-            slot: BuiltValueNullFieldError.checkNotNull(
-                slot, r'InventorySlot', 'slot'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'InventorySlot', 'code'),
-            quantity: BuiltValueNullFieldError.checkNotNull(
-                quantity, r'InventorySlot', 'quantity'));
+        _$InventorySlot._(
+          slot: BuiltValueNullFieldError.checkNotNull(
+              slot, r'InventorySlot', 'slot'),
+          code: BuiltValueNullFieldError.checkNotNull(
+              code, r'InventorySlot', 'code'),
+          quantity: BuiltValueNullFieldError.checkNotNull(
+              quantity, r'InventorySlot', 'quantity'),
+        );
     replace(_$result);
     return _$result;
   }

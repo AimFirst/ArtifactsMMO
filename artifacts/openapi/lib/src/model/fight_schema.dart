@@ -3,7 +3,6 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:artifacts_api/src/model/blocked_hits_schema.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:artifacts_api/src/model/fight_result.dart';
 import 'package:artifacts_api/src/model/drop_schema.dart';
@@ -19,8 +18,6 @@ part 'fight_schema.g.dart';
 /// * [gold] - The amount of gold gained from the fight.
 /// * [drops] - The items dropped from the fight.
 /// * [turns] - Numbers of the turns of the combat.
-/// * [monsterBlockedHits] - The amount of blocked hits by the monster.
-/// * [playerBlockedHits] - The amount of blocked hits by the player.
 /// * [logs] - The fight logs.
 /// * [result] - The result of the fight.
 @BuiltValue()
@@ -40,14 +37,6 @@ abstract class FightSchema implements Built<FightSchema, FightSchemaBuilder> {
   /// Numbers of the turns of the combat.
   @BuiltValueField(wireName: r'turns')
   int get turns;
-
-  /// The amount of blocked hits by the monster.
-  @BuiltValueField(wireName: r'monster_blocked_hits')
-  BlockedHitsSchema get monsterBlockedHits;
-
-  /// The amount of blocked hits by the player.
-  @BuiltValueField(wireName: r'player_blocked_hits')
-  BlockedHitsSchema get playerBlockedHits;
 
   /// The fight logs.
   @BuiltValueField(wireName: r'logs')
@@ -100,16 +89,6 @@ class _$FightSchemaSerializer implements PrimitiveSerializer<FightSchema> {
     yield serializers.serialize(
       object.turns,
       specifiedType: const FullType(int),
-    );
-    yield r'monster_blocked_hits';
-    yield serializers.serialize(
-      object.monsterBlockedHits,
-      specifiedType: const FullType(BlockedHitsSchema),
-    );
-    yield r'player_blocked_hits';
-    yield serializers.serialize(
-      object.playerBlockedHits,
-      specifiedType: const FullType(BlockedHitsSchema),
     );
     yield r'logs';
     yield serializers.serialize(
@@ -173,20 +152,6 @@ class _$FightSchemaSerializer implements PrimitiveSerializer<FightSchema> {
             specifiedType: const FullType(int),
           ) as int;
           result.turns = valueDes;
-          break;
-        case r'monster_blocked_hits':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BlockedHitsSchema),
-          ) as BlockedHitsSchema;
-          result.monsterBlockedHits.replace(valueDes);
-          break;
-        case r'player_blocked_hits':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BlockedHitsSchema),
-          ) as BlockedHitsSchema;
-          result.playerBlockedHits.replace(valueDes);
           break;
         case r'logs':
           final valueDes = serializers.deserialize(

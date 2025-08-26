@@ -7,23 +7,28 @@ part of 'npc_type.dart';
 // **************************************************************************
 
 const NPCType _$merchant = const NPCType._('merchant');
+const NPCType _$trader = const NPCType._('trader');
 
 NPCType _$valueOf(String name) {
   switch (name) {
     case 'merchant':
       return _$merchant;
+    case 'trader':
+      return _$trader;
     default:
-      throw new ArgumentError(name);
+      throw ArgumentError(name);
   }
 }
 
-final BuiltSet<NPCType> _$values = new BuiltSet<NPCType>(const <NPCType>[
+final BuiltSet<NPCType> _$values = BuiltSet<NPCType>(const <NPCType>[
   _$merchant,
+  _$trader,
 ]);
 
 class _$NPCTypeMeta {
   const _$NPCTypeMeta();
   NPCType get merchant => _$merchant;
+  NPCType get trader => _$trader;
   NPCType valueOf(String name) => _$valueOf(name);
   BuiltSet<NPCType> get values => _$values;
 }
@@ -33,14 +38,16 @@ abstract class _$NPCTypeMixin {
   _$NPCTypeMeta get NPCType => const _$NPCTypeMeta();
 }
 
-Serializer<NPCType> _$nPCTypeSerializer = new _$NPCTypeSerializer();
+Serializer<NPCType> _$nPCTypeSerializer = _$NPCTypeSerializer();
 
 class _$NPCTypeSerializer implements PrimitiveSerializer<NPCType> {
   static const Map<String, Object> _toWire = const <String, Object>{
     'merchant': 'merchant',
+    'trader': 'trader',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'merchant': 'merchant',
+    'trader': 'trader',
   };
 
   @override

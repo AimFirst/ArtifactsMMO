@@ -17,27 +17,20 @@ class _$BadgeSchema extends BadgeSchema {
   final int? season;
 
   factory _$BadgeSchema([void Function(BadgeSchemaBuilder)? updates]) =>
-      (new BadgeSchemaBuilder()..update(updates))._build();
+      (BadgeSchemaBuilder()..update(updates))._build();
 
   _$BadgeSchema._(
       {required this.code,
       required this.description,
       required this.conditions,
       this.season})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(code, r'BadgeSchema', 'code');
-    BuiltValueNullFieldError.checkNotNull(
-        description, r'BadgeSchema', 'description');
-    BuiltValueNullFieldError.checkNotNull(
-        conditions, r'BadgeSchema', 'conditions');
-  }
-
+      : super._();
   @override
   BadgeSchema rebuild(void Function(BadgeSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  BadgeSchemaBuilder toBuilder() => new BadgeSchemaBuilder()..replace(this);
+  BadgeSchemaBuilder toBuilder() => BadgeSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -84,7 +77,7 @@ class BadgeSchemaBuilder implements Builder<BadgeSchema, BadgeSchemaBuilder> {
 
   ListBuilder<BadgeConditionSchema>? _conditions;
   ListBuilder<BadgeConditionSchema> get conditions =>
-      _$this._conditions ??= new ListBuilder<BadgeConditionSchema>();
+      _$this._conditions ??= ListBuilder<BadgeConditionSchema>();
   set conditions(ListBuilder<BadgeConditionSchema>? conditions) =>
       _$this._conditions = conditions;
 
@@ -110,7 +103,6 @@ class BadgeSchemaBuilder implements Builder<BadgeSchema, BadgeSchemaBuilder> {
 
   @override
   void replace(BadgeSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BadgeSchema;
   }
 
@@ -126,20 +118,21 @@ class BadgeSchemaBuilder implements Builder<BadgeSchema, BadgeSchemaBuilder> {
     _$BadgeSchema _$result;
     try {
       _$result = _$v ??
-          new _$BadgeSchema._(
-              code: BuiltValueNullFieldError.checkNotNull(
-                  code, r'BadgeSchema', 'code'),
-              description: BuiltValueNullFieldError.checkNotNull(
-                  description, r'BadgeSchema', 'description'),
-              conditions: conditions.build(),
-              season: season);
+          _$BadgeSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'BadgeSchema', 'code'),
+            description: BuiltValueNullFieldError.checkNotNull(
+                description, r'BadgeSchema', 'description'),
+            conditions: conditions.build(),
+            season: season,
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'conditions';
         conditions.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'BadgeSchema', _$failedField, e.toString());
       }
       rethrow;

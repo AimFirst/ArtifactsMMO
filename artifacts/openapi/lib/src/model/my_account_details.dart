@@ -16,11 +16,13 @@ part 'my_account_details.g.dart';
 /// Properties:
 /// * [username] - Username.
 /// * [email] - Email.
-/// * [subscribed] - Subscribed for the current season.
-/// * [status] - Member status.
+/// * [member] - Member status.
+/// * [status] - Account status.
+/// * [skins] - Skins owned.
 /// * [gems] - Gems.
 /// * [achievementsPoints] - Achievement points.
 /// * [banned] - Banned.
+/// * [memberExpiration]
 /// * [badges] - Account badges.
 /// * [banReason] - Ban reason.
 @BuiltValue()
@@ -34,14 +36,18 @@ abstract class MyAccountDetails
   @BuiltValueField(wireName: r'email')
   String get email;
 
-  /// Subscribed for the current season.
-  @BuiltValueField(wireName: r'subscribed')
-  bool get subscribed;
-
   /// Member status.
+  @BuiltValueField(wireName: r'member')
+  bool get member;
+
+  /// Account status.
   @BuiltValueField(wireName: r'status')
   AccountStatus get status;
   // enum statusEnum {  standard,  founder,  gold_founder,  vip_founder,  };
+
+  /// Skins owned.
+  @BuiltValueField(wireName: r'skins')
+  BuiltList<JsonObject?> get skins;
 
   /// Gems.
   @BuiltValueField(wireName: r'gems')
@@ -54,6 +60,9 @@ abstract class MyAccountDetails
   /// Banned.
   @BuiltValueField(wireName: r'banned')
   bool get banned;
+
+  @BuiltValueField(wireName: r'member_expiration')
+  DateTime? get memberExpiration;
 
   /// Account badges.
   @BuiltValueField(wireName: r'badges')
@@ -99,15 +108,20 @@ class _$MyAccountDetailsSerializer
       object.email,
       specifiedType: const FullType(String),
     );
-    yield r'subscribed';
+    yield r'member';
     yield serializers.serialize(
-      object.subscribed,
+      object.member,
       specifiedType: const FullType(bool),
     );
     yield r'status';
     yield serializers.serialize(
       object.status,
       specifiedType: const FullType(AccountStatus),
+    );
+    yield r'skins';
+    yield serializers.serialize(
+      object.skins,
+      specifiedType: const FullType(BuiltList, [FullType.nullable(JsonObject)]),
     );
     yield r'gems';
     yield serializers.serialize(
@@ -124,6 +138,13 @@ class _$MyAccountDetailsSerializer
       object.banned,
       specifiedType: const FullType(bool),
     );
+    if (object.memberExpiration != null) {
+      yield r'member_expiration';
+      yield serializers.serialize(
+        object.memberExpiration,
+        specifiedType: const FullType.nullable(DateTime),
+      );
+    }
     if (object.badges != null) {
       yield r'badges';
       yield serializers.serialize(
@@ -178,12 +199,12 @@ class _$MyAccountDetailsSerializer
           ) as String;
           result.email = valueDes;
           break;
-        case r'subscribed':
+        case r'member':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(bool),
           ) as bool;
-          result.subscribed = valueDes;
+          result.member = valueDes;
           break;
         case r'status':
           final valueDes = serializers.deserialize(
@@ -191,6 +212,14 @@ class _$MyAccountDetailsSerializer
             specifiedType: const FullType(AccountStatus),
           ) as AccountStatus;
           result.status = valueDes;
+          break;
+        case r'skins':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType:
+                const FullType(BuiltList, [FullType.nullable(JsonObject)]),
+          ) as BuiltList<JsonObject?>;
+          result.skins.replace(valueDes);
           break;
         case r'gems':
           final valueDes = serializers.deserialize(
@@ -212,6 +241,14 @@ class _$MyAccountDetailsSerializer
             specifiedType: const FullType(bool),
           ) as bool;
           result.banned = valueDes;
+          break;
+        case r'member_expiration':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(DateTime),
+          ) as DateTime?;
+          if (valueDes == null) continue;
+          result.memberExpiration = valueDes;
           break;
         case r'badges':
           final valueDes = serializers.deserialize(

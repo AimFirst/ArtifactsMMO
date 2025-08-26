@@ -15,7 +15,7 @@ part 'active_event_schema.g.dart';
 /// * [name] - Name of the event.
 /// * [code] - Code of the event.
 /// * [map] - Map of the event.
-/// * [previousSkin] - Previous map skin.
+/// * [previousMap] - Previous map skin.
 /// * [duration] - Duration in minutes.
 /// * [expiration] - Expiration datetime.
 /// * [createdAt] - Start datetime.
@@ -35,8 +35,8 @@ abstract class ActiveEventSchema
   MapSchema get map;
 
   /// Previous map skin.
-  @BuiltValueField(wireName: r'previous_skin')
-  String get previousSkin;
+  @BuiltValueField(wireName: r'previous_map')
+  MapSchema get previousMap;
 
   /// Duration in minutes.
   @BuiltValueField(wireName: r'duration')
@@ -91,10 +91,10 @@ class _$ActiveEventSchemaSerializer
       object.map,
       specifiedType: const FullType(MapSchema),
     );
-    yield r'previous_skin';
+    yield r'previous_map';
     yield serializers.serialize(
-      object.previousSkin,
-      specifiedType: const FullType(String),
+      object.previousMap,
+      specifiedType: const FullType(MapSchema),
     );
     yield r'duration';
     yield serializers.serialize(
@@ -157,12 +157,12 @@ class _$ActiveEventSchemaSerializer
           ) as MapSchema;
           result.map.replace(valueDes);
           break;
-        case r'previous_skin':
+        case r'previous_map':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.previousSkin = valueDes;
+            specifiedType: const FullType(MapSchema),
+          ) as MapSchema;
+          result.previousMap.replace(valueDes);
           break;
         case r'duration':
           final valueDes = serializers.deserialize(

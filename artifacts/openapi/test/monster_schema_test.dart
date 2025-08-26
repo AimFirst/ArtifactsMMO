@@ -79,6 +79,12 @@ void main() {
       // TODO
     });
 
+    // Monster % critical strike.
+    // int criticalStrike
+    test('to test the property `criticalStrike`', () async {
+      // TODO
+    });
+
     // Monster minimum gold drop.
     // int minGold
     test('to test the property `minGold`', () async {
@@ -94,6 +100,12 @@ void main() {
     // Monster drops. This is a list of items that the monster drops after killing the monster.
     // BuiltList<DropRateSchema> drops
     test('to test the property `drops`', () async {
+      // TODO
+    });
+
+    // List of effects.
+    // BuiltList<SimpleEffectSchema> effects
+    test('to test the property `effects`', () async {
       // TODO
     });
   });

@@ -18,7 +18,6 @@ part 'event_schema.g.dart';
 /// * [code] - Code of the event.
 /// * [content] - Content of the event.
 /// * [maps] - Map list of the event.
-/// * [skin] - Map skin of the event.
 /// * [duration] - Duration in minutes.
 /// * [rate] - Rate spawn of the event. (1/rate every minute)
 @BuiltValue()
@@ -38,10 +37,6 @@ abstract class EventSchema implements Built<EventSchema, EventSchemaBuilder> {
   /// Map list of the event.
   @BuiltValueField(wireName: r'maps')
   BuiltList<EventMapSchema> get maps;
-
-  /// Map skin of the event.
-  @BuiltValueField(wireName: r'skin')
-  String get skin;
 
   /// Duration in minutes.
   @BuiltValueField(wireName: r'duration')
@@ -93,11 +88,6 @@ class _$EventSchemaSerializer implements PrimitiveSerializer<EventSchema> {
     yield serializers.serialize(
       object.maps,
       specifiedType: const FullType(BuiltList, [FullType(EventMapSchema)]),
-    );
-    yield r'skin';
-    yield serializers.serialize(
-      object.skin,
-      specifiedType: const FullType(String),
     );
     yield r'duration';
     yield serializers.serialize(
@@ -162,13 +152,6 @@ class _$EventSchemaSerializer implements PrimitiveSerializer<EventSchema> {
                 const FullType(BuiltList, [FullType(EventMapSchema)]),
           ) as BuiltList<EventMapSchema>;
           result.maps.replace(valueDes);
-          break;
-        case r'skin':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.skin = valueDes;
           break;
         case r'duration':
           final valueDes = serializers.deserialize(

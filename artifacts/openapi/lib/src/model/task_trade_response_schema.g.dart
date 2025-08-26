@@ -12,13 +12,9 @@ class _$TaskTradeResponseSchema extends TaskTradeResponseSchema {
 
   factory _$TaskTradeResponseSchema(
           [void Function(TaskTradeResponseSchemaBuilder)? updates]) =>
-      (new TaskTradeResponseSchemaBuilder()..update(updates))._build();
+      (TaskTradeResponseSchemaBuilder()..update(updates))._build();
 
-  _$TaskTradeResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'TaskTradeResponseSchema', 'data');
-  }
-
+  _$TaskTradeResponseSchema._({required this.data}) : super._();
   @override
   TaskTradeResponseSchema rebuild(
           void Function(TaskTradeResponseSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$TaskTradeResponseSchema extends TaskTradeResponseSchema {
 
   @override
   TaskTradeResponseSchemaBuilder toBuilder() =>
-      new TaskTradeResponseSchemaBuilder()..replace(this);
+      TaskTradeResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -57,7 +53,7 @@ class TaskTradeResponseSchemaBuilder
 
   TaskTradeDataSchemaBuilder? _data;
   TaskTradeDataSchemaBuilder get data =>
-      _$this._data ??= new TaskTradeDataSchemaBuilder();
+      _$this._data ??= TaskTradeDataSchemaBuilder();
   set data(TaskTradeDataSchemaBuilder? data) => _$this._data = data;
 
   TaskTradeResponseSchemaBuilder() {
@@ -75,7 +71,6 @@ class TaskTradeResponseSchemaBuilder
 
   @override
   void replace(TaskTradeResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskTradeResponseSchema;
   }
 
@@ -90,14 +85,17 @@ class TaskTradeResponseSchemaBuilder
   _$TaskTradeResponseSchema _build() {
     _$TaskTradeResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$TaskTradeResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$TaskTradeResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'TaskTradeResponseSchema', _$failedField, e.toString());
       }
       rethrow;

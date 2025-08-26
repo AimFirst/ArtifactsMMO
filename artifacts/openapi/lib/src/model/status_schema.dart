@@ -3,8 +3,10 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:artifacts_api/src/model/rate_limit_schema.dart';
 import 'package:artifacts_api/src/model/announcement_schema.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:artifacts_api/src/model/season_schema.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -13,48 +15,48 @@ part 'status_schema.g.dart';
 /// StatusSchema
 ///
 /// Properties:
-/// * [status] - Server status
 /// * [version] - Game version.
-/// * [maxLevel] - Maximum level.
-/// * [charactersOnline] - Characters online.
 /// * [serverTime] - Server time.
+/// * [maxLevel] - Maximum level.
+/// * [maxSkillLevel] - Maximum skill level.
+/// * [charactersOnline] - Characters online.
 /// * [announcements] - Server announcements.
-/// * [lastWipe] - Last server wipe.
-/// * [nextWipe] - Next server wipe.
+/// * [rateLimits] - Rate limits.
+/// * [season] - Current season details.
 @BuiltValue()
 abstract class StatusSchema
     implements Built<StatusSchema, StatusSchemaBuilder> {
-  /// Server status
-  @BuiltValueField(wireName: r'status')
-  String get status;
-
   /// Game version.
   @BuiltValueField(wireName: r'version')
   String get version;
-
-  /// Maximum level.
-  @BuiltValueField(wireName: r'max_level')
-  int get maxLevel;
-
-  /// Characters online.
-  @BuiltValueField(wireName: r'characters_online')
-  int get charactersOnline;
 
   /// Server time.
   @BuiltValueField(wireName: r'server_time')
   DateTime get serverTime;
 
+  /// Maximum level.
+  @BuiltValueField(wireName: r'max_level')
+  int get maxLevel;
+
+  /// Maximum skill level.
+  @BuiltValueField(wireName: r'max_skill_level')
+  int get maxSkillLevel;
+
+  /// Characters online.
+  @BuiltValueField(wireName: r'characters_online')
+  int get charactersOnline;
+
   /// Server announcements.
   @BuiltValueField(wireName: r'announcements')
   BuiltList<AnnouncementSchema> get announcements;
 
-  /// Last server wipe.
-  @BuiltValueField(wireName: r'last_wipe')
-  String get lastWipe;
+  /// Rate limits.
+  @BuiltValueField(wireName: r'rate_limits')
+  BuiltList<RateLimitSchema> get rateLimits;
 
-  /// Next server wipe.
-  @BuiltValueField(wireName: r'next_wipe')
-  String get nextWipe;
+  /// Current season details.
+  @BuiltValueField(wireName: r'season')
+  SeasonSchema? get season;
 
   StatusSchema._();
 
@@ -79,19 +81,24 @@ class _$StatusSchemaSerializer implements PrimitiveSerializer<StatusSchema> {
     StatusSchema object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'status';
-    yield serializers.serialize(
-      object.status,
-      specifiedType: const FullType(String),
-    );
     yield r'version';
     yield serializers.serialize(
       object.version,
       specifiedType: const FullType(String),
     );
+    yield r'server_time';
+    yield serializers.serialize(
+      object.serverTime,
+      specifiedType: const FullType(DateTime),
+    );
     yield r'max_level';
     yield serializers.serialize(
       object.maxLevel,
+      specifiedType: const FullType(int),
+    );
+    yield r'max_skill_level';
+    yield serializers.serialize(
+      object.maxSkillLevel,
       specifiedType: const FullType(int),
     );
     yield r'characters_online';
@@ -99,26 +106,23 @@ class _$StatusSchemaSerializer implements PrimitiveSerializer<StatusSchema> {
       object.charactersOnline,
       specifiedType: const FullType(int),
     );
-    yield r'server_time';
-    yield serializers.serialize(
-      object.serverTime,
-      specifiedType: const FullType(DateTime),
-    );
     yield r'announcements';
     yield serializers.serialize(
       object.announcements,
       specifiedType: const FullType(BuiltList, [FullType(AnnouncementSchema)]),
     );
-    yield r'last_wipe';
+    yield r'rate_limits';
     yield serializers.serialize(
-      object.lastWipe,
-      specifiedType: const FullType(String),
+      object.rateLimits,
+      specifiedType: const FullType(BuiltList, [FullType(RateLimitSchema)]),
     );
-    yield r'next_wipe';
-    yield serializers.serialize(
-      object.nextWipe,
-      specifiedType: const FullType(String),
-    );
+    if (object.season != null) {
+      yield r'season';
+      yield serializers.serialize(
+        object.season,
+        specifiedType: const FullType(SeasonSchema),
+      );
+    }
   }
 
   @override
@@ -144,19 +148,19 @@ class _$StatusSchemaSerializer implements PrimitiveSerializer<StatusSchema> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'status':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.status = valueDes;
-          break;
         case r'version':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(String),
           ) as String;
           result.version = valueDes;
+          break;
+        case r'server_time':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(DateTime),
+          ) as DateTime;
+          result.serverTime = valueDes;
           break;
         case r'max_level':
           final valueDes = serializers.deserialize(
@@ -165,19 +169,19 @@ class _$StatusSchemaSerializer implements PrimitiveSerializer<StatusSchema> {
           ) as int;
           result.maxLevel = valueDes;
           break;
+        case r'max_skill_level':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.maxSkillLevel = valueDes;
+          break;
         case r'characters_online':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(int),
           ) as int;
           result.charactersOnline = valueDes;
-          break;
-        case r'server_time':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.serverTime = valueDes;
           break;
         case r'announcements':
           final valueDes = serializers.deserialize(
@@ -187,19 +191,20 @@ class _$StatusSchemaSerializer implements PrimitiveSerializer<StatusSchema> {
           ) as BuiltList<AnnouncementSchema>;
           result.announcements.replace(valueDes);
           break;
-        case r'last_wipe':
+        case r'rate_limits':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.lastWipe = valueDes;
+            specifiedType:
+                const FullType(BuiltList, [FullType(RateLimitSchema)]),
+          ) as BuiltList<RateLimitSchema>;
+          result.rateLimits.replace(valueDes);
           break;
-        case r'next_wipe':
+        case r'season':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.nextWipe = valueDes;
+            specifiedType: const FullType(SeasonSchema),
+          ) as SeasonSchema;
+          result.season.replace(valueDes);
           break;
         default:
           unhandled.add(key);

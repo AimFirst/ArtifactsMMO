@@ -19,6 +19,12 @@ void main() {
       // TODO
     });
 
+    // Currency used to buy/sell the item. If it's not gold, it's the item code.
+    // String currency
+    test('to test the property `currency`', () async {
+      // TODO
+    });
+
     // int buyPrice
     test('to test the property `buyPrice`', () async {
       // TODO

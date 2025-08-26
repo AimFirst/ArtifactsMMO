@@ -16,21 +16,13 @@ class _$CharacterRestDataSchema extends CharacterRestDataSchema {
 
   factory _$CharacterRestDataSchema(
           [void Function(CharacterRestDataSchemaBuilder)? updates]) =>
-      (new CharacterRestDataSchemaBuilder()..update(updates))._build();
+      (CharacterRestDataSchemaBuilder()..update(updates))._build();
 
   _$CharacterRestDataSchema._(
       {required this.cooldown,
       required this.hpRestored,
       required this.character})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        cooldown, r'CharacterRestDataSchema', 'cooldown');
-    BuiltValueNullFieldError.checkNotNull(
-        hpRestored, r'CharacterRestDataSchema', 'hpRestored');
-    BuiltValueNullFieldError.checkNotNull(
-        character, r'CharacterRestDataSchema', 'character');
-  }
-
+      : super._();
   @override
   CharacterRestDataSchema rebuild(
           void Function(CharacterRestDataSchemaBuilder) updates) =>
@@ -38,7 +30,7 @@ class _$CharacterRestDataSchema extends CharacterRestDataSchema {
 
   @override
   CharacterRestDataSchemaBuilder toBuilder() =>
-      new CharacterRestDataSchemaBuilder()..replace(this);
+      CharacterRestDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +68,7 @@ class CharacterRestDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= new CooldownSchemaBuilder();
+      _$this._cooldown ??= CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   int? _hpRestored;
@@ -85,7 +77,7 @@ class CharacterRestDataSchemaBuilder
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= new CharacterSchemaBuilder();
+      _$this._character ??= CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -106,7 +98,6 @@ class CharacterRestDataSchemaBuilder
 
   @override
   void replace(CharacterRestDataSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CharacterRestDataSchema;
   }
 
@@ -122,11 +113,12 @@ class CharacterRestDataSchemaBuilder
     _$CharacterRestDataSchema _$result;
     try {
       _$result = _$v ??
-          new _$CharacterRestDataSchema._(
-              cooldown: cooldown.build(),
-              hpRestored: BuiltValueNullFieldError.checkNotNull(
-                  hpRestored, r'CharacterRestDataSchema', 'hpRestored'),
-              character: character.build());
+          _$CharacterRestDataSchema._(
+            cooldown: cooldown.build(),
+            hpRestored: BuiltValueNullFieldError.checkNotNull(
+                hpRestored, r'CharacterRestDataSchema', 'hpRestored'),
+            character: character.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
@@ -136,7 +128,7 @@ class CharacterRestDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'CharacterRestDataSchema', _$failedField, e.toString());
       }
       rethrow;

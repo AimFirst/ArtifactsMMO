@@ -12,13 +12,9 @@ class _$AccountDetailsSchema extends AccountDetailsSchema {
 
   factory _$AccountDetailsSchema(
           [void Function(AccountDetailsSchemaBuilder)? updates]) =>
-      (new AccountDetailsSchemaBuilder()..update(updates))._build();
+      (AccountDetailsSchemaBuilder()..update(updates))._build();
 
-  _$AccountDetailsSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'AccountDetailsSchema', 'data');
-  }
-
+  _$AccountDetailsSchema._({required this.data}) : super._();
   @override
   AccountDetailsSchema rebuild(
           void Function(AccountDetailsSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$AccountDetailsSchema extends AccountDetailsSchema {
 
   @override
   AccountDetailsSchemaBuilder toBuilder() =>
-      new AccountDetailsSchemaBuilder()..replace(this);
+      AccountDetailsSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -55,8 +51,7 @@ class AccountDetailsSchemaBuilder
   _$AccountDetailsSchema? _$v;
 
   AccountDetailsBuilder? _data;
-  AccountDetailsBuilder get data =>
-      _$this._data ??= new AccountDetailsBuilder();
+  AccountDetailsBuilder get data => _$this._data ??= AccountDetailsBuilder();
   set data(AccountDetailsBuilder? data) => _$this._data = data;
 
   AccountDetailsSchemaBuilder() {
@@ -74,7 +69,6 @@ class AccountDetailsSchemaBuilder
 
   @override
   void replace(AccountDetailsSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AccountDetailsSchema;
   }
 
@@ -89,14 +83,17 @@ class AccountDetailsSchemaBuilder
   _$AccountDetailsSchema _build() {
     _$AccountDetailsSchema _$result;
     try {
-      _$result = _$v ?? new _$AccountDetailsSchema._(data: data.build());
+      _$result = _$v ??
+          _$AccountDetailsSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'AccountDetailsSchema', _$failedField, e.toString());
       }
       rethrow;

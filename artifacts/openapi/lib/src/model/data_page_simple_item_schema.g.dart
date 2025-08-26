@@ -20,15 +20,11 @@ class _$DataPageSimpleItemSchema extends DataPageSimpleItemSchema {
 
   factory _$DataPageSimpleItemSchema(
           [void Function(DataPageSimpleItemSchemaBuilder)? updates]) =>
-      (new DataPageSimpleItemSchemaBuilder()..update(updates))._build();
+      (DataPageSimpleItemSchemaBuilder()..update(updates))._build();
 
   _$DataPageSimpleItemSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'DataPageSimpleItemSchema', 'data');
-  }
-
+      : super._();
   @override
   DataPageSimpleItemSchema rebuild(
           void Function(DataPageSimpleItemSchemaBuilder) updates) =>
@@ -36,7 +32,7 @@ class _$DataPageSimpleItemSchema extends DataPageSimpleItemSchema {
 
   @override
   DataPageSimpleItemSchemaBuilder toBuilder() =>
-      new DataPageSimpleItemSchemaBuilder()..replace(this);
+      DataPageSimpleItemSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -80,7 +76,7 @@ class DataPageSimpleItemSchemaBuilder
 
   ListBuilder<SimpleItemSchema>? _data;
   ListBuilder<SimpleItemSchema> get data =>
-      _$this._data ??= new ListBuilder<SimpleItemSchema>();
+      _$this._data ??= ListBuilder<SimpleItemSchema>();
   set data(ListBuilder<SimpleItemSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -118,7 +114,6 @@ class DataPageSimpleItemSchemaBuilder
 
   @override
   void replace(DataPageSimpleItemSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageSimpleItemSchema;
   }
 
@@ -134,19 +129,20 @@ class DataPageSimpleItemSchemaBuilder
     _$DataPageSimpleItemSchema _$result;
     try {
       _$result = _$v ??
-          new _$DataPageSimpleItemSchema._(
-              data: data.build(),
-              total: total,
-              page: page,
-              size: size,
-              pages: pages);
+          _$DataPageSimpleItemSchema._(
+            data: data.build(),
+            total: total,
+            page: page,
+            size: size,
+            pages: pages,
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'DataPageSimpleItemSchema', _$failedField, e.toString());
       }
       rethrow;

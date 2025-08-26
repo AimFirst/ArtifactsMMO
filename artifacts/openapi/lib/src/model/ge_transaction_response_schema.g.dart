@@ -12,13 +12,9 @@ class _$GETransactionResponseSchema extends GETransactionResponseSchema {
 
   factory _$GETransactionResponseSchema(
           [void Function(GETransactionResponseSchemaBuilder)? updates]) =>
-      (new GETransactionResponseSchemaBuilder()..update(updates))._build();
+      (GETransactionResponseSchemaBuilder()..update(updates))._build();
 
-  _$GETransactionResponseSchema._({required this.data}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        data, r'GETransactionResponseSchema', 'data');
-  }
-
+  _$GETransactionResponseSchema._({required this.data}) : super._();
   @override
   GETransactionResponseSchema rebuild(
           void Function(GETransactionResponseSchemaBuilder) updates) =>
@@ -26,7 +22,7 @@ class _$GETransactionResponseSchema extends GETransactionResponseSchema {
 
   @override
   GETransactionResponseSchemaBuilder toBuilder() =>
-      new GETransactionResponseSchemaBuilder()..replace(this);
+      GETransactionResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -58,7 +54,7 @@ class GETransactionResponseSchemaBuilder
 
   GETransactionListSchemaBuilder? _data;
   GETransactionListSchemaBuilder get data =>
-      _$this._data ??= new GETransactionListSchemaBuilder();
+      _$this._data ??= GETransactionListSchemaBuilder();
   set data(GETransactionListSchemaBuilder? data) => _$this._data = data;
 
   GETransactionResponseSchemaBuilder() {
@@ -76,7 +72,6 @@ class GETransactionResponseSchemaBuilder
 
   @override
   void replace(GETransactionResponseSchema other) {
-    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GETransactionResponseSchema;
   }
 
@@ -91,14 +86,17 @@ class GETransactionResponseSchemaBuilder
   _$GETransactionResponseSchema _build() {
     _$GETransactionResponseSchema _$result;
     try {
-      _$result = _$v ?? new _$GETransactionResponseSchema._(data: data.build());
+      _$result = _$v ??
+          _$GETransactionResponseSchema._(
+            data: data.build(),
+          );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
+        throw BuiltValueNestedFieldError(
             r'GETransactionResponseSchema', _$failedField, e.toString());
       }
       rethrow;

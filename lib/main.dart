@@ -1,50 +1,67 @@
-import 'package:artifacts_mmo/business/state/state_manager.dart';
-import 'package:artifacts_mmo/infrastructure/api/impl/artifacts_impl.dart';
-import 'package:artifacts_mmo/presentation/target/target_based_upa_view.dart';
-import 'package:artifacts_mmo/presentation/target/target_based_upa_view_model.dart';
+// lib/main.dart
+
+import 'package:artifacts_mmo/home_page.dart';
+import 'package:artifacts_mmo/providers/log_provider.dart';
+import 'package:artifacts_mmo/providers/map_provider.dart';
+import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'services/api_client.dart';
+import 'providers/team_provider.dart';
 
-import 'infrastructure/api/artifacts_api.dart';
+void main() {
+  // --- CONFIGURATION ---
+  const String YOUR_BEARER_TOKEN = String.fromEnvironment('ARTIFACTS_TOKEN');
+  // -------------------
 
-Future<void> main() async {
-  _registerDependencies();
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
-        create: (_) => TargetBasedUpaViewModel(
-            artifactsClient: GetIt.I(), stateManager: GetIt.I()))
-  ], child: const MyApp()));
+  // 1. Create the ApiClient instance
+  final apiClient = ApiClient(YOUR_BEARER_TOKEN);
+
+  runApp(
+    // Use MultiProvider to provide both TeamProvider and MapProvider
+    MultiProvider(
+      providers: [
+        // Add the LogProvider
+        ChangeNotifierProvider(create: (_) => LogProvider()),
+        ChangeNotifierProvider(
+          create: (context) => MapProvider(apiClient),
+        ),
+        ChangeNotifierProxyProvider<MapProvider, TeamProvider>(
+          // TeamProvider now depends on MapProvider
+          create: (context){
+
+            // --- Initialize the LoggerService ---
+            // This is a great place to do it since TeamProvider is our main service
+            LoggerService.instance.init(context.read<LogProvider>());
+
+            return TeamProvider(
+            apiClient,
+            // Pass the initial (likely null) MapProvider
+            context.read<MapProvider>(),
+          );},
+          update: (context, mapProvider, previousTeamProvider) {
+            // This will rebuild TeamProvider when MapProvider gets the map data
+            previousTeamProvider!.updateMapProvider(mapProvider);
+            return previousTeamProvider;
+          },
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
-void _registerDependencies() {
-  GetIt.I.registerLazySingleton<ArtifactsClient>(() => ArtifactsImpl());
-  GetIt.I.registerLazySingleton(() => StateManager(artifactsClient: GetIt.I()));
-}
-
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  int currentPageIndex = 0;
-
-  @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context).copyWith(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple));
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: theme,
-      home: SafeArea(
-        child: Scaffold(
-          body: TargetBasedUpaView(context: context),
-        ),
-      ),
+      theme: ThemeData.light(), // Defines the light theme
+      darkTheme: ThemeData.dark(), // Defines the dark theme
+      themeMode: ThemeMode.system, // Uses the system's theme preference
+      title: 'Artifacts MMO Manager',
+      home: HomePage(), // We'll build this next
     );
   }
 }

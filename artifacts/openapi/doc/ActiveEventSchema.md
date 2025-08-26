@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **name** | **String** | Name of the event. | 
 **code** | **String** | Code of the event. | 
 **map** | [**MapSchema**](MapSchema.md) | Map of the event. | 
-**previousSkin** | **String** | Previous map skin. | 
+**previousMap** | [**MapSchema**](MapSchema.md) | Previous map skin. | 
 **duration** | **int** | Duration in minutes. | 
 **expiration** | [**DateTime**](DateTime.md) | Expiration datetime. | 
 **createdAt** | [**DateTime**](DateTime.md) | Start datetime. | 
