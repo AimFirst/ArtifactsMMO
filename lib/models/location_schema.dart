@@ -8,4 +8,9 @@ class LocationSchema {
   String toString() {
     return '[$x, $y]';
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is LocationSchema && other.x == x && other.y == y;
+  }
 }

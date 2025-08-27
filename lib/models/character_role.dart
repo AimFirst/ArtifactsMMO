@@ -5,4 +5,5 @@ enum CharacterRole {
   gatherer,
   hauler,
   crafter,
+  fighter,
 }

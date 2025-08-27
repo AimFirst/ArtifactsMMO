@@ -1,5 +1,6 @@
 // lib/providers/world_data_provider.dart
 
+import 'package:artifacts_mmo/models/monster_drop_info.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
@@ -16,6 +17,9 @@ class WorldDataProvider with ChangeNotifier {
   final Map<String, ResourceSchema> _resourceMap = {};
   final List<CraftSchema> _recipes = [];
   final Map<String, CraftSchema> _recipeMap = {};
+  final List<MonsterSchema> _monsters = [];
+  final Map<String, MonsterSchema> _monsterMap = {};
+  final Map<String, List<MonsterDropInfo>> _monstersThatDropItem = {};
 
   bool _isLoading = false;
 
@@ -62,10 +66,10 @@ class WorldDataProvider with ChangeNotifier {
           currentPage <= totalPages); // Continue until all pages are fetched.
 
       LoggerService.instance.log(
-          '📚 World Data loaded successfully! Found ${_resources.length} total resources.');
+          '📚 Resources Data loaded successfully! Found ${_resources.length} total resources.');
     } catch (e) {
       LoggerService.instance
-          .log('Failed to load world data: $e', level: LogLevel.error);
+          .log('Failed to load resource data: $e', level: LogLevel.error);
     }
   }
 
@@ -76,11 +80,12 @@ class WorldDataProvider with ChangeNotifier {
     try {
       // Use a do-while loop to ensure we make at least one call.
       do {
-        LoggerService.instance.log(
-            '📚 Fetching items data, page $currentPage of $totalPages...');
+        LoggerService.instance
+            .log('📚 Fetching items data, page $currentPage of $totalPages...');
 
         // Make the paginated API call.
-        final response = await _apiClient.items.getAllItemsItemsGet(page: currentPage);
+        final response =
+            await _apiClient.items.getAllItemsItemsGet(page: currentPage);
 
         if (response.statusCode == 200 && response.data != null) {
           final pageData = response.data!;
@@ -106,13 +111,62 @@ class WorldDataProvider with ChangeNotifier {
               'Failed to load items page ${currentPage - 1} with status ${response.statusCode}');
         }
       } while (
-      currentPage <= totalPages); // Continue until all pages are fetched.
+          currentPage <= totalPages); // Continue until all pages are fetched.
 
       LoggerService.instance.log(
-          '📚 World Data loaded successfully! Found ${_resources.length} total resources.');
+          '📚 Item Data loaded successfully! Found ${_items.length} total items.');
     } catch (e) {
       LoggerService.instance
-          .log('Failed to load world data: $e', level: LogLevel.error);
+          .log('Failed to load item data: $e', level: LogLevel.error);
+    }
+  }
+
+  Future<void> _loadMonsterData() async {
+    int currentPage = 1;
+    int totalPages = 1; // This will be updated by the first API response.
+
+    try {
+      // Use a do-while loop to ensure we make at least one call.
+      do {
+        LoggerService.instance.log(
+            '📚 Fetching monster data, page $currentPage of $totalPages...');
+
+        // Make the paginated API call.
+        final response = await _apiClient.monster
+            .getAllMonstersMonstersGet(page: currentPage);
+
+        if (response.statusCode == 200 && response.data != null) {
+          final pageData = response.data!;
+
+          // Update the total number of pages from the response.
+          totalPages = pageData.pages ?? 1;
+
+          // Add all monsters from the current page to our map.
+          _monsters.addAll(pageData.data);
+          for (final monster in pageData.data) {
+            _monsterMap[monster.code] = monster;
+            for (final drop in monster.drops) {
+              _monstersThatDropItem.putIfAbsent(monster.code, () => []);
+              _monstersThatDropItem[monster.code]!
+                  .add(MonsterDropInfo(monster.code, drop));
+            }
+          }
+
+          // Prepare for the next iteration.
+          currentPage++;
+        } else {
+          // If any page fails, stop the process.
+          throw Exception(
+              'Failed to load monster page ${currentPage - 1} with status ${response.statusCode}');
+        }
+      } while (
+          currentPage <= totalPages); // Continue until all pages are fetched.
+
+      LoggerService.instance.log(
+          '📚 Monster Data loaded successfully! Found ${_monsters.length} total monsters.');
+    } catch (e) {
+      LoggerService.instance
+          .log('Failed to load monster data: $e', level: LogLevel.error);
     }
   }
 
@@ -122,6 +176,7 @@ class WorldDataProvider with ChangeNotifier {
 
     await _loadResourceData();
     await _loadItemData();
+    await _loadMonsterData();
 
     _isLoading = false;
     notifyListeners();

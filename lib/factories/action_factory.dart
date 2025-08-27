@@ -17,8 +17,8 @@ class ActionFactory {
       apiCall: () => _apiClient.myCharacters.actionMoveMyNameActionMovePost(
         name: characterName,
         destinationSchema: (DestinationSchemaBuilder()
-          ..x = x
-          ..y = y)
+              ..x = x
+              ..y = y)
             .build(),
       ),
     );
@@ -27,11 +27,12 @@ class ActionFactory {
   QueuedAction createGiveItemsAction(
       CharacterSchema giver, String receiverName) {
     final inventory = giver.inventory;
-    final items =
-    BuiltList.of(inventory?.map((item) => (SimpleItemSchemaBuilder()
-      ..code = item.code
-      ..quantity = item.quantity)
-        .build()) ??
+    final items = BuiltList.of(inventory
+            ?.where((item) => item.quantity > 0)
+            .map((item) => (SimpleItemSchemaBuilder()
+                  ..code = item.code
+                  ..quantity = item.quantity)
+                .build()) ??
         []);
 
     return QueuedAction(
@@ -39,19 +40,21 @@ class ActionFactory {
         // NOTE: Adjust to your actual generated API call for giving items
         apiCall: () =>
             _apiClient.myCharacters.actionGiveItemsMyNameActionGiveItemPost(
-              name: receiverName,
+              name: giver.name,
               giveItemsSchema: (GiveItemsSchemaBuilder()
-                ..items = ListBuilder(items))
+                    ..items = ListBuilder(items)
+                    ..character = receiverName)
                   .build(),
             ));
   }
 
-  QueuedAction createWithdrawAction(String characterName, SimpleItemSchema item) {
+  QueuedAction createWithdrawAction(
+      String characterName, SimpleItemSchema item) {
     return QueuedAction(
       actionName: 'Withdraw $item',
       apiCall: () => _apiClient.myCharacters
           .actionWithdrawBankItemMyNameActionBankWithdrawItemPost(
-          name: characterName, simpleItemSchema: BuiltList.of([item])),
+              name: characterName, simpleItemSchema: BuiltList.of([item])),
     );
   }
 
@@ -60,8 +63,8 @@ class ActionFactory {
       actionName: 'Mine',
       apiCall: () =>
           _apiClient.myCharacters.actionGatheringMyNameActionGatheringPost(
-            name: characterName,
-          ),
+        name: characterName,
+      ),
     );
   }
 
@@ -73,9 +76,9 @@ class ActionFactory {
           _apiClient.myCharacters.actionEquipItemMyNameActionEquipPost(
               name: characterName,
               equipSchema: (EquipSchemaBuilder()
-                ..slot = slot
-                ..code = item.code
-                ..quantity = item.quantity)
+                    ..slot = slot
+                    ..code = item.code
+                    ..quantity = item.quantity)
                   .build()),
     );
   }
@@ -88,8 +91,8 @@ class ActionFactory {
             _apiClient.myCharacters.actionCraftingMyNameActionCraftingPost(
                 name: characterName,
                 craftingSchema: (CraftingSchemaBuilder()
-                  ..code = item.code
-                  ..quantity = item.quantity)
+                      ..code = item.code
+                      ..quantity = item.quantity)
                     .build()));
   }
 
@@ -98,9 +101,25 @@ class ActionFactory {
         actionName: 'Deposit $item',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
-            .actionDepositBankItemMyNameActionBankDepositItemPost(
-          name: characterName,
-          simpleItemSchema: BuiltList.of([item]),
-        ));
+                .actionDepositBankItemMyNameActionBankDepositItemPost(
+              name: characterName,
+              simpleItemSchema: BuiltList.of([item]),
+            ));
+  }
+
+  QueuedAction createRestAction(String characterName) {
+    return QueuedAction(
+      actionName: 'Resting',
+      apiCall: () => _apiClient.myCharacters
+          .actionRestMyNameActionRestPost(name: characterName),
+    );
+  }
+
+  QueuedAction createFightAction(String characterName) {
+    return QueuedAction(
+      actionName: 'Fighting',
+      apiCall: () => _apiClient.myCharacters
+          .actionFightMyNameActionFightPost(name: characterName),
+    );
   }
 }

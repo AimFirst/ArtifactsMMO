@@ -8,6 +8,7 @@ import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_role.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/character_task.dart';
+import 'package:artifacts_mmo/models/location_schema.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
@@ -60,8 +61,55 @@ class TeamAIService {
         case CharacterRole.crafter:
           _updateCrafterAI(state);
           break;
+        case CharacterRole.fighter:
+          _updateFighterAI(state);
+          break;
         case CharacterRole.idle:
           break;
+      }
+    }
+  }
+
+  void _updateFighterAI(CharacterState fighterState) {
+    final fighter = fighterState.character;
+
+    // Priority 1: SURVIVAL. Heal if health is low.
+    // Let's use 40% as a safe threshold to rest.
+    if (fighter.hp < fighter.maxHp * 0.4) {
+      LoggerService.instance.log("AI: ${fighter.name}'s health is low. Resting.");
+      final restAction = _actionFactory.createRestAction(fighter.name);
+      _teamProvider.queueAction(fighter.name, restAction);
+      return; // Do nothing else until health is restored.
+    }
+
+    // If we are assigned the hunt task, let's find a monster.
+    if (fighterState.currentTask == CharacterTask.huntMonsters) {
+      // Priority 2: Find a suitable target.
+      // We'll find the nearest tile with any monster on it.
+      final monsterTile = _mapProvider.findNearestTile(
+        fighter.location,
+            (tile) => tile.content?.type == MapContentType.monster,
+      );
+
+      if (monsterTile == null) {
+        LoggerService.instance.log("AI: ${fighter.name} cannot find any monsters.", level: LogLevel.warning);
+        return; // No targets found, do nothing.
+      }
+
+      final monsterLocation = LocationSchema(x: monsterTile.x, y: monsterTile.y);
+      final currentLocation = LocationSchema(x: fighter.location.x, y: fighter.location.y);
+
+      // Priority 3: Engage the target.
+      if (currentLocation != monsterLocation) {
+        // We are not on the monster's tile yet, so move there.
+        LoggerService.instance.log("AI: ${fighter.name} moving to engage monster at $monsterLocation.");
+        final moveAction = _actionFactory.createMoveAction(fighter.name, monsterLocation.x, monsterLocation.y);
+        _teamProvider.queueAction(fighter.name, moveAction);
+      } else {
+        // We are on the same tile. Fight!
+        LoggerService.instance.log("AI: ${fighter.name} is on the monster's tile. Engaging in combat!");
+        final fightAction = _actionFactory.createFightAction(fighter.name);
+        _teamProvider.queueAction(fighter.name, fightAction);
       }
     }
   }
@@ -88,7 +136,6 @@ class TeamAIService {
         // Our job is done, we no longer need hauling.
         gathererState.needsHauling = false;
       }
-      // If no hauler is here yet, we just wait.
       return;
     }
 
@@ -208,6 +255,12 @@ class TeamAIService {
     if (gathererToHelp != null) {
       LoggerService.instance.log(
           "AI: ${hauler.name} is responding to ${gathererToHelp.character.name}'s request.");
+
+      if (hauler.location == gathererToHelp.character.location) {
+        // Just waiting for them to give me items.
+        return;
+      }
+
       // The hauler's only job is to move to the gatherer.
       _teamProvider.queueAction(
         hauler.name,

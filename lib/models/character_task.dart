@@ -4,4 +4,5 @@ enum CharacterTask {
   idle,
   mineEndlessly,
   upgradeGear,
+  huntMonsters,
 }
