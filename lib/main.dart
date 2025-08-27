@@ -3,6 +3,7 @@
 import 'package:artifacts_mmo/home_page.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
+import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,26 +24,32 @@ void main() {
       providers: [
         // Add the LogProvider
         ChangeNotifierProvider(create: (_) => LogProvider()),
+        // Add the WorldDataProvider, it depends on ApiClient
+        ChangeNotifierProvider(
+          create: (context) => WorldDataProvider(apiClient),
+        ),
         ChangeNotifierProvider(
           create: (context) => MapProvider(apiClient),
         ),
-        ChangeNotifierProxyProvider<MapProvider, TeamProvider>(
-          // TeamProvider now depends on MapProvider
-          create: (context){
-
-            // --- Initialize the LoggerService ---
+        // TeamProvider will now depend on both MapProvider and WorldDataProvider
+        ChangeNotifierProxyProvider2<MapProvider, WorldDataProvider,
+            TeamProvider>(
+          create: (context) {
             // This is a great place to do it since TeamProvider is our main service
             LoggerService.instance.init(context.read<LogProvider>());
 
             return TeamProvider(
-            apiClient,
-            // Pass the initial (likely null) MapProvider
-            context.read<MapProvider>(),
-          );},
-          update: (context, mapProvider, previousTeamProvider) {
-            // This will rebuild TeamProvider when MapProvider gets the map data
-            previousTeamProvider!.updateMapProvider(mapProvider);
-            return previousTeamProvider;
+              apiClient,
+              context.read<MapProvider>(),
+              context.read<WorldDataProvider>(), // Pass in the new provider
+            );
+          },
+          update: (_, mapProvider, worldDataProvider, teamProvider) {
+            teamProvider!
+              ..updateMapProvider(mapProvider)
+              ..updateWorldDataProvider(
+                  worldDataProvider); // Update the new provider reference
+            return teamProvider;
           },
         ),
       ],
@@ -57,9 +64,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.light(), // Defines the light theme
-      darkTheme: ThemeData.dark(), // Defines the dark theme
-      themeMode: ThemeMode.system, // Uses the system's theme preference
+      theme: ThemeData.light(),
+      // Defines the light theme
+      darkTheme: ThemeData.dark(),
+      // Defines the dark theme
+      themeMode: ThemeMode.system,
+      // Uses the system's theme preference
       title: 'Artifacts MMO Manager',
       home: HomePage(), // We'll build this next
     );

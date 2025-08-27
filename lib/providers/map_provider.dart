@@ -30,7 +30,7 @@ class MapProvider with ChangeNotifier {
 
     try {
       do {
-        LoggerService.instance.log('🗺️ Fetching map data, page $currentPage of $totalPages...');
+        // LoggerService.instance.log('🗺️ Fetching map data, page $currentPage of $totalPages...');
         // Use the correct API call with the current page number
         final response = await _apiClient.maps.getAllMapsMapsGet(page: currentPage);
 

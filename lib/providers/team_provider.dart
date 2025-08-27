@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:artifacts_mmo/providers/log_provider.dart';
+import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:artifacts_mmo/models/character_role.dart';
@@ -27,6 +28,7 @@ class TeamProvider with ChangeNotifier {
 
   final ApiClient _apiClient;
   MapProvider _mapProvider; // Add a reference to MapProvider
+  WorldDataProvider _worldDataProvider; // Add a reference
 
   List<CharacterState> _characterStates = []; // Use the new wrapper
   List<CharacterState> get characters => _characterStates;
@@ -40,7 +42,7 @@ class TeamProvider with ChangeNotifier {
   Timer? _gameLoopTimer;
   final Map<String, Queue<QueuedAction>> _actionQueues = {};
 
-  TeamProvider(this._apiClient, this._mapProvider) {
+  TeamProvider(this._apiClient, this._mapProvider, this._worldDataProvider) {
     fetchAllCharacters().then((_) {
       // Initialize queues and start the game loop after characters are loaded
       for (var state in _characterStates) {
@@ -83,7 +85,8 @@ class TeamProvider with ChangeNotifier {
         _characterStates.firstWhere((s) => s.character.name == characterName);
 
     if (state.isOnCooldown || state.isPerformingAction) {
-      LoggerService.instance.log("$characterName is busy. Action '$actionName' skipped.");
+      LoggerService.instance
+          .log("$characterName is busy. Action '$actionName' skipped.");
       return;
     }
 
@@ -147,6 +150,11 @@ class TeamProvider with ChangeNotifier {
     _mapProvider = newMapProvider;
   }
 
+  // Method for the proxy provider to update the reference
+  void updateWorldDataProvider(WorldDataProvider newProvider) {
+    _worldDataProvider = newProvider;
+  }
+
   // Renamed from _processQueues for clarity
   void _updateCharacterAI() {
     // We can't do anything without the map data
@@ -196,13 +204,21 @@ class TeamProvider with ChangeNotifier {
 
     // For this example, let's assume the crafter just tries to craft if idle.
     if (crafterState.currentTask == CharacterTask.idle) {
-      LoggerService.instance.log("AI: ${crafter.name} is checking if an '$targetItem' is needed.");
+      LoggerService.instance.log(
+          "AI: ${crafter.name} is checking if an '$targetItem' is needed.");
       // In a real scenario, you'd check if the item or materials are in the bank.
       // For now, we'll just queue the crafting action.
 
       // NOTE: Assumes an API call to craft an item from banked materials.
       // This may require withdrawing materials first, then crafting.
-      queueAction(crafter.name, _createCraftAction(crafter.name, targetItem));
+      queueAction(
+          crafter.name,
+          _createCraftAction(
+              crafter.name,
+              (SimpleItemSchemaBuilder()
+                    ..code = targetItem
+                    ..quantity = 1)
+                  .build()));
     }
   }
 
@@ -235,7 +251,8 @@ class TeamProvider with ChangeNotifier {
 
     // Check inventory status.
     if (gathererState.isInventoryFull) {
-      LoggerService.instance.log("AI: ${gatherer.name}'s inventory is full. Requesting haul.");
+      LoggerService.instance
+          .log("AI: ${gatherer.name}'s inventory is full. Requesting haul.");
       gathererState.needsHauling = true;
       return; // Stop and wait for a hauler
     }
@@ -254,7 +271,20 @@ class TeamProvider with ChangeNotifier {
 
       // NOTE: Assumption: Character model has a map of skills, e.g., character.skills['mining']
       // Adjust 'mining' and the property access as needed.
-      final int miningSkill = gatherer.miningLevel ?? 0;
+      final int miningSkill = gatherer.miningLevel;
+
+      // Function to check if a tile is a valid mining node for this character
+      bool isMinable(MapSchema tile) {
+        if (tile.content == null) return false;
+        // Look up the resource details from our new provider!
+        final resource =
+            _worldDataProvider.getResourceByCode(tile.content!.code);
+        if (resource == null) return false;
+
+        // Check the details from the looked-up data
+        return resource.skill == GatheringSkill.mining &&
+            miningSkill >= resource.level;
+      }
 
       // Step 1: Check if we're standing on a mineable node
       final currentTile = mapTiles.firstWhereOrNull(
@@ -263,22 +293,21 @@ class TeamProvider with ChangeNotifier {
             tile.y == currentLocation.y, // This should not happen
       );
 
-      // NOTE: Adjust 'resource' and 'type' to match your generated model
-      if (currentTile?.content?.type == MapContentType.resource && miningSkill >= (currentTile.resource.skillRequired ?? 0)) {
-        LoggerService.instance.log("AI: ${gatherer.name} is on a rock. Queuing 'Mine'.");
+      if (currentTile != null && isMinable(currentTile)) {
+        LoggerService.instance
+            .log("AI: ${gatherer.name} is on a rock. Queuing 'Mine'.");
         queueAction(gatherer.name, _createMineAction(gatherer.name));
       } else {
         // Step 2: If not, find the nearest rock and move to it
-        // Use the new generic method to find a rock
-        DestinationSchema? nearestRock = _findNearestTile(
-            currentLocation, (tile) =>
-        tile.resource?.type == 'rock' &&
-            miningSkill >= (tile.resource.skillRequired ?? 0),);
-        if (nearestRock != null) {
+        // Find the nearest valid node on the entire map
+        DestinationSchema? nearestNode =
+            _findNearestTile(currentLocation, isMinable);
+
+        if (nearestNode != null) {
           LoggerService.instance.log(
-              "AI: ${gatherer.name} (Mining: $miningSkill) moving to nearest valid rock at (${nearestRock.x}, ${nearestRock.y}).");
+              "AI: ${gatherer.name} (Mining: $miningSkill) moving to nearest valid node at (${nearestNode.x}, ${nearestNode.y}).");
           queueAction(gatherer.name,
-              _createMoveAction(gatherer.name, nearestRock.x, nearestRock.y));
+              _createMoveAction(gatherer.name, nearestNode.x, nearestNode.y));
         } else {
           LoggerService.instance.log(
               "AI: ${gatherer.name} (Mining: $miningSkill) cannot find any rocks they can mine on the map.",
@@ -296,13 +325,15 @@ class TeamProvider with ChangeNotifier {
 
     // Priority 1: If we have items, our job is to bank them.
     if (hauler.inventoryCount > 0) {
-      LoggerService.instance.log("AI: ${hauler.name} has items. Moving to bank.");
+      LoggerService.instance
+          .log("AI: ${hauler.name} has items. Moving to bank.");
       // Step 1: Find the bank dynamically
-      DestinationSchema? bankLocation =
-      _findNearestTile(hauler.location, (tile) => tile.content?.code == 'bank');
+      DestinationSchema? bankLocation = _findNearestTile(
+          hauler.location, (tile) => tile.content?.code == 'bank');
 
       if (bankLocation != null) {
-        LoggerService.instance.log("AI: ${hauler.name} has items. Moving to bank at (${bankLocation.x}, ${bankLocation.y}).");
+        LoggerService.instance.log(
+            "AI: ${hauler.name} has items. Moving to bank at (${bankLocation.x}, ${bankLocation.y}).");
         // Step 2: Move to the bank
         queueAction(hauler.name,
             _createMoveAction(hauler.name, bankLocation.x, bankLocation.y));
@@ -310,15 +341,22 @@ class TeamProvider with ChangeNotifier {
         // Step 3: Deposit items (one at a time)
         // For simplicity, we'll just deposit the first item in the inventory.
         // The AI loop will trigger again next cycle to deposit the next one.
-        final firstItem = hauler.inventory?.where((i) => i.quantity > 0).map((i) => (SimpleItemSchemaBuilder()..code = i.code..quantity = i.quantity).build()).firstOrNull;
+        final firstItem = hauler.inventory
+            ?.where((i) => i.quantity > 0)
+            .map((i) => (SimpleItemSchemaBuilder()
+                  ..code = i.code
+                  ..quantity = i.quantity)
+                .build())
+            .firstOrNull;
         if (firstItem != null) {
-          queueAction(
-              hauler.name, _createBankAction(hauler.name, firstItem));
+          queueAction(hauler.name, _createBankAction(hauler.name, firstItem));
         } else {
-          LoggerService.instance.log("AI: ${hauler.name} has no items to bank.");
+          LoggerService.instance
+              .log("AI: ${hauler.name} has no items to bank.");
         }
       } else {
-        LoggerService.instance.log("AI: ${hauler.name} has items but cannot find a bank on the map!");
+        LoggerService.instance.log(
+            "AI: ${hauler.name} has items but cannot find a bank on the map!");
       }
       return;
     }
@@ -350,7 +388,8 @@ class TeamProvider with ChangeNotifier {
       // --- Queue Processing Logic (from the old loop) ---
       if (isReady && queue.isNotEmpty) {
         final action = queue.removeFirst();
-        LoggerService.instance.log('Executing ${action.actionName} for $characterName');
+        LoggerService.instance
+            .log('Executing ${action.actionName} for $characterName');
         performAction(
           characterName: characterName,
           actionName: action.actionName,
@@ -370,52 +409,69 @@ class TeamProvider with ChangeNotifier {
     final bool hasBestTool = gatherer.weaponSlot == targetTool;
 
     if (hasBestTool) {
-      LoggerService.instance.log("AI: ${gatherer.name} already has the best tool. Switching to mining.");
+      LoggerService.instance.log(
+          "AI: ${gatherer.name} already has the best tool. Switching to mining.");
       setTask(gatherer.name, CharacterTask.mineEndlessly);
     } else {
-      LoggerService.instance.log("AI: ${gatherer.name} needs to get an '$targetTool'. Moving to bank.");
+      final targetToolItem = (SimpleItemSchemaBuilder()
+            ..code = targetTool
+            ..quantity = 1)
+          .build();
+      LoggerService.instance.log(
+          "AI: ${gatherer.name} needs to get an '$targetTool'. Moving to bank.");
       // Find the bank and move to it
-      final bankLocation = _findNearestTile(gatherer.location, (tile) => tile.content?.code == 'bank');
+      final bankLocation = _findNearestTile(
+          gatherer.location, (tile) => tile.content?.code == 'bank');
       if (bankLocation != null) {
-        queueAction(gatherer.name, _createMoveAction(gatherer.name, bankLocation.x, bankLocation.y));
+        queueAction(gatherer.name,
+            _createMoveAction(gatherer.name, bankLocation.x, bankLocation.y));
         // Queue a withdraw and equip action
-        queueAction(gatherer.name, _createWithdrawAction(gatherer.name, targetTool));
-        queueAction(gatherer.name, _createEquipAction(gatherer.name, targetTool));
+        queueAction(gatherer.name,
+            _createWithdrawAction(gatherer.name, targetToolItem));
+        queueAction(gatherer.name,
+            _createEquipAction(gatherer.name, targetToolItem, ItemSlot.weapon));
       }
     }
   }
 
   // --- NEW: Helper for Withdraw and Equip Actions ---
-  QueuedAction _createWithdrawAction(String characterName, String itemName) {
+  QueuedAction _createWithdrawAction(
+      String characterName, SimpleItemSchema item) {
     return QueuedAction(
-      actionName: 'Withdraw $itemName',
-      apiCall: () => apiClient.myCharacters.withdrawPost(
-        characterName,
-        body: {'item': itemName, 'quantity': 1},
-      ),
+      actionName: 'Withdraw $item',
+      apiCall: () => apiClient.myCharacters
+          .actionWithdrawBankItemMyNameActionBankWithdrawItemPost(
+              name: characterName, simpleItemSchema: BuiltList.of([item])),
     );
   }
 
-  QueuedAction _createEquipAction(String characterName, String itemName) {
+  QueuedAction _createEquipAction(
+      String characterName, SimpleItemSchema item, ItemSlot slot) {
     return QueuedAction(
-      actionName: 'Equip $itemName',
-      apiCall: () => apiClient.myCharacters.equipPost(
-        characterName,
-        body: {'item': itemName},
-      ),
+      actionName: 'Equip $item to $slot',
+      apiCall: () =>
+          apiClient.myCharacters.actionEquipItemMyNameActionEquipPost(
+              name: characterName,
+              equipSchema: (EquipSchemaBuilder()
+                    ..slot = slot
+                    ..code = item.code
+                    ..quantity = item.quantity)
+                  .build()),
     );
   }
 
   // --- NEW: Helper for Crafting Action ---
-  QueuedAction _createCraftAction(String characterName, String itemName) {
+  QueuedAction _createCraftAction(String characterName, SimpleItemSchema item) {
     return QueuedAction(
-      actionName: 'Craft $itemName',
-      // NOTE: Adjust to your actual generated API call for crafting
-      apiCall: () => apiClient.myCharacters.craftPost(
-        characterName,
-        body: {'item': itemName, 'quantity': 1},
-      ),
-    );
+        actionName: 'Craft $item',
+        // NOTE: Adjust to your actual generated API call for crafting
+        apiCall: () =>
+            apiClient.myCharacters.actionCraftingMyNameActionCraftingPost(
+                name: characterName,
+                craftingSchema: (CraftingSchemaBuilder()
+                      ..code = item.code
+                      ..quantity = item.quantity)
+                    .build()));
   }
 
   // --- NEW "Give Items" Helper ---
@@ -424,9 +480,10 @@ class TeamProvider with ChangeNotifier {
     final inventory = giver.inventory;
     final items =
         BuiltList.of(inventory?.map((item) => (SimpleItemSchemaBuilder()
-              ..code = item.code
-              ..quantity = item.quantity)
-            .build()) ?? []);
+                  ..code = item.code
+                  ..quantity = item.quantity)
+                .build()) ??
+            []);
 
     return QueuedAction(
         actionName: 'Give to $receiverName',
@@ -446,10 +503,10 @@ class TeamProvider with ChangeNotifier {
         actionName: 'Deposit $item',
         // Use the correct generated API call
         apiCall: () => apiClient.myCharacters
-            .actionDepositBankItemMyNameActionBankDepositItemPost(
-          name: characterName,
-          simpleItemSchema: BuiltList.of([item]),
-        ));
+                .actionDepositBankItemMyNameActionBankDepositItemPost(
+              name: characterName,
+              simpleItemSchema: BuiltList.of([item]),
+            ));
   }
 
   DestinationSchema? _findNearestTile(
@@ -462,11 +519,14 @@ class TeamProvider with ChangeNotifier {
       // Use the provided predicate function to check if this is the tile we want
       if (predicate(tile)) {
         // Manhattan distance calculation
-        final distance =
-            (currentLocation.x - tile.x).abs() + (currentLocation.y - tile.y).abs();
+        final distance = (currentLocation.x - tile.x).abs() +
+            (currentLocation.y - tile.y).abs();
         if (distance < minDistance) {
           minDistance = distance;
-          nearest = (DestinationSchemaBuilder()..x = tile.x..y = tile.y).build();
+          nearest = (DestinationSchemaBuilder()
+                ..x = tile.x
+                ..y = tile.y)
+              .build();
         }
       }
     }
