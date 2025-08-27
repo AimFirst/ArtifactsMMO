@@ -114,7 +114,7 @@ class _CharacterCardState extends State<CharacterCard> {
               Text('Location: ${character.location}'),
             ],
           ),
-          // After the Location Info Row, add Inventory Info
+          // Inventory
           const SizedBox(height: 8),
           Row(
             children: [
@@ -122,6 +122,16 @@ class _CharacterCardState extends State<CharacterCard> {
               const SizedBox(width: 8),
               // NOTE: Adjust field names to match your Character model
               Text('Inventory: ${character.inventoryCount} / ${character.inventoryMaxItems}'),
+            ],
+          ),
+          // Skills
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(Icons.star, color: Colors.amber, size: 16),
+              const SizedBox(width: 8),
+              // NOTE: Adjust property access to match your Character model
+              Text('Mining: ${character.miningLevel}'),
             ],
           ),
           const SizedBox(height: 8),

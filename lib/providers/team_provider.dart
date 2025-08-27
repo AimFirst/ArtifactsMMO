@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:collection';
+import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:artifacts_mmo/models/character_role.dart';
@@ -18,6 +19,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class TeamProvider with ChangeNotifier {
+  // --- NEW: Gear Policy Definition ---
+  final Map<String, String> _gearPolicy = {
+    'mining': 'copper_pickaxe',
+    // 'woodcutting': 'Iron Axe', // Future policies
+  };
+
   final ApiClient _apiClient;
   MapProvider _mapProvider; // Add a reference to MapProvider
 
@@ -167,12 +174,36 @@ class TeamProvider with ChangeNotifier {
         case CharacterRole.hauler:
           _updateHaulerAI(state, gathererNeedingHaul);
           break;
+        case CharacterRole.crafter:
+          _updateCrafterAI(state);
+          break;
         case CharacterRole.idle:
           break;
       }
     }
 
     _processQueues(); // We'll separate queue processing into its own loop
+  }
+
+  // --- NEW: AI logic for Crafters ---
+  void _updateCrafterAI(CharacterState crafterState) {
+    final crafter = crafterState.character;
+    final String targetItem = _gearPolicy['mining']!; // e.g., 'Iron Pickaxe'
+
+    // For now, let's assume we have a way to check bank inventory.
+    // A more robust solution would be a separate BankProvider.
+    // bool needsCrafting = !isItemInBank(targetItem);
+
+    // For this example, let's assume the crafter just tries to craft if idle.
+    if (crafterState.currentTask == CharacterTask.idle) {
+      LoggerService.instance.log("AI: ${crafter.name} is checking if an '$targetItem' is needed.");
+      // In a real scenario, you'd check if the item or materials are in the bank.
+      // For now, we'll just queue the crafting action.
+
+      // NOTE: Assumes an API call to craft an item from banked materials.
+      // This may require withdrawing materials first, then crafting.
+      queueAction(crafter.name, _createCraftAction(crafter.name, targetItem));
+    }
   }
 
   // New AI logic for Gatherers
@@ -209,11 +240,21 @@ class TeamProvider with ChangeNotifier {
       return; // Stop and wait for a hauler
     }
 
+    // Handle the new upgrade task
+    if (gathererState.currentTask == CharacterTask.upgradeGear) {
+      _handleGearUpgrade(gathererState);
+      return; // Don't do other tasks while upgrading
+    }
+
     // This is the existing logic from the previous step
     if (gathererState.currentTask == CharacterTask.mineEndlessly) {
       // --- NEW MINING LOGIC ---
       final currentLocation = gatherer.location;
       final mapTiles = _mapProvider.worldMap!.tiles;
+
+      // NOTE: Assumption: Character model has a map of skills, e.g., character.skills['mining']
+      // Adjust 'mining' and the property access as needed.
+      final int miningSkill = gatherer.miningLevel ?? 0;
 
       // Step 1: Check if we're standing on a mineable node
       final currentTile = mapTiles.firstWhereOrNull(
@@ -223,21 +264,27 @@ class TeamProvider with ChangeNotifier {
       );
 
       // NOTE: Adjust 'resource' and 'type' to match your generated model
-      if (currentTile?.content?.code == 'copper_rocks') {
+      if (currentTile?.content?.type == MapContentType.resource && miningSkill >= (currentTile.resource.skillRequired ?? 0)) {
         LoggerService.instance.log("AI: ${gatherer.name} is on a rock. Queuing 'Mine'.");
         queueAction(gatherer.name, _createMineAction(gatherer.name));
       } else {
         // Step 2: If not, find the nearest rock and move to it
         // Use the new generic method to find a rock
         DestinationSchema? nearestRock = _findNearestTile(
-            currentLocation, (tile) => tile.content?.code == 'copper_rocks');
+            currentLocation, (tile) =>
+        tile.resource?.type == 'rock' &&
+            miningSkill >= (tile.resource.skillRequired ?? 0),);
         if (nearestRock != null) {
           LoggerService.instance.log(
-              "AI: ${gatherer.name} is not on a rock. Moving to nearest one at (${nearestRock.x}, ${nearestRock.y}).");
+              "AI: ${gatherer.name} (Mining: $miningSkill) moving to nearest valid rock at (${nearestRock.x}, ${nearestRock.y}).");
           queueAction(gatherer.name,
               _createMoveAction(gatherer.name, nearestRock.x, nearestRock.y));
         } else {
-          LoggerService.instance.log("AI: No rocks found on the map for ${gatherer.name}.");
+          LoggerService.instance.log(
+              "AI: ${gatherer.name} (Mining: $miningSkill) cannot find any rocks they can mine on the map.",
+              level: LogLevel.warning);
+          // We can't find any valid rocks, so stop the task.
+          setTask(gatherer.name, CharacterTask.idle);
         }
       }
     }
@@ -312,6 +359,63 @@ class TeamProvider with ChangeNotifier {
         notifyListeners();
       }
     }
+  }
+
+  // --- NEW: Logic for the Upgrade Gear task ---
+  void _handleGearUpgrade(CharacterState gathererState) {
+    final gatherer = gathererState.character;
+    final String targetTool = _gearPolicy['mining']!; // e.g., 'Iron Pickaxe'
+
+    // NOTE: Adjust property names for equipped items
+    final bool hasBestTool = gatherer.weaponSlot == targetTool;
+
+    if (hasBestTool) {
+      LoggerService.instance.log("AI: ${gatherer.name} already has the best tool. Switching to mining.");
+      setTask(gatherer.name, CharacterTask.mineEndlessly);
+    } else {
+      LoggerService.instance.log("AI: ${gatherer.name} needs to get an '$targetTool'. Moving to bank.");
+      // Find the bank and move to it
+      final bankLocation = _findNearestTile(gatherer.location, (tile) => tile.content?.code == 'bank');
+      if (bankLocation != null) {
+        queueAction(gatherer.name, _createMoveAction(gatherer.name, bankLocation.x, bankLocation.y));
+        // Queue a withdraw and equip action
+        queueAction(gatherer.name, _createWithdrawAction(gatherer.name, targetTool));
+        queueAction(gatherer.name, _createEquipAction(gatherer.name, targetTool));
+      }
+    }
+  }
+
+  // --- NEW: Helper for Withdraw and Equip Actions ---
+  QueuedAction _createWithdrawAction(String characterName, String itemName) {
+    return QueuedAction(
+      actionName: 'Withdraw $itemName',
+      apiCall: () => apiClient.myCharacters.withdrawPost(
+        characterName,
+        body: {'item': itemName, 'quantity': 1},
+      ),
+    );
+  }
+
+  QueuedAction _createEquipAction(String characterName, String itemName) {
+    return QueuedAction(
+      actionName: 'Equip $itemName',
+      apiCall: () => apiClient.myCharacters.equipPost(
+        characterName,
+        body: {'item': itemName},
+      ),
+    );
+  }
+
+  // --- NEW: Helper for Crafting Action ---
+  QueuedAction _createCraftAction(String characterName, String itemName) {
+    return QueuedAction(
+      actionName: 'Craft $itemName',
+      // NOTE: Adjust to your actual generated API call for crafting
+      apiCall: () => apiClient.myCharacters.craftPost(
+        characterName,
+        body: {'item': itemName, 'quantity': 1},
+      ),
+    );
   }
 
   // --- NEW "Give Items" Helper ---
