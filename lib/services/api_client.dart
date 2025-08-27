@@ -16,6 +16,7 @@ class ApiClient {
   MapsApi get maps => _api.getMapsApi();
   ResourcesApi get resources => _api.getResourcesApi();
   MyAccountApi get myAccount => _api.getMyAccountApi();
+  ItemsApi get items => _api.getItemsApi();
   // Add other getters for other API groups as needed, e.g., market, crafting, etc.
   // MarketApi get market => _api.getMarketApi();
 

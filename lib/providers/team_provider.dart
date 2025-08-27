@@ -2,6 +2,8 @@
 
 import 'dart:async';
 import 'dart:collection';
+import 'package:artifacts_mmo/extensions/craft_extension.dart';
+import 'package:artifacts_mmo/extensions/item_extension.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
@@ -204,50 +206,58 @@ class TeamProvider with ChangeNotifier {
   // --- NEW: AI logic for Crafters ---
   void _updateCrafterAI(CharacterState crafterState) {
     final crafter = crafterState.character;
-    final String targetItem = _gearPolicy['mining']!;
+    final targetItem = _gearPolicy['mining']!;
+    final targetItemSchema = _worldDataProvider.getItemByCode(targetItem);
 
-    // Priority 1: Check if the item already exists in the bank.
+    // Step 1: Does the item already exist in the bank?
     if (_bankProvider.hasItem(targetItem)) {
       LoggerService.instance.log(
           "AI: ${crafter.name} sees '$targetItem' is already in the bank. Standing by.");
       return; // Do nothing, the item is already crafted.
     }
 
-    // Priority 2: Check for materials and location (solving the problem!)
-    // For now, we will just log it. A future step is to look up recipes.
-    LoggerService.instance.log(
-        "AI: ${crafter.name} confirmed '$targetItem' needs to be crafted.");
+    // Step 2: Look up the recipe for the item.
+    final CraftSchema? recipe = _worldDataProvider.getRecipeForItem(targetItem);
+    if (recipe == null) {
+      LoggerService.instance.log("AI: ${crafter.name} has no recipe for '$targetItem'.", level: LogLevel.warning);
+      return;
+    }
 
-    // Find the nearest forge
-    final forgeLocation = _findNearestTile(
-        crafter.location, (tile) => tile.content?.code == 'forge');
+    // Step 3: Check if we have the required materials in the bank.
+    bool hasAllMaterials = true;
+    for (final material in recipe.items ?? <SimpleItemSchema>[]) {
+      final bankItem = _bankProvider.items.firstWhereOrNull((item) => item.code == material.code);
+      if (bankItem == null || bankItem.quantity < material.quantity) {
+        hasAllMaterials = false;
+        LoggerService.instance.log("AI: ${crafter.name} is waiting for materials for '$targetItem'. Missing: ${material.code}");
+        break; // Stop checking, we're missing something.
+      }
+    }
+
+    if (!hasAllMaterials) {
+      return; // Wait for the hauler to deliver more materials.
+    }
+
+    // Step 4: If we have materials, check if we are at the correct crafting location.
+    final forgeLocation = _findNearestTile(crafter.location, (tile) => tile.content?.code == recipe.station); // e.g., 'forge'
     if (forgeLocation == null) {
-      LoggerService.instance.log("AI: ${crafter.name} cannot find a forge.",
-          level: LogLevel.warning);
+      LoggerService.instance.log("AI: ${crafter.name} cannot find a '${recipe.station}' to craft.", level: LogLevel.warning);
       return;
     }
 
-    // Are we at the forge?
-    if (crafter.location.x != forgeLocation.x ||
-        crafter.location.y != forgeLocation.y) {
-      LoggerService.instance.log("AI: ${crafter.name} moving to the forge.");
-      queueAction(crafter.name,
-          _createMoveAction(crafter.name, forgeLocation.x, forgeLocation.y));
-      return;
-    }
+    // Step 5: If we have materials AND are at the right location, queue the full crafting sequence!
+    LoggerService.instance.log("AI: ${crafter.name} has materials and is at the forge. Starting crafting sequence for '$targetItem'.");
 
-    // If we are at the forge, attempt to craft.
-    // The call will still fail if we don't have materials, but our logic is now correct.
-    LoggerService.instance.log(
-        "AI: ${crafter.name} is at the forge and attempting to craft '$targetItem'.");
-    queueAction(
-        crafter.name,
-        _createCraftAction(
-            crafter.name,
-            (SimpleItemSchemaBuilder()
-                  ..code = targetItem
-                  ..quantity = 1)
-                .build()));
+    // a) Withdraw all necessary materials.
+    for (final material in recipe.items ?? <SimpleItemSchema>[]) {
+      queueAction(crafter.name, _createWithdrawAction(crafter.name, material));
+    }
+    LoggerService.instance.log("AI: ${crafter.name} is moving to the '${recipe.station}'.");
+    queueAction(crafter.name, _createMoveAction(crafter.name, forgeLocation.x, forgeLocation.y));
+    // b) Craft the item.
+    queueAction(crafter.name, _createCraftAction(crafter.name, targetItemSchema!.simpleItem));
+    // c) Deposit the final product back into the bank.
+    queueAction(crafter.name, _createBankAction(crafter.name, targetItemSchema.simpleItem));
   }
 
   // New AI logic for Gatherers
