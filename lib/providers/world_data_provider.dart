@@ -195,4 +195,8 @@ class WorldDataProvider with ChangeNotifier {
   ItemSchema? getItemByCode(String code) {
     return _itemMap[code];
   }
+
+  MonsterSchema? getMonsterByCode(String code) {
+    return _monsterMap[code];
+  }
 }

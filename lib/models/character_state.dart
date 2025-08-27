@@ -25,6 +25,7 @@ class CharacterState with ChangeNotifier {
 
   void updateCharacter(CharacterSchema newCharacterData) {
     character = newCharacterData;
+    notifyListeners();
   }
 
   // Called before an API call
@@ -65,6 +66,11 @@ class CharacterState with ChangeNotifier {
       LoggerService.instance.log("${character.name} role set to: $newRole");
       notifyListeners();
     }
+  }
+
+  void setCooldown(int seconds) {
+    cooldownEndsAt = DateTime.now().add(Duration(seconds: seconds));
+    notifyListeners();
   }
 
   // Method to check inventory status

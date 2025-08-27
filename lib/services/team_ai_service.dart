@@ -15,6 +15,7 @@ import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
+import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:collection/collection.dart';
 
@@ -31,9 +32,10 @@ class TeamAIService {
   final WorldDataProvider _worldDataProvider;
   final BankProvider _bankProvider;
   final MapProvider _mapProvider;
+  final CombatService _combatService;
   late ActionFactory _actionFactory;
 
-  TeamAIService(this._apiClient, this._teamProvider, this._worldDataProvider, this._bankProvider, this._mapProvider)  {
+  TeamAIService(this._apiClient, this._teamProvider, this._worldDataProvider, this._bankProvider, this._mapProvider, this._combatService)  {
     _actionFactory = ActionFactory(_apiClient);
   }
 
@@ -74,8 +76,7 @@ class TeamAIService {
     final fighter = fighterState.character;
 
     // Priority 1: SURVIVAL. Heal if health is low.
-    // Let's use 40% as a safe threshold to rest.
-    if (fighter.hp < fighter.maxHp * 0.4) {
+    if (fighter.hp < fighter.maxHp) {
       LoggerService.instance.log("AI: ${fighter.name}'s health is low. Resting.");
       final restAction = _actionFactory.createRestAction(fighter.name);
       _teamProvider.queueAction(fighter.name, restAction);
@@ -84,11 +85,31 @@ class TeamAIService {
 
     // If we are assigned the hunt task, let's find a monster.
     if (fighterState.currentTask == CharacterTask.huntMonsters) {
-      // Priority 2: Find a suitable target.
-      // We'll find the nearest tile with any monster on it.
+      // Step 1: Find ALL monster tiles.
+      final allMonsterTiles = _mapProvider.worldMap?.tiles
+          .where((tile) => tile.content?.type == MapContentType.monster) ?? <MapSchema>[];
+
+      // Step 2: Filter using the CombatService to find winnable targets.
+      final List<MapSchema> winnableTargets = [];
+      for (final tile in allMonsterTiles) {
+        final monsterData = _worldDataProvider.getMonsterByCode(tile.content!.code);
+        if (monsterData != null) {
+          // THE CORE LOGIC CHANGE IS HERE!
+          if (_combatService.canWinFight(fighter, monsterData)) {
+            winnableTargets.add(tile);
+          }
+        }
+      }
+
+      // Step 3: Find the closest winnable target
+      if (winnableTargets.isEmpty) {
+        LoggerService.instance.log("AI: ${fighter.name} cannot find any monsters.", level: LogLevel.warning);
+        return;
+      }
+
       final monsterTile = _mapProvider.findNearestTile(
         fighter.location,
-            (tile) => tile.content?.type == MapContentType.monster,
+            (tile) => winnableTargets.contains(tile),
       );
 
       if (monsterTile == null) {
@@ -159,22 +180,25 @@ class TeamAIService {
       final currentLocation = gatherer.location;
       final mapTiles = _mapProvider.worldMap!.tiles;
 
+      // Function to check if a tile is valid for this character
+      bool isGatherable(MapSchema tile) {
+        if (tile.content == null) return false;
+        final resource = _worldDataProvider.getResourceByCode(tile.content!.code);
+        if (resource == null) return false;
+
+        // Get the specific skill required (e.g., 'mining')
+        final GatheringSkill requiredSkillName = resource.skill;
+        final int requiredSkillLevel = resource.level;
+
+        // Get the character's current level for that skill
+        final int characterSkillLevel = gatherer.gatheringSkills[requiredSkillName] ?? 0;
+
+        return characterSkillLevel >= requiredSkillLevel;
+      }
+
       // NOTE: Assumption: Character model has a map of skills, e.g., character.skills['mining']
       // Adjust 'mining' and the property access as needed.
       final int miningSkill = gatherer.miningLevel;
-
-      // Function to check if a tile is a valid mining node for this character
-      bool isMinable(MapSchema tile) {
-        if (tile.content == null) return false;
-        // Look up the resource details from our new provider!
-        final resource =
-        _worldDataProvider.getResourceByCode(tile.content!.code);
-        if (resource == null) return false;
-
-        // Check the details from the looked-up data
-        return resource.skill == GatheringSkill.mining &&
-            miningSkill >= resource.level;
-      }
 
       // Step 1: Check if we're standing on a mineable node
       final currentTile = mapTiles.firstWhereOrNull(
@@ -183,7 +207,7 @@ class TeamAIService {
             tile.y == currentLocation.y, // This should not happen
       );
 
-      if (currentTile != null && isMinable(currentTile)) {
+      if (currentTile != null && isGatherable(currentTile)) {
         LoggerService.instance
             .log("AI: ${gatherer.name} is on a rock. Queuing 'Mine'.");
         _teamProvider.queueAction(gatherer.name, _actionFactory.createMineAction(gatherer.name));
@@ -191,7 +215,7 @@ class TeamAIService {
         // Step 2: If not, find the nearest rock and move to it
         // Find the nearest valid node on the entire map
         DestinationSchema? nearestNode =
-        _mapProvider.findNearestTile(currentLocation, isMinable);
+        _mapProvider.findNearestTile(currentLocation, isGatherable);
 
         if (nearestNode != null) {
           LoggerService.instance.log(
@@ -225,8 +249,11 @@ class TeamAIService {
         LoggerService.instance.log(
             "AI: ${hauler.name} has items. Moving to bank at (${bankLocation.x}, ${bankLocation.y}).");
         // Step 2: Move to the bank
-        _teamProvider.queueAction(hauler.name,
-            _actionFactory.createMoveAction(hauler.name, bankLocation.x, bankLocation.y));
+        if (hauler.location.x != bankLocation.x || hauler.location.y != bankLocation.y) {
+          _teamProvider.queueAction(hauler.name,
+              _actionFactory.createMoveAction(
+                  hauler.name, bankLocation.x, bankLocation.y));
+        }
 
         // Step 3: Deposit items (one at a time)
         // For simplicity, we'll just deposit the first item in the inventory.

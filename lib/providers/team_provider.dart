@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
+import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
+import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:artifacts_mmo/models/character_role.dart';
@@ -13,10 +15,11 @@ import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
 
 class TeamProvider with ChangeNotifier {
-
   final ApiClient _apiClient;
+  final _combatService = CombatService();
   MapProvider _mapProvider; // Add a reference to MapProvider
   WorldDataProvider _worldDataProvider; // Add a reference
   BankProvider _bankProvider; // Add a reference
@@ -37,7 +40,8 @@ class TeamProvider with ChangeNotifier {
 
   TeamProvider(this._apiClient, this._mapProvider, this._worldDataProvider,
       this._bankProvider) {
-    _aiService = TeamAIService(_apiClient, this, _worldDataProvider, _bankProvider, _mapProvider);
+    _aiService = TeamAIService(_apiClient, this, _worldDataProvider,
+        _bankProvider, _mapProvider, _combatService);
     fetchAllCharacters().then((_) {
       // Initialize queues and start the game loop after characters are loaded
       for (var state in _characterStates) {
@@ -105,11 +109,64 @@ class TeamProvider with ChangeNotifier {
           // This error means the API changed its response format
           state.setActionFailed('Invalid response format');
         }
+
+        if (data.data is GiveItemDataSchema) {
+          final CharacterSchema? updatedCharacter = data.data.receiverCharacter;
+          if (updatedCharacter != null) {
+            for (var charData in data.characters) {
+              final characterToUpdate = _characterStates.firstWhereOrNull(
+                (s) => s.character.name == charData.name,
+              );
+              characterToUpdate?.updateCharacter(charData);
+            }
+          }
+        }
       } else {
         state.setActionFailed('API Error ${response.statusCode}');
       }
+    } on DioException catch (e) {
+      String errorMessage = "An unknown API error occurred.";
+      LogLevel logLevel = LogLevel.error;
+
+      if (e.response?.data != null) {
+        final errorData = e.response!.data;
+        // The API returns errors like {'code': 499, 'message': '...'}
+        final code = errorData['code'];
+        final message = errorData['message'];
+
+        errorMessage = "Error ($characterName) $code: $message";
+
+        // Handle specific, non-critical errors
+        switch (code) {
+          case 499: // code_character_in_cooldown
+          case 429: // code_too_many_requests
+            logLevel = LogLevel
+                .warning; // This is an expected issue, not a critical error
+            // We can also manually sync the cooldown based on the error
+            state.setCooldown(5); // Assume a default cooldown on failure
+            break;
+          case 497: // code_character_inventory_full
+            logLevel = LogLevel.info; // This is a state change, not an error
+            state.needsHauling = true;
+            break;
+          case 493: // code_character_not_skill_level_required
+            logLevel = LogLevel.warning;
+            // The AI tried something it can't do. Stop the task to prevent loops.
+            state.setTask(CharacterTask.idle);
+            break;
+          case 452: // code_token_invalid
+          case 453: // code_token_expired
+            // These are critical errors.
+            errorMessage =
+                "CRITICAL: API Token is invalid or expired. Please update it in settings.";
+            break;
+        }
+      }
+
+      LoggerService.instance.log(errorMessage, level: logLevel);
+      state.setActionFailed(errorMessage);
     } catch (e) {
-      state.setActionFailed(e.toString().substring(0, 50)); // Keep error brief
+      state.setActionFailed('Error: $characterName ${e.toString().substring(0, 50)}'); // Keep error brief
     }
   }
 
@@ -177,7 +234,6 @@ class TeamProvider with ChangeNotifier {
       }
     }
   }
-
 
   // New method for the UI to set a character's task
   void setTask(String characterName, CharacterTask task) {
