@@ -30,14 +30,14 @@ class MapProvider with ChangeNotifier {
 
     try {
       do {
-        // LoggerService.instance.log('🗺️ Fetching map data, page $currentPage of $totalPages...');
+        LoggerService.instance.log('🗺️ Fetching map data, page $currentPage of $totalPages...');
         // Use the correct API call with the current page number
         final response = await _apiClient.maps.getAllMapsMapsGet(page: currentPage);
 
         if (response.statusCode == 200 && response.data != null) {
           final pageData = response.data!;
           // Update totalPages with the value from the API response
-          totalPages = pageData.total ?? 1;
+          totalPages = pageData.pages ?? 1;
 
           // Extract the list of maps from the current page's data
           final BuiltList<MapSchema> mapsOnPage = pageData.data;

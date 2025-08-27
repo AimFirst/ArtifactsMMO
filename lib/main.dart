@@ -1,6 +1,7 @@
 // lib/main.dart
 
 import 'package:artifacts_mmo/home_page.dart';
+import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
@@ -31,9 +32,12 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => MapProvider(apiClient),
         ),
+        ChangeNotifierProvider(
+          create: (context) => BankProvider(apiClient),
+        ),
         // TeamProvider will now depend on both MapProvider and WorldDataProvider
-        ChangeNotifierProxyProvider2<MapProvider, WorldDataProvider,
-            TeamProvider>(
+        ChangeNotifierProxyProvider3<MapProvider, WorldDataProvider,
+            BankProvider, TeamProvider>(
           create: (context) {
             // This is a great place to do it since TeamProvider is our main service
             LoggerService.instance.init(context.read<LogProvider>());
@@ -41,14 +45,16 @@ void main() {
             return TeamProvider(
               apiClient,
               context.read<MapProvider>(),
-              context.read<WorldDataProvider>(), // Pass in the new provider
+              context.read<WorldDataProvider>(),
+              context.read<BankProvider>(),
             );
           },
-          update: (_, mapProvider, worldDataProvider, teamProvider) {
+          update:
+              (_, mapProvider, worldDataProvider, bankProvider, teamProvider) {
             teamProvider!
               ..updateMapProvider(mapProvider)
-              ..updateWorldDataProvider(
-                  worldDataProvider); // Update the new provider reference
+              ..updateWorldDataProvider(worldDataProvider)
+              ..updateBankProvider(bankProvider);
             return teamProvider;
           },
         ),

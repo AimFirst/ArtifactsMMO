@@ -38,7 +38,7 @@ class WorldDataProvider with ChangeNotifier {
           final pageData = response.data!;
 
           // Update the total number of pages from the response.
-          totalPages = pageData.total ?? 1;
+          totalPages = pageData.pages ?? 1;
 
           // Add all resources from the current page to our map.
           for (final resource in pageData.data) {

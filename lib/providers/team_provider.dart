@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:collection';
+import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
@@ -29,6 +30,7 @@ class TeamProvider with ChangeNotifier {
   final ApiClient _apiClient;
   MapProvider _mapProvider; // Add a reference to MapProvider
   WorldDataProvider _worldDataProvider; // Add a reference
+  BankProvider _bankProvider; // Add a reference
 
   List<CharacterState> _characterStates = []; // Use the new wrapper
   List<CharacterState> get characters => _characterStates;
@@ -42,7 +44,8 @@ class TeamProvider with ChangeNotifier {
   Timer? _gameLoopTimer;
   final Map<String, Queue<QueuedAction>> _actionQueues = {};
 
-  TeamProvider(this._apiClient, this._mapProvider, this._worldDataProvider) {
+  TeamProvider(this._apiClient, this._mapProvider, this._worldDataProvider,
+      this._bankProvider) {
     fetchAllCharacters().then((_) {
       // Initialize queues and start the game loop after characters are loaded
       for (var state in _characterStates) {
@@ -145,6 +148,11 @@ class TeamProvider with ChangeNotifier {
     });
   }
 
+  // Method to update the reference
+  void updateBankProvider(BankProvider newProvider) {
+    _bankProvider = newProvider;
+  }
+
   // Method for ChangeNotifierProxyProvider to update the map reference
   void updateMapProvider(MapProvider newMapProvider) {
     _mapProvider = newMapProvider;
@@ -196,30 +204,50 @@ class TeamProvider with ChangeNotifier {
   // --- NEW: AI logic for Crafters ---
   void _updateCrafterAI(CharacterState crafterState) {
     final crafter = crafterState.character;
-    final String targetItem = _gearPolicy['mining']!; // e.g., 'Iron Pickaxe'
+    final String targetItem = _gearPolicy['mining']!;
 
-    // For now, let's assume we have a way to check bank inventory.
-    // A more robust solution would be a separate BankProvider.
-    // bool needsCrafting = !isItemInBank(targetItem);
-
-    // For this example, let's assume the crafter just tries to craft if idle.
-    if (crafterState.currentTask == CharacterTask.idle) {
+    // Priority 1: Check if the item already exists in the bank.
+    if (_bankProvider.hasItem(targetItem)) {
       LoggerService.instance.log(
-          "AI: ${crafter.name} is checking if an '$targetItem' is needed.");
-      // In a real scenario, you'd check if the item or materials are in the bank.
-      // For now, we'll just queue the crafting action.
-
-      // NOTE: Assumes an API call to craft an item from banked materials.
-      // This may require withdrawing materials first, then crafting.
-      queueAction(
-          crafter.name,
-          _createCraftAction(
-              crafter.name,
-              (SimpleItemSchemaBuilder()
-                    ..code = targetItem
-                    ..quantity = 1)
-                  .build()));
+          "AI: ${crafter.name} sees '$targetItem' is already in the bank. Standing by.");
+      return; // Do nothing, the item is already crafted.
     }
+
+    // Priority 2: Check for materials and location (solving the problem!)
+    // For now, we will just log it. A future step is to look up recipes.
+    LoggerService.instance.log(
+        "AI: ${crafter.name} confirmed '$targetItem' needs to be crafted.");
+
+    // Find the nearest forge
+    final forgeLocation = _findNearestTile(
+        crafter.location, (tile) => tile.content?.code == 'forge');
+    if (forgeLocation == null) {
+      LoggerService.instance.log("AI: ${crafter.name} cannot find a forge.",
+          level: LogLevel.warning);
+      return;
+    }
+
+    // Are we at the forge?
+    if (crafter.location.x != forgeLocation.x ||
+        crafter.location.y != forgeLocation.y) {
+      LoggerService.instance.log("AI: ${crafter.name} moving to the forge.");
+      queueAction(crafter.name,
+          _createMoveAction(crafter.name, forgeLocation.x, forgeLocation.y));
+      return;
+    }
+
+    // If we are at the forge, attempt to craft.
+    // The call will still fail if we don't have materials, but our logic is now correct.
+    LoggerService.instance.log(
+        "AI: ${crafter.name} is at the forge and attempting to craft '$targetItem'.");
+    queueAction(
+        crafter.name,
+        _createCraftAction(
+            crafter.name,
+            (SimpleItemSchemaBuilder()
+                  ..code = targetItem
+                  ..quantity = 1)
+                .build()));
   }
 
   // New AI logic for Gatherers
@@ -417,19 +445,26 @@ class TeamProvider with ChangeNotifier {
             ..code = targetTool
             ..quantity = 1)
           .build();
-      LoggerService.instance.log(
-          "AI: ${gatherer.name} needs to get an '$targetTool'. Moving to bank.");
-      // Find the bank and move to it
-      final bankLocation = _findNearestTile(
-          gatherer.location, (tile) => tile.content?.code == 'bank');
-      if (bankLocation != null) {
-        queueAction(gatherer.name,
-            _createMoveAction(gatherer.name, bankLocation.x, bankLocation.y));
-        // Queue a withdraw and equip action
-        queueAction(gatherer.name,
-            _createWithdrawAction(gatherer.name, targetToolItem));
-        queueAction(gatherer.name,
-            _createEquipAction(gatherer.name, targetToolItem, ItemSlot.weapon));
+      // NEW: Check if the tool is waiting in the bank first!
+      if (_bankProvider.hasItem(targetTool)) {
+        LoggerService.instance.log(
+            "AI: ${gatherer.name} sees '$targetTool' is in the bank. Moving to get it.");
+        final bankLocation = _findNearestTile(
+            gatherer.location, (tile) => tile.content?.code == 'bank');
+        if (bankLocation != null) {
+          queueAction(gatherer.name,
+              _createMoveAction(gatherer.name, bankLocation.x, bankLocation.y));
+          queueAction(gatherer.name,
+              _createWithdrawAction(gatherer.name, targetToolItem));
+          queueAction(
+              gatherer.name,
+              _createEquipAction(
+                  gatherer.name, targetToolItem, ItemSlot.weapon));
+        }
+      } else {
+        LoggerService.instance.log(
+            "AI: ${gatherer.name} needs '$targetTool', but it's not in the bank. Waiting for crafter.");
+        // We just wait. The crafter's AI will handle making the item.
       }
     }
   }
