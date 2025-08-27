@@ -1,5 +1,6 @@
 // lib/providers/map_provider.dart
 
+import 'package:artifacts_mmo/models/location_schema.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/foundation.dart';
@@ -63,5 +64,29 @@ class MapProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners(); // Notify all listeners that the complete map is ready
     }
+  }
+
+  DestinationSchema? findNearestTile(
+      LocationSchema currentLocation, bool Function(MapSchema) predicate) {
+    final tiles = worldMap?.tiles ?? [];
+    DestinationSchema? nearest;
+    num minDistance = double.infinity;
+
+    for (final tile in tiles) {
+      // Use the provided predicate function to check if this is the tile we want
+      if (predicate(tile)) {
+        // Manhattan distance calculation
+        final distance = (currentLocation.x - tile.x).abs() +
+            (currentLocation.y - tile.y).abs();
+        if (distance < minDistance) {
+          minDistance = distance;
+          nearest = (DestinationSchemaBuilder()
+            ..x = tile.x
+            ..y = tile.y)
+              .build();
+        }
+      }
+    }
+    return nearest;
   }
 }
