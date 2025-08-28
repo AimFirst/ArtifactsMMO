@@ -6,4 +6,5 @@ enum CharacterTask {
   craftEndlessly,
   upgradeGear,
   huntMonsters,
+  completeServerTask,
 }

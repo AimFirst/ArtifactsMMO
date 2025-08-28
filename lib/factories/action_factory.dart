@@ -24,6 +24,20 @@ class ActionFactory {
     );
   }
 
+  QueuedAction createAcceptTaskAction(String characterName) {
+    return QueuedAction(
+      actionName: 'Accepting Task',
+      apiCall: () => _apiClient.myCharacters.actionAcceptNewTaskMyNameActionTaskNewPost(name: characterName),
+    );
+  }
+
+  QueuedAction createCompleteTaskAction(String characterName) {
+    return QueuedAction(
+      actionName: 'Completing Task',
+      apiCall: () => _apiClient.myCharacters.actionCompleteTaskMyNameActionTaskCompletePost(name: characterName),
+    );
+  }
+
   QueuedAction createGiveItemsAction(
       CharacterSchema giver, String receiverName) {
     final inventory = giver.inventory;

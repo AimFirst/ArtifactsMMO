@@ -3,7 +3,6 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/craft_extension.dart';
-import 'package:artifacts_mmo/extensions/item_extension.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_role.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
@@ -53,6 +52,12 @@ class TeamAIService {
 
       if (!isReady || queue.isNotEmpty) continue;
 
+      // The new task takes precedence over role-based AI
+      if (state.currentTask == CharacterTask.completeServerTask) {
+        _updateTaskingAI(state);
+        continue; // Move to the next character
+      }
+
       switch (state.role) {
         case CharacterRole.gatherer:
           _updateGathererAI(state, characterStates);
@@ -72,7 +77,78 @@ class TeamAIService {
     }
   }
 
-  void _updateFighterAI(CharacterState fighterState) {
+  void _updateTaskingAI(CharacterState state) {
+    final character = state.character;
+
+    // --- State 1: No Active Task ---
+    // If the character has no task, their goal is to get one.
+    if (character.task.isEmpty) {
+      final taskMaster = _mapProvider.findNearestTile(character.location, (t) => t.content?.type == MapContentType.tasksMaster);
+      if (taskMaster == null) {
+        LoggerService.instance.log("AI: ${character.name} can't find a task master.", level: LogLevel.warning);
+        return;
+      }
+
+      final taskMasterLocation = LocationSchema(x: taskMaster.x, y: taskMaster.y);
+      if (character.location.x != taskMasterLocation.x || character.location.y != taskMasterLocation.y) {
+        LoggerService.instance.log("AI: ${character.name} moving to Task Master at $taskMasterLocation.");
+        _teamProvider.queueAction(character.name, _actionFactory.createMoveAction(character.name, taskMasterLocation.x, taskMasterLocation.y));
+      } else {
+        LoggerService.instance.log("AI: ${character.name} is at Task Master, accepting new task.");
+        final acceptAction = _actionFactory.createAcceptTaskAction(character.name);
+        _teamProvider.queueAction(character.name, acceptAction);
+        // Remember where we got the task
+        state.taskGiverLocation = taskMasterLocation;
+      }
+      return;
+    }
+
+    // --- State 2: Task is Complete ---
+    // If progress is met, the goal is to turn it in.
+    if (character.taskProgress >= character.taskTotal) {
+      final turnInLocation = state.taskGiverLocation;
+      if (turnInLocation == null) {
+        LoggerService.instance.log("AI: ${character.name} has a completed task but forgot where to turn it in!", level: LogLevel.error);
+        return;
+      }
+
+      if (character.location.x != turnInLocation.x || character.location.y != turnInLocation.y) {
+        LoggerService.instance.log("AI: ${character.name} moving to turn in task at $turnInLocation.");
+        _teamProvider.queueAction(character.name, _actionFactory.createMoveAction(character.name, turnInLocation.x, turnInLocation.y));
+      } else {
+        LoggerService.instance.log("AI: ${character.name} turning in completed task: ${character.task}.");
+        final completeAction = _actionFactory.createCompleteTaskAction(character.name);
+        _teamProvider.queueAction(character.name, completeAction);
+      }
+      return;
+    }
+
+    // --- State 3: Task is In Progress ---
+    // Perform the action needed to make progress.
+    switch (character.taskType) {
+      case 'monsters':
+        final targetMonsterCode = character.task;
+          _updateFighterAi(state, (character, tile) => tile.content?.code == targetMonsterCode);
+        break;
+      case 'items':
+        final targetItemName = character.task;
+        // This is the most complex part, requiring team cooperation.
+        // For now, we'll assume the character must acquire it themselves.
+        // A future step is to create a team-wide "request" for the item.
+        if (character.inventory?.any((item) => item.code == targetItemName) ?? false) {
+          // We have the item, now we just need the full quantity.
+          // For now, we'll assume we have enough and head to turn-in.
+          // state.character.taskProgress = state.character.taskTotal;
+        } else {
+          LoggerService.instance.log("AI: ${character.name} needs to acquire '$targetItemName'. Delegating to Crafter AI.");
+          // We can temporarily assign a crafting sub-task
+          // This is a great place for more advanced team-wide AI later.
+        }
+        break;
+    }
+  }
+
+  void _updateFighterAi(CharacterState fighterState,bool Function(CharacterSchema, MapSchema) test) {
     final fighter = fighterState.character;
 
     // Priority 1: SURVIVAL. Heal if health is low.
@@ -83,55 +159,53 @@ class TeamAIService {
       return; // Do nothing else until health is restored.
     }
 
+    // Step 1: Find ALL monster tiles.
+    final allMonsterTiles = _mapProvider.worldMap?.tiles
+        .where((tile) => tile.content?.type == MapContentType.monster) ?? <MapSchema>[];
+
+    // Step 2: Find all targets that match our criteria
+    final winnableTargets = allMonsterTiles.where((tile) => test(fighter, tile)).toList();
+
+    // Step 3: Find the closest winnable target
+    if (winnableTargets.isEmpty) {
+      LoggerService.instance.log("AI: ${fighter.name} cannot find any monsters.", level: LogLevel.warning);
+      return;
+    }
+
+    final monsterTile = _mapProvider.findNearestTile(
+      fighter.location,
+          (tile) => winnableTargets.contains(tile),
+    );
+
+    if (monsterTile == null) {
+      LoggerService.instance.log("AI: ${fighter.name} cannot find any monsters.", level: LogLevel.warning);
+      return; // No targets found, do nothing.
+    }
+
+    final monsterLocation = LocationSchema(x: monsterTile.x, y: monsterTile.y);
+    final currentLocation = LocationSchema(x: fighter.location.x, y: fighter.location.y);
+
+    // Priority 3: Engage the target.
+    if (currentLocation != monsterLocation) {
+      // We are not on the monster's tile yet, so move there.
+      LoggerService.instance.log("AI: ${fighter.name} moving to engage monster at $monsterLocation.");
+      final moveAction = _actionFactory.createMoveAction(fighter.name, monsterLocation.x, monsterLocation.y);
+      _teamProvider.queueAction(fighter.name, moveAction);
+    } else {
+      // We are on the same tile. Fight!
+      LoggerService.instance.log("AI: ${fighter.name} is on the monster's tile. Engaging in combat!");
+      final fightAction = _actionFactory.createFightAction(fighter.name);
+      _teamProvider.queueAction(fighter.name, fightAction);
+    }
+  }
+
+  void _updateFighterAI(CharacterState fighterState) {
     // If we are assigned the hunt task, let's find a monster.
     if (fighterState.currentTask == CharacterTask.huntMonsters) {
-      // Step 1: Find ALL monster tiles.
-      final allMonsterTiles = _mapProvider.worldMap?.tiles
-          .where((tile) => tile.content?.type == MapContentType.monster) ?? <MapSchema>[];
-
-      // Step 2: Filter using the CombatService to find winnable targets.
-      final List<MapSchema> winnableTargets = [];
-      for (final tile in allMonsterTiles) {
+      _updateFighterAi(fighterState, (fighter, tile) {
         final monsterData = _worldDataProvider.getMonsterByCode(tile.content!.code);
-        if (monsterData != null) {
-          // THE CORE LOGIC CHANGE IS HERE!
-          if (_combatService.canWinFight(fighter, monsterData)) {
-            winnableTargets.add(tile);
-          }
-        }
-      }
-
-      // Step 3: Find the closest winnable target
-      if (winnableTargets.isEmpty) {
-        LoggerService.instance.log("AI: ${fighter.name} cannot find any monsters.", level: LogLevel.warning);
-        return;
-      }
-
-      final monsterTile = _mapProvider.findNearestTile(
-        fighter.location,
-            (tile) => winnableTargets.contains(tile),
-      );
-
-      if (monsterTile == null) {
-        LoggerService.instance.log("AI: ${fighter.name} cannot find any monsters.", level: LogLevel.warning);
-        return; // No targets found, do nothing.
-      }
-
-      final monsterLocation = LocationSchema(x: monsterTile.x, y: monsterTile.y);
-      final currentLocation = LocationSchema(x: fighter.location.x, y: fighter.location.y);
-
-      // Priority 3: Engage the target.
-      if (currentLocation != monsterLocation) {
-        // We are not on the monster's tile yet, so move there.
-        LoggerService.instance.log("AI: ${fighter.name} moving to engage monster at $monsterLocation.");
-        final moveAction = _actionFactory.createMoveAction(fighter.name, monsterLocation.x, monsterLocation.y);
-        _teamProvider.queueAction(fighter.name, moveAction);
-      } else {
-        // We are on the same tile. Fight!
-        LoggerService.instance.log("AI: ${fighter.name} is on the monster's tile. Engaging in combat!");
-        final fightAction = _actionFactory.createFightAction(fighter.name);
-        _teamProvider.queueAction(fighter.name, fightAction);
-      }
+        return monsterData != null && _combatService.canWinFight(fighter, monsterData);
+      });
     }
   }
 
@@ -310,7 +384,6 @@ class TeamAIService {
 
     final crafter = crafterState.character;
     final worldData = _worldDataProvider;
-    final bank = _bankProvider;
 
     // Step 1: Get the target item from the character's state.
     final SimpleItemSchema? targetItemName = crafterState.designatedCraftingItem;

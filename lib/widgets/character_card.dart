@@ -142,6 +142,8 @@ class _CharacterCardState extends State<CharacterCard> {
           ),
           // Skills
           const SizedBox(height: 8),
+          _buildServerTaskStatus(state.character),
+          const SizedBox(height: 8),
           _buildContextualSkillInfo(state),
           const SizedBox(height: 8),
           // Last Action & Cooldown
@@ -149,6 +151,37 @@ class _CharacterCardState extends State<CharacterCard> {
           const SizedBox(height: 16),
           // Action Buttons
           _buildActionButtons(context, state),
+        ],
+      ),
+    );
+  }
+
+  // Add a new helper method to display the task
+  Widget _buildServerTaskStatus(CharacterSchema character) {
+    // Check if the character has an active server-side task
+    if (character.task.isEmpty) {
+      return const SizedBox.shrink(); // Return an empty widget if no task
+    }
+
+    final double progress = character.taskTotal > 0
+        ? character.taskProgress / character.taskTotal
+        : 0;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Quest: ${character.task}",
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          LinearProgressIndicator(value: progress),
+          Text(
+            "${character.taskProgress} / ${character.taskTotal}",
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
         ],
       ),
     );
