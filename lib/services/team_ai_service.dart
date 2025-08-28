@@ -21,8 +21,8 @@ import 'package:collection/collection.dart';
 
 // This is our "Brain". It's not a provider and has no UI logic.
 class TeamAIService {
-  final Map<String, String> _gearPolicy = {
-    'mining': 'copper_pickaxe',
+  final Map<GatheringSkill, String> _toolForSkill = {
+    GatheringSkill.mining: 'copper_pickaxe',
     // 'woodcutting': 'Iron Axe', // Future policies
   };
 
@@ -175,16 +175,20 @@ class TeamAIService {
     }
 
     // This is the existing logic from the previous step
-    if (gathererState.currentTask == CharacterTask.mineEndlessly) {
-      // --- NEW MINING LOGIC ---
-      final currentLocation = gatherer.location;
+    if (gathererState.currentTask == CharacterTask.gatherEndlessly) {
       final mapTiles = _mapProvider.worldMap!.tiles;
+      final gatherer = gathererState.character;
+      final currentLocation = gatherer.location;
+      final designatedSkill = gathererState.designatedGatheringSkill;
+
+      if (designatedSkill == null) return; // Should not happen, but safe to check
 
       // Function to check if a tile is valid for this character
       bool isGatherable(MapSchema tile) {
         if (tile.content == null) return false;
         final resource = _worldDataProvider.getResourceByCode(tile.content!.code);
         if (resource == null) return false;
+        if (resource.skill != designatedSkill) return false;
 
         // Get the specific skill required (e.g., 'mining')
         final GatheringSkill requiredSkillName = resource.skill;
@@ -209,7 +213,7 @@ class TeamAIService {
 
       if (currentTile != null && isGatherable(currentTile)) {
         LoggerService.instance
-            .log("AI: ${gatherer.name} is on a rock. Queuing 'Mine'.");
+            .log("AI: ${gatherer.name} is at ${currentTile.content?.code}. Queuing 'Gather'.");
         _teamProvider.queueAction(gatherer.name, _actionFactory.createMineAction(gatherer.name));
       } else {
         // Step 2: If not, find the nearest rock and move to it
@@ -303,7 +307,7 @@ class TeamAIService {
 
   void _updateCrafterAI(CharacterState crafterState) {
     final crafter = crafterState.character;
-    final targetItem = _gearPolicy['mining']!;
+    final targetItem = _toolForSkill[GatheringSkill.mining]!;
     final targetItemSchema = _worldDataProvider.getItemByCode(targetItem);
 
     // Step 1: Does the item already exist in the bank?
@@ -360,7 +364,7 @@ class TeamAIService {
 
   void _handleGearUpgrade(CharacterState gathererState) {
     final gatherer = gathererState.character;
-    final String targetTool = _gearPolicy['mining']!; // e.g., 'Iron Pickaxe'
+    final String targetTool = _toolForSkill[GatheringSkill.mining]!; // e.g., 'Iron Pickaxe'
 
     // NOTE: Adjust property names for equipped items
     final bool hasBestTool = gatherer.weaponSlot == targetTool;
@@ -368,7 +372,7 @@ class TeamAIService {
     if (hasBestTool) {
       LoggerService.instance.log(
           "AI: ${gatherer.name} already has the best tool. Switching to mining.");
-      _teamProvider.setTask(gatherer.name, CharacterTask.mineEndlessly);
+      _teamProvider.setTask(gatherer.name, CharacterTask.gatherEndlessly);
     } else {
       final targetToolItem = (SimpleItemSchemaBuilder()
         ..code = targetTool

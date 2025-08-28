@@ -15,6 +15,7 @@ class CharacterState with ChangeNotifier {
   CharacterTask currentTask = CharacterTask.idle; // Add this line
   CharacterRole role = CharacterRole.idle; // Default role
   bool needsHauling = false; // Flag to signal for help
+  GatheringSkill? designatedGatheringSkill;
 
   CharacterState({required this.character, this.lastAction = 'Idle'});
 
@@ -25,6 +26,20 @@ class CharacterState with ChangeNotifier {
 
   void updateCharacter(CharacterSchema newCharacterData) {
     character = newCharacterData;
+    notifyListeners();
+  }
+
+  // A new method to assign a gathering task
+  void setGatheringTask(GatheringSkill? skill) {
+    if (skill == null) {
+      // If null is passed, set the task to idle
+      currentTask = CharacterTask.idle;
+      designatedGatheringSkill = null;
+    } else {
+      currentTask = CharacterTask.gatherEndlessly;
+      designatedGatheringSkill = skill;
+    }
+    print("${character.name} task set to: $currentTask with skill $designatedGatheringSkill");
     notifyListeners();
   }
 

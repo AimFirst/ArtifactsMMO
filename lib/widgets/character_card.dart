@@ -201,6 +201,29 @@ class _CharacterCardState extends State<CharacterCard> {
                 }
               },
             ),
+            if (state.currentTask == CharacterTask.gatherEndlessly) ...[
+            const Text('Job: ', style: TextStyle(fontWeight: FontWeight.bold)),
+            DropdownButton<GatheringSkill?>(
+              // The value is the character's currently assigned skill
+              value: state.currentTask == CharacterTask.gatherEndlessly
+                  ? state.designatedGatheringSkill
+                  : null,
+              hint: const Text("Idle"), // Show 'Idle' when no skill is selected
+              // Create a list of all gathering skills, plus a null option for 'Idle'
+              items: [
+                const DropdownMenuItem(value: null, child: Text("Idle")),
+                ...GatheringSkill.values.map((skill) {
+                  return DropdownMenuItem(
+                    value: skill,
+                    child: Text(skill.name), // e.g., "mining"
+                  );
+                }),
+              ],
+              onChanged: (GatheringSkill? newSkill) {
+                // Call the new method in the provider to set the task
+                teamProvider.setGatheringTask(characterName, newSkill);
+              },
+            ),],
           ],
         ),
         const SizedBox(height: 8),

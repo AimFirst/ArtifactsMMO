@@ -244,6 +244,14 @@ class TeamProvider with ChangeNotifier {
     clearQueue(characterName);
   }
 
+  void setGatheringTask(String characterName, GatheringSkill? skill) {
+    final state =
+        _characterStates.firstWhere((s) => s.character.name == characterName);
+    state.setGatheringTask(skill);
+
+    clearQueue(characterName);
+  }
+
   // Method for the UI to set a role
   void setRole(String characterName, CharacterRole role) {
     final state =
