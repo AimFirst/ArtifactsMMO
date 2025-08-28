@@ -113,12 +113,10 @@ class TeamProvider with ChangeNotifier {
         if (data.data is GiveItemDataSchema) {
           final CharacterSchema? updatedCharacter = data.data.receiverCharacter;
           if (updatedCharacter != null) {
-            for (var charData in data.characters) {
-              final characterToUpdate = _characterStates.firstWhereOrNull(
-                (s) => s.character.name == charData.name,
-              );
-              characterToUpdate?.updateCharacter(charData);
-            }
+            final characterToUpdate = _characterStates.firstWhereOrNull(
+              (s) => s.character.name == updatedCharacter.name,
+            );
+            characterToUpdate?.updateCharacter(updatedCharacter);
           }
         }
       } else {
@@ -166,7 +164,8 @@ class TeamProvider with ChangeNotifier {
       LoggerService.instance.log(errorMessage, level: logLevel);
       state.setActionFailed(errorMessage);
     } catch (e) {
-      state.setActionFailed('Error: $characterName ${e.toString().substring(0, 50)}'); // Keep error brief
+      state.setActionFailed(
+          'Error: $characterName ${e.toString().substring(0, 50)}'); // Keep error brief
     }
   }
 
