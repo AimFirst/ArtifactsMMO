@@ -1,27 +1,28 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/element_enum.dart';
 import 'package:artifacts_mmo/models/location_schema.dart';
+import 'package:artifacts_mmo/models/skill_level.dart';
 
 extension CharacterExtensions on CharacterSchema {
   LocationSchema get location => LocationSchema(x: x, y: y);
   int get inventoryCount => inventory?.fold(0, (sum, item) => ((sum ?? 0) + item.quantity)) ?? 0;
 
-  Map<GatheringSkill, int> get gatheringSkills => {
-    GatheringSkill.mining: miningLevel,
-    GatheringSkill.woodcutting: woodcuttingLevel,
-    GatheringSkill.fishing: fishingLevel,
-    GatheringSkill.alchemy: alchemyLevel,
+  Map<GatheringSkill, SkillLevel> get gatheringSkills => {
+    GatheringSkill.mining: SkillLevel(level: miningLevel, xp: miningXp, maxXp: miningMaxXp),
+    GatheringSkill.woodcutting: SkillLevel(level: woodcuttingLevel, xp: woodcuttingXp, maxXp: woodcuttingMaxXp),
+    GatheringSkill.fishing: SkillLevel(level: fishingLevel, xp: fishingXp, maxXp: fishingMaxXp),
+    GatheringSkill.alchemy: SkillLevel(level: alchemyLevel, xp: alchemyXp, maxXp: alchemyMaxXp),
   };
 
-  Map<CraftSkill, int> get craftSkills =>
+  Map<CraftSkill, SkillLevel> get craftSkills =>
   {
-    CraftSkill.alchemy: alchemyLevel,
-    CraftSkill.jewelrycrafting: jewelrycraftingLevel,
-    CraftSkill.gearcrafting: gearcraftingLevel,
-    CraftSkill.weaponcrafting: weaponcraftingLevel,
-    CraftSkill.cooking: cookingLevel,
-    CraftSkill.mining: miningLevel,
-    CraftSkill.woodcutting: woodcuttingLevel,
+    CraftSkill.alchemy: SkillLevel(level: alchemyLevel, xp: alchemyXp, maxXp: alchemyMaxXp),
+    CraftSkill.jewelrycrafting: SkillLevel(level: jewelrycraftingLevel, xp: jewelrycraftingXp, maxXp: jewelrycraftingMaxXp),
+    CraftSkill.gearcrafting: SkillLevel(level: gearcraftingLevel, xp: gearcraftingXp, maxXp: gearcraftingMaxXp),
+    CraftSkill.weaponcrafting: SkillLevel(level: weaponcraftingLevel, xp: weaponcraftingXp, maxXp: weaponcraftingMaxXp),
+    CraftSkill.cooking: SkillLevel(level: cookingLevel, xp: cookingXp, maxXp: cookingMaxXp),
+    CraftSkill.mining: SkillLevel(level: miningLevel, xp: miningXp, maxXp: miningMaxXp),
+    CraftSkill.woodcutting: SkillLevel(level: woodcuttingLevel, xp: woodcuttingXp, maxXp: woodcuttingMaxXp),
   };
 
   Map<ElementEnum, int> get attacks => {
@@ -44,4 +45,6 @@ extension CharacterExtensions on CharacterSchema {
     ElementEnum.earth: resEarth,
     ElementEnum.air: resAir,
   };
+
+  Map<String, SkillLevel> get skills => {'overall': SkillLevel(level: level, xp: xp, maxXp: maxXp)}..addAll(craftSkills.map((key, value) => MapEntry(key.name, value)))..addAll(gatheringSkills.map((key, value) => MapEntry(key.name, value)));
 }

@@ -10,6 +10,8 @@ import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/character_task.dart';
 import 'package:artifacts_mmo/models/queued_action.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
+import 'package:artifacts_mmo/widgets/character_details_page.dart';
+import 'package:artifacts_mmo/widgets/skill_progress_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,13 +53,26 @@ class _CharacterCardState extends State<CharacterCard> {
         builder: (context, state, child) {
           // Rebuild the card content whenever the state notifies listeners
           return Card(
+            clipBehavior: Clip.hardEdge,
             elevation: 4.0,
             margin: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Opacity(
-              // Dim the card if the character is busy
-              opacity:
-                  state.isOnCooldown || state.isPerformingAction ? 0.65 : 1.0,
-              child: _buildCardContent(context, state),
+            child: InkWell(
+              onTap: () {
+                // Navigate to the character details page when tapped
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CharacterDetailsPage(characterState: state),
+                  ),
+                );
+              },
+              child: Opacity(
+                // Dim the card if the character is busy
+                opacity:
+                    state.isOnCooldown || state.isPerformingAction ? 0.65 : 1.0,
+                child: _buildCardContent(context, state),
+              ),
             ),
           );
         },
@@ -126,14 +141,7 @@ class _CharacterCardState extends State<CharacterCard> {
           ),
           // Skills
           const SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(Icons.star, color: Colors.amber, size: 16),
-              const SizedBox(width: 8),
-              // NOTE: Adjust property access to match your Character model
-              Text('Mining: ${character.miningLevel}'),
-            ],
-          ),
+          _buildContextualSkillInfo(state),
           const SizedBox(height: 8),
           // Last Action & Cooldown
           _buildActionStatus(state),
@@ -143,6 +151,48 @@ class _CharacterCardState extends State<CharacterCard> {
         ],
       ),
     );
+  }
+
+  // Add this new helper method to the _CharacterCardState
+  Widget _buildContextualSkillInfo(CharacterState state) {
+    final character = state.character;
+
+    switch (state.currentTask) {
+      case CharacterTask.gatherEndlessly:
+        final skill = state.designatedGatheringSkill;
+        if (skill == null) return const SizedBox.shrink();
+
+        // This assumes you have a map of skill data, which you do.
+        final skillName = skill.name;
+        return SkillProgressWidget(
+          skillName: skillName.toUpperCase(),
+          icon: Icons.construction, // Replace with specific icons if desired
+          level: character.skills[skillName]?.level ?? 0,
+          currentXp: character.skills[skillName]?.xp ?? 0,
+          maxXp: character.skills[skillName]?.maxXp ?? 1,
+        );
+
+      case CharacterTask.huntMonsters:
+        return SkillProgressWidget(
+          skillName: 'COMBAT',
+          icon: Icons.shield,
+          iconColor: Colors.redAccent,
+          level: character.level,
+          currentXp: character.xp,
+          maxXp: character.maxXp,
+        );
+
+      default:
+      // When idle or doing other tasks, show nothing or the main combat level
+        return SkillProgressWidget(
+          skillName: 'COMBAT',
+          icon: Icons.shield,
+          iconColor: Colors.grey,
+          level: character.level,
+          currentXp: character.xp,
+          maxXp: character.maxXp,
+        );
+    }
   }
 
   Widget _buildActionStatus(CharacterState state) {

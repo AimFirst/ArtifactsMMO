@@ -195,7 +195,7 @@ class TeamAIService {
         final int requiredSkillLevel = resource.level;
 
         // Get the character's current level for that skill
-        final int characterSkillLevel = gatherer.gatheringSkills[requiredSkillName] ?? 0;
+        final int characterSkillLevel = gatherer.gatheringSkills[requiredSkillName]?.level ?? 1;
 
         return characterSkillLevel >= requiredSkillLevel;
       }
