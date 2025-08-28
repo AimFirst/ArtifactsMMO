@@ -110,14 +110,14 @@ class ActionFactory {
                     .build()));
   }
 
-  QueuedAction createBankAction(String characterName, SimpleItemSchema item) {
+  QueuedAction createBankAction(String characterName, BuiltList<SimpleItemSchema> items) {
     return QueuedAction(
-        actionName: 'Deposit $item',
+        actionName: 'Deposit $items',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
                 .actionDepositBankItemMyNameActionBankDepositItemPost(
               name: characterName,
-              simpleItemSchema: BuiltList.of([item]),
+              simpleItemSchema:items,
             ));
   }
 

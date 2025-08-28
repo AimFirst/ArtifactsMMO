@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
+import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
@@ -23,6 +24,7 @@ class TeamProvider with ChangeNotifier {
   MapProvider _mapProvider; // Add a reference to MapProvider
   WorldDataProvider _worldDataProvider; // Add a reference
   BankProvider _bankProvider; // Add a reference
+  TeamBrainProvider _teamBrainProvider;
 
   List<CharacterState> _characterStates = []; // Use the new wrapper
   List<CharacterState> get characters => _characterStates;
@@ -39,9 +41,9 @@ class TeamProvider with ChangeNotifier {
   late final TeamAIService _aiService;
 
   TeamProvider(this._apiClient, this._mapProvider, this._worldDataProvider,
-      this._bankProvider) {
+      this._bankProvider, this._teamBrainProvider) {
     _aiService = TeamAIService(_apiClient, this, _worldDataProvider,
-        _bankProvider, _mapProvider, _combatService);
+        _bankProvider, _mapProvider, _combatService, _teamBrainProvider);
     fetchAllCharacters().then((_) {
       // Initialize queues and start the game loop after characters are loaded
       for (var state in _characterStates) {
@@ -200,6 +202,10 @@ class TeamProvider with ChangeNotifier {
   // Method to update the reference
   void updateBankProvider(BankProvider newProvider) {
     _bankProvider = newProvider;
+  }
+
+  void updateTeamBrainProvider(TeamBrainProvider newProvider) {
+    _teamBrainProvider = newProvider;
   }
 
   // Method for ChangeNotifierProxyProvider to update the map reference
