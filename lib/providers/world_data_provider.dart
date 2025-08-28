@@ -25,6 +25,9 @@ class WorldDataProvider with ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  List<CraftSchema> get allRecipes => _recipes;
+  Map<String, CraftSchema> get allRecipeMap => _recipeMap;
+
   WorldDataProvider(this._apiClient) {
     _loadWorldData();
   }

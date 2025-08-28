@@ -16,6 +16,7 @@ class CharacterState with ChangeNotifier {
   CharacterRole role = CharacterRole.idle; // Default role
   bool needsHauling = false; // Flag to signal for help
   GatheringSkill? designatedGatheringSkill;
+  SimpleItemSchema? designatedCraftingItem;
 
   CharacterState({required this.character, this.lastAction = 'Idle'});
 
@@ -26,6 +27,19 @@ class CharacterState with ChangeNotifier {
 
   void updateCharacter(CharacterSchema newCharacterData) {
     character = newCharacterData;
+    notifyListeners();
+  }
+
+  // A new method to assign a crafting task
+  void setCraftingTask(String? itemName) {
+    if (itemName == null || itemName.isEmpty) {
+      currentTask = CharacterTask.idle;
+      designatedCraftingItem = null;
+    } else {
+      currentTask = CharacterTask.craftEndlessly;
+      designatedCraftingItem = (SimpleItemSchemaBuilder()..code = itemName..quantity = 1).build();
+    }
+    print("${character.name} task set to: Craft '$designatedCraftingItem'");
     notifyListeners();
   }
 

@@ -264,4 +264,10 @@ class TeamProvider with ChangeNotifier {
     _gameLoopTimer?.cancel();
     super.dispose();
   }
+
+  void setCraftingTask(String characterName, String? text) {
+    final state =
+        _characterStates.firstWhere((s) => s.character.name == characterName);
+    state.setCraftingTask(text);
+  }
 }

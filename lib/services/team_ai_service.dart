@@ -306,23 +306,57 @@ class TeamAIService {
   }
 
   void _updateCrafterAI(CharacterState crafterState) {
-    final crafter = crafterState.character;
-    final targetItem = _toolForSkill[GatheringSkill.mining]!;
-    final targetItemSchema = _worldDataProvider.getItemByCode(targetItem);
+    if (crafterState.currentTask != CharacterTask.craftEndlessly) return;
 
-    // Step 1: Does the item already exist in the bank?
-    if (_bankProvider.hasItem(targetItem)) {
-      LoggerService.instance.log(
-          "AI: ${crafter.name} sees '$targetItem' is already in the bank. Standing by.");
-      return; // Do nothing, the item is already crafted.
-    }
+    final crafter = crafterState.character;
+    final worldData = _worldDataProvider;
+    final bank = _bankProvider;
+
+    // Step 1: Get the target item from the character's state.
+    final SimpleItemSchema? targetItemName = crafterState.designatedCraftingItem;
+    if (targetItemName == null) return;
 
     // Step 2: Look up the recipe for the item.
-    final CraftSchema? recipe = _worldDataProvider.getRecipeForItem(targetItem);
+    final CraftSchema? recipe = worldData.getRecipeForItem(targetItemName.code);
     if (recipe == null) {
-      LoggerService.instance.log("AI: ${crafter.name} has no recipe for '$targetItem'.", level: LogLevel.warning);
+      LoggerService.instance.log("AI: ${crafter.name} has no recipe for '$targetItemName'.", level: LogLevel.warning);
+      _teamProvider.setTask(crafter.name, CharacterTask.idle); // Stop if recipe is invalid
       return;
     }
+
+    // --- NEW: Crafting Skill Check ---
+    final CraftSkill? requiredSkill = recipe.skill; // e.g., 'weaponcrafting'
+    final int requiredLevel = recipe.level ?? 1;
+    final int characterLevel = crafter.skills[requiredSkill]?.level ?? 1;
+
+    if (characterLevel < requiredLevel) {
+      LoggerService.instance.log(
+          "AI: ${crafter.name} skill too low for '$targetItemName'. Needs $requiredSkill $requiredLevel, has $characterLevel.",
+          level: LogLevel.warning
+      );
+      _teamProvider.setTask(crafter.name, CharacterTask.idle); // Stop task
+      return;
+    }
+
+
+
+    // final crafter = crafterState.character;
+    // final targetItem = _toolForSkill[GatheringSkill.mining]!;
+    // final targetItemSchema = _worldDataProvider.getItemByCode(targetItem);
+    //
+    // // Step 1: Does the item already exist in the bank?
+    // if (_bankProvider.hasItem(targetItem)) {
+    //   LoggerService.instance.log(
+    //       "AI: ${crafter.name} sees '$targetItem' is already in the bank. Standing by.");
+    //   return; // Do nothing, the item is already crafted.
+    // }
+    //
+    // // Step 2: Look up the recipe for the item.
+    // final CraftSchema? recipe = _worldDataProvider.getRecipeForItem(targetItem);
+    // if (recipe == null) {
+    //   LoggerService.instance.log("AI: ${crafter.name} has no recipe for '$targetItem'.", level: LogLevel.warning);
+    //   return;
+    // }
 
     // Step 3: Check if we have the required materials in the bank.
     bool hasAllMaterials = true;
@@ -330,7 +364,7 @@ class TeamAIService {
       final bankItem = _bankProvider.items.firstWhereOrNull((item) => item.code == material.code);
       if (bankItem == null || bankItem.quantity < material.quantity) {
         hasAllMaterials = false;
-        LoggerService.instance.log("AI: ${crafter.name} is waiting for materials for '$targetItem'. Missing: ${material.code}");
+        LoggerService.instance.log("AI: ${crafter.name} is waiting for materials for '$targetItemName'. Missing: ${material.code}");
         break; // Stop checking, we're missing something.
       }
     }
@@ -347,7 +381,7 @@ class TeamAIService {
     }
 
     // Step 5: If we have materials AND are at the right location, queue the full crafting sequence!
-    LoggerService.instance.log("AI: ${crafter.name} has materials and is at the forge. Starting crafting sequence for '$targetItem'.");
+    LoggerService.instance.log("AI: ${crafter.name} has materials and is at the forge. Starting crafting sequence for '$targetItemName'.");
 
     // a) Withdraw all necessary materials.
     for (final material in recipe.items ?? <SimpleItemSchema>[]) {
@@ -356,9 +390,9 @@ class TeamAIService {
     LoggerService.instance.log("AI: ${crafter.name} is moving to the '${recipe.station}'.");
     _teamProvider.queueAction(crafter.name, _actionFactory.createMoveAction(crafter.name, forgeLocation.x, forgeLocation.y));
     // b) Craft the item.
-    _teamProvider.queueAction(crafter.name, _actionFactory.createCraftAction(crafter.name, targetItemSchema!.simpleItem));
+    _teamProvider.queueAction(crafter.name, _actionFactory.createCraftAction(crafter.name, targetItemName));
     // c) Deposit the final product back into the bank.
-    _teamProvider.queueAction(crafter.name, _actionFactory.createBankAction(crafter.name, targetItemSchema.simpleItem));
+    _teamProvider.queueAction(crafter.name, _actionFactory.createBankAction(crafter.name, targetItemName));
   }
 
 

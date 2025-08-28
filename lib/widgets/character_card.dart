@@ -10,6 +10,7 @@ import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/character_task.dart';
 import 'package:artifacts_mmo/models/queued_action.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
+import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/widgets/character_details_page.dart';
 import 'package:artifacts_mmo/widgets/skill_progress_widget.dart';
 import 'package:flutter/material.dart';
@@ -149,6 +150,56 @@ class _CharacterCardState extends State<CharacterCard> {
           // Action Buttons
           _buildActionButtons(context, state),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCrafterControls(BuildContext context, CharacterState state) {
+    final teamProvider = context.read<TeamProvider>();
+    final worldData = context.read<WorldDataProvider>();
+    final character = state.character;
+    final characterName = character.name;
+
+    // Get all craftable items and sort them alphabetically.
+    final allRecipesKeys = worldData.allRecipeMap.keys.toList()..sort((a, b) => a.compareTo(b));
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: DropdownButtonFormField<String>(
+        value: state.designatedCraftingItem?.code,
+        hint: const Text("Set Crafting Task..."),
+        isExpanded: true,
+        decoration: const InputDecoration(
+          labelText: "Crafting Task",
+          isDense: true,
+        ),
+        // Build the list of dropdown items.
+        items: allRecipesKeys.map((itemCode) {
+          final recipe = worldData.getRecipeForItem(itemCode)!;
+          final item = worldData.getItemByCode(itemCode);
+          final requiredSkill = recipe.skill;
+          final requiredLevel = recipe.level ?? 1;
+          final characterLevel = character.skills[requiredSkill]?.level ?? 1;
+
+          // Check if the character can craft this item.
+          final bool canCraft = characterLevel >= requiredLevel;
+
+          return DropdownMenuItem(
+            value: itemCode,
+            // Disable the item in the dropdown if the level is too low.
+            enabled: canCraft,
+            child: Text(
+              "${item?.name} (Lvl $requiredLevel $requiredSkill)",
+              // Style the text to be gray if disabled.
+              style: TextStyle(
+                color: canCraft ? Colors.white : Colors.grey.shade600,
+              ),
+            ),
+          );
+        }).toList(),
+        onChanged: (String? newItemToCraft) {
+          teamProvider.setCraftingTask(characterName, newItemToCraft);
+        },
       ),
     );
   }
@@ -296,6 +347,10 @@ class _CharacterCardState extends State<CharacterCard> {
             ),
           ],
         ),
+        if (state.role == CharacterRole.crafter) ...[
+        const SizedBox(height: 8),
+          _buildCrafterControls(context, state),
+        ],
         const SizedBox(height: 8),
         // --- Manual Action Buttons ---
         Wrap(
