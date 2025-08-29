@@ -1,13 +1,10 @@
-// lib/providers/map_provider.dart
-
-import 'package:artifacts_mmo/models/location_schema.dart';
+import 'package:artifacts_mmo/models/world_map.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
+import 'package:artifacts_mmo/services/api_client.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:artifacts_api/artifacts_api.dart';
-import '../services/api_client.dart';
-import '../models/world_map.dart'; // Import our new model
 
 class MapProvider with ChangeNotifier {
   final ApiClient _apiClient;
@@ -67,7 +64,7 @@ class MapProvider with ChangeNotifier {
   }
 
   DestinationSchema? findNearestTile(
-      LocationSchema currentLocation, bool Function(MapSchema) predicate) {
+      DestinationSchema currentLocation, bool Function(MapSchema) predicate) {
     final tiles = worldMap?.tiles ?? [];
     DestinationSchema? nearest;
     num minDistance = double.infinity;

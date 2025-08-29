@@ -1,15 +1,28 @@
+import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
+import 'package:artifacts_mmo/extensions/inventory_extension.dart';
+import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
+import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
+import 'package:collection/collection.dart';
+import 'package:built_collection/built_collection.dart';
 
 class FulfillTeamRequestGoal extends AIGoal {
+  @override
+  int get priority => 70;
+
+  @override
+  String get name => 'Fulfill Request';
+
   @override
   bool canRun(
       CharacterState state,
@@ -22,7 +35,7 @@ class FulfillTeamRequestGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
-    return false;
+    return teamBrainProvider.openRequests.any((request) => (state.character.inventory?.count(request.itemName) ?? 0) >= request.quantity);
   }
 
   @override
@@ -37,12 +50,12 @@ class FulfillTeamRequestGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
-    // TODO: implement execute
+    final request = teamBrainProvider.openRequests.firstWhereOrNull((request) => (state.character.inventory?.count(request.itemName) ?? 0) >= request.quantity);
+    if (request == null) {
+      LoggerService.instance.log("AI: ${state.character.name} can't find a request to fulfill.", level: LogLevel.warning);
+      return;
+    }
+
+    teamProvider.queueBankDeposit(state.character, BuiltList.of([(SimpleItemSchemaBuilder()..code = request.itemName..quantity = request.quantity).build()]));
   }
-
-  @override
-  int get priority => 90;
-
-  @override
-  String get name => 'Fulfill Request';
 }

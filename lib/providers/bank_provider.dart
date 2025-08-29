@@ -62,7 +62,15 @@ class BankProvider with ChangeNotifier {
     }
   }
 
+  int count(String itemCode) {
+    return _items.fold(0, (count, item) => item.code == itemCode ? item.quantity + count : count);
+  }
+
+  bool hasItems(SimpleItemSchema items) {
+    return count(items.code) >= items.quantity;
+  }
+
   bool hasItem(String itemCode) {
-    return _items.any((item) => item.code == itemCode);
+    return count(itemCode) > 0;
   }
 }

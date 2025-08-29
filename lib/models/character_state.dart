@@ -3,7 +3,6 @@
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/models/character_role.dart';
 import 'package:artifacts_mmo/models/character_task.dart';
-import 'package:artifacts_mmo/models/location_schema.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/material.dart';
 import 'package:artifacts_api/artifacts_api.dart'; // Your generated models
@@ -18,7 +17,6 @@ class CharacterState with ChangeNotifier {
   bool needsHauling = false; // Flag to signal for help
   GatheringSkill? designatedGatheringSkill;
   SimpleItemSchema? designatedCraftingItem;
-  LocationSchema? taskGiverLocation;
   String currentGoal = 'Idle'; // Default goal
 
   CharacterState({required this.character, this.lastAction = 'Idle'});
@@ -117,5 +115,9 @@ class CharacterState with ChangeNotifier {
   // You may need to adjust the field names (e.g., character.inventory.length).
   bool get isInventoryFull {
     return character.inventoryCount >= character.inventoryMaxItems;
+  }
+
+  bool get isInventoryNearlyFull {
+    return character.inventoryCount >= character.inventoryMaxItems * 0.8;
   }
 }

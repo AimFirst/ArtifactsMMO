@@ -110,15 +110,26 @@ class ActionFactory {
                     .build()));
   }
 
-  QueuedAction createBankAction(String characterName, BuiltList<SimpleItemSchema> items) {
+  QueuedAction createBankWithdrawAction(String characterName, BuiltList<SimpleItemSchema> items) {
     return QueuedAction(
         actionName: 'Deposit $items',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
-                .actionDepositBankItemMyNameActionBankDepositItemPost(
+                .actionWithdrawBankItemMyNameActionBankWithdrawItemPost(
               name: characterName,
               simpleItemSchema:items,
             ));
+  }
+
+  QueuedAction createBankDepositAction(String characterName, BuiltList<SimpleItemSchema> items) {
+    return QueuedAction(
+        actionName: 'Deposit $items',
+        // Use the correct generated API call
+        apiCall: () => _apiClient.myCharacters
+            .actionDepositBankItemMyNameActionBankDepositItemPost(
+          name: characterName,
+          simpleItemSchema:items,
+        ));
   }
 
   QueuedAction createRestAction(String characterName) {

@@ -66,7 +66,7 @@ class HaulerStrategy implements AIStrategy {
                 .build());
         if (items != null && items.isNotEmpty) {
           teamProvider.queueAction(hauler.name,
-              actionFactory.createBankAction(hauler.name, BuiltList.of(items)));
+              actionFactory.createBankWithdrawAction(hauler.name, BuiltList.of(items)));
         } else {
           LoggerService.instance
               .log("AI: ${hauler.name} has no items to bank.");

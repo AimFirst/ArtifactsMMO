@@ -1,10 +1,12 @@
+import 'dart:math';
+
 import 'package:artifacts_api/artifacts_api.dart';
-import 'package:artifacts_mmo/ai/fighter_strategy.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
+import 'package:artifacts_mmo/extensions/inventory_extension.dart';
+import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
-import 'package:artifacts_mmo/models/location_schema.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
@@ -14,11 +16,19 @@ import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
-import 'package:collection/collection.dart';
+import 'package:built_collection/built_collection.dart';
 
 class CompleteServerTaskGoal extends AIGoal {
   static const taskTypeItems = 'items';
   static const taskTypeMonsters = 'monsters';
+
+  final _random = Random();
+
+  @override
+  int get priority => 80;
+
+  @override
+  String get name => 'Server Task';
 
   @override
   bool canRun(
@@ -33,12 +43,33 @@ class CompleteServerTaskGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) {
-    return
-        // no task yet, can accept new one
-        state.character.task.isEmpty
-            // task is complete, can turn it in
-            ||
-            _taskDone(state);
+    // no task yet, can accept a new one
+    if (state.character.task.isEmpty) {
+      return true;
+    }
+
+    // task is complete, can turn it in
+    if (_taskDone(state)) {
+      return true;
+    }
+
+    // Combat task, see if we can make progress.
+    if (state.character.taskType == taskTypeMonsters) {
+      final monster = worldDataProvider.getMonsterByCode(state.character.task);
+      if (monster != null) {
+        return combatService.canWinFight(state.character, monster);
+      }
+    }
+
+    // Item task, see if we've requested the items.
+    if (state.character.taskType == taskTypeItems) {
+      if (!teamBrainProvider.openRequests.any(
+          (request) => request.key == _buildBrainRequestKey(state.character))) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @override
@@ -72,7 +103,8 @@ class CompleteServerTaskGoal extends AIGoal {
 
     // --- State 3: TASK IN PROGRESS ---
     // Otherwise, our goal is to work on the current task.
-    _workOnTask(state, actionFactory, mapProvider, teamProvider, teamBrainProvider);
+    _workOnTask(state, actionFactory, mapProvider, teamProvider,
+        teamBrainProvider, bankProvider, aiService);
   }
 
   void _getNewTask(
@@ -83,8 +115,8 @@ class CompleteServerTaskGoal extends AIGoal {
       ActionFactory actionFactory) {
     final character = state.character;
     // Find the nearest task master
-    final taskMaster = mapProvider.findNearestTile(
-        character.location, (t) => t.content?.type == 'tasks_master');
+    final taskMaster = _findTaskMaster(state, mapProvider);
+
     if (taskMaster == null) {
       LoggerService.instance.log(
           "AI: ${character.name} can't find a task master.",
@@ -92,21 +124,12 @@ class CompleteServerTaskGoal extends AIGoal {
       return;
     }
 
-    final taskMasterLocation = LocationSchema(x: taskMaster.x, y: taskMaster.y);
-    if (character.location.x != taskMasterLocation.x ||
-        character.location.y != taskMasterLocation.y) {
-      LoggerService.instance.log(
-          "AI: ${character.name} moving to Task Master at $taskMasterLocation.");
-      teamProvider.queueAction(
-          character.name,
-          actionFactory.createMoveAction(
-              character.name, taskMasterLocation.x, taskMasterLocation.y));
-    }
+    teamProvider.queueMoveTo(character, taskMaster);
+
     LoggerService.instance.log(
         "AI: ${character.name} is at/on way to Task Master, accepting new task.");
     final acceptAction = actionFactory.createAcceptTaskAction(character.name);
     teamProvider.queueAction(character.name, acceptAction);
-    state.taskGiverLocation = taskMasterLocation;
   }
 
   void _turnInTask(
@@ -125,15 +148,8 @@ class CompleteServerTaskGoal extends AIGoal {
       return;
     }
 
-    if (character.location.x != turnInLocation.x ||
-        character.location.y != turnInLocation.y) {
-      LoggerService.instance.log(
-          "AI: ${character.name} moving to turn in task at $turnInLocation.");
-      teamProvider.queueAction(
-          character.name,
-          actionFactory.createMoveAction(
-              character.name, turnInLocation.x, turnInLocation.y));
-    }
+    teamProvider.queueMoveTo(character, turnInLocation);
+
     LoggerService.instance.log(
         "AI: ${character.name} turning in completed task: ${character.task}.");
     final completeAction =
@@ -146,34 +162,59 @@ class CompleteServerTaskGoal extends AIGoal {
       ActionFactory actionFactory,
       MapProvider mapProvider,
       TeamProvider teamProvider,
-      TeamBrainProvider teamBrainProvider) {
+      TeamBrainProvider teamBrainProvider,
+      BankProvider bankProvider,
+      TeamAIService aiService) {
     final character = state.character;
 
     switch (character.taskType) {
       case 'monsters':
         // Find and fight the specific monster required by the task
         final targetMonsterCode = character.task;
-        FighterStrategy().updateFighterAi(
-          state,
-          actionFactory,
-          mapProvider,
-          teamProvider,
-          (character, tile) => tile.content?.code == targetMonsterCode,
-        );
+
+        // Find the closest
+        final monsterLocation = mapProvider.findNearestTile(
+            character.location,
+            (t) =>
+                t.content?.type == MapContentType.monster &&
+                t.content?.code == targetMonsterCode);
+        if (monsterLocation == null) {
+          LoggerService.instance.log(
+              "AI: ${character.name} can't find a monster to fight!",
+              level: LogLevel.error);
+          return;
+        }
+
+        // Move to him and fight!
+        teamProvider.queueMoveTo(character, monsterLocation);
+        teamProvider.queueAction(
+            character.name, actionFactory.createFightAction(character.name));
         break;
       case 'items':
         final targetItemName = character.task;
         final targetQuantity = character.taskTotal;
 
         // How many items do we have
-        final itemInInventory = character.inventory
-            ?.firstWhereOrNull((item) => item.code == targetItemName);
+        final currentQuantity = character.inventory?.count(targetItemName) ?? 0;
+        final remainingQuantity = targetQuantity - currentQuantity;
 
-        final currentQuantity = itemInInventory?.quantity ?? 0;
+        // If we have the right amount in the bank, go fetch it.
+        final inBank = bankProvider.count(targetItemName);
+        if (inBank >= remainingQuantity) {
+          final remainingItemSchema = (SimpleItemSchemaBuilder()
+                ..code = targetItemName
+                ..quantity = remainingQuantity)
+              .build();
+          teamProvider.queueBankWithdraw(
+              character, BuiltList.of([remainingItemSchema]));
+          _turnInTask(
+              state, mapProvider, aiService, actionFactory, teamProvider);
+          return;
+        }
 
         // We don't have the items. Post a request to the Team Brain.
-        teamBrainProvider.postRequest(
-            ItemRequest('Task: ${character.task}', targetItemName, targetQuantity-currentQuantity, character.name));
+        teamBrainProvider.postRequest(ItemRequest('Task: ${character.task}',
+            targetItemName, remainingQuantity - inBank, character.name));
         LoggerService.instance.log(
             "AI: ${character.name} needs '$targetItemName', posted request to team.");
 
@@ -181,13 +222,20 @@ class CompleteServerTaskGoal extends AIGoal {
     }
   }
 
+  String _buildBrainRequestKey(CharacterSchema character) {
+    return '${character.name}:task:${character.task}';
+  }
+
   DestinationSchema? _findTaskMaster(
       CharacterState state, MapProvider mapProvider) {
+    final code = state.character.taskType.isEmpty
+        ? (_random.nextBool() ? taskTypeMonsters : taskTypeItems)
+        : state.character.taskType;
     return mapProvider.findNearestTile(
         state.character.location,
         (t) =>
             t.content?.type == MapContentType.tasksMaster &&
-            t.content?.code == state.character.taskType);
+            t.content?.code == code);
   }
 
   bool _taskDone(CharacterState state) {
@@ -198,20 +246,10 @@ class CompleteServerTaskGoal extends AIGoal {
       final targetQuantity = character.taskTotal;
 
       // Check if we have enough items already
-      final itemInInventory = character.inventory
-          ?.firstWhereOrNull((item) => item.code == targetItemName);
-      if (itemInInventory != null &&
-          itemInInventory.quantity >= targetQuantity) {
-        hasItems = true;
-      }
+      final countInInventory = character.inventory?.count(targetItemName) ?? 0;
+      hasItems = countInInventory >= targetQuantity;
     }
     return state.character.taskProgress >= state.character.taskTotal ||
         hasItems;
   }
-
-  @override
-  int get priority => 90;
-
-  @override
-  String get name => 'Server Task';
 }

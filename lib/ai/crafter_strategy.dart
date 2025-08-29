@@ -112,7 +112,7 @@ class CrafterStrategy implements AIStrategy {
     // c) Deposit the final product back into the bank.
     teamProvider.queueAction(
         crafter.name,
-        actionFactory.createBankAction(
+        actionFactory.createBankWithdrawAction(
             crafter.name, BuiltList.of([targetItemName])));
   }
 }

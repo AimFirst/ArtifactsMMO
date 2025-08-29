@@ -1,10 +1,9 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/element_enum.dart';
-import 'package:artifacts_mmo/models/location_schema.dart';
 import 'package:artifacts_mmo/models/skill_level.dart';
 
 extension CharacterExtensions on CharacterSchema {
-  LocationSchema get location => LocationSchema(x: x, y: y);
+  DestinationSchema get location => (DestinationSchemaBuilder()..x = x..y = y).build();
   int get inventoryCount => inventory?.fold(0, (sum, item) => ((sum ?? 0) + item.quantity)) ?? 0;
 
   Map<GatheringSkill, SkillLevel> get gatheringSkills => {

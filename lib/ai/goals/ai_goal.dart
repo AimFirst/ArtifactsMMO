@@ -6,6 +6,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
 abstract class AIGoal {
@@ -49,5 +50,8 @@ abstract class AIGoal {
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates,) {
     state.setCurrentGoal(name);
+    LoggerService.instance
+        .log("GOAL: ${state.character.name} is executing $name");
+    execute(state, aiService, combatService, worldDataProvider, actionFactory, mapProvider, teamProvider, bankProvider, teamBrainProvider, characterStates);
   }
 }

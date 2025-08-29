@@ -5,7 +5,7 @@ import 'package:artifacts_mmo/ai/crafter_strategy.dart';
 import 'package:artifacts_mmo/ai/fighter_strategy.dart';
 import 'package:artifacts_mmo/ai/gatherer_strategy.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
-import 'package:artifacts_mmo/ai/goals/bank_items_goal.dart';
+import 'package:artifacts_mmo/ai/goals/clear_inventory_goal.dart';
 import 'package:artifacts_mmo/ai/goals/complete_server_task_goal.dart';
 import 'package:artifacts_mmo/ai/goals/fulfill_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/idle_goal.dart';
@@ -52,7 +52,7 @@ class TeamAIService {
 
     // Initialize all possible goals.
     _goals.addAll([
-      BankItemsGoal(),
+      ClearInventoryGoal(),
       CompleteServerTaskGoal(),
       FulfillTeamRequestGoal(),
       UpgradeGearGoal(),
@@ -69,6 +69,11 @@ class TeamAIService {
   // This is the main entry point for the AI update cycle.
   void updateAI(List<CharacterState> characterStates) {
     for (final state in characterStates) {
+      // Ignore characters who are currently active.
+      if (state.isPerformingAction || state.isOnCooldown) {
+        continue;
+      }
+
       // Find the highest-priority goal that can be run.
       for (final goal in _goals) {
         if (goal.canRun(
@@ -96,7 +101,7 @@ class TeamAIService {
             _teamBrainProvider,
             characterStates,
           );
-          return;
+          break;
         }
       }
       // If no goals can be run, the character will implicitly remain idle.
