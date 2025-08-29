@@ -148,9 +148,9 @@ class _CharacterCardState extends State<CharacterCard> {
           const SizedBox(height: 8),
           // Last Action & Cooldown
           _buildActionStatus(state),
-          const SizedBox(height: 16),
-          // Action Buttons
-          _buildActionButtons(context, state),
+          const SizedBox(height: 8),
+          _buildCurrentGoalStatus(state),
+          const SizedBox(height: 16)
         ],
       ),
     );
@@ -183,56 +183,6 @@ class _CharacterCardState extends State<CharacterCard> {
             style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCrafterControls(BuildContext context, CharacterState state) {
-    final teamProvider = context.read<TeamProvider>();
-    final worldData = context.read<WorldDataProvider>();
-    final character = state.character;
-    final characterName = character.name;
-
-    // Get all craftable items and sort them alphabetically.
-    final allRecipesKeys = worldData.allRecipeMap.keys.toList()..sort((a, b) => a.compareTo(b));
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: DropdownButtonFormField<String>(
-        value: state.designatedCraftingItem?.code,
-        hint: const Text("Set Crafting Task..."),
-        isExpanded: true,
-        decoration: const InputDecoration(
-          labelText: "Crafting Task",
-          isDense: true,
-        ),
-        // Build the list of dropdown items.
-        items: allRecipesKeys.map((itemCode) {
-          final recipe = worldData.getRecipeForItem(itemCode)!;
-          final item = worldData.getItemByCode(itemCode);
-          final requiredSkill = recipe.skill;
-          final requiredLevel = recipe.level ?? 1;
-          final characterLevel = character.skills[requiredSkill]?.level ?? 1;
-
-          // Check if the character can craft this item.
-          final bool canCraft = characterLevel >= requiredLevel;
-
-          return DropdownMenuItem(
-            value: itemCode,
-            // Disable the item in the dropdown if the level is too low.
-            enabled: canCraft,
-            child: Text(
-              "${item?.name} (Lvl $requiredLevel $requiredSkill)",
-              // Style the text to be gray if disabled.
-              style: TextStyle(
-                color: canCraft ? Colors.white : Colors.grey.shade600,
-              ),
-            ),
-          );
-        }).toList(),
-        onChanged: (String? newItemToCraft) {
-          teamProvider.setCraftingTask(characterName, newItemToCraft);
-        },
       ),
     );
   }
@@ -279,6 +229,46 @@ class _CharacterCardState extends State<CharacterCard> {
     }
   }
 
+  // Then, add this new method to your CharacterCard's state:
+  Widget _buildCurrentGoalStatus(CharacterState state) {
+    IconData goalIcon = Icons.pause_circle_outline; // Default for Idle
+    Color iconColor = Colors.grey;
+
+    // Choose an icon based on the current goal string
+    switch (state.currentGoal) {
+      case "Banking Full Inventory":
+        goalIcon = Icons.savings;
+        iconColor = Colors.amber;
+        break;
+      case "Completing Server Task":
+        goalIcon = Icons.assignment;
+        iconColor = Colors.lightBlueAccent;
+        break;
+      case "Upgrading Gear":
+        goalIcon = Icons.upgrade;
+        iconColor = Colors.purpleAccent;
+        break;
+      case "Leveling Up Skill":
+        goalIcon = Icons.trending_up;
+        iconColor = Colors.greenAccent;
+        break;
+    // Add more cases for your other goals
+    }
+
+    return SizedBox.shrink(
+      child: Row(
+        children: [
+          Icon(goalIcon, color: iconColor, size: 16),
+          const SizedBox(width: 8),Text(
+              state.currentGoal,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildActionStatus(CharacterState state) {
     if (state.isPerformingAction) {
       return Row(children: [
@@ -306,122 +296,5 @@ class _CharacterCardState extends State<CharacterCard> {
       const SizedBox(width: 8),
       Text(state.lastAction)
     ]);
-  }
-
-  Widget _buildActionButtons(BuildContext context, CharacterState state) {
-    final teamProvider = context.read<TeamProvider>();
-    final characterName = state.character.name;
-    final queue = teamProvider.getQueueFor(characterName);
-    final random = Random(); // Create a single Random instance
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // --- Task Assignment Dropdown ---
-        Row(
-          children: [
-            const Text('Task: ', style: TextStyle(fontWeight: FontWeight.bold)),
-            DropdownButton<CharacterTask>(
-              value: state.currentTask,
-              items: CharacterTask.values.map((task) {
-                return DropdownMenuItem(
-                  value: task,
-                  child: Text(task.toString().split('.').last), // e.g., "mineEndlessly"
-                );
-              }).toList(),
-              onChanged: (CharacterTask? newTask) {
-                if (newTask != null) {
-                  teamProvider.setTask(characterName, newTask);
-                }
-              },
-            ),
-            if (state.currentTask == CharacterTask.gatherEndlessly) ...[
-            const Text('Job: ', style: TextStyle(fontWeight: FontWeight.bold)),
-            DropdownButton<GatheringSkill?>(
-              // The value is the character's currently assigned skill
-              value: state.currentTask == CharacterTask.gatherEndlessly
-                  ? state.designatedGatheringSkill
-                  : null,
-              hint: const Text("Idle"), // Show 'Idle' when no skill is selected
-              // Create a list of all gathering skills, plus a null option for 'Idle'
-              items: [
-                const DropdownMenuItem(value: null, child: Text("Idle")),
-                ...GatheringSkill.values.map((skill) {
-                  return DropdownMenuItem(
-                    value: skill,
-                    child: Text(skill.name), // e.g., "mining"
-                  );
-                }),
-              ],
-              onChanged: (GatheringSkill? newSkill) {
-                // Call the new method in the provider to set the task
-                teamProvider.setGatheringTask(characterName, newSkill);
-              },
-            ),],
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            const Text('Role: ', style: TextStyle(fontWeight: FontWeight.bold)),
-            DropdownButton<CharacterRole>(
-              value: state.role,
-              items: CharacterRole.values.map((role) {
-                return DropdownMenuItem(
-                  value: role,
-                  child: Text(role.toString().split('.').last),
-                );
-              }).toList(),
-              onChanged: (CharacterRole? newRole) {
-                if (newRole != null) {
-                  teamProvider.setRole(characterName, newRole);
-                }
-              },
-            ),
-          ],
-        ),
-        if (state.role == CharacterRole.crafter) ...[
-        const SizedBox(height: 8),
-          _buildCrafterControls(context, state),
-        ],
-        const SizedBox(height: 8),
-        // --- Manual Action Buttons ---
-        Wrap(
-          spacing: 8.0,
-          children: [
-            ElevatedButton(
-              child: const Text('Queue Random Move'),
-              onPressed: () {
-                final int randomX = random.nextInt(6);
-                final int randomY = random.nextInt(6);
-                teamProvider.queueAction(
-                  characterName,
-                  QueuedAction(
-                    actionName: 'Move to ($randomX, $randomY)',
-                    apiCall: () => teamProvider.apiClient.myCharacters
-                        .actionMoveMyNameActionMovePost(
-                      name: characterName,
-                      destinationSchema: (DestinationSchemaBuilder()
-                        ..setCoords(randomX, randomY))
-                          .build(),
-                    ),
-                  ),
-                );
-              },
-            ),
-            // The manual "Queue Mine" button is now replaced by the task dropdown.
-          ],
-        ),
-        // Clear Queue Button
-        if (queue.isNotEmpty)
-          TextButton.icon(
-            icon: const Icon(Icons.clear_all, size: 16),
-            label: const Text('Clear Queue'),
-            onPressed: () => teamProvider.clearQueue(characterName),
-            style: TextButton.styleFrom(
-                foregroundColor: Colors.redAccent, padding: EdgeInsets.zero),
-          )
-      ],
-    );
   }
 }

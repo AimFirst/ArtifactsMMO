@@ -19,6 +19,7 @@ class CharacterState with ChangeNotifier {
   GatheringSkill? designatedGatheringSkill;
   SimpleItemSchema? designatedCraftingItem;
   LocationSchema? taskGiverLocation;
+  String currentGoal = 'Idle'; // Default goal
 
   CharacterState({required this.character, this.lastAction = 'Idle'});
 
@@ -30,6 +31,13 @@ class CharacterState with ChangeNotifier {
   void updateCharacter(CharacterSchema newCharacterData) {
     character = newCharacterData;
     notifyListeners();
+  }
+
+  void setCurrentGoal(String goalName) {
+    if (currentGoal != goalName) {
+      currentGoal = goalName;
+      notifyListeners();
+    }
   }
 
   // A new method to assign a crafting task

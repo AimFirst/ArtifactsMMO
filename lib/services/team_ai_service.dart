@@ -4,6 +4,13 @@ import 'package:artifacts_mmo/ai/ai_strategy.dart';
 import 'package:artifacts_mmo/ai/crafter_strategy.dart';
 import 'package:artifacts_mmo/ai/fighter_strategy.dart';
 import 'package:artifacts_mmo/ai/gatherer_strategy.dart';
+import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
+import 'package:artifacts_mmo/ai/goals/bank_items_goal.dart';
+import 'package:artifacts_mmo/ai/goals/complete_server_task_goal.dart';
+import 'package:artifacts_mmo/ai/goals/fulfill_team_request_goal.dart';
+import 'package:artifacts_mmo/ai/goals/idle_goal.dart';
+import 'package:artifacts_mmo/ai/goals/level_up_skill.dart';
+import 'package:artifacts_mmo/ai/goals/upgrade_gear_goal.dart';
 import 'package:artifacts_mmo/ai/hauler_strategy.dart';
 import 'package:artifacts_mmo/ai/idle_strategy.dart';
 import 'package:artifacts_mmo/ai/tasking_strategy.dart';
@@ -18,6 +25,7 @@ import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/logger_service.dart';
 
 // This is our "Brain". It's not a provider and has no UI logic.
 class TeamAIService {
@@ -29,18 +37,8 @@ class TeamAIService {
   final MapProvider _mapProvider;
   final CombatService _combatService;
   final TeamBrainProvider _teamBrainProvider;
+  final List<AIGoal> _goals = [];
   late ActionFactory _actionFactory;
-
-  // A map to hold our strategy objects.
-  final Map<CharacterRole, AIStrategy> _roleStrategies = {
-    CharacterRole.gatherer: GathererStrategy(),
-    CharacterRole.hauler: HaulerStrategy(),
-    CharacterRole.crafter: CrafterStrategy(),
-    CharacterRole.fighter: FighterStrategy(),
-  };
-  final AIStrategy _taskingStrategy = TaskingStrategy();
-  final AIStrategy _idleStrategy =
-      IdleStrategy(); // A strategy that does nothing.
 
   TeamAIService(
       this._apiClient,
@@ -51,18 +49,29 @@ class TeamAIService {
       this._combatService,
       this._teamBrainProvider) {
     _actionFactory = ActionFactory(_apiClient);
+
+    // Initialize all possible goals.
+    _goals.addAll([
+      BankItemsGoal(),
+      CompleteServerTaskGoal(),
+      FulfillTeamRequestGoal(),
+      UpgradeGearGoal(),
+      LevelUpSkillGoal(),
+      IdleGoal(),
+    ]);
+
+    // Sort them once by priority, descending.
+    _goals.sort((a, b) => b.priority.compareTo(a.priority));
+    LoggerService.instance
+        .log("AI Goal engine initialized with ${_goals.length} goals.");
   }
 
   // This is the main entry point for the AI update cycle.
   void updateAI(List<CharacterState> characterStates) {
     for (final state in characterStates) {
-      final character = state.character;
-      final bool isReady = !state.isPerformingAction && !state.isOnCooldown;
-      final queue = _teamProvider.getQueueFor(character.name);
-
-      if (!isReady || queue.isNotEmpty) continue;
-
-      _getStrategyFor(state).update(
+      // Find the highest-priority goal that can be run.
+      for (final goal in _goals) {
+        if (goal.canRun(
           state,
           this,
           _combatService,
@@ -72,16 +81,25 @@ class TeamAIService {
           _teamProvider,
           _bankProvider,
           _teamBrainProvider,
-          characterStates);
+          characterStates,
+        )) {
+          // Execute it and immediately stop processing for this character.
+          goal.executeWrapper(
+            state,
+            this,
+            _combatService,
+            _worldDataProvider,
+            _actionFactory,
+            _mapProvider,
+            _teamProvider,
+            _bankProvider,
+            _teamBrainProvider,
+            characterStates,
+          );
+          return;
+        }
+      }
+      // If no goals can be run, the character will implicitly remain idle.
     }
-  }
-
-  AIStrategy _getStrategyFor(CharacterState state) {
-    // Meta-tasks take top priority.
-    if (state.currentTask == CharacterTask.completeServerTask) {
-      return _taskingStrategy;
-    }
-    // Otherwise, use the strategy for the character's role.
-    return _roleStrategies[state.role] ?? _idleStrategy;
   }
 }

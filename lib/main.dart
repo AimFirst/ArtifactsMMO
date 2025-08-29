@@ -36,6 +36,9 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => BankProvider(apiClient),
         ),
+        ChangeNotifierProvider(
+          create: (context) => TeamBrainProvider(),
+        ),
         // TeamProvider will now depend on both MapProvider and WorldDataProvider
         ChangeNotifierProxyProvider4<MapProvider, WorldDataProvider,
             BankProvider, TeamBrainProvider, TeamProvider>(

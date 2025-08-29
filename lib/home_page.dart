@@ -2,6 +2,7 @@
 
 import 'package:artifacts_mmo/widgets/log_panel.dart';
 import 'package:artifacts_mmo/widgets/map_view.dart';
+import 'package:artifacts_mmo/widgets/team_brain_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/team_provider.dart';
@@ -22,13 +23,15 @@ class HomePage extends StatelessWidget {
                 Expanded(
                   child: Consumer<TeamProvider>(
                     builder: (context, teamProvider, child) {
-                      if (teamProvider.isLoading && teamProvider.characters.isEmpty) {
+                      if (teamProvider.isLoading &&
+                          teamProvider.characters.isEmpty) {
                         return const Center(child: CircularProgressIndicator());
                       }
 
                       if (teamProvider.characters.isEmpty) {
                         return const Center(
-                          child: Text('No characters found or an error occurred.'),
+                          child:
+                              Text('No characters found or an error occurred.'),
                         );
                       }
 
@@ -49,24 +52,34 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          const VerticalDivider(width: 1,),
-          // --- Map and Log Panel ---
+          const VerticalDivider(
+            width: 1,
+          ),
+          // --- Map and Bottom Panels (right side) ---
           Expanded(
-            flex: 3, // Give this panel 3/5 of the screen width
+            flex: 3,
             child: Column(
               children: [
                 const Expanded(
-                  flex: 3,
-                  child: MapView(), // The new map widget
+                  flex: 3, // Map takes the top portion
+                  child: MapView(),
                 ),
                 const Divider(height: 1),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Logs", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-                const Expanded(
-                  flex: 2,
-                  child: LogPanel(), // Your existing log panel
+                Expanded(
+                  flex: 2, // The bottom portion is now a Row
+                  child: Row(
+                    children: [
+                      // Team Brain Panel on the left of the bottom row
+                      const Expanded(
+                        child: TeamBrainPanel(),
+                      ),
+                      const VerticalDivider(width: 1),
+                      // Log Panel on the right of the bottom row
+                      const Expanded(
+                        child: LogPanel(),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
