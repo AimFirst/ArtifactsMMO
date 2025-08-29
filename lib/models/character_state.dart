@@ -1,5 +1,3 @@
-// lib/models/character_state.dart
-
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/models/character_role.dart';
 import 'package:artifacts_mmo/models/character_task.dart';
@@ -45,7 +43,10 @@ class CharacterState with ChangeNotifier {
       designatedCraftingItem = null;
     } else {
       currentTask = CharacterTask.craftEndlessly;
-      designatedCraftingItem = (SimpleItemSchemaBuilder()..code = itemName..quantity = 1).build();
+      designatedCraftingItem = (SimpleItemSchemaBuilder()
+            ..code = itemName
+            ..quantity = 1)
+          .build();
     }
     print("${character.name} task set to: Craft '$designatedCraftingItem'");
     notifyListeners();
@@ -61,7 +62,8 @@ class CharacterState with ChangeNotifier {
       currentTask = CharacterTask.gatherEndlessly;
       designatedGatheringSkill = skill;
     }
-    print("${character.name} task set to: $currentTask with skill $designatedGatheringSkill");
+    print(
+        "${character.name} task set to: $currentTask with skill $designatedGatheringSkill");
     notifyListeners();
   }
 
@@ -73,7 +75,8 @@ class CharacterState with ChangeNotifier {
   }
 
   // Called after a successful API call
-  void setActionComplete(CharacterSchema newCharacterData, CooldownSchema cooldownData) {
+  void setActionComplete(
+      CharacterSchema newCharacterData, CooldownSchema cooldownData) {
     character = newCharacterData;
     isPerformingAction = false;
     lastAction = '${lastAction.replaceAll('...', '')} - Success';

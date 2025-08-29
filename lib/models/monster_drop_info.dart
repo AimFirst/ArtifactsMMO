@@ -5,5 +5,4 @@ class MonsterDropInfo {
   final DropRateSchema drop;
 
   MonsterDropInfo(this.monsterCode, this.drop);
-
 }

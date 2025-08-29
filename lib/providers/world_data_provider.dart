@@ -1,5 +1,3 @@
-// lib/providers/world_data_provider.dart
-
 import 'package:artifacts_mmo/models/monster_drop_info.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
@@ -26,6 +24,7 @@ class WorldDataProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   List<CraftSchema> get allRecipes => _recipes;
+
   Map<String, CraftSchema> get allRecipeMap => _recipeMap;
 
   WorldDataProvider(this._apiClient) {

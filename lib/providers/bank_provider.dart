@@ -1,18 +1,18 @@
-// lib/providers/bank_provider.dart
-
 import 'package:artifacts_mmo/providers/log_provider.dart';
+import 'package:artifacts_mmo/services/api_client.dart';
+import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:artifacts_api/artifacts_api.dart';
-import '../services/api_client.dart';
-import '../services/logger_service.dart';
 
 class BankProvider with ChangeNotifier {
   final ApiClient _apiClient;
 
   List<SimpleItemSchema> _items = [];
+
   List<SimpleItemSchema> get items => _items;
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   BankProvider(this._apiClient) {
@@ -30,10 +30,12 @@ class BankProvider with ChangeNotifier {
 
     try {
       do {
-        LoggerService.instance.log('🏦 Fetching bank inventory, page $currentPage of $totalPages...');
+        LoggerService.instance.log(
+            '🏦 Fetching bank inventory, page $currentPage of $totalPages...');
 
         // Make the paginated API call.
-        final response = await _apiClient.myAccount.getBankItemsMyBankItemsGet(page: currentPage);
+        final response = await _apiClient.myAccount
+            .getBankItemsMyBankItemsGet(page: currentPage);
 
         if (response.statusCode == 200 && response.data != null) {
           final pageData = response.data!;
@@ -47,15 +49,18 @@ class BankProvider with ChangeNotifier {
           // Prepare for the next iteration.
           currentPage++;
         } else {
-          throw Exception('Failed to load bank inventory page ${currentPage - 1} with status ${response.statusCode}');
+          throw Exception(
+              'Failed to load bank inventory page ${currentPage - 1} with status ${response.statusCode}');
         }
-      } while (currentPage <= totalPages); // Continue until all pages are fetched.
+      } while (
+          currentPage <= totalPages); // Continue until all pages are fetched.
 
       _items = allItems;
-      LoggerService.instance.log('🏦 Bank inventory updated. Found ${_items.length} total item stacks.');
-
+      LoggerService.instance.log(
+          '🏦 Bank inventory updated. Found ${_items.length} total item stacks.');
     } catch (e) {
-      LoggerService.instance.log('Failed to fetch bank inventory: $e', level: LogLevel.error);
+      LoggerService.instance
+          .log('Failed to fetch bank inventory: $e', level: LogLevel.error);
     } finally {
       _isLoading = false;
       notifyListeners(); // Notify listeners that the complete inventory is ready.
@@ -63,7 +68,8 @@ class BankProvider with ChangeNotifier {
   }
 
   int count(String itemCode) {
-    return _items.fold(0, (count, item) => item.code == itemCode ? item.quantity + count : count);
+    return _items.fold(0,
+        (count, item) => item.code == itemCode ? item.quantity + count : count);
   }
 
   bool hasItems(SimpleItemSchema items) {

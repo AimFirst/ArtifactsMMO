@@ -1,5 +1,3 @@
-// lib/factories/action_factory.dart
-
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/models/queued_action.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
@@ -27,14 +25,16 @@ class ActionFactory {
   QueuedAction createAcceptTaskAction(String characterName) {
     return QueuedAction(
       actionName: 'Accepting Task',
-      apiCall: () => _apiClient.myCharacters.actionAcceptNewTaskMyNameActionTaskNewPost(name: characterName),
+      apiCall: () => _apiClient.myCharacters
+          .actionAcceptNewTaskMyNameActionTaskNewPost(name: characterName),
     );
   }
 
   QueuedAction createCompleteTaskAction(String characterName) {
     return QueuedAction(
       actionName: 'Completing Task',
-      apiCall: () => _apiClient.myCharacters.actionCompleteTaskMyNameActionTaskCompletePost(name: characterName),
+      apiCall: () => _apiClient.myCharacters
+          .actionCompleteTaskMyNameActionTaskCompletePost(name: characterName),
     );
   }
 
@@ -110,26 +110,28 @@ class ActionFactory {
                     .build()));
   }
 
-  QueuedAction createBankWithdrawAction(String characterName, BuiltList<SimpleItemSchema> items) {
+  QueuedAction createBankWithdrawAction(
+      String characterName, BuiltList<SimpleItemSchema> items) {
     return QueuedAction(
         actionName: 'Deposit $items',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
                 .actionWithdrawBankItemMyNameActionBankWithdrawItemPost(
               name: characterName,
-              simpleItemSchema:items,
+              simpleItemSchema: items,
             ));
   }
 
-  QueuedAction createBankDepositAction(String characterName, BuiltList<SimpleItemSchema> items) {
+  QueuedAction createBankDepositAction(
+      String characterName, BuiltList<SimpleItemSchema> items) {
     return QueuedAction(
         actionName: 'Deposit $items',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
-            .actionDepositBankItemMyNameActionBankDepositItemPost(
-          name: characterName,
-          simpleItemSchema:items,
-        ));
+                .actionDepositBankItemMyNameActionBankDepositItemPost(
+              name: characterName,
+              simpleItemSchema: items,
+            ));
   }
 
   QueuedAction createRestAction(String characterName) {

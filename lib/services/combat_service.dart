@@ -1,12 +1,11 @@
 // lib/services/combat_service.dart
 
 import 'dart:math';
+
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/element_enum.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/monster_extension.dart';
-import 'package:artifacts_mmo/providers/log_provider.dart';
-import 'package:artifacts_mmo/services/logger_service.dart';
 
 class CombatService {
   // Simulates a fight and predicts if the character will win.
@@ -34,7 +33,8 @@ class CombatService {
     final turnsForMonsterToWin = (character.hp / monsterAvgDPT).ceil();
 
     // The player wins if they win in fewer turns AND within the 50-turn limit.
-    final canWin = turnsForPlayerToWin < turnsForMonsterToWin && turnsForPlayerToWin <= 50;
+    final canWin =
+        turnsForPlayerToWin < turnsForMonsterToWin && turnsForPlayerToWin <= 50;
 
     // LoggerService.instance.log(
     //   "SIM: ${character.name} vs ${monster.name}. Player wins in ~$turnsForPlayerToWin turns. Monster wins in ~$turnsForMonsterToWin turns. Winnable: $canWin",
@@ -47,7 +47,12 @@ class CombatService {
     required CharacterSchema attacker,
     required MonsterSchema defender,
   }) {
-    return _calculateAverageDamagePerTurn(attackerAttacks: attacker.attacks, attackerDamages: attacker.damages, attackerCriticalStrike: attacker.criticalStrike, defenderResistances: defender.resistances,);
+    return _calculateAverageDamagePerTurn(
+      attackerAttacks: attacker.attacks,
+      attackerDamages: attacker.damages,
+      attackerCriticalStrike: attacker.criticalStrike,
+      defenderResistances: defender.resistances,
+    );
   }
 
   /// Calculates the total average damage a monster does to a character in one turn.
@@ -55,7 +60,12 @@ class CombatService {
     required MonsterSchema attacker,
     required CharacterSchema defender,
   }) {
-    return _calculateAverageDamagePerTurn(attackerAttacks: attacker.attacks, attackerDamages: attacker.damages, attackerCriticalStrike: attacker.criticalStrike, defenderResistances: defender.resistances,);
+    return _calculateAverageDamagePerTurn(
+      attackerAttacks: attacker.attacks,
+      attackerDamages: attacker.damages,
+      attackerCriticalStrike: attacker.criticalStrike,
+      defenderResistances: defender.resistances,
+    );
   }
 
   /// Calculates the total average damage an attacker does to a defender in one turn.
@@ -86,7 +96,8 @@ class CombatService {
       // 3. Factor in critical strike chance for an average result.
       // Crit deals 1.5x damage. Avg Dmg = NormalDmg * (1 + 0.5 * CritChance)
       final critChance = (attackerCriticalStrike) / 100.0;
-      final averageElementalDamage = damageAfterResistance * (1 + 0.5 * critChance);
+      final averageElementalDamage =
+          damageAfterResistance * (1 + 0.5 * critChance);
 
       totalAverageDamage += averageElementalDamage;
     }

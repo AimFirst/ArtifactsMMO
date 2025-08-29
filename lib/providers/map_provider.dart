@@ -9,9 +9,11 @@ import 'package:artifacts_api/artifacts_api.dart';
 class MapProvider with ChangeNotifier {
   final ApiClient _apiClient;
   WorldMap? _worldMap;
+
   WorldMap? get worldMap => _worldMap;
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   MapProvider(this._apiClient) {
@@ -24,13 +26,16 @@ class MapProvider with ChangeNotifier {
 
     final List<MapSchema> allTiles = [];
     int currentPage = 1;
-    int totalPages = 1; // Start with 1, the first response will give us the actual total.
+    int totalPages =
+        1; // Start with 1, the first response will give us the actual total.
 
     try {
       do {
-        LoggerService.instance.log('🗺️ Fetching map data, page $currentPage of $totalPages...');
+        LoggerService.instance
+            .log('🗺️ Fetching map data, page $currentPage of $totalPages...');
         // Use the correct API call with the current page number
-        final response = await _apiClient.maps.getAllMapsMapsGet(page: currentPage);
+        final response =
+            await _apiClient.maps.getAllMapsMapsGet(page: currentPage);
 
         if (response.statusCode == 200 && response.data != null) {
           final pageData = response.data!;
@@ -47,16 +52,19 @@ class MapProvider with ChangeNotifier {
           currentPage++;
         } else {
           // If any page fails, stop the process
-          throw Exception('Failed to load page $currentPage with status ${response.statusCode}');
+          throw Exception(
+              'Failed to load page $currentPage with status ${response.statusCode}');
         }
-      } while (currentPage <= totalPages); // Continue until we've fetched all pages
+      } while (
+          currentPage <= totalPages); // Continue until we've fetched all pages
 
       // Once the loop is done, create the final WorldMap object
       _worldMap = WorldMap(tiles: allTiles);
-      LoggerService.instance.log('🗺️ Map data loaded successfully! Found ${allTiles.length} total tiles.');
-
+      LoggerService.instance.log(
+          '🗺️ Map data loaded successfully! Found ${allTiles.length} total tiles.');
     } catch (e) {
-      LoggerService.instance.log('Failed to load map data: $e', level: LogLevel.error);
+      LoggerService.instance
+          .log('Failed to load map data: $e', level: LogLevel.error);
     } finally {
       _isLoading = false;
       notifyListeners(); // Notify all listeners that the complete map is ready
@@ -78,8 +86,8 @@ class MapProvider with ChangeNotifier {
         if (distance < minDistance) {
           minDistance = distance;
           nearest = (DestinationSchemaBuilder()
-            ..x = tile.x
-            ..y = tile.y)
+                ..x = tile.x
+                ..y = tile.y)
               .build();
         }
       }

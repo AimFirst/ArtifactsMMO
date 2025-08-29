@@ -1,23 +1,15 @@
 // lib/services/team_ai_service.dart
 
-import 'package:artifacts_mmo/ai/ai_strategy.dart';
-import 'package:artifacts_mmo/ai/crafter_strategy.dart';
-import 'package:artifacts_mmo/ai/fighter_strategy.dart';
-import 'package:artifacts_mmo/ai/gatherer_strategy.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/ai/goals/clear_inventory_goal.dart';
 import 'package:artifacts_mmo/ai/goals/complete_server_task_goal.dart';
 import 'package:artifacts_mmo/ai/goals/fulfill_team_request_goal.dart';
+import 'package:artifacts_mmo/ai/goals/heal_goal.dart';
 import 'package:artifacts_mmo/ai/goals/idle_goal.dart';
 import 'package:artifacts_mmo/ai/goals/level_up_skill.dart';
 import 'package:artifacts_mmo/ai/goals/upgrade_gear_goal.dart';
-import 'package:artifacts_mmo/ai/hauler_strategy.dart';
-import 'package:artifacts_mmo/ai/idle_strategy.dart';
-import 'package:artifacts_mmo/ai/tasking_strategy.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
-import 'package:artifacts_mmo/models/character_role.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
-import 'package:artifacts_mmo/models/character_task.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
@@ -55,9 +47,10 @@ class TeamAIService {
       ClearInventoryGoal(),
       CompleteServerTaskGoal(),
       FulfillTeamRequestGoal(),
-      UpgradeGearGoal(),
-      LevelUpSkillGoal(),
+      HealGoal(),
       IdleGoal(),
+      LevelUpSkillGoal(),
+      UpgradeGearGoal(),
     ]);
 
     // Sort them once by priority, descending.

@@ -1,4 +1,3 @@
-// lib/providers/team_brain_provider.dart
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:collection/collection.dart';
@@ -20,9 +19,13 @@ class TeamBrainProvider with ChangeNotifier {
       _requests.where((r) => r.fulfilledBy == null).toList();
 
   void postRequest(ItemRequest request) {
-
     // Remove any duplicate requests first.
-    final existingRequest = _requests.firstWhereOrNull((r) => r.key == request.key && r.requestedBy == request.requestedBy && r.itemName == request.itemName,);
+    final existingRequest = _requests.firstWhereOrNull(
+      (r) =>
+          r.key == request.key &&
+          r.requestedBy == request.requestedBy &&
+          r.itemName == request.itemName,
+    );
     if (existingRequest != null) {
       _requests.remove(existingRequest);
     }
