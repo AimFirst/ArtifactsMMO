@@ -11,12 +11,32 @@ import 'package:artifacts_mmo/services/team_ai_service.dart';
 
 class UpgradeGearGoal extends AIGoal {
   @override
-  bool canRun(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
+  bool canRun(
+      CharacterState state,
+      TeamAIService aiService,
+      CombatService combatService,
+      WorldDataProvider worldDataProvider,
+      ActionFactory actionFactory,
+      MapProvider mapProvider,
+      TeamProvider teamProvider,
+      BankProvider bankProvider,
+      TeamBrainProvider teamBrainProvider,
+      List<CharacterState> characterStates) {
     return false;
   }
 
   @override
-  void execute(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
+  void execute(
+      CharacterState state,
+      TeamAIService aiService,
+      CombatService combatService,
+      WorldDataProvider worldDataProvider,
+      ActionFactory actionFactory,
+      MapProvider mapProvider,
+      TeamProvider teamProvider,
+      BankProvider bankProvider,
+      TeamBrainProvider teamBrainProvider,
+      List<CharacterState> characterStates) {
     // TODO: implement execute
   }
 
@@ -25,5 +45,4 @@ class UpgradeGearGoal extends AIGoal {
 
   @override
   String get name => 'Upgrade Gear';
-
 }

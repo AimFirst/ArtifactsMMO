@@ -1,5 +1,3 @@
-// lib/main.dart
-
 import 'package:artifacts_mmo/home_page.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';

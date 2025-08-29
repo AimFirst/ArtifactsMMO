@@ -1,5 +1,3 @@
-// lib/widgets/team_brain_panel.dart
-
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

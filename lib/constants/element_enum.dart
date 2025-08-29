@@ -1,6 +1,1 @@
-enum ElementEnum {
-  fire,
-  earth,
-  water,
-  air
-}
+enum ElementEnum { fire, earth, water, air }

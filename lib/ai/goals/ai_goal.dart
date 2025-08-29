@@ -16,42 +16,58 @@ abstract class AIGoal {
   String get name;
 
   // Can this goal be pursued by the character right now?
-  bool canRun(CharacterState state,
-      TeamAIService aiService,
-      CombatService combatService,
-      WorldDataProvider worldDataProvider,
-      ActionFactory actionFactory,
-      MapProvider mapProvider,
-      TeamProvider teamProvider,
-      BankProvider bankProvider,
-      TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates,);
+  bool canRun(
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  );
 
   // Execute the logic for this goal (queueing actions, etc.)
-  void execute(CharacterState state,
-      TeamAIService aiService,
-      CombatService combatService,
-      WorldDataProvider worldDataProvider,
-      ActionFactory actionFactory,
-      MapProvider mapProvider,
-      TeamProvider teamProvider,
-      BankProvider bankProvider,
-      TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates,);
+  void execute(
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  );
 
-  void executeWrapper(CharacterState state,
-      TeamAIService aiService,
-      CombatService combatService,
-      WorldDataProvider worldDataProvider,
-      ActionFactory actionFactory,
-      MapProvider mapProvider,
-      TeamProvider teamProvider,
-      BankProvider bankProvider,
-      TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates,) {
+  void executeWrapper(
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  ) {
     state.setCurrentGoal(name);
     LoggerService.instance
         .log("GOAL: ${state.character.name} is executing $name");
-    execute(state, aiService, combatService, worldDataProvider, actionFactory, mapProvider, teamProvider, bankProvider, teamBrainProvider, characterStates);
+    execute(
+        state,
+        aiService,
+        combatService,
+        worldDataProvider,
+        actionFactory,
+        mapProvider,
+        teamProvider,
+        bankProvider,
+        teamBrainProvider,
+        characterStates);
   }
 }

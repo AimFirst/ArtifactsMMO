@@ -17,12 +17,33 @@ class HealGoal extends AIGoal {
   int get priority => 100;
 
   @override
-  bool canRun(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
+  bool canRun(
+      CharacterState state,
+      TeamAIService aiService,
+      CombatService combatService,
+      WorldDataProvider worldDataProvider,
+      ActionFactory actionFactory,
+      MapProvider mapProvider,
+      TeamProvider teamProvider,
+      BankProvider bankProvider,
+      TeamBrainProvider teamBrainProvider,
+      List<CharacterState> characterStates) {
     return state.character.hp < state.character.maxHp;
   }
 
   @override
-  void execute(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
-    teamProvider.queueAction(state.character.name, actionFactory.createRestAction(state.character.name));
+  void execute(
+      CharacterState state,
+      TeamAIService aiService,
+      CombatService combatService,
+      WorldDataProvider worldDataProvider,
+      ActionFactory actionFactory,
+      MapProvider mapProvider,
+      TeamProvider teamProvider,
+      BankProvider bankProvider,
+      TeamBrainProvider teamBrainProvider,
+      List<CharacterState> characterStates) {
+    teamProvider.queueAction(state.character.name,
+        actionFactory.createRestAction(state.character.name));
   }
 }

@@ -1,5 +1,3 @@
-// lib/widgets/skill_progress_widget.dart
-
 import 'package:flutter/material.dart';
 
 class SkillProgressWidget extends StatelessWidget {
@@ -54,7 +52,7 @@ class SkillProgressWidget extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: progress,
                     minHeight: 8,
-                    backgroundColor: Colors.white.withOpacity(0.1),
+                    backgroundColor: Colors.white.withValues(alpha: 0.1),
                   ),
                 ),
               ),

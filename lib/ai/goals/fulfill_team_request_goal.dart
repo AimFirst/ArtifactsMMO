@@ -35,7 +35,9 @@ class FulfillTeamRequestGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
-    return teamBrainProvider.openRequests.any((request) => (state.character.inventory?.count(request.itemName) ?? 0) >= request.quantity);
+    return teamBrainProvider.openRequests.any((request) =>
+        (state.character.inventory?.count(request.itemName) ?? 0) >=
+        request.quantity);
   }
 
   @override
@@ -50,12 +52,23 @@ class FulfillTeamRequestGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
-    final request = teamBrainProvider.openRequests.firstWhereOrNull((request) => (state.character.inventory?.count(request.itemName) ?? 0) >= request.quantity);
+    final request = teamBrainProvider.openRequests.firstWhereOrNull((request) =>
+        (state.character.inventory?.count(request.itemName) ?? 0) >=
+        request.quantity);
     if (request == null) {
-      LoggerService.instance.log("AI: ${state.character.name} can't find a request to fulfill.", level: LogLevel.warning);
+      LoggerService.instance.log(
+          "AI: ${state.character.name} can't find a request to fulfill.",
+          level: LogLevel.warning);
       return;
     }
 
-    teamProvider.queueBankDeposit(state.character, BuiltList.of([(SimpleItemSchemaBuilder()..code = request.itemName..quantity = request.quantity).build()]));
+    teamProvider.queueBankDeposit(
+        state.character,
+        BuiltList.of([
+          (SimpleItemSchemaBuilder()
+                ..code = request.itemName
+                ..quantity = request.quantity)
+              .build()
+        ]));
   }
 }

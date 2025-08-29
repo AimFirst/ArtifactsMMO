@@ -1,8 +1,6 @@
-// lib/widgets/tile_widget.dart
-
+import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:flutter/material.dart';
-import 'package:artifacts_api/artifacts_api.dart';
 
 class TileWidget extends StatelessWidget {
   final MapSchema tile;
@@ -55,7 +53,7 @@ class TileWidget extends StatelessWidget {
       return Container(
         // Optional: Add a subtle background to make character stand out
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.4),
+          color: Colors.black.withValues(alpha: 0.4),
           shape: BoxShape.circle,
         ),
         padding: const EdgeInsets.all(2), // Padding around the image

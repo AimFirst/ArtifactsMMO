@@ -1,4 +1,3 @@
-// lib/ai/goals/level_up_skill_goal.dart
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';

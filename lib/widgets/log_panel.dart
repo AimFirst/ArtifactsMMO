@@ -1,4 +1,3 @@
-// lib/widgets/log_panel.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/log_provider.dart';
@@ -12,7 +11,7 @@ class LogPanel extends StatelessWidget {
     final logProvider = context.watch<LogProvider>();
 
     return Container(
-      color: Colors.black.withOpacity(0.2),
+      color: Colors.black.withValues(alpha: 0.2),
       child: ListView.builder(
         itemCount: logProvider.logs.length,
         reverse: false, // Since we add to the top, we don't need to reverse
@@ -33,8 +32,8 @@ class LogPanel extends StatelessWidget {
                       color: entry.level == LogLevel.error
                           ? Colors.redAccent
                           : entry.level == LogLevel.warning
-                          ? Colors.yellow
-                          : Colors.white,
+                              ? Colors.yellow
+                              : Colors.white,
                     ),
                   ),
                 ],

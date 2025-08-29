@@ -1,16 +1,10 @@
-// lib/widgets/character_card.dart
-
 import 'dart:async';
-import 'dart:math';
+
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
-import 'package:artifacts_mmo/extensions/destination_extension.dart';
-import 'package:artifacts_mmo/models/character_role.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/character_task.dart';
-import 'package:artifacts_mmo/models/queued_action.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
-import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/widgets/character_details_page.dart';
 import 'package:artifacts_mmo/widgets/skill_progress_widget.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +131,8 @@ class _CharacterCardState extends State<CharacterCard> {
               Icon(Icons.inventory_2, color: Colors.brown[400], size: 16),
               const SizedBox(width: 8),
               // NOTE: Adjust field names to match your Character model
-              Text('Inventory: ${character.inventoryCount} / ${character.inventoryMaxItems}'),
+              Text(
+                  'Inventory: ${character.inventoryCount} / ${character.inventoryMaxItems}'),
             ],
           ),
           // Skills
@@ -200,7 +195,8 @@ class _CharacterCardState extends State<CharacterCard> {
         final skillName = skill.name;
         return SkillProgressWidget(
           skillName: skillName.toUpperCase(),
-          icon: Icons.construction, // Replace with specific icons if desired
+          icon: Icons.construction,
+          // Replace with specific icons if desired
           level: character.skills[skillName]?.level ?? 0,
           currentXp: character.skills[skillName]?.xp ?? 0,
           maxXp: character.skills[skillName]?.maxXp ?? 1,
@@ -217,7 +213,7 @@ class _CharacterCardState extends State<CharacterCard> {
         );
 
       default:
-      // When idle or doing other tasks, show nothing or the main combat level
+        // When idle or doing other tasks, show nothing or the main combat level
         return SkillProgressWidget(
           skillName: 'COMBAT',
           icon: Icons.shield,
@@ -252,18 +248,19 @@ class _CharacterCardState extends State<CharacterCard> {
         goalIcon = Icons.trending_up;
         iconColor = Colors.greenAccent;
         break;
-    // Add more cases for your other goals
+      // Add more cases for your other goals
     }
 
     return SizedBox.shrink(
       child: Row(
         children: [
           Icon(goalIcon, color: iconColor, size: 16),
-          const SizedBox(width: 8),Text(
-              state.currentGoal,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-              overflow: TextOverflow.ellipsis,
-            ),
+          const SizedBox(width: 8),
+          Text(
+            state.currentGoal,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );

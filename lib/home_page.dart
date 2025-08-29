@@ -1,5 +1,3 @@
-// lib/home_page.dart
-
 import 'package:artifacts_mmo/widgets/log_panel.dart';
 import 'package:artifacts_mmo/widgets/map_view.dart';
 import 'package:artifacts_mmo/widgets/team_brain_panel.dart';
