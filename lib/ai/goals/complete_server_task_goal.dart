@@ -97,7 +97,7 @@ class CompleteServerTaskGoal extends AIGoal {
     // --- State 2: TASK COMPLETE ---
     // If progress is done, our goal is to turn it in.
     if (_taskDone(state)) {
-      _turnInTask(state, mapProvider, aiService, actionFactory, teamProvider);
+      _turnInTask(state, mapProvider, aiService, actionFactory, teamProvider, teamBrainProvider);
       return;
     }
 
@@ -138,6 +138,7 @@ class CompleteServerTaskGoal extends AIGoal {
     TeamAIService aiService,
     ActionFactory actionFactory,
     TeamProvider teamProvider,
+      TeamBrainProvider teamBrainProvider,
   ) {
     final character = state.character;
     final turnInLocation = _findTaskMaster(state, mapProvider);
@@ -152,6 +153,7 @@ class CompleteServerTaskGoal extends AIGoal {
 
     LoggerService.instance.log(
         "AI: ${character.name} turning in completed task: ${character.task}.");
+    teamBrainProvider.completeRequestKey(_buildBrainRequestKey(character));
     final completeAction =
         actionFactory.createCompleteTaskAction(character.name);
     teamProvider.queueAction(character.name, completeAction);
@@ -208,7 +210,7 @@ class CompleteServerTaskGoal extends AIGoal {
           teamProvider.queueBankWithdraw(
               character, BuiltList.of([remainingItemSchema]));
           _turnInTask(
-              state, mapProvider, aiService, actionFactory, teamProvider);
+              state, mapProvider, aiService, actionFactory, teamProvider, teamBrainProvider);
           return;
         }
 

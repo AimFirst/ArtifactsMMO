@@ -43,6 +43,15 @@ class TeamBrainProvider with ChangeNotifier {
         "REQUEST: ${request.fulfilledBy} accepted the request for ${request.itemName}.");
   }
 
+  bool hasRequest(String key) {
+    return _requests.any((r) => r.key == key);
+  }
+
+  void completeRequestKey(String key) {
+    _requests.removeWhere((r) => r.key == key);
+    notifyListeners();
+  }
+
   void completeRequest(ItemRequest request) {
     _requests.remove(request);
     notifyListeners();

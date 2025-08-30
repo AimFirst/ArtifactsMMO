@@ -62,6 +62,8 @@ class FulfillTeamRequestGoal extends AIGoal {
       return;
     }
 
+    teamBrainProvider.fulfillRequest(request, state.character.name);
+
     teamProvider.queueBankDeposit(
         state.character,
         BuiltList.of([
