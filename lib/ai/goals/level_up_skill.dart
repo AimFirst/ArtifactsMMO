@@ -30,7 +30,7 @@ class LevelUpSkillGoal extends AIGoal {
     List<CharacterState> characterStates,
   ) {
     // This is the default task, so it can always run if nothing else can.
-    return true;
+    return false;
   }
 
   @override

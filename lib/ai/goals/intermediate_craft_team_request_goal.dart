@@ -14,6 +14,7 @@ import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:artifacts_mmo/extensions/inventory_extension.dart';
+import 'package:built_collection/built_collection.dart';
 
 class IntermediateCraftTeamRequestGoal extends AIGoal {
   @override
@@ -37,8 +38,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
   ) {
     for (final request in teamBrainProvider.openRequests) {
       // If someone besides us is already fulfilling this request, ignore it.
-      if (request.fulfilledBy != null &&
-          request.fulfilledBy != state.character.name) {
+      if (request.fulfilledBy == null) {
         final missingItems = _missingItemsNeededToCraft(
             state.character, request.itemName, worldDataProvider, bankProvider);
         // Can we craft something?
@@ -79,8 +79,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
   ) {
     for (final request in teamBrainProvider.openRequests) {
       // If someone besides us is already fulfilling this request, ignore it.
-      if (request.fulfilledBy != null &&
-          request.fulfilledBy != state.character.name) {
+      if (request.fulfilledBy == null) {
         final missingItems = _missingItemsNeededToCraft(
             state.character, request.itemName, worldDataProvider, bankProvider);
         // Can we craft something?
@@ -88,23 +87,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
             state.character, request.itemName, worldDataProvider)) {
           // We have all the items we need, craft it.
           if (missingItems.isEmpty) {
-            final item = worldDataProvider.getItemByCode(request.itemName);
-            final craftLocation = mapProvider.findNearestTile(
-                state.character.location,
-                (tile) =>
-                    tile.content?.type == MapContentType.workshop &&
-                    tile.content?.code == item?.type);
-            if (craftLocation != null) {
-              teamProvider.queueMoveTo(state.character, craftLocation);
-              teamProvider.queueAction(
-                  state.character.name,
-                  actionFactory.createCraftAction(
-                      state.character.name,
-                      (SimpleItemSchemaBuilder()
-                            ..code = request.itemName
-                            ..quantity = request.quantity)
-                          .build()));
-            }
+            _craftItem(state, request, teamProvider, mapProvider, worldDataProvider, actionFactory, teamBrainProvider);
           } else {
             // If we haven't requested missing sub items, request it.
             for (final item in missingItems) {
@@ -120,6 +103,50 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
           }
         }
       }
+    }
+  }
+
+  void _craftItem(CharacterState state, ItemRequest request, TeamProvider teamProvider, MapProvider mapProvider, WorldDataProvider worldDataProvider, ActionFactory actionFactory, TeamBrainProvider teamBrainProvider,) {
+    final item = worldDataProvider.getItemByCode(request.itemName);
+    final recipe = worldDataProvider.getRecipeForItem(request.itemName);
+
+    // See if we need to pull any items from the bank
+    List<SimpleItemSchema> itemsToPullFromBank = [];
+    for (final subItem in recipe?.items ?? <SimpleItemSchema>[]) {
+      final itemCode = subItem.code;
+      int neededCount = subItem.quantity;
+
+      final inventoryCount = state.character.inventory?.count(itemCode) ?? 0;
+      neededCount = max(neededCount - inventoryCount, 0);
+
+      if (neededCount > 0) {
+        itemsToPullFromBank.add((SimpleItemSchemaBuilder()..code = subItem.code..quantity = subItem.quantity).build());
+      }
+    }
+
+    if (itemsToPullFromBank.isNotEmpty) {
+      teamProvider.queueBankWithdraw(state.character, BuiltList.of(itemsToPullFromBank));
+      for (final item in itemsToPullFromBank) {
+        teamBrainProvider.completeRequestKey(_keyForSubRequest(request, item.code));
+      }
+    }
+
+    // Find and move to our craft workbench location.
+    final craftLocation = mapProvider.findNearestTile(
+        state.character.location,
+            (tile) =>
+        tile.content?.type == MapContentType.workshop &&
+            tile.content?.code == item?.type);
+    if (craftLocation != null) {
+      teamProvider.queueMoveTo(state.character, craftLocation);
+      teamProvider.queueAction(
+          state.character.name,
+          actionFactory.createCraftAction(
+              state.character.name,
+              (SimpleItemSchemaBuilder()
+                ..code = request.itemName
+                ..quantity = request.quantity)
+                  .build()));
     }
   }
 
@@ -159,14 +186,12 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
       int neededItemCount = subItem.quantity;
 
       final inventoryCount = character.inventory?.count(neededItemCode) ?? 0;
-      if (inventoryCount > 0) {
         neededItemCount = max(neededItemCount - inventoryCount, 0);
-      }
+
 
       final bankCount = bankProvider.count(neededItemCode);
-      if (bankCount > 0) {
         neededItemCount = max(neededItemCount - bankCount, 0);
-      }
+
 
       // Unable to fulfill this request, so return false
       if (neededItemCount > 0) {

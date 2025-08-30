@@ -27,6 +27,8 @@ class WorldDataProvider with ChangeNotifier {
 
   Map<String, CraftSchema> get allRecipeMap => _recipeMap;
 
+  List<MonsterSchema> get allMonsters => _monsters;
+
   WorldDataProvider(this._apiClient) {
     _loadWorldData();
   }

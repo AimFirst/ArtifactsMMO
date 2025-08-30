@@ -3,9 +3,13 @@
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/ai/goals/clear_inventory_goal.dart';
 import 'package:artifacts_mmo/ai/goals/complete_server_task_goal.dart';
+import 'package:artifacts_mmo/ai/goals/default_goal.dart';
 import 'package:artifacts_mmo/ai/goals/fulfill_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/heal_goal.dart';
 import 'package:artifacts_mmo/ai/goals/idle_goal.dart';
+import 'package:artifacts_mmo/ai/goals/intermediate_craft_team_request_goal.dart';
+import 'package:artifacts_mmo/ai/goals/intermediate_fight_team_request_goal.dart';
+import 'package:artifacts_mmo/ai/goals/intermediate_gather_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/level_up_skill.dart';
 import 'package:artifacts_mmo/ai/goals/upgrade_gear_goal.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
@@ -46,9 +50,13 @@ class TeamAIService {
     _goals.addAll([
       ClearInventoryGoal(),
       CompleteServerTaskGoal(),
+      DefaultGoal(),
       FulfillTeamRequestGoal(),
       HealGoal(),
       IdleGoal(),
+      IntermediateCraftTeamRequestGoal(),
+      IntermediateFightTeamRequestGoal(),
+      IntermediateGatherTeamRequestGoal(),
       LevelUpSkillGoal(),
       UpgradeGearGoal(),
     ]);

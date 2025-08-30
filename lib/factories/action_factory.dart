@@ -72,7 +72,7 @@ class ActionFactory {
     );
   }
 
-  QueuedAction createMineAction(String characterName) {
+  QueuedAction createGatherAction(String characterName) {
     return QueuedAction(
       actionName: 'Mine',
       apiCall: () =>
