@@ -119,15 +119,15 @@ class CompleteServerTaskGoal extends AIGoal {
 
     if (taskMaster == null) {
       LoggerService.instance.log(
-          "AI: ${character.name} can't find a task master.",
-          level: LogLevel.warning);
+          "AI: Can't find a task master.",
+          level: LogLevel.warning, character: character);
       return;
     }
 
     teamProvider.queueMoveTo(character, taskMaster);
 
     LoggerService.instance.log(
-        "AI: ${character.name} is at/on way to Task Master, accepting new task.");
+        "AI: at/on way to Task Master, accepting new task.", character: character);
     final acceptAction = actionFactory.createAcceptTaskAction(character.name);
     teamProvider.queueAction(character.name, acceptAction);
   }
@@ -144,15 +144,15 @@ class CompleteServerTaskGoal extends AIGoal {
     final turnInLocation = _findTaskMaster(state, mapProvider);
     if (turnInLocation == null) {
       LoggerService.instance.log(
-          "AI: ${character.name} completed a task but doesn't know where the task master is!",
-          level: LogLevel.error);
+          "AI: Completed a task but doesn't know where the task master is!",
+          level: LogLevel.error, character: character);
       return;
     }
 
     teamProvider.queueMoveTo(character, turnInLocation);
 
     LoggerService.instance.log(
-        "AI: ${character.name} turning in completed task: ${character.task}.");
+        "AI: urning in completed task: ${character.task}.", character: character);
     teamBrainProvider.completeRequestKey(_buildBrainRequestKey(character));
     final completeAction =
         actionFactory.createCompleteTaskAction(character.name);
@@ -182,8 +182,8 @@ class CompleteServerTaskGoal extends AIGoal {
                 t.content?.code == targetMonsterCode);
         if (monsterLocation == null) {
           LoggerService.instance.log(
-              "AI: ${character.name} can't find a monster to fight!",
-              level: LogLevel.error);
+              "AI: Can't find a monster to fight!",
+              level: LogLevel.error, character: character);
           return;
         }
 
@@ -215,10 +215,10 @@ class CompleteServerTaskGoal extends AIGoal {
         }
 
         // We don't have the items. Post a request to the Team Brain.
-        teamBrainProvider.postRequest(ItemRequest('Task: ${character.task}',
+        teamBrainProvider.postRequest(ItemRequest(_buildBrainRequestKey(character),
             targetItemName, remainingQuantity - inBank, character.name));
         LoggerService.instance.log(
-            "AI: ${character.name} needs '$targetItemName', posted request to team.");
+            "AI: Need '$targetItemName', posted request to team.", character: state.character);
 
         break;
     }

@@ -57,8 +57,8 @@ class FulfillTeamRequestGoal extends AIGoal {
         request.quantity);
     if (request == null) {
       LoggerService.instance.log(
-          "AI: ${state.character.name} can't find a request to fulfill.",
-          level: LogLevel.warning);
+          "AI: Can't find a request to fulfill.",
+          level: LogLevel.warning, character: state.character);
       return;
     }
 

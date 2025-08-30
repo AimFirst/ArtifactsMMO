@@ -57,7 +57,7 @@ abstract class AIGoal {
   ) {
     state.setCurrentGoal(name);
     LoggerService.instance
-        .log("GOAL: ${state.character.name} is executing $name");
+        .log("GOAL: $name", character: state.character);
     execute(
         state,
         aiService,
