@@ -113,7 +113,7 @@ class ActionFactory {
   QueuedAction createBankWithdrawAction(
       String characterName, BuiltList<SimpleItemSchema> items) {
     return QueuedAction(
-        actionName: 'Deposit $items',
+        actionName: 'Withdraw $items',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
                 .actionWithdrawBankItemMyNameActionBankWithdrawItemPost(

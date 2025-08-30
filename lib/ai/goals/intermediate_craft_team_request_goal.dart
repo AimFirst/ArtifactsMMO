@@ -113,6 +113,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
         if (missingItems.isEmpty) {
           _craftItem(state, request, teamProvider, mapProvider,
               worldDataProvider, actionFactory, teamBrainProvider);
+          return;
         } else {
           // If we haven't requested missing sub items, request it.
           for (final item in missingItems) {
