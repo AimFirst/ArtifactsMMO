@@ -236,7 +236,7 @@ class TeamProvider with ChangeNotifier {
       if (isReady && queue.isNotEmpty) {
         final action = queue.removeFirst();
         LoggerService.instance
-            .log('Executing ${action.actionName} for $characterName');
+            .log('Executing ${action.actionName}', character: state.character);
         performAction(
           characterName: characterName,
           actionName: action.actionName,
