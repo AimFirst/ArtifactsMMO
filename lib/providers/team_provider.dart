@@ -84,17 +84,17 @@ class TeamProvider with ChangeNotifier {
   // Generic method to handle any character action
   // Generic method to handle any character action
   Future<void> performAction({
-    required String characterName,
+    required CharacterSchema character,
     required String actionName,
     // This now accepts a function that returns a Future of a dynamic Response
     required Future<Response<dynamic>> Function() apiCall,
   }) async {
     final state =
-        _characterStates.firstWhere((s) => s.character.name == characterName);
+        _characterStates.firstWhere((s) => s.character.name == character.name);
 
     if (state.isOnCooldown || state.isPerformingAction) {
       LoggerService.instance
-          .log("$characterName is busy. Action '$actionName' skipped.");
+          .log("Busy. Action '$actionName' skipped.", character: character);
       return;
     }
 
@@ -116,6 +116,7 @@ class TeamProvider with ChangeNotifier {
           state.setActionComplete(updatedCharacter, cooldown);
         } else {
           // This error means the API changed its response format
+          LoggerService.instance.log('Invalid response format', level: LogLevel.warning, character: character);
           state.setActionFailed('Invalid response format');
         }
 
@@ -129,6 +130,7 @@ class TeamProvider with ChangeNotifier {
           }
         }
       } else {
+        LoggerService.instance.log('API Error ${response.statusCode}', level: LogLevel.warning, character: character);
         state.setActionFailed('API Error ${response.statusCode}');
       }
     } on DioException catch (e) {
@@ -141,7 +143,7 @@ class TeamProvider with ChangeNotifier {
         final code = errorData['code'];
         final message = errorData['message'];
 
-        errorMessage = "Error ($characterName) $code: $message";
+        errorMessage = "Error (${character.name}) $code: $message";
 
         // Handle specific, non-critical errors
         switch (code) {
@@ -170,11 +172,12 @@ class TeamProvider with ChangeNotifier {
         }
       }
 
-      LoggerService.instance.log(errorMessage, level: logLevel);
+      LoggerService.instance.log(errorMessage, level: logLevel, character: character);
       state.setActionFailed(errorMessage);
     } catch (e) {
+      LoggerService.instance.log('Error: $e', level: LogLevel.error, character: character);
       state.setActionFailed(
-          'Error: $characterName ${e.toString().substring(0, 50)}'); // Keep error brief
+          'Error: ${character.name} ${e.toString().substring(0, 50)}',); // Keep error brief
     }
   }
 
@@ -228,17 +231,17 @@ class TeamProvider with ChangeNotifier {
   // We need to separate queue processing so the AI can queue multiple actions at once
   void _processQueues() {
     for (final state in _characterStates) {
-      final characterName = state.character.name;
+      final character = state.character;
       final bool isReady = !state.isPerformingAction && !state.isOnCooldown;
-      final queue = _actionQueues[characterName]!;
+      final queue = _actionQueues[character.name]!;
 
       // --- Queue Processing Logic (from the old loop) ---
       if (isReady && queue.isNotEmpty) {
         final action = queue.removeFirst();
         LoggerService.instance
-            .log('Executing ${action.actionName}', character: state.character);
+            .log('Executing ${action.actionName}', character: character);
         performAction(
-          characterName: characterName,
+          character: character,
           actionName: action.actionName,
           apiCall: action.apiCall,
         );

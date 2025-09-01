@@ -24,6 +24,6 @@ class LoggerService {
     // Replace the old print() statements
     debugPrint("[${level.name.toUpperCase()}] ${character == null ? '' : '[${character.name}]'} $message");
 
-    _logProvider?.addLog(message, level: level);
+    _logProvider?.addLog(message, level: level, character: character);
   }
 }
