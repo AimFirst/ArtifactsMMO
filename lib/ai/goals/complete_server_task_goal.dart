@@ -152,8 +152,14 @@ class CompleteServerTaskGoal extends AIGoal {
     teamProvider.queueMoveTo(character, turnInLocation);
 
     LoggerService.instance.log(
-        "AI: urning in completed task: ${character.task}.", character: character);
+        "AI: turning in completed task: ${character.task}.", character: character);
     teamBrainProvider.completeRequestKey(_buildBrainRequestKey(character));
+
+    // If the task is an item task, you have to deposit the items with the trader before you can complete the task
+    if (character.taskType == taskTypeItems) {
+      final depositItemsAction = actionFactory.createTaskDepositAction(character.name, (SimpleItemSchemaBuilder()..quantity = (character.taskTotal - character.taskProgress)..code = character.task).build());
+      teamProvider.queueAction(character.name, depositItemsAction);
+    }
     final completeAction =
         actionFactory.createCompleteTaskAction(character.name);
     teamProvider.queueAction(character.name, completeAction);

@@ -30,6 +30,13 @@ class ActionFactory {
     );
   }
 
+  QueuedAction createTaskDepositAction(String characterName, SimpleItemSchema item) {
+    return QueuedAction(
+      actionName: 'Depositing $item',
+      apiCall: () => _apiClient.myCharacters
+          .actionTaskTradeMyNameActionTaskTradePost(name: characterName, simpleItemSchema: item));
+  }
+
   QueuedAction createCompleteTaskAction(String characterName) {
     return QueuedAction(
       actionName: 'Completing Task',
