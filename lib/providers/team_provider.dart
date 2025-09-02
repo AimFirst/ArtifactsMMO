@@ -81,11 +81,11 @@ class TeamProvider with ChangeNotifier {
 
   // Generic method to handle any character action
   // Generic method to handle any character action
-  Future<void> performAction({
+  Future<void> performAction<T>({
     required CharacterSchema character,
     required String actionName,
     // This now accepts a function that returns a Future of a dynamic Response
-    required Future<Response<dynamic>> Function() apiCall,
+    required Future<Response<T>> Function() apiCall,
   }) async {
     final state =
         _characterStates.firstWhere((s) => s.character.name == character.name);
@@ -119,32 +119,28 @@ class TeamProvider with ChangeNotifier {
           state.setActionFailed('Invalid response format');
         }
 
-        switch (data.data) {
-          case GiveItemDataSchema:
-            final CharacterSchema? updatedCharacter =
-                data.data.receiverCharacter;
-            if (updatedCharacter != null) {
-              final characterToUpdate = _characterStates.firstWhereOrNull(
-                (s) => s.character.name == updatedCharacter.name,
-              );
-              characterToUpdate?.updateCharacter(updatedCharacter);
-            }
-            break;
+        switch (data.runtimeType) {
           case BankItemTransactionResponseSchema:
-            final bankItems = data.data.bank;
-            if (bankItems != null) {
-              _bankProvider.updateBankInventory(bankItems);
-            }
+            _bankProvider.updateBankInventory(data.data.bank);
             break;
         }
+
+        if (data is BankItemTransactionResponseSchema) {
+          _bankProvider.updateBankInventory(data.data.bank);
+        } else if (data is GiveItemReponseSchema) {
+          final receiverCharacter = data.data.receiverCharacter;
+          final characterToUpdate = _characterStates.firstWhereOrNull(
+                (s) => s.character.name == receiverCharacter.name,
+          );
+          characterToUpdate?.updateCharacter(receiverCharacter);
+        }
       } else {
-        state.setPaused(true);
+        _actionQueues[character.name]?.clear();
         LoggerService.instance.log('API Error ${response.statusCode}',
             level: LogLevel.warning, character: character);
         state.setActionFailed('API Error ${response.statusCode}');
       }
     } on DioException catch (e) {
-      state.setPaused(true);
       String errorMessage = "An unknown API error occurred.";
       LogLevel logLevel = LogLevel.error;
 
@@ -163,7 +159,8 @@ class TeamProvider with ChangeNotifier {
             logLevel = LogLevel
                 .warning; // This is an expected issue, not a critical error
             // We can also manually sync the cooldown based on the error
-            state.setCooldown(DateTime.now().add(const Duration(seconds: 5))); // Assume a default cooldown on failure
+            state.setCooldown(DateTime.now().add(const Duration(
+                seconds: 5))); // Assume a default cooldown on failure
             break;
           case 497: // code_character_inventory_full
             logLevel = LogLevel.info; // This is a state change, not an error
@@ -180,11 +177,12 @@ class TeamProvider with ChangeNotifier {
         }
       }
 
+      _actionQueues[character.name]?.clear();
       LoggerService.instance
           .log(errorMessage, level: logLevel, character: character);
       state.setActionFailed(errorMessage);
     } catch (e) {
-      state.setPaused(true);
+      _actionQueues[character.name]?.clear();
       LoggerService.instance
           .log('Error: $e', level: LogLevel.error, character: character);
       state.setActionFailed(
@@ -271,7 +269,8 @@ class TeamProvider with ChangeNotifier {
   }
 
   void togglePause(String characterName) {
-    final state = _characterStates.firstWhereOrNull((s) => s.character.name == characterName);
+    final state = _characterStates
+        .firstWhereOrNull((s) => s.character.name == characterName);
     state?.togglePaused();
   }
 

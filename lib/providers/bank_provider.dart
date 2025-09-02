@@ -67,8 +67,8 @@ class BankProvider with ChangeNotifier {
     }
   }
 
-  void updateBankInventory(List<SimpleItemSchema> items) {
-    _items = items;
+  void updateBankInventory(Iterable<SimpleItemSchema> items) {
+    _items = items.toList();
     notifyListeners();
   }
 
