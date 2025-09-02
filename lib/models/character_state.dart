@@ -1,5 +1,4 @@
 import 'package:artifacts_mmo/extensions/character_extension.dart';
-import 'package:artifacts_mmo/models/character_role.dart';
 import 'package:artifacts_mmo/models/character_task.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +10,13 @@ class CharacterState with ChangeNotifier {
   DateTime? cooldownEndsAt;
   bool isPerformingAction = false;
   CharacterTask currentTask = CharacterTask.idle; // Add this line
-  CharacterRole role = CharacterRole.idle; // Default role
-  bool needsHauling = false; // Flag to signal for help
   GatheringSkill? designatedGatheringSkill;
   SimpleItemSchema? designatedCraftingItem;
   String currentGoal = 'Idle'; // Default goal
 
-  CharacterState({required this.character, this.lastAction = 'Idle'});
+  CharacterState({required this.character, this.lastAction = 'Idle'}) {
+    cooldownEndsAt = character.cooldownExpiration;
+  }
 
   bool get isOnCooldown {
     if (cooldownEndsAt == null) return false;
@@ -100,16 +99,8 @@ class CharacterState with ChangeNotifier {
     }
   }
 
-  void setRole(CharacterRole newRole) {
-    if (role != newRole) {
-      role = newRole;
-      LoggerService.instance.log("${character.name} role set to: $newRole");
-      notifyListeners();
-    }
-  }
-
-  void setCooldown(int seconds) {
-    cooldownEndsAt = DateTime.now().add(Duration(seconds: seconds));
+  void setCooldown(DateTime? cooldownEnd) {
+    cooldownEndsAt = cooldownEnd;
     notifyListeners();
   }
 

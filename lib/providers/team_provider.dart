@@ -8,7 +8,6 @@ import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
-import 'package:artifacts_mmo/models/character_role.dart';
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/character_task.dart';
@@ -163,11 +162,10 @@ class TeamProvider with ChangeNotifier {
             logLevel = LogLevel
                 .warning; // This is an expected issue, not a critical error
             // We can also manually sync the cooldown based on the error
-            state.setCooldown(5); // Assume a default cooldown on failure
+            state.setCooldown(DateTime.now().add(const Duration(seconds: 5))); // Assume a default cooldown on failure
             break;
           case 497: // code_character_inventory_full
             logLevel = LogLevel.info; // This is a state change, not an error
-            state.needsHauling = true;
             break;
           case 493: // code_character_not_skill_level_required
             logLevel = LogLevel.warning;
@@ -288,13 +286,6 @@ class TeamProvider with ChangeNotifier {
     state.setGatheringTask(skill);
 
     clearQueue(characterName);
-  }
-
-  // Method for the UI to set a role
-  void setRole(String characterName, CharacterRole role) {
-    final state =
-        _characterStates.firstWhere((s) => s.character.name == characterName);
-    state.setRole(role);
   }
 
   @override
