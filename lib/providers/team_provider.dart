@@ -10,7 +10,6 @@ import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
-import 'package:artifacts_mmo/models/character_task.dart';
 import 'package:artifacts_mmo/models/queued_action.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
@@ -169,8 +168,6 @@ class TeamProvider with ChangeNotifier {
             break;
           case 493: // code_character_not_skill_level_required
             logLevel = LogLevel.warning;
-            // The AI tried something it can't do. Stop the task to prevent loops.
-            state.setTask(CharacterTask.idle);
             break;
           case 452: // code_token_invalid
           case 453: // code_token_expired
@@ -270,33 +267,9 @@ class TeamProvider with ChangeNotifier {
     }
   }
 
-  // New method for the UI to set a character's task
-  void setTask(String characterName, CharacterTask task) {
-    final state =
-        _characterStates.firstWhere((s) => s.character.name == characterName);
-    state.setTask(task);
-
-    // When a task is changed, it's good practice to clear the old queue
-    clearQueue(characterName);
-  }
-
-  void setGatheringTask(String characterName, GatheringSkill? skill) {
-    final state =
-        _characterStates.firstWhere((s) => s.character.name == characterName);
-    state.setGatheringTask(skill);
-
-    clearQueue(characterName);
-  }
-
   @override
   void dispose() {
     _gameLoopTimer?.cancel();
     super.dispose();
-  }
-
-  void setCraftingTask(String characterName, String? text) {
-    final state =
-        _characterStates.firstWhere((s) => s.character.name == characterName);
-    state.setCraftingTask(text);
   }
 }

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
-import 'package:artifacts_mmo/models/character_task.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/widgets/character_details_page.dart';
 import 'package:artifacts_mmo/widgets/skill_progress_widget.dart';
@@ -186,43 +185,15 @@ class _CharacterCardState extends State<CharacterCard> {
   Widget _buildContextualSkillInfo(CharacterState state) {
     final character = state.character;
 
-    switch (state.currentTask) {
-      case CharacterTask.gatherEndlessly:
-        final skill = state.designatedGatheringSkill;
-        if (skill == null) return const SizedBox.shrink();
-
-        // This assumes you have a map of skill data, which you do.
-        final skillName = skill.name;
-        return SkillProgressWidget(
-          skillName: skillName.toUpperCase(),
-          icon: Icons.construction,
-          // Replace with specific icons if desired
-          level: character.skills[skillName]?.level ?? 0,
-          currentXp: character.skills[skillName]?.xp ?? 0,
-          maxXp: character.skills[skillName]?.maxXp ?? 1,
-        );
-
-      case CharacterTask.huntMonsters:
-        return SkillProgressWidget(
-          skillName: 'COMBAT',
-          icon: Icons.shield,
-          iconColor: Colors.redAccent,
-          level: character.level,
-          currentXp: character.xp,
-          maxXp: character.maxXp,
-        );
-
-      default:
-        // When idle or doing other tasks, show nothing or the main combat level
-        return SkillProgressWidget(
-          skillName: 'COMBAT',
-          icon: Icons.shield,
-          iconColor: Colors.grey,
-          level: character.level,
-          currentXp: character.xp,
-          maxXp: character.maxXp,
-        );
-    }
+    // When idle or doing other tasks, show nothing or the main combat level
+    return SkillProgressWidget(
+      skillName: 'COMBAT',
+      icon: Icons.shield,
+      iconColor: Colors.grey,
+      level: character.level,
+      currentXp: character.xp,
+      maxXp: character.maxXp,
+    );
   }
 
   // Then, add this new method to your CharacterCard's state:

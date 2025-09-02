@@ -1,6 +1,4 @@
 import 'package:artifacts_mmo/extensions/character_extension.dart';
-import 'package:artifacts_mmo/models/character_task.dart';
-import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/material.dart';
 import 'package:artifacts_api/artifacts_api.dart'; // Your generated models
 
@@ -9,9 +7,6 @@ class CharacterState with ChangeNotifier {
   String lastAction;
   DateTime? cooldownEndsAt;
   bool isPerformingAction = false;
-  CharacterTask currentTask = CharacterTask.idle; // Add this line
-  GatheringSkill? designatedGatheringSkill;
-  SimpleItemSchema? designatedCraftingItem;
   String currentGoal = 'Idle'; // Default goal
 
   CharacterState({required this.character, this.lastAction = 'Idle'}) {
@@ -33,37 +28,6 @@ class CharacterState with ChangeNotifier {
       currentGoal = goalName;
       notifyListeners();
     }
-  }
-
-  // A new method to assign a crafting task
-  void setCraftingTask(String? itemName) {
-    if (itemName == null || itemName.isEmpty) {
-      currentTask = CharacterTask.idle;
-      designatedCraftingItem = null;
-    } else {
-      currentTask = CharacterTask.craftEndlessly;
-      designatedCraftingItem = (SimpleItemSchemaBuilder()
-            ..code = itemName
-            ..quantity = 1)
-          .build();
-    }
-    print("${character.name} task set to: Craft '$designatedCraftingItem'");
-    notifyListeners();
-  }
-
-  // A new method to assign a gathering task
-  void setGatheringTask(GatheringSkill? skill) {
-    if (skill == null) {
-      // If null is passed, set the task to idle
-      currentTask = CharacterTask.idle;
-      designatedGatheringSkill = null;
-    } else {
-      currentTask = CharacterTask.gatherEndlessly;
-      designatedGatheringSkill = skill;
-    }
-    print(
-        "${character.name} task set to: $currentTask with skill $designatedGatheringSkill");
-    notifyListeners();
   }
 
   // Called before an API call
@@ -88,15 +52,6 @@ class CharacterState with ChangeNotifier {
     isPerformingAction = false;
     lastAction = '${lastAction.replaceAll('...', '')} - Failed: $error';
     notifyListeners();
-  }
-
-  // Add a method to update the task
-  void setTask(CharacterTask newTask) {
-    if (currentTask != newTask) {
-      currentTask = newTask;
-      LoggerService.instance.log("${character.name} task set to: $newTask");
-      notifyListeners();
-    }
   }
 
   void setCooldown(DateTime? cooldownEnd) {

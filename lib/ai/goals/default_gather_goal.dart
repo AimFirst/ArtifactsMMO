@@ -87,7 +87,7 @@ class DefaultGatherGoal extends AIGoal {
       }
 
       return resource;
-    }).toList()?..sort((a,b) => (b?.level ?? 1) - (a?.level ?? 1)))?.first;
+    }).where((e) => e != null).toList()?..sort((a,b) => (b?.level ?? 1) - (a?.level ?? 1)))?.first;
 
     if (resourceToGather == null) {
       LoggerService.instance.log('No gatherable resources found.', character: state.character);
