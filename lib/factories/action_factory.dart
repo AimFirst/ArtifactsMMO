@@ -1,4 +1,5 @@
 import 'package:artifacts_api/artifacts_api.dart';
+import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/models/queued_action.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
 import 'package:built_collection/built_collection.dart';
@@ -19,6 +20,7 @@ class ActionFactory {
               ..y = y)
             .build(),
       ),
+      shouldPerform: (state) => state.character.location.x != x || state.character.location.y != y,
     );
   }
 

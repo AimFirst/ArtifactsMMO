@@ -67,6 +67,11 @@ class BankProvider with ChangeNotifier {
     }
   }
 
+  void updateBankInventory(List<SimpleItemSchema> items) {
+    _items = items;
+    notifyListeners();
+  }
+
   int count(String itemCode) {
     return _items.fold(0,
         (count, item) => item.code == itemCode ? item.quantity + count : count);

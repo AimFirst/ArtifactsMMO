@@ -7,12 +7,6 @@ import 'package:built_collection/built_collection.dart';
 
 extension TeamProviderActions on TeamProvider {
   void queueMoveTo(CharacterSchema character, DestinationSchema destination) {
-    // If we are already there, just exit.
-    if (character.location.x == destination.x &&
-        character.location.y == destination.y) {
-      return;
-    }
-
     queueAction(
         character.name,
         actionFactory.createMoveAction(

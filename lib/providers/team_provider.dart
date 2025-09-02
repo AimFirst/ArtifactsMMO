@@ -116,21 +116,32 @@ class TeamProvider with ChangeNotifier {
           state.setActionComplete(updatedCharacter, cooldown);
         } else {
           // This error means the API changed its response format
-          LoggerService.instance.log('Invalid response format', level: LogLevel.warning, character: character);
+          LoggerService.instance.log('Invalid response format',
+              level: LogLevel.warning, character: character);
           state.setActionFailed('Invalid response format');
         }
 
-        if (data.data is GiveItemDataSchema) {
-          final CharacterSchema? updatedCharacter = data.data.receiverCharacter;
-          if (updatedCharacter != null) {
-            final characterToUpdate = _characterStates.firstWhereOrNull(
-              (s) => s.character.name == updatedCharacter.name,
-            );
-            characterToUpdate?.updateCharacter(updatedCharacter);
-          }
+        switch (data.data) {
+          case GiveItemDataSchema:
+            final CharacterSchema? updatedCharacter =
+                data.data.receiverCharacter;
+            if (updatedCharacter != null) {
+              final characterToUpdate = _characterStates.firstWhereOrNull(
+                (s) => s.character.name == updatedCharacter.name,
+              );
+              characterToUpdate?.updateCharacter(updatedCharacter);
+            }
+            break;
+          case BankItemTransactionResponseSchema:
+            final bankItems = data.data.bank;
+            if (bankItems != null) {
+              _bankProvider.updateBankInventory(bankItems);
+            }
+            break;
         }
       } else {
-        LoggerService.instance.log('API Error ${response.statusCode}', level: LogLevel.warning, character: character);
+        LoggerService.instance.log('API Error ${response.statusCode}',
+            level: LogLevel.warning, character: character);
         state.setActionFailed('API Error ${response.statusCode}');
       }
     } on DioException catch (e) {
@@ -172,12 +183,15 @@ class TeamProvider with ChangeNotifier {
         }
       }
 
-      LoggerService.instance.log(errorMessage, level: logLevel, character: character);
+      LoggerService.instance
+          .log(errorMessage, level: logLevel, character: character);
       state.setActionFailed(errorMessage);
     } catch (e) {
-      LoggerService.instance.log('Error: $e', level: LogLevel.error, character: character);
+      LoggerService.instance
+          .log('Error: $e', level: LogLevel.error, character: character);
       state.setActionFailed(
-          'Error: ${character.name} ${e.toString().substring(0, 50)}',); // Keep error brief
+        'Error: ${character.name} ${e.toString().substring(0, 50)}',
+      ); // Keep error brief
     }
   }
 
@@ -238,14 +252,22 @@ class TeamProvider with ChangeNotifier {
       // --- Queue Processing Logic (from the old loop) ---
       if (isReady && queue.isNotEmpty) {
         final action = queue.removeFirst();
-        LoggerService.instance
-            .log('Executing ${action.actionName}', character: character);
-        performAction(
-          character: character,
-          actionName: action.actionName,
-          apiCall: action.apiCall,
-        );
-        notifyListeners();
+
+        if (action.shouldPerform == null || action.shouldPerform!(state)) {
+          LoggerService.instance
+              .log('Executing ${action.actionName}', character: character);
+
+          performAction(
+            character: character,
+            actionName: action.actionName,
+            apiCall: action.apiCall,
+          );
+          notifyListeners();
+        } else {
+          LoggerService.instance.log(
+              'Failed precheck, skipping ${action.actionName}',
+              character: character);
+        }
       }
     }
   }
