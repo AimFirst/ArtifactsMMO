@@ -1,13 +1,10 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
-import 'package:artifacts_mmo/extensions/inventory_extension.dart';
-import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
-import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
@@ -15,8 +12,6 @@ import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:collection/collection.dart';
 
 class DefaultGatherGoal extends AIGoal {
   @override
@@ -64,7 +59,7 @@ class DefaultGatherGoal extends AIGoal {
     }
 
     // Find the hardest thing in this skill we can gather.
-    final resourceToGather = (mapProvider.worldMap?.tiles.map((tile) {
+    final resourceToGather = ((mapProvider.worldMap?.tiles ?? []) .map((tile) {
       // Not a resource node, ignore it.
       if (tile.content?.type != MapContentType.resource || tile.content?.code == null) {
         return null;
@@ -87,7 +82,7 @@ class DefaultGatherGoal extends AIGoal {
       }
 
       return resource;
-    }).where((e) => e != null).toList()?..sort((a,b) => (b?.level ?? 1) - (a?.level ?? 1)))?.first;
+    }).where((e) => e != null).toList()..sort((a,b) => (b?.level ?? 1) - (a?.level ?? 1))).firstOrNull;
 
     if (resourceToGather == null) {
       LoggerService.instance.log('No gatherable resources found.', character: state.character);

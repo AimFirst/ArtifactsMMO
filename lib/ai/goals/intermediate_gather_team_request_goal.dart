@@ -70,7 +70,8 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
 
       // We can gather this item, so do it.
       if (_canGather(state, request.itemName, worldDataProvider)) {
-        final location = mapProvider.findNearestTile(state.character.location, (tile) => tile.content?.type == MapContentType.resource && tile.content?.code == request.itemName);
+        final item = worldDataProvider.getResourceByCode(request.itemName);
+        final location = mapProvider.findNearestTile(state.character.location, (tile) => tile.content?.type == MapContentType.resource && tile.content?.code == item?.code);
         if (location == null) {
           LoggerService.instance.log('No gather location found for ${request.itemName}', level: LogLevel.warning, character: state.character);
           continue;

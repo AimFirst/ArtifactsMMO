@@ -193,14 +193,26 @@ class _CharacterCardState extends State<CharacterCard> {
   Widget _buildContextualSkillInfo(CharacterState state) {
     final character = state.character;
 
+    // Find highest skill
+    int currentHighestSkillLevel = 0;
+    String currentHighestSkill = '';
+    for (var skill in character.skills.entries) {
+      if (skill.value.level > currentHighestSkillLevel) {
+        currentHighestSkill = skill.key;
+        currentHighestSkillLevel = skill.value.level;
+      }
+    }
+
+    final skillInfo = character.skills[currentHighestSkill];
+
     // When idle or doing other tasks, show nothing or the main combat level
     return SkillProgressWidget(
-      skillName: 'COMBAT',
+      skillName: currentHighestSkill,
       icon: Icons.shield,
       iconColor: Colors.grey,
-      level: character.level,
-      currentXp: character.xp,
-      maxXp: character.maxXp,
+      level: skillInfo?.level ?? 1,
+      currentXp: skillInfo?.xp ?? 0,
+      maxXp: skillInfo?.maxXp ?? 1,
     );
   }
 

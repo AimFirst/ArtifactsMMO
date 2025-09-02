@@ -59,7 +59,9 @@ class WorldDataProvider with ChangeNotifier {
           // Add all resources from the current page to our map.
           _resources.addAll(pageData.data);
           for (final resource in pageData.data) {
-            _resourceMap[resource.code] = resource;
+            for (final drop in resource.drops) {
+              _resourceMap[drop.code] = resource;
+            }
           }
 
           // Prepare for the next iteration.
