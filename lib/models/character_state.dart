@@ -8,6 +8,7 @@ class CharacterState with ChangeNotifier {
   DateTime? cooldownEndsAt;
   bool isPerformingAction = false;
   String currentGoal = 'Idle'; // Default goal
+  bool isPaused = false;
 
   CharacterState({required this.character, this.lastAction = 'Idle'}) {
     cooldownEndsAt = character.cooldownExpiration;
@@ -57,6 +58,19 @@ class CharacterState with ChangeNotifier {
   void setCooldown(DateTime? cooldownEnd) {
     cooldownEndsAt = cooldownEnd;
     notifyListeners();
+  }
+
+  void setPaused(bool paused) {
+    isPaused = paused;
+
+    if (!isPaused) {
+      currentGoal = 'Idle';
+    }
+    notifyListeners();
+  }
+
+  void togglePaused() {
+    setPaused(!isPaused);
   }
 
   // Method to check inventory status

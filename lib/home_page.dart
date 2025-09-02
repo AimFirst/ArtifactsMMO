@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
       body: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Column(
               children: [
                 Expanded(

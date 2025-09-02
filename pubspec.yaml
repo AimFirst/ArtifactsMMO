@@ -29,6 +29,9 @@ environment:
 # versions available, run `flutter pub outdated`.
 # pubspec.yaml
 
+flutter:
+  uses-material-design: true
+
 dependencies:
   flutter:
     sdk: flutter

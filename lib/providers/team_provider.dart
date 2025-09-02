@@ -138,11 +138,13 @@ class TeamProvider with ChangeNotifier {
             break;
         }
       } else {
+        state.setPaused(true);
         LoggerService.instance.log('API Error ${response.statusCode}',
             level: LogLevel.warning, character: character);
         state.setActionFailed('API Error ${response.statusCode}');
       }
     } on DioException catch (e) {
+      state.setPaused(true);
       String errorMessage = "An unknown API error occurred.";
       LogLevel logLevel = LogLevel.error;
 
@@ -182,6 +184,7 @@ class TeamProvider with ChangeNotifier {
           .log(errorMessage, level: logLevel, character: character);
       state.setActionFailed(errorMessage);
     } catch (e) {
+      state.setPaused(true);
       LoggerService.instance
           .log('Error: $e', level: LogLevel.error, character: character);
       state.setActionFailed(
@@ -265,6 +268,11 @@ class TeamProvider with ChangeNotifier {
         }
       }
     }
+  }
+
+  void togglePause(String characterName) {
+    final state = _characterStates.firstWhereOrNull((s) => s.character.name == characterName);
+    state?.togglePaused();
   }
 
   @override

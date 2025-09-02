@@ -75,7 +75,7 @@ class TeamAIService {
   void updateAI(List<CharacterState> characterStates) {
     for (final state in characterStates) {
       // Ignore characters who are currently active.
-      if (state.isPerformingAction || state.isOnCooldown || !_teamProvider.getQueueFor(state.character.name).isEmpty) {
+      if (state.isPerformingAction || state.isOnCooldown || state.isPaused || !_teamProvider.getQueueFor(state.character.name).isEmpty) {
         continue;
       }
 

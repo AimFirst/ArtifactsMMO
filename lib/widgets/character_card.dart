@@ -64,7 +64,7 @@ class _CharacterCardState extends State<CharacterCard> {
               child: Opacity(
                 // Dim the card if the character is busy
                 opacity:
-                    state.isOnCooldown || state.isPerformingAction ? 0.65 : 1.0,
+                    state.isOnCooldown || state.isPaused || state.isPerformingAction ? 0.65 : 1.0,
                 child: _buildCardContent(context, state),
               ),
             ),
@@ -101,6 +101,14 @@ class _CharacterCardState extends State<CharacterCard> {
                   avatar: const Icon(Icons.playlist_play, size: 16),
                   padding: const EdgeInsets.all(4),
                 ),
+              // Pause/Resume Button
+              IconButton(
+                icon: Icon(state.isPaused ? Icons.play_arrow : Icons.pause),
+                color: state.isPaused ? Colors.greenAccent : Colors.white,
+                onPressed: () {
+                  teamProvider.togglePause(character.name);
+                },
+              ),
             ],
           ),
           const SizedBox(height: 12),
