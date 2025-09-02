@@ -14,10 +14,10 @@ import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
-class DefaultGoal extends AIGoal {
+class DefaultFightGoal extends AIGoal {
 
   @override
-  String get name => 'Default Goal';
+  String get name => 'Default Fight';
 
   @override
   int get priority => 10;

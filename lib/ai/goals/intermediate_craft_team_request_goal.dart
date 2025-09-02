@@ -184,6 +184,8 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
       return;
     }
     teamProvider.queueMoveTo(state.character, craftLocation);
+
+    // Craft the item
     teamProvider.queueAction(
         state.character.name,
         actionFactory.createCraftAction(

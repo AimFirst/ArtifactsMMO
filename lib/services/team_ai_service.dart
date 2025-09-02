@@ -3,7 +3,9 @@
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/ai/goals/clear_inventory_goal.dart';
 import 'package:artifacts_mmo/ai/goals/complete_server_task_goal.dart';
-import 'package:artifacts_mmo/ai/goals/default_goal.dart';
+import 'package:artifacts_mmo/ai/goals/default_craft_goal.dart';
+import 'package:artifacts_mmo/ai/goals/default_fight_goal.dart';
+import 'package:artifacts_mmo/ai/goals/default_gather_goal.dart';
 import 'package:artifacts_mmo/ai/goals/fulfill_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/heal_goal.dart';
 import 'package:artifacts_mmo/ai/goals/idle_goal.dart';
@@ -50,7 +52,9 @@ class TeamAIService {
     _goals.addAll([
       ClearInventoryGoal(),
       CompleteServerTaskGoal(),
-      DefaultGoal(),
+      DefaultCraftGoal(),
+      DefaultFightGoal(),
+      DefaultGatherGoal(),
       FulfillTeamRequestGoal(),
       HealGoal(),
       IdleGoal(),
@@ -71,7 +75,7 @@ class TeamAIService {
   void updateAI(List<CharacterState> characterStates) {
     for (final state in characterStates) {
       // Ignore characters who are currently active.
-      if (state.isPerformingAction || state.isOnCooldown) {
+      if (state.isPerformingAction || state.isOnCooldown || !_teamProvider.getQueueFor(state.character.name).isEmpty) {
         continue;
       }
 

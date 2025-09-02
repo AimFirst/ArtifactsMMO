@@ -15,6 +15,7 @@ class WorldDataProvider with ChangeNotifier {
   final Map<String, ResourceSchema> _resourceMap = {};
   final List<CraftSchema> _recipes = [];
   final Map<String, CraftSchema> _recipeMap = {};
+  Map<CraftSkill, List<MapEntry<String, CraftSchema>>> _recipesPerSkill = {};
   final List<MonsterSchema> _monsters = [];
   final Map<String, MonsterSchema> _monsterMap = {};
   final Map<String, List<MonsterDropInfo>> _monstersThatDropItem = {};
@@ -26,6 +27,8 @@ class WorldDataProvider with ChangeNotifier {
   List<CraftSchema> get allRecipes => _recipes;
 
   Map<String, CraftSchema> get allRecipeMap => _recipeMap;
+
+  Map<CraftSkill, List<MapEntry<String, CraftSchema>>> get recipesPerSkill => _recipesPerSkill;
 
   List<MonsterSchema> get allMonsters => _monsters;
 
@@ -104,6 +107,8 @@ class WorldDataProvider with ChangeNotifier {
             if (item.craft != null) {
               _recipes.add(item.craft!);
               _recipeMap[item.code] = item.craft!;
+              _recipesPerSkill[item.craft!.skill!] =
+                  (_recipesPerSkill[item.craft!.skill] ?? [])..add(MapEntry(item.code, item.craft!));
             }
           }
 
