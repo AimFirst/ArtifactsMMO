@@ -33,6 +33,8 @@ class WorldDataProvider with ChangeNotifier {
 
   List<MonsterSchema> get allMonsters => _monsters;
 
+  List<ItemSchema> get allItems => _items;
+
   WorldDataProvider(this._apiClient) {
     _loadWorldData();
   }

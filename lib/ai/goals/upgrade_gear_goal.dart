@@ -1,5 +1,7 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
+import 'package:artifacts_mmo/extensions/character_extension.dart';
+import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
@@ -47,7 +49,46 @@ class UpgradeGearGoal extends AIGoal {
     // TODO: implement execute
   }
 
-  Map<ItemSlot, String> _getGearToUpgrade(CharacterState character) {
-    return {};
+  Map<ItemSlot, List<String>> _bestInSlot(CharacterState character, WorldDataProvider worldDataProvider) {
+    final Map<ItemSlot, List<String>> bestInSlot = {};
+
+    for (final slot in ItemSlot.values) {
+      List<String> bestItems = [];
+      final options = worldDataProvider.allItems.where((item) => item.type == slot.type && character.character.canUseItem(item)).toList();
+      options.sort((a, b) => b.level.compareTo(a.level));
+      final maxLevel = options.firstOrNull?.level;
+
+      // No items in this slot.
+      if (maxLevel == null) {
+        continue;
+      }
+
+      // Get all the items with the highest level
+      for (final item in options) {
+        if (item.level == maxLevel) {
+          bestItems.add(item.code);
+        }
+      }
+
+      bestInSlot[slot] = bestItems;
+    }
+
+    return bestInSlot;
+  }
+
+  Map<ItemSlot, List<String>> _getGearToUpgrade(CharacterState character, WorldDataProvider worldDataProvider) {
+    final Map<ItemSlot, List<String>> gearToUpgrade = {};
+
+    final bestInSlotMap = _bestInSlot(character, worldDataProvider);
+    for (final bestInSlot in bestInSlotMap.entries) {
+      final bestItems = bestInSlot.value;
+      final slot = bestInSlot.key;
+
+      for (final item in bestItems) {
+        // if (character.character.)
+      }
+    }
+
+    return gearToUpgrade;
   }
 }

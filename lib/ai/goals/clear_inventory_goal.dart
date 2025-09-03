@@ -1,5 +1,6 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
+import 'package:artifacts_mmo/extensions/inventory_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
@@ -48,15 +49,22 @@ class ClearInventoryGoal extends AIGoal {
   ) {
     final character = state.character;
 
-    teamProvider.queueBankDeposit(
-        state.character,
-        BuiltList.of(character.inventory
-                ?.map((i) => ((SimpleItemSchemaBuilder()
-                      ..code = i.code
-                      ..quantity = i.quantity)
-                    .build()))
-                .where((i) => i.quantity > 0) ??
-            <SimpleItemSchema>[]));
+    // If we are working on a quest and have quest items, deposit those first.
+    if (character.task.isNotEmpty &&
+        character.taskType == 'items' &&
+        (character.inventory?.count(character.task) ?? 0) > 0) {
+      teamProvider.queueTaskDeposit(state);
+    } else {
+      teamProvider.queueBankDeposit(
+          state.character,
+          BuiltList.of(character.inventory
+                  ?.map((i) => ((SimpleItemSchemaBuilder()
+                        ..code = i.code
+                        ..quantity = i.quantity)
+                      .build()))
+                  .where((i) => i.quantity > 0) ??
+              <SimpleItemSchema>[]));
+    }
   }
 
   @override

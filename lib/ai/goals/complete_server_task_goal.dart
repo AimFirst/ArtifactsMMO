@@ -19,10 +19,6 @@ import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:built_collection/built_collection.dart';
 
 class CompleteServerTaskGoal extends AIGoal {
-  static const taskTypeItems = 'items';
-  static const taskTypeMonsters = 'monsters';
-
-  final _random = Random();
 
   @override
   int get priority => 80;
@@ -49,12 +45,12 @@ class CompleteServerTaskGoal extends AIGoal {
     }
 
     // task is complete, can turn it in
-    if (_taskDone(state)) {
+    if (_taskDone(state, bankProvider)) {
       return true;
     }
 
     // Combat task, see if we can make progress.
-    if (state.character.taskType == taskTypeMonsters) {
+    if (state.character.taskType == TaskType.monsters.name) {
       final monster = worldDataProvider.getMonsterByCode(state.character.task);
       if (monster != null) {
         return combatService.canWinFight(state.character, monster);
@@ -62,7 +58,7 @@ class CompleteServerTaskGoal extends AIGoal {
     }
 
     // Item task, see if we've requested the items.
-    if (state.character.taskType == taskTypeItems) {
+    if (state.character.taskType == TaskType.items.name) {
       if (!teamBrainProvider.openRequests.any(
           (request) => request.key == _buildBrainRequestKey(state.character))) {
         return true;
@@ -96,7 +92,7 @@ class CompleteServerTaskGoal extends AIGoal {
 
     // --- State 2: TASK COMPLETE ---
     // If progress is done, our goal is to turn it in.
-    if (_taskDone(state)) {
+    if (_taskDone(state, bankProvider, checkBank: false)) {
       _turnInTask(state, mapProvider, aiService, actionFactory, teamProvider, teamBrainProvider);
       return;
     }
@@ -114,17 +110,9 @@ class CompleteServerTaskGoal extends AIGoal {
       TeamProvider teamProvider,
       ActionFactory actionFactory) {
     final character = state.character;
-    // Find the nearest task master
-    final taskMaster = _findTaskMaster(state, mapProvider);
 
-    if (taskMaster == null) {
-      LoggerService.instance.log(
-          "AI: Can't find a task master.",
-          level: LogLevel.warning, character: character);
-      return;
-    }
 
-    teamProvider.queueMoveTo(character, taskMaster);
+    teamProvider.queueMoveToTaskMaster(state);
 
     LoggerService.instance.log(
         "AI: at/on way to Task Master, accepting new task.", character: character);
@@ -141,32 +129,14 @@ class CompleteServerTaskGoal extends AIGoal {
       TeamBrainProvider teamBrainProvider,
   ) {
     final character = state.character;
-    final turnInLocation = _findTaskMaster(state, mapProvider);
-    if (turnInLocation == null) {
-      LoggerService.instance.log(
-          "AI: Completed a task but doesn't know where the task master is!",
-          level: LogLevel.error, character: character);
-      return;
-    }
-
-    teamProvider.queueMoveTo(character, turnInLocation);
+    teamProvider.queueMoveToTaskMaster(state);
 
     LoggerService.instance.log(
         "AI: turning in completed task: ${character.task}.", character: character);
     teamBrainProvider.completeRequestKey(_buildBrainRequestKey(character));
 
-    // If the task is an item task, you have to deposit the items with the trader before you can complete the task
-    if (character.taskType == taskTypeItems) {
-      final amountNeededToTurnIn = character.taskTotal - character.taskProgress;
-      final amountInInventory = character.inventory?.count(character.task) ?? 0;
-      final depositItemsAction = actionFactory.createTaskDepositAction(character.name, (SimpleItemSchemaBuilder()..quantity = min(amountInInventory, amountNeededToTurnIn)..code = character.task).build());
-      teamProvider.queueAction(character.name, depositItemsAction);
+    teamProvider.queueTaskDeposit(state);
 
-      // If we didn't deposit all of them, we need to try again.
-      if (amountInInventory < amountNeededToTurnIn) {
-        return;
-      }
-    }
     final completeAction =
         actionFactory.createCompleteTaskAction(character.name);
     teamProvider.queueAction(character.name, completeAction);
@@ -207,7 +177,7 @@ class CompleteServerTaskGoal extends AIGoal {
         break;
       case 'items':
         final targetItemName = character.task;
-        final targetQuantity = character.taskTotal;
+        final targetQuantity = character.taskTotal - character.taskProgress;
 
         // How many items do we have
         final currentQuantity = character.inventory?.count(targetItemName) ?? 0;
@@ -223,8 +193,6 @@ class CompleteServerTaskGoal extends AIGoal {
               .build();
           teamProvider.queueBankWithdraw(
               character, BuiltList.of([remainingItemSchema]));
-          _turnInTask(
-              state, mapProvider, aiService, actionFactory, teamProvider, teamBrainProvider);
           return;
         }
 
@@ -242,28 +210,24 @@ class CompleteServerTaskGoal extends AIGoal {
     return '${character.name}:task:${character.task}';
   }
 
-  DestinationSchema? _findTaskMaster(
-      CharacterState state, MapProvider mapProvider) {
-    final code = state.character.taskType.isEmpty
-        ? (_random.nextBool() ? taskTypeMonsters : taskTypeItems)
-        : state.character.taskType;
-    return mapProvider.findNearestTile(
-        state.character.location,
-        (t) =>
-            t.content?.type == MapContentType.tasksMaster &&
-            t.content?.code == code);
-  }
 
-  bool _taskDone(CharacterState state) {
+
+  bool _taskDone(CharacterState state, BankProvider bankProvider, {bool checkBank = true}) {
     bool hasItems = false;
-    if (state.character.taskType == taskTypeItems) {
+    if (state.character.taskType == TaskType.items.name) {
       final character = state.character;
       final targetItemName = character.task;
-      final targetQuantity = character.taskTotal;
+      int targetQuantity = character.taskTotal - character.taskProgress;
 
       // Check if we have enough items already
-      final countInInventory = character.inventory?.count(targetItemName) ?? 0;
-      hasItems = countInInventory >= targetQuantity;
+      targetQuantity -= character.inventory?.count(targetItemName) ?? 0;
+      hasItems = targetQuantity <= 0;
+
+      // Check if we have enough in the bank
+      if (!hasItems && checkBank) {
+        targetQuantity -= bankProvider.count(targetItemName);
+        hasItems = targetQuantity <= 0;
+      }
     }
     return state.character.taskProgress >= state.character.taskTotal ||
         hasItems;
