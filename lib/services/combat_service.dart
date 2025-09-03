@@ -50,6 +50,7 @@ class CombatService {
     return _calculateAverageDamagePerTurn(
       attackerAttacks: attacker.attacks,
       attackerDamages: attacker.damages,
+      attackerBaseDamage: attacker.dmg,
       attackerCriticalStrike: attacker.criticalStrike,
       defenderResistances: defender.resistances,
     );
@@ -63,6 +64,7 @@ class CombatService {
     return _calculateAverageDamagePerTurn(
       attackerAttacks: attacker.attacks,
       attackerDamages: attacker.damages,
+      attackerBaseDamage: 0,
       attackerCriticalStrike: attacker.criticalStrike,
       defenderResistances: defender.resistances,
     );
@@ -72,6 +74,7 @@ class CombatService {
   double _calculateAverageDamagePerTurn({
     required Map<ElementEnum, int> attackerAttacks,
     required Map<ElementEnum, int> attackerDamages,
+    required int attackerBaseDamage,
     required int attackerCriticalStrike,
     required Map<ElementEnum, int> defenderResistances,
   }) {
@@ -84,7 +87,7 @@ class CombatService {
 
       // 1. Apply damage buffs to the base attack.
       // 1 damage buff = 1% extra damage.
-      final damageBuff = attackerDamages[element] ?? 0;
+      final damageBuff = attackerBaseDamage + (attackerDamages[element] ?? 0);
       final totalAttack = baseAttack * (1 + (damageBuff / 100));
 
       // 2. Apply defender's resistance.

@@ -157,8 +157,15 @@ class CompleteServerTaskGoal extends AIGoal {
 
     // If the task is an item task, you have to deposit the items with the trader before you can complete the task
     if (character.taskType == taskTypeItems) {
-      final depositItemsAction = actionFactory.createTaskDepositAction(character.name, (SimpleItemSchemaBuilder()..quantity = (character.taskTotal - character.taskProgress)..code = character.task).build());
+      final amountNeededToTurnIn = character.taskTotal - character.taskProgress;
+      final amountInInventory = character.inventory?.count(character.task) ?? 0;
+      final depositItemsAction = actionFactory.createTaskDepositAction(character.name, (SimpleItemSchemaBuilder()..quantity = min(amountInInventory, amountNeededToTurnIn)..code = character.task).build());
       teamProvider.queueAction(character.name, depositItemsAction);
+
+      // If we didn't deposit all of them, we need to try again.
+      if (amountInInventory < amountNeededToTurnIn) {
+        return;
+      }
     }
     final completeAction =
         actionFactory.createCompleteTaskAction(character.name);
@@ -209,9 +216,10 @@ class CompleteServerTaskGoal extends AIGoal {
         // If we have the right amount in the bank, go fetch it.
         final inBank = bankProvider.count(targetItemName);
         if (inBank >= remainingQuantity) {
+          final maxFreeSpaceInInventory = character.inventoryMaxItems - character.inventoryCount;
           final remainingItemSchema = (SimpleItemSchemaBuilder()
                 ..code = targetItemName
-                ..quantity = remainingQuantity)
+                ..quantity = max(remainingQuantity, maxFreeSpaceInInventory))
               .build();
           teamProvider.queueBankWithdraw(
               character, BuiltList.of([remainingItemSchema]));
