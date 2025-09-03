@@ -30,7 +30,7 @@ class TeamBrainPanel extends StatelessWidget {
                 final request = openRequests[index];
                 return ListTile(
                   dense: true,
-                  leading: const Icon(Icons.help_outline, color: Colors.cyan),
+                  leading: _imageForItem(request.itemName),
                   title: Text("${request.quantity}x ${request.itemName}"),
                   subtitle: Text("Requested by: ${request.requestedBy}"),
                 );
@@ -39,5 +39,20 @@ class TeamBrainPanel extends StatelessWidget {
           ),
       ],
     );
+  }
+
+  Widget _imageForItem(String code) {
+    return Image.network(
+        'https://artifactsmmo.com/images/items/$code.png',
+        fit: BoxFit.cover,
+        width: 24, // Control character image size
+        height: 24,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(Icons.person_off, color: Colors.red, size: 18); // Fallback for missing character image
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2));
+        },);
   }
 }

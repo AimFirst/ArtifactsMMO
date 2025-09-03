@@ -92,9 +92,23 @@ class _CharacterCardState extends State<CharacterCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Image.network(
+                'https://artifactsmmo.com/images/characters/${character.skin}.png',
+                fit: BoxFit.cover,
+                width: 24, // Control character image size
+                height: 24,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.person_off, color: Colors.red, size: 18); // Fallback for missing character image
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2));
+                },),
+              SizedBox(width: 8),
               Text(character.name,
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold)),
+              Spacer(),
               if (queue.isNotEmpty)
                 Chip(
                   label: Text('${queue.length} Queued'),
