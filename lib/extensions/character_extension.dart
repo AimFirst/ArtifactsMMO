@@ -25,13 +25,14 @@ extension CharacterExtensions on CharacterSchema {
 
       final skillLevel = skills[skillName]?.level;
       if (skillLevel == null) {
-        LoggerService.instance.log('Skill $skillName not found', level: LogLevel.warning, character: this);
+        LoggerService.instance.log('Skill $skillName not found',
+            level: LogLevel.warning, character: this);
         return false;
       }
 
       switch (itemRequirement.operator_) {
         case ConditionOperator.eq:
-           if (skillLevel != itemRequirement.value) return false;
+          if (skillLevel != itemRequirement.value) return false;
         case ConditionOperator.gt:
           if (skillLevel <= itemRequirement.value) return false;
         case ConditionOperator.lt:
@@ -42,6 +43,46 @@ extension CharacterExtensions on CharacterSchema {
     }
 
     return true;
+  }
+
+  String itemInSlot(ItemSlot slot) {
+    switch (slot) {
+      case ItemSlot.amulet:
+        return amuletSlot;
+      case ItemSlot.artifact1:
+        return artifact1Slot;
+      case ItemSlot.artifact2:
+        return artifact2Slot;
+      case ItemSlot.artifact3:
+        return artifact3Slot;
+      case ItemSlot.bag:
+        return bagSlot;
+      case ItemSlot.bodyArmor:
+        return bodyArmorSlot;
+      case ItemSlot.boots:
+        return bootsSlot;
+      case ItemSlot.helmet:
+        return helmetSlot;
+      case ItemSlot.legArmor:
+        return legArmorSlot;
+      case ItemSlot.ring1:
+        return ring1Slot;
+      case ItemSlot.ring2:
+        return ring2Slot;
+      case ItemSlot.rune:
+        return runeSlot;
+      case ItemSlot.weapon:
+        return weaponSlot;
+      case ItemSlot.utility1:
+        return utility1Slot;
+      case ItemSlot.utility2:
+        return utility2Slot;
+      case ItemSlot.shield:
+        return shieldSlot;
+      default:
+        LoggerService.instance.log('Unknown item slot: $slot', character: this);
+        return '';
+    }
   }
 
   int get inventoryCount =>

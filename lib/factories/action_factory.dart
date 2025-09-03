@@ -20,7 +20,8 @@ class ActionFactory {
               ..y = y)
             .build(),
       ),
-      shouldPerform: (state) => state.character.location.x != x || state.character.location.y != y,
+      shouldPerform: (state) =>
+          state.character.location.x != x || state.character.location.y != y,
     );
   }
 
@@ -32,11 +33,13 @@ class ActionFactory {
     );
   }
 
-  QueuedAction createTaskDepositAction(String characterName, SimpleItemSchema item) {
+  QueuedAction createTaskDepositAction(
+      String characterName, SimpleItemSchema item) {
     return QueuedAction(
-      actionName: 'Depositing $item',
-      apiCall: () => _apiClient.myCharacters
-          .actionTaskTradeMyNameActionTaskTradePost(name: characterName, simpleItemSchema: item));
+        actionName: 'Depositing $item',
+        apiCall: () => _apiClient.myCharacters
+            .actionTaskTradeMyNameActionTaskTradePost(
+                name: characterName, simpleItemSchema: item));
   }
 
   QueuedAction createCompleteTaskAction(String characterName) {
@@ -89,6 +92,16 @@ class ActionFactory {
         name: characterName,
       ),
     );
+  }
+
+  QueuedAction createUnequipAction(String characterName, ItemSlot itemSlot, int quantity) {
+    return QueuedAction(
+        actionName: 'Unequip $itemSlot',
+        apiCall: () =>
+            _apiClient.myCharacters.actionUnequipItemMyNameActionUnequipPost(
+              name: characterName,
+              unequipSchema: (UnequipSchemaBuilder()..slot = itemSlot..quantity = quantity).build(),
+            ));
   }
 
   QueuedAction createEquipAction(
