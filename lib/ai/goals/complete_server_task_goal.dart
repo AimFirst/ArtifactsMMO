@@ -219,7 +219,7 @@ class CompleteServerTaskGoal extends AIGoal {
           final maxFreeSpaceInInventory = character.inventoryMaxItems - character.inventoryCount;
           final remainingItemSchema = (SimpleItemSchemaBuilder()
                 ..code = targetItemName
-                ..quantity = max(remainingQuantity, maxFreeSpaceInInventory))
+                ..quantity = min(remainingQuantity, maxFreeSpaceInInventory))
               .build();
           teamProvider.queueBankWithdraw(
               character, BuiltList.of([remainingItemSchema]));

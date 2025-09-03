@@ -220,8 +220,6 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
 
     final schema = worldDataProvider.getRecipeForItem(item.code);
     if (schema == null) {
-      LoggerService.instance.log('Can\'t find recipe for ${item.code}',
-          character: character, level: LogLevel.warning);
       return itemsMissing;
     }
 

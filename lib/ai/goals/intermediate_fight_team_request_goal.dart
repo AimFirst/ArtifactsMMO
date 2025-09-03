@@ -90,7 +90,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
   }
 
   bool _canGather(CharacterState character, String itemCode, WorldDataProvider worldDataProvider, CombatService combatService) {
-    final item = worldDataProvider.getResourceByCode(itemCode);
+    final item = worldDataProvider.getResourceByDropCode(itemCode);
     if (item == null) {
       return false;
     }

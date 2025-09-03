@@ -13,6 +13,7 @@ class WorldDataProvider with ChangeNotifier {
   final Map<String, ItemSchema> _itemMap = {};
   final List<ResourceSchema> _resources = [];
   final Map<String, ResourceSchema> _resourceMap = {};
+  final Map<String, ResourceSchema> _resourceDropMap = {};
   final List<CraftSchema> _recipes = [];
   final Map<String, CraftSchema> _recipeMap = {};
   Map<CraftSkill, List<MapEntry<String, CraftSchema>>> _recipesPerSkill = {};
@@ -59,8 +60,9 @@ class WorldDataProvider with ChangeNotifier {
           // Add all resources from the current page to our map.
           _resources.addAll(pageData.data);
           for (final resource in pageData.data) {
+            _resourceMap[resource.code] = resource;
             for (final drop in resource.drops) {
-              _resourceMap[drop.code] = resource;
+              _resourceDropMap[drop.code] = resource;
             }
           }
 
@@ -196,6 +198,10 @@ class WorldDataProvider with ChangeNotifier {
   // Public method to look up resource details by its code.
   ResourceSchema? getResourceByCode(String code) {
     return _resourceMap[code];
+  }
+
+  ResourceSchema? getResourceByDropCode(String code) {
+    return _resourceDropMap[code];
   }
 
   // Public method to look up a recipe by the item it creates

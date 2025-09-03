@@ -1,3 +1,4 @@
+import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
@@ -10,6 +11,12 @@ import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
 class UpgradeGearGoal extends AIGoal {
+  @override
+  int get priority => 30;
+
+  @override
+  String get name => 'Upgrade Gear';
+
   @override
   bool canRun(
       CharacterState state,
@@ -40,9 +47,7 @@ class UpgradeGearGoal extends AIGoal {
     // TODO: implement execute
   }
 
-  @override
-  int get priority => 40;
-
-  @override
-  String get name => 'Upgrade Gear';
+  Map<ItemSlot, String> _getGearToUpgrade(CharacterState character) {
+    return {};
+  }
 }
