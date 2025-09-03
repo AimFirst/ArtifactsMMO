@@ -188,9 +188,27 @@ class _CharacterCardState extends State<CharacterCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Quest: ${character.task}",
-            style: const TextStyle(fontWeight: FontWeight.bold),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Quest: ${character.task}",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(width: 8),
+              Image.network(
+                character.taskType == TaskType.items ? 'https://artifactsmmo.com/images/items/${character.task}.png' : 'https://artifactsmmo.com/images/monsters/${character.task}.png',
+                fit: BoxFit.cover,
+                width: 12, // Control character image size
+                height: 12,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.person_off, color: Colors.red, size: 18); // Fallback for missing character image
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 2));
+                },),
+            ],
           ),
           const SizedBox(height: 4),
           LinearProgressIndicator(value: progress),
