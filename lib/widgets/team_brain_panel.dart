@@ -13,9 +13,9 @@ class TeamBrainPanel extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.all(8.0),
-          child: Text("Team Requests", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          child: Text("Team Requests (${openRequests.length})", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
         const Divider(height: 1),
         if (openRequests.isEmpty)

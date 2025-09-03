@@ -148,13 +148,12 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
       final itemCode = subItem.code;
       int neededCount = subItem.quantity;
 
-      final inventoryCount = state.character.inventory?.count(itemCode) ?? 0;
-      neededCount = max(neededCount - inventoryCount, 0);
+      neededCount -= state.character.inventory?.count(itemCode) ?? 0;
 
       if (neededCount > 0) {
         itemsToPullFromBank.add((SimpleItemSchemaBuilder()
               ..code = subItem.code
-              ..quantity = subItem.quantity)
+              ..quantity = neededCount)
             .build());
       }
     }

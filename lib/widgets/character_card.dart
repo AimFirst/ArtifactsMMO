@@ -128,7 +128,7 @@ class _CharacterCardState extends State<CharacterCard> {
             children: [
               Icon(Icons.location_on, color: Colors.blue[400], size: 16),
               const SizedBox(width: 8),
-              Text('Location: ${character.location}'),
+              Text('Location: [${character.location.x}, ${character.location.y}]'),
             ],
           ),
           // Inventory

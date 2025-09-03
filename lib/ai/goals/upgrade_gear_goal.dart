@@ -18,7 +18,7 @@ import 'package:built_collection/built_collection.dart';
 
 class UpgradeGearGoal extends AIGoal {
   @override
-  int get priority => 30;
+  int get priority => 65;
 
   @override
   String get name => 'Upgrade Gear';
@@ -40,7 +40,8 @@ class UpgradeGearGoal extends AIGoal {
       final current = state.character.itemInSlot(bestInSlot.key);
 
       // If we don't have anything equipped, or the thing we have equipped is not in the list of best items...
-      if (bestInSlot.value.isNotEmpty && (current.isEmpty || bestInSlot.value.contains(current))) {
+      if (bestInSlot.value.isNotEmpty && (current.isEmpty || !bestInSlot.value.contains(current))) {
+
         for (final desiredItem in bestInSlot.value) {
           // Do we have it in the inventory/bank?
           if ((state.character.inventory?.count(desiredItem) ?? 0) > 0 || (bankProvider.count(desiredItem) > 0)) {
