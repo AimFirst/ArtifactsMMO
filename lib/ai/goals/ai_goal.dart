@@ -168,8 +168,8 @@ abstract class AIGoal {
         // Don't have on to equip, request it instead.
         teamBrainProvider.postRequest(ItemRequest(
             _createEquipRequestKey(
-                state.character.name, slot, gearContext, bestInSlot.name),
-            bestInSlot.name,
+                state.character.name, slot, gearContext, bestInSlot.code),
+            bestInSlot.code,
             1,
             state.character.name));
       }
