@@ -11,6 +11,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/equipment_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
@@ -81,6 +82,26 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
         return;
       }
     }
+  }
+
+  @override
+  GearEvaluationContext? gearEvaluationContext(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
+    for (final request in teamBrainProvider.openRequests) {
+      // Someone else is already on it.
+      if (request.fulfilledBy != null) {
+        continue;
+      }
+
+      // We can gather this item, so do it.
+      if (_canGather(state, request.itemName, worldDataProvider)) {
+        final item = worldDataProvider.getResourceByDropCode(request.itemName);
+        if (item != null) {
+          return GearEvaluationContext(taskType: item.skill.name);
+        }
+      }
+    }
+
+    return null;
   }
 
   bool _canGather(CharacterState character, String itemCode, WorldDataProvider worldDataProvider) {

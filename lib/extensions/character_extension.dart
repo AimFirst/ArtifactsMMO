@@ -85,6 +85,47 @@ extension CharacterExtensions on CharacterSchema {
     }
   }
 
+  CharacterSchema copyWithEquippedItem(ItemSchema item, ItemSlot itemSlot) {
+    final builder = toBuilder();
+    switch (itemSlot) {
+      case ItemSlot.amulet:
+        builder.amuletSlot = item.code;
+      case ItemSlot.artifact1:
+        builder.artifact1Slot = item.code;
+      case ItemSlot.artifact2:
+        builder.artifact2Slot = item.code;
+      case ItemSlot.artifact3:
+        builder.artifact3Slot = item.code;
+      case ItemSlot.bag:
+        builder.bagSlot = item.code;
+      case ItemSlot.bodyArmor:
+        builder.bodyArmorSlot = item.code;
+      case ItemSlot.boots:
+        builder.bootsSlot = item.code;
+      case ItemSlot.helmet:
+        builder.helmetSlot = item.code;
+      case ItemSlot.legArmor:
+        builder.legArmorSlot = item.code;
+      case ItemSlot.ring1:
+        builder.ring1Slot = item.code;
+      case ItemSlot.ring2:
+        builder.ring2Slot = item.code;
+      case ItemSlot.rune:
+        builder.runeSlot = item.code;
+      case ItemSlot.weapon:
+        builder.weaponSlot = item.code;
+      case ItemSlot.utility1:
+        builder.utility1Slot = item.code;
+      case ItemSlot.utility2:
+        builder.utility2Slot = item.code;
+      case ItemSlot.shield:
+        builder.shieldSlot = item.code;
+      default:
+        LoggerService.instance.log('Unknown item slot: $itemSlot', character: this);
+    }
+    return builder.build();
+  }
+
   int get inventoryCount =>
       inventory?.fold(0, (sum, item) => ((sum ?? 0) + item.quantity)) ?? 0;
 

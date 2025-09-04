@@ -14,6 +14,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/equipment_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:built_collection/built_collection.dart';
@@ -129,6 +130,11 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
         }
       }
     }
+  }
+
+  @override
+  GearEvaluationContext? gearEvaluationContext(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
+    return null;
   }
 
   void _craftItem(

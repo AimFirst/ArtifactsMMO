@@ -12,7 +12,6 @@ import 'package:artifacts_mmo/ai/goals/idle_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_craft_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_fight_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_gather_team_request_goal.dart';
-import 'package:artifacts_mmo/ai/goals/upgrade_gear_goal.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
@@ -22,6 +21,7 @@ import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/equipment_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 
 // This is our "Brain". It's not a provider and has no UI logic.
@@ -36,6 +36,7 @@ class TeamAIService {
   final TeamBrainProvider _teamBrainProvider;
   final List<AIGoal> _goals = [];
   late ActionFactory _actionFactory;
+  late EquipmentService _equipmentService;
 
   TeamAIService(
       this._apiClient,
@@ -46,6 +47,7 @@ class TeamAIService {
       this._combatService,
       this._teamBrainProvider) {
     _actionFactory = ActionFactory(_apiClient);
+    _equipmentService = EquipmentService(_combatService);
 
     // Initialize all possible goals.
     _goals.addAll([
@@ -60,7 +62,6 @@ class TeamAIService {
       IntermediateCraftTeamRequestGoal(),
       IntermediateFightTeamRequestGoal(),
       IntermediateGatherTeamRequestGoal(),
-      UpgradeGearGoal(),
     ]);
 
     // Sort them once by priority, descending.
@@ -73,7 +74,10 @@ class TeamAIService {
   void updateAI(List<CharacterState> characterStates) {
     for (final state in characterStates) {
       // Ignore characters who are currently active.
-      if (state.isPerformingAction || state.isOnCooldown || state.isPaused || !_teamProvider.getQueueFor(state.character.name).isEmpty) {
+      if (state.isPerformingAction ||
+          state.isOnCooldown ||
+          state.isPaused ||
+          !_teamProvider.getQueueFor(state.character.name).isEmpty) {
         continue;
       }
 
@@ -91,6 +95,21 @@ class TeamAIService {
           _teamBrainProvider,
           characterStates,
         )) {
+          // Check equipment for it.
+          goal.handleBestEquipment(
+            state,
+            this,
+            _combatService,
+            _equipmentService,
+            _worldDataProvider,
+            _actionFactory,
+            _mapProvider,
+            _teamProvider,
+            _bankProvider,
+            _teamBrainProvider,
+            characterStates,
+          );
+
           // Execute it and immediately stop processing for this character.
           goal.executeWrapper(
             state,

@@ -14,6 +14,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/equipment_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:built_collection/built_collection.dart';
@@ -210,8 +211,6 @@ class CompleteServerTaskGoal extends AIGoal {
     return '${character.name}:task:${character.task}';
   }
 
-
-
   bool _taskDone(CharacterState state, BankProvider bankProvider, {bool checkBank = true}) {
     bool hasItems = false;
     if (state.character.taskType == TaskType.items.name) {
@@ -231,5 +230,23 @@ class CompleteServerTaskGoal extends AIGoal {
     }
     return state.character.taskProgress >= state.character.taskTotal ||
         hasItems;
+  }
+
+  @override
+  GearEvaluationContext? gearEvaluationContext(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
+    // no task yet, can accept a new one
+    if (state.character.task.isEmpty || _taskDone(state, bankProvider)) {
+      return null;
+    }
+
+    // Combat task, see if we can make progress.
+    if (state.character.taskType == TaskType.monsters.name) {
+      final monster = worldDataProvider.getMonsterByCode(state.character.task);
+      if (monster != null) {
+        return GearEvaluationContext(taskType: 'overall', targetMonster: monster);
+      }
+    }
+
+    return null;
   }
 }

@@ -7,9 +7,49 @@ import 'package:artifacts_mmo/constants/element_enum.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/monster_extension.dart';
 
+class CombatDetails {
+  final double playerAvgDPT;
+  final double monsterAvgDPT;
+  final int playerStartHp;
+  final int monsterStartHp;
+  final int haste;
+
+  int get turnsForPlayerToWin => (monsterStartHp / playerAvgDPT).ceil();
+
+  int get turnsForMonsterToWin => (playerStartHp / monsterAvgDPT).ceil();
+
+  int get totalTurns => turnsForPlayerToWin + turnsForMonsterToWin;
+
+  bool get canWin =>
+      turnsForPlayerToWin < turnsForMonsterToWin && turnsForPlayerToWin <= 50;
+
+  double get fightCooldown =>
+      totalTurns * 2 - (haste * 0.01) * (totalTurns * 2);
+
+  double get restToHealCooldown => (turnsForMonsterToWin * monsterAvgDPT) / 5;
+
+  double get totalCooldown => fightCooldown + restToHealCooldown;
+
+  CombatDetails({
+    required this.playerAvgDPT,
+    required this.monsterAvgDPT,
+    required this.playerStartHp,
+    required this.monsterStartHp,
+    required this.haste,
+  });
+}
+
 class CombatService {
   // Simulates a fight and predicts if the character will win.
   bool canWinFight(CharacterSchema character, MonsterSchema monster) {
+    // Calculate the average damage per turn for both combatants.
+    final combatDetails = getCombatDetails(character, monster);
+
+    return combatDetails.canWin;
+  }
+
+  CombatDetails getCombatDetails(
+      CharacterSchema character, MonsterSchema monster) {
     // Calculate the average damage per turn for both combatants.
     final playerAvgDPT = _calculateAverageDamagerPerTurnCharacter(
       attacker: character,
@@ -20,26 +60,13 @@ class CombatService {
       defender: character,
     );
 
-    if (playerAvgDPT <= 0) {
-      // LoggerService.instance.log(
-      //     "SIM: ${character.name} deals no damage to ${monster.name}. Unwinnable.",
-      //     level: LogLevel.warning);
-      return false; // Can't win if you can't deal damage.
-    }
-
-    // Calculate how many turns it takes for each to win.
-    // We use ceil() because a partial turn is still a full turn.
-    final turnsForPlayerToWin = (monster.hp / playerAvgDPT).ceil();
-    final turnsForMonsterToWin = (character.hp / monsterAvgDPT).ceil();
-
-    // The player wins if they win in fewer turns AND within the 50-turn limit.
-    final canWin =
-        turnsForPlayerToWin < turnsForMonsterToWin && turnsForPlayerToWin <= 50;
-
-    // LoggerService.instance.log(
-    //   "SIM: ${character.name} vs ${monster.name}. Player wins in ~$turnsForPlayerToWin turns. Monster wins in ~$turnsForMonsterToWin turns. Winnable: $canWin",
-    // );
-    return canWin;
+    return CombatDetails(
+      playerAvgDPT: playerAvgDPT,
+      monsterAvgDPT: monsterAvgDPT,
+      playerStartHp: character.maxHp,
+      monsterStartHp: monster.hp,
+      haste: character.haste,
+    );
   }
 
   /// Calculates the total average damage a character does to a monster in one turn.
