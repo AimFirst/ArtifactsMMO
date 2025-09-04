@@ -21,6 +21,7 @@ import 'package:built_collection/built_collection.dart';
 
 class IntermediateCraftTeamRequestGoal extends AIGoal {
   final Random random = Random();
+
   @override
   String get name => 'Intermediate Craft Team Request';
 
@@ -94,26 +95,8 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) {
-    // Try to sort by our best skills first.
-    final requests = teamBrainProvider.openRequests..sort((a,b) {
-      final aRecipe = worldDataProvider.getRecipeForItem(a.itemName);
-      final bRecipe = worldDataProvider.getRecipeForItem(b.itemName);
-
-      if (aRecipe != null && bRecipe != null) {
-        final aSkill = aRecipe.skill;
-        final bSkill = bRecipe.skill;
-
-        final myASkill = state.character.skills[aSkill?.name];
-        final myBSkill = state.character.skills[bSkill?.name];
-
-        if (myASkill != null && myBSkill != null) {
-          return myBSkill.level.compareTo(myASkill.level);
-        }
-      }
-
-      return random.nextBool() ? 1 : -1;
-    });
-
+    final requests = _requestsSortedBySkill(
+        state.character, teamBrainProvider, worldDataProvider);
     // Try to accomplish a craft
     for (final request in requests) {
       // If someone besides us is already fulfilling this request, ignore it.
@@ -156,8 +139,44 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
+  GearEvaluationContext? gearEvaluationContext(
+      CharacterState state,
+      TeamAIService aiService,
+      CombatService combatService,
+      WorldDataProvider worldDataProvider,
+      ActionFactory actionFactory,
+      MapProvider mapProvider,
+      TeamProvider teamProvider,
+      BankProvider bankProvider,
+      TeamBrainProvider teamBrainProvider,
+      List<CharacterState> characterStates) {
     return null;
+  }
+
+  List<ItemRequest> _requestsSortedBySkill(
+      CharacterSchema character,
+      TeamBrainProvider teamBrainProvider,
+      WorldDataProvider worldDataProvider) {
+    // Try to sort by our best skills first.
+    return teamBrainProvider.openRequests
+      ..sort((a, b) {
+        final aRecipe = worldDataProvider.getRecipeForItem(a.itemName);
+        final bRecipe = worldDataProvider.getRecipeForItem(b.itemName);
+
+        if (aRecipe != null && bRecipe != null) {
+          final aSkill = aRecipe.skill;
+          final bSkill = bRecipe.skill;
+
+          final myASkill = character.skills[aSkill?.name];
+          final myBSkill = character.skills[bSkill?.name];
+
+          if (myASkill != null && myBSkill != null) {
+            return myBSkill.level.compareTo(myASkill.level);
+          }
+        }
+
+        return random.nextBool() ? 1 : -1;
+      });
   }
 
   void _craftItem(

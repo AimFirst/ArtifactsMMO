@@ -66,27 +66,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) {
-
-    // Try to sort by our best skills first.
-    final requests = teamBrainProvider.openRequests..sort((a,b) {
-      final aResource = worldDataProvider.getResourceByDropCode(a.itemName);
-      final bResource = worldDataProvider.getResourceByDropCode(b.itemName);
-
-      if (aResource != null && bResource != null) {
-        final aSkill = aResource.skill;
-        final bSkill = bResource.skill;
-
-        final myASkill = state.character.skills[aSkill.name];
-        final myBSkill = state.character.skills[bSkill.name];
-
-        if (myASkill != null && myBSkill != null) {
-          return myBSkill.level.compareTo(myASkill.level);
-        }
-      }
-
-      return random.nextBool() ? 1 : -1;
-    });
-
+    final requests = _requestsSortedBySkill(state.character, teamBrainProvider, worldDataProvider);
     for (final request in requests) {
       // Someone else is already on it.
       if (request.fulfilledBy != null) {
@@ -110,7 +90,8 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
 
   @override
   GearEvaluationContext? gearEvaluationContext(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
-    for (final request in teamBrainProvider.openRequests) {
+    final requests = _requestsSortedBySkill(state.character, teamBrainProvider, worldDataProvider);
+    for (final request in requests) {
       // Someone else is already on it.
       if (request.fulfilledBy != null) {
         continue;
@@ -126,6 +107,28 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     }
 
     return null;
+  }
+
+  List<ItemRequest> _requestsSortedBySkill(CharacterSchema character, TeamBrainProvider teamBrainProvider, WorldDataProvider worldDataProvider) {
+    // Try to sort by our best skills first.
+    return teamBrainProvider.openRequests..sort((a,b) {
+      final aResource = worldDataProvider.getResourceByDropCode(a.itemName);
+      final bResource = worldDataProvider.getResourceByDropCode(b.itemName);
+
+      if (aResource != null && bResource != null) {
+        final aSkill = aResource.skill;
+        final bSkill = bResource.skill;
+
+        final myASkill = character.skills[aSkill.name];
+        final myBSkill = character.skills[bSkill.name];
+
+        if (myASkill != null && myBSkill != null) {
+          return myBSkill.level.compareTo(myASkill.level);
+        }
+      }
+
+      return random.nextBool() ? 1 : -1;
+    });
   }
 
   bool _canGather(CharacterState character, String itemCode, WorldDataProvider worldDataProvider) {
