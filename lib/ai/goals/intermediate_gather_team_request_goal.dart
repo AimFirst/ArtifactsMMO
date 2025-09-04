@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
@@ -16,6 +18,7 @@ import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
 class IntermediateGatherTeamRequestGoal extends AIGoal {
+  final random = Random();
   @override
   String get name => 'Intermediate Gather Team Request';
 
@@ -63,7 +66,28 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) {
-    for (final request in teamBrainProvider.openRequests) {
+
+    // Try to sort by our best skills first.
+    final requests = teamBrainProvider.openRequests..sort((a,b) {
+      final aResource = worldDataProvider.getResourceByDropCode(a.itemName);
+      final bResource = worldDataProvider.getResourceByDropCode(b.itemName);
+
+      if (aResource != null && bResource != null) {
+        final aSkill = aResource.skill;
+        final bSkill = bResource.skill;
+
+        final myASkill = state.character.skills[aSkill.name];
+        final myBSkill = state.character.skills[bSkill.name];
+
+        if (myASkill != null && myBSkill != null) {
+          return myBSkill.level.compareTo(myASkill.level);
+        }
+      }
+
+      return random.nextBool() ? 1 : -1;
+    });
+
+    for (final request in requests) {
       // Someone else is already on it.
       if (request.fulfilledBy != null) {
         continue;

@@ -20,6 +20,7 @@ import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:built_collection/built_collection.dart';
 
 class IntermediateCraftTeamRequestGoal extends AIGoal {
+  final Random random = Random();
   @override
   String get name => 'Intermediate Craft Team Request';
 
@@ -39,6 +40,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) {
+    // See if we can accomplish any.
     for (final request in teamBrainProvider.openRequests) {
       // If someone besides us is already fulfilling this request, ignore it.
       if (request.fulfilledBy == null) {
@@ -92,7 +94,28 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) {
-    for (final request in teamBrainProvider.openRequests) {
+    // Try to sort by our best skills first.
+    final requests = teamBrainProvider.openRequests..sort((a,b) {
+      final aRecipe = worldDataProvider.getRecipeForItem(a.itemName);
+      final bRecipe = worldDataProvider.getRecipeForItem(b.itemName);
+
+      if (aRecipe != null && bRecipe != null) {
+        final aSkill = aRecipe.skill;
+        final bSkill = bRecipe.skill;
+
+        final myASkill = state.character.skills[aSkill?.name];
+        final myBSkill = state.character.skills[bSkill?.name];
+
+        if (myASkill != null && myBSkill != null) {
+          return myBSkill.level.compareTo(myASkill.level);
+        }
+      }
+
+      return random.nextBool() ? 1 : -1;
+    });
+
+    // Try to accomplish a craft
+    for (final request in requests) {
       // If someone besides us is already fulfilling this request, ignore it.
       if (request.fulfilledBy != null) {
         continue;
