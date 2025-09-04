@@ -33,6 +33,7 @@ class TeamBrainPanel extends StatelessWidget {
                   leading: _imageForItem(request.itemName),
                   title: Text("${request.quantity}x ${request.itemName}"),
                   subtitle: Text("Requested by: ${request.requestedBy}"),
+                  trailing: Text(request.key, style: TextStyle(fontSize: 8),),
                 );
               },
             ),
