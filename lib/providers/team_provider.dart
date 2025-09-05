@@ -108,24 +108,22 @@ class TeamProvider with ChangeNotifier {
       // Check if the response was successful and the data is valid
       if (response.statusCode == 200 && data != null) {
         // --- Robustly extract shared properties ---
-        // We assume all successful action responses contain 'character' and 'cooldown'.
-        // This is a safe way to access properties on a 'dynamic' object.
-        final CharacterSchema? updatedCharacter = data.data.character;
-        final CooldownSchema? cooldown = data.data.cooldown;
+        try {
+          // We assume all successful action responses contain 'character' and 'cooldown'.
+          // This is a safe way to access properties on a 'dynamic' object.
+          final CharacterSchema? updatedCharacter = data?.data?.character;
+          final CooldownSchema? cooldown = data?.data?.cooldown;
 
-        if (updatedCharacter != null && cooldown != null) {
-          state.setActionComplete(updatedCharacter, cooldown);
-        } else {
-          // This error means the API changed its response format
-          LoggerService.instance.log('Invalid response format',
-              level: LogLevel.warning, character: character);
-          state.setActionFailed('Invalid response format');
-        }
+          if (updatedCharacter != null && cooldown != null) {
+            state.setActionComplete(updatedCharacter, cooldown);
+          } else {
+            // This error means the API changed its response format
+            LoggerService.instance.log('Invalid response format',
+                level: LogLevel.warning, character: character);
+            state.setActionFailed('Invalid response format');
+          }
+        } catch (_) {
 
-        switch (data.runtimeType) {
-          case BankItemTransactionResponseSchema:
-            _bankProvider.updateBankInventory(data.data.bank);
-            break;
         }
 
         if (data is BankItemTransactionResponseSchema) {
@@ -136,6 +134,12 @@ class TeamProvider with ChangeNotifier {
                 (s) => s.character.name == receiverCharacter.name,
           );
           characterToUpdate?.updateCharacter(receiverCharacter);
+        } else if (data is CharacterSchema) {
+          final characterToUpdate = _characterStates.firstWhereOrNull(
+                (s) => s.character.name == character.name,
+          );
+          characterToUpdate?.updateCharacter(data);
+          state.setActionComplete(data, (CooldownSchemaBuilder()..expiration = data.cooldownExpiration).build());
         }
       } else {
         _actionQueues[character.name]?.clear();
@@ -184,6 +188,9 @@ class TeamProvider with ChangeNotifier {
       LoggerService.instance
           .log(errorMessage, level: logLevel, character: character);
       state.setActionFailed(errorMessage);
+
+      // Try to reset this character's status.
+      await performAction(character: character, actionName: 'error, resetting state', apiCall: () => _apiClient.character.getCharacterCharactersNameGet(name: character.name));
     } catch (e) {
       _actionQueues[character.name]?.clear();
       LoggerService.instance

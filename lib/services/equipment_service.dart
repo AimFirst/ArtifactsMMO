@@ -2,6 +2,7 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/item_type_extension.dart';
+import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
 
 // Defines the context for a gear decision
@@ -24,6 +25,7 @@ class EquipmentService {
     GearEvaluationContext context,
     List<ItemSchema> availableItems,
     CharacterSchema currentCharacter,
+    WorldDataProvider worldDataProvider,
   ) {
     ItemSchema? bestItem;
     final worstScore = -1000000.0;
@@ -39,13 +41,15 @@ class EquipmentService {
       if (context.taskType == 'overall' && context.targetMonster != null) {
         // For fighting, the "score" is the simulated damage per turn.
         // We temporarily create a "what if" version of the character with the item equipped.
-        final tempCharacter = currentCharacter.copyWithEquippedItem(item, slot);
-        final combatDetails = _combatService
-            .getCombatDetails(
+        final tempCharacter = currentCharacter.copyWithEquippedItem(
+            item, slot, worldDataProvider);
+        final combatDetails = _combatService.getCombatDetails(
           tempCharacter,
           context.targetMonster!,
         );
-        currentScore = combatDetails.canWin ? combatDetails.totalCooldown * -1.0 : worstScore;
+        currentScore = combatDetails.canWin
+            ? combatDetails.totalCooldown * -1.0
+            : worstScore;
       } else {
         // For gathering, the "score" is simply the relevant stat boost.
         currentScore = -1.0 *
@@ -57,8 +61,8 @@ class EquipmentService {
                             : 0))) ??
                 0);
       }
-      // Add more scoring logic for other tasks...
 
+      // Add more scoring logic for other tasks...
       if (currentScore > bestScore) {
         bestScore = currentScore;
         bestItem = item;

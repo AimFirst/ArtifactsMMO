@@ -1,7 +1,9 @@
 import 'package:artifacts_api/artifacts_api.dart';
+import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/constants/element_enum.dart';
 import 'package:artifacts_mmo/models/skill_level.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
+import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 
 extension CharacterExtensions on CharacterSchema {
@@ -85,45 +87,206 @@ extension CharacterExtensions on CharacterSchema {
     }
   }
 
-  CharacterSchema copyWithEquippedItem(ItemSchema item, ItemSlot itemSlot) {
+  CharacterSchema copyWithEquippedItem(
+    ItemSchema newItem,
+    ItemSlot itemSlot,
+    WorldDataProvider worldDataProvider,
+  ) {
+    String? previousItemCode;
     final builder = toBuilder();
     switch (itemSlot) {
       case ItemSlot.amulet:
-        builder.amuletSlot = item.code;
+        previousItemCode = amuletSlot;
+        builder.amuletSlot = newItem.code;
+        break;
       case ItemSlot.artifact1:
-        builder.artifact1Slot = item.code;
+        previousItemCode = artifact1Slot;
+        builder.artifact1Slot = newItem.code;
+        break;
       case ItemSlot.artifact2:
-        builder.artifact2Slot = item.code;
+        previousItemCode = artifact2Slot;
+        builder.artifact2Slot = newItem.code;
+        break;
       case ItemSlot.artifact3:
-        builder.artifact3Slot = item.code;
+        previousItemCode = artifact3Slot;
+        builder.artifact3Slot = newItem.code;
+        break;
       case ItemSlot.bag:
-        builder.bagSlot = item.code;
+        previousItemCode = bagSlot;
+        builder.bagSlot = newItem.code;
+        break;
       case ItemSlot.bodyArmor:
-        builder.bodyArmorSlot = item.code;
+        previousItemCode = bodyArmorSlot;
+        builder.bodyArmorSlot = newItem.code;
+        break;
       case ItemSlot.boots:
-        builder.bootsSlot = item.code;
+        previousItemCode = bootsSlot;
+        builder.bootsSlot = newItem.code;
+        break;
       case ItemSlot.helmet:
-        builder.helmetSlot = item.code;
+        previousItemCode = helmetSlot;
+        builder.helmetSlot = newItem.code;
+        break;
       case ItemSlot.legArmor:
-        builder.legArmorSlot = item.code;
+        previousItemCode = legArmorSlot;
+        builder.legArmorSlot = newItem.code;
+        break;
       case ItemSlot.ring1:
-        builder.ring1Slot = item.code;
+        previousItemCode = ring1Slot;
+        builder.ring1Slot = newItem.code;
+        break;
       case ItemSlot.ring2:
-        builder.ring2Slot = item.code;
+        previousItemCode = ring2Slot;
+        builder.ring2Slot = newItem.code;
+        break;
       case ItemSlot.rune:
-        builder.runeSlot = item.code;
+        previousItemCode = runeSlot;
+        builder.runeSlot = newItem.code;
+        break;
       case ItemSlot.weapon:
-        builder.weaponSlot = item.code;
+        previousItemCode = weaponSlot;
+        builder.weaponSlot = newItem.code;
+        break;
       case ItemSlot.utility1:
-        builder.utility1Slot = item.code;
+        previousItemCode = utility1Slot;
+        builder.utility1Slot = newItem.code;
+        break;
       case ItemSlot.utility2:
-        builder.utility2Slot = item.code;
+        previousItemCode = utility2Slot;
+        builder.utility2Slot = newItem.code;
+        break;
       case ItemSlot.shield:
-        builder.shieldSlot = item.code;
+        previousItemCode = shieldSlot;
+        builder.shieldSlot = newItem.code;
+        break;
       default:
-        LoggerService.instance.log('Unknown item slot: $itemSlot', character: this);
+        LoggerService.instance
+            .log('Unknown item slot: $itemSlot', character: this);
+        break;
     }
+
+    ItemSchema? oldItem = previousItemCode == null
+        ? null
+        : worldDataProvider.getItemByCode(previousItemCode);
+
+    if (oldItem != null) {
+      _updateStats(builder, oldItem, true);
+    }
+    _updateStats(builder, newItem, false);
+
     return builder.build();
+  }
+
+  void _updateStats(
+      CharacterSchemaBuilder builder, ItemSchema item, bool subtract) {
+    try {
+      for (final effect in item.effects ?? <SimpleEffectSchema>[]) {
+        final effectEnum =
+            EffectEnum.values.firstWhere((e) => e.name == effect.code);
+        switch (effectEnum) {
+          case EffectEnum.attack_air:
+            builder.attackAir = (builder.attackAir ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.attack_earth:
+            builder.attackEarth = (builder.attackEarth ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.attack_fire:
+            builder.attackFire = (builder.attackFire ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.attack_water:
+            builder.attackWater = (builder.attackWater ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.dmg:
+            builder.dmg = (builder.dmg ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.dmg_air:
+            builder.dmgAir = (builder.dmgAir ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.dmg_earth:
+            builder.dmgEarth = (builder.dmgEarth ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.dmg_fire:
+            builder.dmgFire = (builder.dmgFire ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.dmg_water:
+            builder.dmgWater = (builder.dmgWater ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.res_air:
+            builder.resAir = (builder.resAir ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.res_earth:
+            builder.resEarth = (builder.resEarth ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.res_fire:
+            builder.resFire = (builder.resFire ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.res_water:
+            builder.resWater = (builder.resWater ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.hp:
+            builder.hp = (builder.hp ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            builder.maxHp = (builder.maxHp ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.critical_strike:
+            builder.criticalStrike = (builder.criticalStrike ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.wisdom:
+            builder.wisdom = (builder.wisdom ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.inventory_space:
+            builder.inventoryMaxItems = (builder.inventoryMaxItems ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
+          case EffectEnum.alchemy:
+          case EffectEnum.antipoison:
+          case EffectEnum.boost_dmg_air:
+          case EffectEnum.boost_dmg_earth:
+          case EffectEnum.boost_dmg_fire:
+          case EffectEnum.boost_dmg_water:
+          case EffectEnum.boost_hp:
+          case EffectEnum.boost_res_air:
+          case EffectEnum.boost_res_earth:
+          case EffectEnum.boost_res_fire:
+          case EffectEnum.boost_res_water:
+          case EffectEnum.burn:
+          case EffectEnum.corrupted:
+          case EffectEnum.fishing:
+          case EffectEnum.gold:
+          case EffectEnum.heal:
+          case EffectEnum.healing:
+          case EffectEnum.lifesteal:
+          case EffectEnum.mining:
+          case EffectEnum.poison:
+          case EffectEnum.reconstitution:
+          case EffectEnum.restore:
+          case EffectEnum.woodcutting:
+            break;
+        }
+      }
+    } catch (e) {
+      LoggerService.instance.log(
+        'Error mapping effect enum: $e',
+        character: this,
+        level: LogLevel.warning,
+      );
+    }
   }
 
   int get inventoryCount =>

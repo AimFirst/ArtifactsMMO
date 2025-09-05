@@ -122,7 +122,12 @@ abstract class AIGoal {
 
     for (final slot in ItemSlot.values) {
       final bestInSlot = equipmentService.findBestItemForSlot(
-          slot, gearContext, worldDataProvider.allItems, state.character);
+        slot,
+        gearContext,
+        worldDataProvider.allItems,
+        state.character,
+        worldDataProvider,
+      );
       // Nothing to do for this slot.
       if (bestInSlot == null) {
         continue;
@@ -165,13 +170,16 @@ abstract class AIGoal {
                     .fromCodeAndQuantity(bestInSlot.code, 1),
                 slot));
       } else {
-        // Don't have on to equip, request it instead.
-        teamBrainProvider.postRequest(ItemRequest(
-            _createEquipRequestKey(
-                state.character.name, slot, gearContext, bestInSlot.code),
-            bestInSlot.code,
-            1,
-            state.character.name));
+        // Don't have one to equip, request it instead.
+        final key = _createEquipRequestKey(
+            state.character.name, slot, gearContext, bestInSlot.code);
+        if (!teamBrainProvider.hasRequest(key)) {
+          teamBrainProvider.postRequest(ItemRequest(
+              key,
+              bestInSlot.code,
+              1,
+              state.character.name));
+        }
       }
     }
   }

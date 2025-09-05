@@ -1,3 +1,4 @@
+import 'package:artifacts_mmo/extensions/drop_rate_schema_extension.dart';
 import 'package:artifacts_mmo/models/monster_drop_info.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
@@ -29,7 +30,8 @@ class WorldDataProvider with ChangeNotifier {
 
   Map<String, CraftSchema> get allRecipeMap => _recipeMap;
 
-  Map<CraftSkill, List<MapEntry<String, CraftSchema>>> get recipesPerSkill => _recipesPerSkill;
+  Map<CraftSkill, List<MapEntry<String, CraftSchema>>> get recipesPerSkill =>
+      _recipesPerSkill;
 
   List<MonsterSchema> get allMonsters => _monsters;
 
@@ -114,7 +116,8 @@ class WorldDataProvider with ChangeNotifier {
               _recipes.add(item.craft!);
               _recipeMap[item.code] = item.craft!;
               _recipesPerSkill[item.craft!.skill!] =
-                  (_recipesPerSkill[item.craft!.skill] ?? [])..add(MapEntry(item.code, item.craft!));
+                  (_recipesPerSkill[item.craft!.skill] ?? [])
+                    ..add(MapEntry(item.code, item.craft!));
             }
           }
 
@@ -161,8 +164,8 @@ class WorldDataProvider with ChangeNotifier {
           for (final monster in pageData.data) {
             _monsterMap[monster.code] = monster;
             for (final drop in monster.drops) {
-              _monstersThatDropItem.putIfAbsent(monster.code, () => []);
-              _monstersThatDropItem[monster.code]!
+              _monstersThatDropItem.putIfAbsent(drop.code, () => []);
+              _monstersThatDropItem[drop.code]!
                   .add(MonsterDropInfo(monster.code, drop));
             }
           }
@@ -217,5 +220,17 @@ class WorldDataProvider with ChangeNotifier {
 
   MonsterSchema? getMonsterByCode(String code) {
     return _monsterMap[code];
+  }
+
+  List<MonsterSchema> getMonstersByDropCode(String code) {
+    List<MonsterSchema> monsters = [];
+    final monsterCodes = _monstersThatDropItem[code];
+    monsterCodes?.sort((a,b) => b.drop.averageQuantity.compareTo(a.drop.averageQuantity));
+    monsterCodes
+        ?.map((drop) => getMonsterByCode(drop.monsterCode))
+        .forEach((monster) {
+      if (monster != null) monsters.add(monster);
+    });
+    return monsters;
   }
 }
