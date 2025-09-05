@@ -9,7 +9,7 @@ class TeamBrainPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final teamBrain = context.watch<TeamBrainProvider>();
-    final openRequests = teamBrain.openRequests;
+    final openRequests = teamBrain.openRequests..sort((a, b) => a.key.compareTo(b.key));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +31,10 @@ class TeamBrainPanel extends StatelessWidget {
                 final request = openRequests[index];
                 return ListTile(
                   dense: true,
-                  leading: _imageForItem(request.requestedItem.code),
+                  leading: Padding(
+                    padding: EdgeInsets.fromLTRB(16.0 * (request.depthCount-1), 0 ,0 ,0),
+                    child: _imageForItem(request.requestedItem.code),
+                  ),
                   title: Text('${request.requestedItem.simpleName}'),
                   subtitle: Text('Requested by: ${request.requestedBy}'),
                   trailing: Text(request.key, style: TextStyle(fontSize: 8),),

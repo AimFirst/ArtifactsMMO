@@ -18,6 +18,10 @@ class ItemRequest {
     return buildRequestKey(parentRequest, keyPrefix, requestedItem.code, requestedBy);
   }
 
+  int get depthCount {
+    return (parentRequest?.depthCount ?? 0) + 1;
+  }
+
   ItemRequest({
     required this.keyPrefix,
     required this.requestedItem,
