@@ -65,7 +65,7 @@ class DefaultFightGoal extends AIGoal {
 
     teamProvider.queueMoveTo(state.character, location);
     teamProvider.queueAction(state.character.name,
-        actionFactory.createFightAction(state.character.name));
+        actionFactory.createFightAction(state.character.name, monsterCode ?? ''));
   }
 
   String? _monsterToFight(

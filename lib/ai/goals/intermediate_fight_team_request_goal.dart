@@ -79,7 +79,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
         }
         teamProvider.queueMoveTo(state.character, location);
         teamProvider.queueAction(state.character.name,
-            actionFactory.createFightAction(state.character.name));
+            actionFactory.createFightAction(state.character.name, monster.code));
         return;
       }
     }

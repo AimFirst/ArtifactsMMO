@@ -314,31 +314,20 @@ class _CharacterCardState extends State<CharacterCard> {
   }
 
   Widget _buildActionStatus(CharacterState state) {
-    if (state.isPerformingAction) {
-      return Row(children: [
-        const SizedBox(
-            width: 16,
-            height: 16,
-            child: CircularProgressIndicator(strokeWidth: 2)),
-        const SizedBox(width: 8),
-        Text(state.lastAction)
-      ]);
-    }
-
-    if (state.isOnCooldown) {
-      final remaining =
-          state.cooldownEndsAt!.difference(DateTime.now()).inSeconds;
-      return Row(children: [
-        Icon(Icons.timer, color: Colors.orange[600], size: 16),
-        const SizedBox(width: 8),
-        Text('Ready in ${remaining}s'),
-      ]);
-    }
+    final remaining =
+        state.cooldownEndsAt!.difference(DateTime.now()).inSeconds;
 
     return Row(children: [
       const Icon(Icons.check_circle, color: Colors.green, size: 16),
       const SizedBox(width: 8),
-      Text(state.lastAction)
+      Text(state.lastAction),
+      const Spacer(),
+      if (state.isOnCooldown)
+        Row(children: [
+          Icon(Icons.timer, color: Colors.orange[600], size: 16),
+          const SizedBox(width: 8),
+          Text('Ready in ${remaining}s'),
+        ]),
     ]);
   }
 }

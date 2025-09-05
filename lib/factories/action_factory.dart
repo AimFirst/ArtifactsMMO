@@ -1,5 +1,6 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
+import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/models/queued_action.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
 import 'package:built_collection/built_collection.dart';
@@ -36,7 +37,7 @@ class ActionFactory {
   QueuedAction createTaskDepositAction(
       String characterName, SimpleItemSchema item) {
     return QueuedAction(
-        actionName: 'Depositing $item',
+        actionName: 'Depositing ${item.simpleName}',
         apiCall: () => _apiClient.myCharacters
             .actionTaskTradeMyNameActionTaskTradePost(
                 name: characterName, simpleItemSchema: item));
@@ -77,7 +78,7 @@ class ActionFactory {
   QueuedAction createWithdrawAction(
       String characterName, SimpleItemSchema item) {
     return QueuedAction(
-      actionName: 'Withdraw $item',
+      actionName: 'Withdraw ${item.simpleName}',
       apiCall: () => _apiClient.myCharacters
           .actionWithdrawBankItemMyNameActionBankWithdrawItemPost(
               name: characterName, simpleItemSchema: BuiltList.of([item])),
@@ -135,7 +136,7 @@ class ActionFactory {
   QueuedAction createBankWithdrawAction(
       String characterName, BuiltList<SimpleItemSchema> items) {
     return QueuedAction(
-        actionName: 'Withdraw $items',
+        actionName: 'Withdraw ${items.map((item) => item.simpleName).join(', ')}',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
                 .actionWithdrawBankItemMyNameActionBankWithdrawItemPost(
@@ -147,7 +148,7 @@ class ActionFactory {
   QueuedAction createBankDepositAction(
       String characterName, BuiltList<SimpleItemSchema> items) {
     return QueuedAction(
-        actionName: 'Deposit $items',
+        actionName: 'Deposit ${items.map((item) => item.simpleName).join(', ')}',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
                 .actionDepositBankItemMyNameActionBankDepositItemPost(
@@ -164,9 +165,9 @@ class ActionFactory {
     );
   }
 
-  QueuedAction createFightAction(String characterName) {
+  QueuedAction createFightAction(String characterName, String monster) {
     return QueuedAction(
-      actionName: 'Fighting',
+      actionName: 'Fighting $monster',
       apiCall: () => _apiClient.myCharacters
           .actionFightMyNameActionFightPost(name: characterName),
     );

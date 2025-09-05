@@ -179,7 +179,7 @@ class CompleteServerTaskGoal extends AIGoal {
         // Move to him and fight!
         teamProvider.queueMoveTo(character, monsterLocation);
         teamProvider.queueAction(
-            character.name, actionFactory.createFightAction(character.name));
+            character.name, actionFactory.createFightAction(character.name, targetMonsterCode));
         break;
       case 'items':
         final targetItemName = character.task;
