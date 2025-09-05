@@ -18,6 +18,8 @@ void main() {
   // 1. Create the ApiClient instance
   final apiClient = ApiClient(YOUR_BEARER_TOKEN);
 
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     // Use MultiProvider to provide both TeamProvider and MapProvider
     MultiProvider(
