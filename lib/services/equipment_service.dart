@@ -1,5 +1,6 @@
 // lib/services/equipment_service.dart
 import 'package:artifacts_api/artifacts_api.dart';
+import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
@@ -48,7 +49,10 @@ class EquipmentService {
           context.targetMonster!,
         );
         currentScore = combatDetails.canWin
-            ? combatDetails.totalCooldown * -1.0 + (tempCharacter.maxHp / 1000)
+            ? combatDetails.totalCooldown * -1.0 +
+                (tempCharacter.maxHp / 1000) +
+                (tempCharacter.inventoryMaxItems /
+                    10000) // Provide a small boost if we also get more inventory space
             : worstScore;
       } else {
         // For gathering, the "score" is simply the relevant stat boost.
@@ -58,7 +62,10 @@ class EquipmentService {
                     (sum, effect) => ((sum ?? 0) +
                         (effect.code == context.taskType
                             ? effect.value
-                            : 0))) ??
+                            : effect.code == EffectEnum.inventory_space.name
+                                ? (effect.value /
+                                    100) // Provide a small boost if we also get more inventory space
+                                : 0))) ??
                 0);
       }
 
