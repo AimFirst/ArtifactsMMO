@@ -26,7 +26,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
   String get name => 'Intermediate Craft Team Request';
 
   @override
-  int get priority => 60;
+  int get priority => 85;
 
   @override
   bool canRun(

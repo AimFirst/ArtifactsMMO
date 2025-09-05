@@ -28,6 +28,7 @@ enum EffectEnum {
   dmg_water('Adds X% Water Damage to its stats when equipped.'),
   fishing('Reduces cooldown by -10% when a character is fishing.'),
   gold('Adds X gold in your inventory.'),
+  haste('Adds X Haste to its stats when equipped. The haste reduces the cooldown of a fight.'),
   heal('Heal X HP when the item is used.'),
   healing('Every 3 played turns, restores x% of HP at the start of the turn.'),
   hp('Adds X HP to its stats when equipped.'),

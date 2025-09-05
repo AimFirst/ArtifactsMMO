@@ -46,7 +46,7 @@ dependencies:
   artifacts_api:
     path: artifacts/openapi
   intl: ^0.18.1 # Use the latest stable version
-  wakelock_plus: ^1.3.2
+  wakelock_plus: ^1.3.0
 
 dev_dependencies:
   flutter_test:

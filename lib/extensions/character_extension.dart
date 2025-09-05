@@ -254,6 +254,10 @@ extension CharacterExtensions on CharacterSchema {
             builder.inventoryMaxItems = (builder.inventoryMaxItems ?? 0) +
                 ((subtract ? -1 : 1) * effect.value).round();
             break;
+          case EffectEnum.haste:
+            builder.haste = (builder.haste ?? 0) +
+                ((subtract ? -1 : 1) * effect.value).round();
+            break;
           case EffectEnum.alchemy:
           case EffectEnum.antipoison:
           case EffectEnum.boost_dmg_air:
