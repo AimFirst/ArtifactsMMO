@@ -48,7 +48,7 @@ class EquipmentService {
           context.targetMonster!,
         );
         currentScore = combatDetails.canWin
-            ? combatDetails.totalCooldown * -1.0
+            ? combatDetails.totalCooldown * -1.0 + (tempCharacter.maxHp / 1000)
             : worstScore;
       } else {
         // For gathering, the "score" is simply the relevant stat boost.

@@ -18,7 +18,7 @@ class CombatDetails {
 
   int get turnsForMonsterToWin => (playerStartHp / monsterAvgDPT).ceil();
 
-  int get totalTurns => turnsForPlayerToWin + turnsForMonsterToWin;
+  int get totalTurns => min(turnsForPlayerToWin, turnsForMonsterToWin);
 
   bool get canWin =>
       turnsForPlayerToWin < turnsForMonsterToWin && turnsForPlayerToWin <= 50;
@@ -26,7 +26,7 @@ class CombatDetails {
   double get fightCooldown =>
       totalTurns * 2 - (haste * 0.01) * (totalTurns * 2);
 
-  double get restToHealCooldown => (turnsForMonsterToWin * monsterAvgDPT) / 5;
+  double get restToHealCooldown => (totalTurns * monsterAvgDPT) / 5;
 
   double get totalCooldown => fightCooldown + restToHealCooldown;
 

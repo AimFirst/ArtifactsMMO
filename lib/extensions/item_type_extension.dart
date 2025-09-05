@@ -3,6 +3,10 @@ import 'package:artifacts_api/artifacts_api.dart';
 extension ItemSlotExtension on ItemSlot {
   String get type {
     switch (this) {
+      case ItemSlot.bodyArmor:
+        return 'body_armor';
+      case ItemSlot.legArmor:
+        return 'leg_armor';
       case ItemSlot.artifact1:
       case ItemSlot.artifact2:
       case ItemSlot.artifact3:
