@@ -63,8 +63,11 @@ class _CharacterCardState extends State<CharacterCard> {
               },
               child: Opacity(
                 // Dim the card if the character is busy
-                opacity:
-                    state.isOnCooldown || state.isPaused || state.isPerformingAction ? 0.65 : 1.0,
+                opacity: state.isOnCooldown ||
+                        state.isPaused ||
+                        state.isPerformingAction
+                    ? 0.65
+                    : 1.0,
                 child: _buildCardContent(context, state),
               ),
             ),
@@ -95,15 +98,22 @@ class _CharacterCardState extends State<CharacterCard> {
               Image.network(
                 'https://artifactsmmo.com/images/characters/${character.skin}.png',
                 fit: BoxFit.cover,
-                width: 24, // Control character image size
+                width: 24,
+                // Control character image size
                 height: 24,
                 errorBuilder: (context, error, stackTrace) {
-                  return Icon(Icons.person_off, color: Colors.red, size: 18); // Fallback for missing character image
+                  return Icon(Icons.person_off,
+                      color: Colors.red,
+                      size: 18); // Fallback for missing character image
                 },
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
-                  return SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2));
-                },),
+                  return SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2));
+                },
+              ),
               SizedBox(width: 8),
               Text(character.name,
                   style: const TextStyle(
@@ -123,6 +133,10 @@ class _CharacterCardState extends State<CharacterCard> {
                   teamProvider.togglePause(character.name);
                 },
               ),
+              IconButton(
+                  onPressed: () async =>
+                      await teamProvider.refreshCharacter(character),
+                  icon: Icon(Icons.refresh)),
             ],
           ),
           const SizedBox(height: 12),
@@ -142,7 +156,8 @@ class _CharacterCardState extends State<CharacterCard> {
             children: [
               Icon(Icons.location_on, color: Colors.blue[400], size: 16),
               const SizedBox(width: 8),
-              Text('Location: [${character.location.x}, ${character.location.y}]'),
+              Text(
+                  'Location: [${character.location.x}, ${character.location.y}]'),
             ],
           ),
           // Inventory
@@ -197,17 +212,26 @@ class _CharacterCardState extends State<CharacterCard> {
               ),
               SizedBox(width: 8),
               Image.network(
-                character.taskType == TaskType.items ? 'https://artifactsmmo.com/images/items/${character.task}.png' : 'https://artifactsmmo.com/images/monsters/${character.task}.png',
+                character.taskType == TaskType.items
+                    ? 'https://artifactsmmo.com/images/items/${character.task}.png'
+                    : 'https://artifactsmmo.com/images/monsters/${character.task}.png',
                 fit: BoxFit.cover,
-                width: 12, // Control character image size
+                width: 12,
+                // Control character image size
                 height: 12,
                 errorBuilder: (context, error, stackTrace) {
-                  return Icon(Icons.person_off, color: Colors.red, size: 18); // Fallback for missing character image
+                  return Icon(Icons.person_off,
+                      color: Colors.red,
+                      size: 18); // Fallback for missing character image
                 },
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
-                  return SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 2));
-                },),
+                  return SizedBox(
+                      width: 12,
+                      height: 12,
+                      child: CircularProgressIndicator(strokeWidth: 2));
+                },
+              ),
             ],
           ),
           const SizedBox(height: 4),

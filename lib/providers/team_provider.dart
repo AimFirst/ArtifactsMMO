@@ -82,6 +82,22 @@ class TeamProvider with ChangeNotifier {
     }
   }
 
+  Future<void> refreshCharacter(CharacterSchema character) async {
+    try {
+      final state = _characterStates.firstWhereOrNull((s) =>
+      s.character.name == character.name);
+      if (state != null) {
+        final updatedCharacter = await _apiClient.character
+            .getCharacterCharactersNameGet(name: character.name);
+        if (updatedCharacter.data?.data != null) {
+          state.updateCharacter(updatedCharacter.data!.data);
+        }
+      }
+    } catch (e) {
+      LoggerService.instance.log('Error refreshing character: $e', level: LogLevel.warning, character: character);
+    }
+  }
+
   // Generic method to handle any character action
   // Generic method to handle any character action
   Future<void> performAction<T>({
@@ -108,7 +124,6 @@ class TeamProvider with ChangeNotifier {
       // Check if the response was successful and the data is valid
       if (response.statusCode == 200 && data != null) {
         // --- Robustly extract shared properties ---
-        try {
           // We assume all successful action responses contain 'character' and 'cooldown'.
           // This is a safe way to access properties on a 'dynamic' object.
           final CharacterSchema? updatedCharacter = data?.data?.character;
@@ -122,9 +137,6 @@ class TeamProvider with ChangeNotifier {
                 level: LogLevel.warning, character: character);
             state.setActionFailed('Invalid response format');
           }
-        } catch (_) {
-
-        }
 
         if (data is BankItemTransactionResponseSchema) {
           _bankProvider.updateBankInventory(data.data.bank);
@@ -190,7 +202,7 @@ class TeamProvider with ChangeNotifier {
       state.setActionFailed(errorMessage);
 
       // Try to reset this character's status.
-      await performAction(character: character, actionName: 'error, resetting state', apiCall: () => _apiClient.character.getCharacterCharactersNameGet(name: character.name));
+      await refreshCharacter(character);
     } catch (e) {
       _actionQueues[character.name]?.clear();
       LoggerService.instance
