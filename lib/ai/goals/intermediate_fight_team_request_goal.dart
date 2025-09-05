@@ -36,14 +36,9 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     List<CharacterState> characterStates,
   ) {
     for (final request in teamBrainProvider.openRequests) {
-      // Someone else is already on it.
-      if (request.fulfilledBy != null) {
-        continue;
-      }
-
       // We can gather this item by fighting, so do it.
       if (_canGather(
-          state, request.itemName, worldDataProvider, combatService) != null) {
+          state, request.requestedItem.code, worldDataProvider, combatService) != null) {
         return true;
       }
     }
@@ -65,14 +60,10 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     List<CharacterState> characterStates,
   ) {
     for (final request in teamBrainProvider.openRequests) {
-      // Someone else is already on it.
-      if (request.fulfilledBy != null) {
-        continue;
-      }
 
       // We can gather this item, so do it.
       final monster =
-          _canGather(state, request.itemName, worldDataProvider, combatService);
+          _canGather(state, request.requestedItem.code, worldDataProvider, combatService);
       if (monster != null) {
         final location = mapProvider.findNearestTile(
             state.character.location,
@@ -107,14 +98,10 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
     for (final request in teamBrainProvider.openRequests) {
-      // Someone else is already on it.
-      if (request.fulfilledBy != null) {
-        continue;
-      }
 
       // We can gather this item by fighting, so do it.
       final monster =
-          _canGather(state, request.itemName, worldDataProvider, combatService);
+          _canGather(state, request.requestedItem.code, worldDataProvider, combatService);
       if (monster != null) {
         return GearEvaluationContext(
             taskType: 'overall', targetMonster: monster);

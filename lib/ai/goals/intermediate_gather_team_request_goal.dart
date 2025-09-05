@@ -39,13 +39,9 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     List<CharacterState> characterStates,
   ) {
     for (final request in teamBrainProvider.openRequests) {
-      // Someone else is already on it.
-      if (request.fulfilledBy != null) {
-        continue;
-      }
 
       // We can gather this item, so do it.
-      if (_canGather(state, request.itemName, worldDataProvider)) {
+      if (_canGather(state, request.requestedItem.code, worldDataProvider)) {
         return true;
       }
     }
@@ -68,17 +64,13 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
   ) {
     final requests = _requestsSortedBySkill(state.character, teamBrainProvider, worldDataProvider);
     for (final request in requests) {
-      // Someone else is already on it.
-      if (request.fulfilledBy != null) {
-        continue;
-      }
 
       // We can gather this item, so do it.
-      if (_canGather(state, request.itemName, worldDataProvider)) {
-        final item = worldDataProvider.getResourceByDropCode(request.itemName);
+      if (_canGather(state, request.requestedItem.code, worldDataProvider)) {
+        final item = worldDataProvider.getResourceByDropCode(request.requestedItem.code);
         final location = mapProvider.findNearestTile(state.character.location, (tile) => tile.content?.type == MapContentType.resource && tile.content?.code == item?.code);
         if (location == null) {
-          LoggerService.instance.log('No gather location found for ${request.itemName}', level: LogLevel.warning, character: state.character);
+          LoggerService.instance.log('No gather location found for ${request.requestedItem.code}', level: LogLevel.warning, character: state.character);
           continue;
         }
         teamProvider.queueMoveTo(state.character, location);
@@ -92,14 +84,10 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
   GearEvaluationContext? gearEvaluationContext(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
     final requests = _requestsSortedBySkill(state.character, teamBrainProvider, worldDataProvider);
     for (final request in requests) {
-      // Someone else is already on it.
-      if (request.fulfilledBy != null) {
-        continue;
-      }
 
       // We can gather this item, so do it.
-      if (_canGather(state, request.itemName, worldDataProvider)) {
-        final item = worldDataProvider.getResourceByDropCode(request.itemName);
+      if (_canGather(state, request.requestedItem.code, worldDataProvider)) {
+        final item = worldDataProvider.getResourceByDropCode(request.requestedItem.code);
         if (item != null) {
           return GearEvaluationContext(taskType: item.skill.name);
         }
@@ -112,8 +100,8 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
   List<ItemRequest> _requestsSortedBySkill(CharacterSchema character, TeamBrainProvider teamBrainProvider, WorldDataProvider worldDataProvider) {
     // Try to sort by our best skills first.
     return teamBrainProvider.openRequests..sort((a,b) {
-      final aResource = worldDataProvider.getResourceByDropCode(a.itemName);
-      final bResource = worldDataProvider.getResourceByDropCode(b.itemName);
+      final aResource = worldDataProvider.getResourceByDropCode(a.requestedItem.code);
+      final bResource = worldDataProvider.getResourceByDropCode(b.requestedItem.code);
 
       if (aResource != null && bResource != null) {
         final aSkill = aResource.skill;

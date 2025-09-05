@@ -1,3 +1,4 @@
+import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,9 +31,9 @@ class TeamBrainPanel extends StatelessWidget {
                 final request = openRequests[index];
                 return ListTile(
                   dense: true,
-                  leading: _imageForItem(request.itemName),
-                  title: Text("${request.quantity}x ${request.itemName}"),
-                  subtitle: Text("Requested by: ${request.requestedBy}"),
+                  leading: _imageForItem(request.requestedItem.code),
+                  title: Text('${request.requestedItem.simpleName}'),
+                  subtitle: Text('Requested by: ${request.requestedBy}'),
                   trailing: Text(request.key, style: TextStyle(fontSize: 8),),
                 );
               },

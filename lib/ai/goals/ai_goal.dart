@@ -143,8 +143,7 @@ abstract class AIGoal {
       if ((state.character.inventory?.count(bestInSlot.code) ?? 0) < 1) {
         // See if we have it in the bank
         if (bankProvider.count(bestInSlot.code) > 0) {
-          teamBrainProvider.completeRequestKey(_createEquipRequestKey(
-              state.character.name, slot, gearContext, bestInSlot.name));
+          teamBrainProvider.completeRequest(null, _createEquipRequestKeyPrefix(slot, gearContext), bestInSlot.code, state.character.name);
           teamProvider.queueBankWithdraw(
               state.character,
               BuiltList.of([
@@ -171,21 +170,22 @@ abstract class AIGoal {
                 slot));
       } else {
         // Don't have one to equip, request it instead.
-        final key = _createEquipRequestKey(
-            state.character.name, slot, gearContext, bestInSlot.code);
-        if (!teamBrainProvider.hasRequest(key)) {
+        final keyPrefix = _createEquipRequestKeyPrefix(slot, gearContext);
+        if (!teamBrainProvider.hasRequest(null, keyPrefix, bestInSlot.code, state.character.name)) {
           teamBrainProvider.postRequest(ItemRequest(
-              key,
-              bestInSlot.code,
-              1,
-              state.character.name));
+            keyPrefix: keyPrefix,
+            requestedBy: state.character.name,
+            requestedItem: SimpleItemSchemaBuilder()
+                .fromCodeAndQuantity(bestInSlot.code, 1),
+            childrenRequests: [],
+          ));
         }
       }
     }
   }
 
-  String _createEquipRequestKey(String characterName, ItemSlot slot,
-      GearEvaluationContext gearContext, String itemName) {
-    return '${characterName}_${slot.toString()}_${gearContext.taskType}_$itemName';
+  String _createEquipRequestKeyPrefix(
+      ItemSlot slot, GearEvaluationContext gearContext) {
+    return '${slot.name}-${gearContext.taskType}';
   }
 }

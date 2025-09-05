@@ -1,6 +1,7 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/extensions/inventory_extension.dart';
+import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
@@ -37,8 +38,8 @@ class FulfillTeamRequestGoal extends AIGoal {
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
     return teamBrainProvider.openRequests.any((request) =>
-        (state.character.inventory?.count(request.itemName) ?? 0) >=
-        request.quantity);
+        (state.character.inventory?.count(request.requestedItem.code) ?? 0) >=
+        request.requestedItem.quantity);
   }
 
   @override
@@ -54,23 +55,18 @@ class FulfillTeamRequestGoal extends AIGoal {
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
     final request = teamBrainProvider.openRequests.firstWhereOrNull((request) =>
-        (state.character.inventory?.count(request.itemName) ?? 0) >=
-        request.quantity);
+        (state.character.inventory?.count(request.requestedItem.code) ?? 0) >=
+        request.requestedItem.quantity);
     if (request == null) {
       LoggerService.instance.log("AI: Can't find a request to fulfill.",
           level: LogLevel.warning, character: state.character);
       return;
     }
 
-    teamBrainProvider.fulfillRequest(request, state.character.name);
-
     teamProvider.queueBankDeposit(
         state.character,
         BuiltList.of([
-          (SimpleItemSchemaBuilder()
-                ..code = request.itemName
-                ..quantity = request.quantity)
-              .build()
+          SimpleItemSchemaBuilder().fromCodeAndQuantity(request.requestedItem.code, request.requestedItem.quantity)
         ]));
   }
 
