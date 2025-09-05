@@ -6,7 +6,6 @@ import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
-import 'package:artifacts_mmo/services/equipment_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:artifacts_api/artifacts_api.dart';
@@ -26,7 +25,6 @@ class TeamProvider with ChangeNotifier {
   BankProvider _bankProvider; // Add a reference
   TeamBrainProvider _teamBrainProvider;
   late ActionFactory _actionFactory;
-  late EquipmentService _equipmentService;
 
   List<CharacterState> _characterStates = []; // Use the new wrapper
   List<CharacterState> get characters => _characterStates;
@@ -51,7 +49,6 @@ class TeamProvider with ChangeNotifier {
     _actionFactory = ActionFactory(_apiClient);
     _aiService = TeamAIService(_apiClient, this, _worldDataProvider,
         _bankProvider, _mapProvider, _combatService, _teamBrainProvider);
-    _equipmentService = EquipmentService(_combatService);
     fetchAllCharacters().then((_) {
       // Initialize queues and start the game loop after characters are loaded
       for (var state in _characterStates) {
@@ -294,6 +291,23 @@ class TeamProvider with ChangeNotifier {
     final state = _characterStates
         .firstWhereOrNull((s) => s.character.name == characterName);
     state?.togglePaused();
+  }
+
+  void togglePauseAll() {
+    // Check if any character is currently active.
+    final bool shouldPause = _characterStates.any((c) => !c.isPaused);
+
+    // Set the paused state for every character.
+    for (final state in _characterStates) {
+      state.isPaused = shouldPause;
+      // Also update their goal display if they are being resumed.
+      if (!shouldPause) {
+        state.currentGoal = 'Idle';
+      }
+    }
+
+    LoggerService.instance.log(shouldPause ? "TEAM: Pausing all characters." : "TEAM: Resuming all characters.");
+    notifyListeners();
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:artifacts_mmo/widgets/log_panel.dart';
 import 'package:artifacts_mmo/widgets/map_view.dart';
+import 'package:artifacts_mmo/widgets/quick_settings_panel.dart';
 import 'package:artifacts_mmo/widgets/team_brain_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,21 @@ class HomePage extends StatelessWidget {
               children: [
                 const Expanded(
                   flex: 3, // Map takes the top portion
-                  child: MapView(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // The Map now goes inside an Expanded to take up remaining space
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 17 / 21,
+                          child: const MapView(),
+                        ),
+                      ),
+                      const VerticalDivider(width: 1),
+                      // The new settings panel is added here. It will not expand.
+                      QuickSettingsPanel(),
+                    ],
+                  ),
                 ),
                 const Divider(height: 1),
                 Expanded(
