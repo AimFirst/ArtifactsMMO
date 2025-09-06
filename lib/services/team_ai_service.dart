@@ -21,7 +21,7 @@ import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
-import 'package:artifacts_mmo/services/equipment_service.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 
 // This is our "Brain". It's not a provider and has no UI logic.
@@ -36,7 +36,7 @@ class TeamAIService {
   final TeamBrainProvider _teamBrainProvider;
   final List<AIGoal> _goals = [];
   late ActionFactory _actionFactory;
-  late EquipmentService _equipmentService;
+  late LoadoutOptimizerService _loadoutOptimizerService;
 
   TeamAIService(
       this._apiClient,
@@ -47,7 +47,7 @@ class TeamAIService {
       this._combatService,
       this._teamBrainProvider) {
     _actionFactory = ActionFactory(_apiClient);
-    _equipmentService = EquipmentService(_combatService);
+    _loadoutOptimizerService = LoadoutOptimizerService(_combatService, _worldDataProvider);
 
     // Initialize all possible goals.
     _goals.addAll([
@@ -100,7 +100,7 @@ class TeamAIService {
             state,
             this,
             _combatService,
-            _equipmentService,
+            _loadoutOptimizerService,
             _worldDataProvider,
             _actionFactory,
             _mapProvider,

@@ -1,9 +1,11 @@
 import 'package:artifacts_mmo/extensions/drop_rate_schema_extension.dart';
+import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/models/monster_drop_info.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/services/api_client.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 import 'package:artifacts_api/artifacts_api.dart';
 
@@ -21,6 +23,7 @@ class WorldDataProvider with ChangeNotifier {
   final List<MonsterSchema> _monsters = [];
   final Map<String, MonsterSchema> _monsterMap = {};
   final Map<String, List<MonsterDropInfo>> _monstersThatDropItem = {};
+  final Map<ItemSlot, List<ItemSchema>> _itemsForSlotMap = {};
 
   bool _isLoading = false;
 
@@ -112,12 +115,20 @@ class WorldDataProvider with ChangeNotifier {
           _items.addAll(pageData.data);
           for (final item in pageData.data) {
             _itemMap[item.code] = item;
+
+            // Cache crafting
             if (item.craft != null) {
               _recipes.add(item.craft!);
               _recipeMap[item.code] = item.craft!;
               _recipesPerSkill[item.craft!.skill!] =
                   (_recipesPerSkill[item.craft!.skill] ?? [])
                     ..add(MapEntry(item.code, item.craft!));
+            }
+
+            // Cache equipment
+            final itemSlot = ItemSlot.values.firstWhereOrNull((e) => e.type == item.type);
+            if (itemSlot != null) {
+              _itemsForSlotMap.putIfAbsent(itemSlot, () => <ItemSchema>[]).add(item);
             }
           }
 

@@ -7,6 +7,8 @@ import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 
 extension CharacterExtensions on CharacterSchema {
+  static String overallLevelSkillName = 'overall';
+
   DestinationSchema get location => (DestinationSchemaBuilder()
         ..x = x
         ..y = y)
@@ -88,91 +90,106 @@ extension CharacterExtensions on CharacterSchema {
   }
 
   CharacterSchema copyWithEquippedItem(
-    ItemSchema newItem,
     ItemSlot itemSlot,
+    ItemSchema item,
+    WorldDataProvider worldDataProvider,
+  ) {
+    return copyWithEquippedItems({itemSlot: item}, worldDataProvider);
+  }
+
+  CharacterSchema copyWithEquippedItems(
+    Map<ItemSlot, ItemSchema?> items,
     WorldDataProvider worldDataProvider,
   ) {
     String? previousItemCode;
     final builder = toBuilder();
-    switch (itemSlot) {
-      case ItemSlot.amulet:
-        previousItemCode = amuletSlot;
-        builder.amuletSlot = newItem.code;
-        break;
-      case ItemSlot.artifact1:
-        previousItemCode = artifact1Slot;
-        builder.artifact1Slot = newItem.code;
-        break;
-      case ItemSlot.artifact2:
-        previousItemCode = artifact2Slot;
-        builder.artifact2Slot = newItem.code;
-        break;
-      case ItemSlot.artifact3:
-        previousItemCode = artifact3Slot;
-        builder.artifact3Slot = newItem.code;
-        break;
-      case ItemSlot.bag:
-        previousItemCode = bagSlot;
-        builder.bagSlot = newItem.code;
-        break;
-      case ItemSlot.bodyArmor:
-        previousItemCode = bodyArmorSlot;
-        builder.bodyArmorSlot = newItem.code;
-        break;
-      case ItemSlot.boots:
-        previousItemCode = bootsSlot;
-        builder.bootsSlot = newItem.code;
-        break;
-      case ItemSlot.helmet:
-        previousItemCode = helmetSlot;
-        builder.helmetSlot = newItem.code;
-        break;
-      case ItemSlot.legArmor:
-        previousItemCode = legArmorSlot;
-        builder.legArmorSlot = newItem.code;
-        break;
-      case ItemSlot.ring1:
-        previousItemCode = ring1Slot;
-        builder.ring1Slot = newItem.code;
-        break;
-      case ItemSlot.ring2:
-        previousItemCode = ring2Slot;
-        builder.ring2Slot = newItem.code;
-        break;
-      case ItemSlot.rune:
-        previousItemCode = runeSlot;
-        builder.runeSlot = newItem.code;
-        break;
-      case ItemSlot.weapon:
-        previousItemCode = weaponSlot;
-        builder.weaponSlot = newItem.code;
-        break;
-      case ItemSlot.utility1:
-        previousItemCode = utility1Slot;
-        builder.utility1Slot = newItem.code;
-        break;
-      case ItemSlot.utility2:
-        previousItemCode = utility2Slot;
-        builder.utility2Slot = newItem.code;
-        break;
-      case ItemSlot.shield:
-        previousItemCode = shieldSlot;
-        builder.shieldSlot = newItem.code;
-        break;
-      default:
-        LoggerService.instance
-            .log('Unknown item slot: $itemSlot', character: this);
-        break;
-    }
+    for (final itemEntry in items.entries) {
+      final itemSlot = itemEntry.key;
+      final newItem = itemEntry.value;
+      final newItemCode = newItem?.code ?? '';
 
-    ItemSchema? oldItem = previousItemCode == null
-        ? null
-        : worldDataProvider.getItemByCode(previousItemCode);
+      switch (itemSlot) {
+        case ItemSlot.amulet:
+          previousItemCode = amuletSlot;
+          builder.amuletSlot = newItemCode;
+          break;
+        case ItemSlot.artifact1:
+          previousItemCode = artifact1Slot;
+          builder.artifact1Slot = newItemCode;
+          break;
+        case ItemSlot.artifact2:
+          previousItemCode = artifact2Slot;
+          builder.artifact2Slot = newItemCode;
+          break;
+        case ItemSlot.artifact3:
+          previousItemCode = artifact3Slot;
+          builder.artifact3Slot = newItemCode;
+          break;
+        case ItemSlot.bag:
+          previousItemCode = bagSlot;
+          builder.bagSlot = newItemCode;
+          break;
+        case ItemSlot.bodyArmor:
+          previousItemCode = bodyArmorSlot;
+          builder.bodyArmorSlot = newItemCode;
+          break;
+        case ItemSlot.boots:
+          previousItemCode = bootsSlot;
+          builder.bootsSlot = newItemCode;
+          break;
+        case ItemSlot.helmet:
+          previousItemCode = helmetSlot;
+          builder.helmetSlot = newItemCode;
+          break;
+        case ItemSlot.legArmor:
+          previousItemCode = legArmorSlot;
+          builder.legArmorSlot = newItemCode;
+          break;
+        case ItemSlot.ring1:
+          previousItemCode = ring1Slot;
+          builder.ring1Slot = newItemCode;
+          break;
+        case ItemSlot.ring2:
+          previousItemCode = ring2Slot;
+          builder.ring2Slot = newItemCode;
+          break;
+        case ItemSlot.rune:
+          previousItemCode = runeSlot;
+          builder.runeSlot = newItemCode;
+          break;
+        case ItemSlot.weapon:
+          previousItemCode = weaponSlot;
+          builder.weaponSlot = newItemCode;
+          break;
+        case ItemSlot.utility1:
+          previousItemCode = utility1Slot;
+          builder.utility1Slot = newItemCode;
+          break;
+        case ItemSlot.utility2:
+          previousItemCode = utility2Slot;
+          builder.utility2Slot = newItemCode;
+          break;
+        case ItemSlot.shield:
+          previousItemCode = shieldSlot;
+          builder.shieldSlot = newItemCode;
+          break;
+        default:
+          LoggerService.instance
+              .log('Unknown item slot: $itemSlot', character: this);
+          break;
+      }
 
-    if (oldItem != null) {
-      _updateStats(builder, oldItem, true);
+      ItemSchema? oldItem = previousItemCode == null
+          ? null
+          : worldDataProvider.getItemByCode(previousItemCode);
+
+      if (oldItem != null) {
+        _updateStats(builder, oldItem, true);
+      }
+      if (newItem != null) {
+        _updateStats(builder, newItem, false);
+      }
     }
-    _updateStats(builder, newItem, false);
 
     return builder.build();
   }
@@ -286,7 +303,7 @@ extension CharacterExtensions on CharacterSchema {
       }
     } catch (e) {
       LoggerService.instance.log(
-        'Error mapping effect enum: $e',
+        'Error mapping effect enum for ${item.code}: $e',
         character: this,
         level: LogLevel.warning,
       );
@@ -356,7 +373,7 @@ extension CharacterExtensions on CharacterSchema {
       };
 
   Map<String, SkillLevel> get skills =>
-      {'overall': SkillLevel(level: level, xp: xp, maxXp: maxXp)}
+      {overallLevelSkillName: SkillLevel(level: level, xp: xp, maxXp: maxXp)}
         ..addAll(craftSkills.map((key, value) => MapEntry(key.name, value)))
         ..addAll(
             gatheringSkills.map((key, value) => MapEntry(key.name, value)));
