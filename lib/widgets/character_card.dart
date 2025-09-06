@@ -212,7 +212,7 @@ class _CharacterCardState extends State<CharacterCard> {
               ),
               SizedBox(width: 8),
               Image.network(
-                character.taskType == TaskType.items
+                character.taskType == TaskType.items.name
                     ? 'https://artifactsmmo.com/images/items/${character.task}.png'
                     : 'https://artifactsmmo.com/images/monsters/${character.task}.png',
                 fit: BoxFit.cover,
