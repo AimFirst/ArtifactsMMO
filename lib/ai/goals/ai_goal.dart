@@ -135,7 +135,7 @@ abstract class AIGoal {
       }
 
       // Check to see if it's already equipped
-      if (currentLoadout.itemsBySlot[slot] == item.code) {
+      if (currentLoadout.itemsBySlot[slot]?.code == item.code) {
         continue;
       }
 
@@ -190,7 +190,7 @@ abstract class AIGoal {
       }
 
       // Check to see if it's already equipped
-      if (currentLoadout.itemsBySlot[slot] == item.code) {
+      if (currentLoadout.itemsBySlot[slot]?.code == item.code) {
         continue;
       }
 
@@ -218,6 +218,7 @@ abstract class AIGoal {
               SimpleItemSchemaBuilder()
                   .fromCodeAndQuantity(item.code, 1)
             ]));
+        foundOneToEquip = true;
       }
 
       // We found one to equip, let's do it.
