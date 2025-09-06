@@ -7,4 +7,9 @@ class GearEvaluationContext {
   targetMonster; // The specific monster for fighting context
 
   GearEvaluationContext({required this.taskType, this.targetMonster});
+
+  @override
+  String toString() {
+    return targetMonster == null ? taskType : '$taskType:${targetMonster?.code}';
+  }
 }
