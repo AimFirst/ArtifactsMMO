@@ -155,7 +155,7 @@ abstract class AIGoal {
       }
 
       // Not found anywhere, let's request it.
-      final keyPrefix = _createEquipRequestKeyPrefix(slot, gearContext);
+      final keyPrefix = _createEquipRequestKeyPrefix(slot);
       if (!teamBrainProvider.hasRequest(
           null, keyPrefix, item.code, state.character.name)) {
         teamBrainProvider.postRequest(ItemRequest(
@@ -209,7 +209,7 @@ abstract class AIGoal {
           .isNotEmpty) {
         teamBrainProvider.completeRequest(
             null,
-            _createEquipRequestKeyPrefix(slot, gearContext),
+            _createEquipRequestKeyPrefix(slot),
             item.code,
             state.character.name);
         teamProvider.queueBankWithdraw(
@@ -236,7 +236,7 @@ abstract class AIGoal {
   }
 
   String _createEquipRequestKeyPrefix(
-      ItemSlot slot, GearEvaluationContext gearContext) {
-    return '${slot.name}-${gearContext.taskType}';
+      ItemSlot slot) {
+    return '${slot.name}-gear';
   }
 }

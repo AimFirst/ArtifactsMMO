@@ -9,7 +9,7 @@ class TeamBrainPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final teamBrain = context.watch<TeamBrainProvider>();
-    final openRequests = teamBrain.openRequests..sort((a, b) => a.key.compareTo(b.key));
+    final openRequests = [...teamBrain.openRequests]..sort((a, b) => a.key.compareTo(b.key));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
