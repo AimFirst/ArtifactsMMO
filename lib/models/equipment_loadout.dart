@@ -1,5 +1,6 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
+import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 
 // note to self: HP starts at 120 and increased by 5 for every combat level
@@ -62,6 +63,21 @@ class EquipmentLoadout {
     );
   }
 
+  factory EquipmentLoadout.fromItems(List<ItemSchema?> items) {
+    EquipmentLoadout loadout = EquipmentLoadout();
+    for (final item in items) {
+      if (item == null) {
+        continue;
+      }
+
+      final slot = item.itemSlot;
+      if (slot != null) {
+        loadout = loadout.copyWithItem(slot, item);
+      }
+    }
+    return loadout;
+  }
+
   Map<ItemSlot, ItemSchema?> get itemsBySlot {
     return {
       ItemSlot.weapon: weapon,
@@ -104,7 +120,7 @@ class EquipmentLoadout {
     ];
   }
 
-  double effectValue(EffectEnum effectEnum) {
+  int effectValue(EffectEnum effectEnum) {
     return items.fold(
         0,
         (prevItemSum, item) =>
