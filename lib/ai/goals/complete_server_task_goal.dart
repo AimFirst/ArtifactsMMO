@@ -16,6 +16,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:built_collection/built_collection.dart';
@@ -32,6 +33,7 @@ class CompleteServerTaskGoal extends AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -77,6 +79,7 @@ class CompleteServerTaskGoal extends AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -178,8 +181,8 @@ class CompleteServerTaskGoal extends AIGoal {
 
         // Move to him and fight!
         teamProvider.queueMoveTo(character, monsterLocation);
-        teamProvider.queueAction(
-            character.name, actionFactory.createFightAction(character.name, targetMonsterCode));
+        teamProvider.queueAction(character.name,
+            actionFactory.createFightAction(character.name, targetMonsterCode));
         break;
       case 'items':
         final targetItemName = character.task;
@@ -250,6 +253,7 @@ class CompleteServerTaskGoal extends AIGoal {
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
+      LoadoutOptimizerService loadoutOptimizerService,
       WorldDataProvider worldDataProvider,
       ActionFactory actionFactory,
       MapProvider mapProvider,

@@ -47,7 +47,8 @@ class TeamAIService {
       this._combatService,
       this._teamBrainProvider) {
     _actionFactory = ActionFactory(_apiClient);
-    _loadoutOptimizerService = LoadoutOptimizerService(_combatService, _worldDataProvider);
+    _loadoutOptimizerService =
+        LoadoutOptimizerService(_combatService, _worldDataProvider);
 
     // Initialize all possible goals.
     _goals.addAll([
@@ -87,6 +88,7 @@ class TeamAIService {
           state,
           this,
           _combatService,
+          _loadoutOptimizerService,
           _worldDataProvider,
           _actionFactory,
           _mapProvider,
@@ -115,6 +117,7 @@ class TeamAIService {
             state,
             this,
             _combatService,
+            _loadoutOptimizerService,
             _worldDataProvider,
             _actionFactory,
             _mapProvider,

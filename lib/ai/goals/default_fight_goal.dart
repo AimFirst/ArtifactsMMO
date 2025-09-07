@@ -12,6 +12,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
@@ -27,6 +28,7 @@ class DefaultFightGoal extends AIGoal {
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
+      LoadoutOptimizerService loadoutOptimizerService,
       WorldDataProvider worldDataProvider,
       ActionFactory actionFactory,
       MapProvider mapProvider,
@@ -42,6 +44,7 @@ class DefaultFightGoal extends AIGoal {
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
+      LoadoutOptimizerService loadoutOptimizerService,
       WorldDataProvider worldDataProvider,
       ActionFactory actionFactory,
       MapProvider mapProvider,
@@ -49,8 +52,8 @@ class DefaultFightGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
-    final monsterCode =
-        _monsterToFight(worldDataProvider, combatService, state.character);
+    final monsterCode = _monsterToFight(worldDataProvider, combatService,
+        state.character, bankProvider, loadoutOptimizerService);
 
     final location = mapProvider.findNearestTile(
         state.character.location,
@@ -64,19 +67,39 @@ class DefaultFightGoal extends AIGoal {
     }
 
     teamProvider.queueMoveTo(state.character, location);
-    teamProvider.queueAction(state.character.name,
-        actionFactory.createFightAction(state.character.name, monsterCode ?? ''));
+    teamProvider.queueAction(
+        state.character.name,
+        actionFactory.createFightAction(
+            state.character.name, monsterCode ?? ''));
   }
 
   String? _monsterToFight(
     WorldDataProvider worldDataProvider,
     CombatService combatService,
     CharacterSchema character,
+    BankProvider bankProvider,
+    LoadoutOptimizerService loadoutOptimizerService,
   ) {
     final monsters = worldDataProvider.allMonsters
       ..sort((b, a) => a.level.compareTo(b.level));
     for (final monster in monsters) {
-      if (combatService.canWinFight(character, monster)) {
+      final idealLoadout = loadoutOptimizerService.bestLoadoutOfAvailableItems(
+        character,
+        GearEvaluationContext(
+            taskType: CharacterExtensions.overallLevelSkillName,
+            targetMonster: monster),
+        character.inventory
+                ?.map((i) => worldDataProvider.getItemByCode(i.code))
+                .toList() ??
+            [],
+        bankProvider.items
+            .map((i) => worldDataProvider.getItemByCode(i.code))
+            .toList(),
+      );
+      final tempCharacter = character.copyWithEquippedItems(
+          idealLoadout.loadout.itemsBySlot, worldDataProvider);
+
+      if (combatService.canWinFight(tempCharacter, monster)) {
         return monster.code;
       }
     }
@@ -88,6 +111,7 @@ class DefaultFightGoal extends AIGoal {
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
+      LoadoutOptimizerService loadoutOptimizerService,
       WorldDataProvider worldDataProvider,
       ActionFactory actionFactory,
       MapProvider mapProvider,
@@ -95,8 +119,13 @@ class DefaultFightGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
-    final monsterCode =
-        _monsterToFight(worldDataProvider, combatService, state.character);
+    final monsterCode = _monsterToFight(
+      worldDataProvider,
+      combatService,
+      state.character,
+      bankProvider,
+      loadoutOptimizerService,
+    );
     if (monsterCode == null) {
       return null;
     }

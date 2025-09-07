@@ -11,6 +11,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:built_collection/built_collection.dart';
 
@@ -26,6 +27,7 @@ class ClearInventoryGoal extends AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -43,6 +45,7 @@ class ClearInventoryGoal extends AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -76,6 +79,7 @@ class ClearInventoryGoal extends AIGoal {
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
+      LoadoutOptimizerService loadoutOptimizerService,
       WorldDataProvider worldDataProvider,
       ActionFactory actionFactory,
       MapProvider mapProvider,

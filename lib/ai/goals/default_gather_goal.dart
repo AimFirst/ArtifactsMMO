@@ -11,6 +11,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
@@ -23,81 +24,103 @@ class DefaultGatherGoal extends AIGoal {
 
   @override
   bool canRun(
-      CharacterState state,
-      TeamAIService aiService,
-      CombatService combatService,
-      WorldDataProvider worldDataProvider,
-      ActionFactory actionFactory,
-      MapProvider mapProvider,
-      TeamProvider teamProvider,
-      BankProvider bankProvider,
-      TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates,
-      ) {
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  ) {
     // Find any crafting skills that we are the "expert" on and see if we can craft anything.
     return _expertGatherer(
-        state, worldDataProvider, bankProvider, characterStates) !=
+            state, worldDataProvider, bankProvider, characterStates) !=
         null;
   }
 
   @override
   void execute(
-      CharacterState state,
-      TeamAIService aiService,
-      CombatService combatService,
-      WorldDataProvider worldDataProvider,
-      ActionFactory actionFactory,
-      MapProvider mapProvider,
-      TeamProvider teamProvider,
-      BankProvider bankProvider,
-      TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates,
-      ) {
-    final skill = _expertGatherer(state, worldDataProvider, bankProvider, characterStates);
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  ) {
+    final skill = _expertGatherer(
+        state, worldDataProvider, bankProvider, characterStates);
     if (skill == null) {
-      LoggerService.instance.log('No gather skill found.', character: state.character);
+      LoggerService.instance
+          .log('No gather skill found.', character: state.character);
       return;
     }
 
     // Find the hardest thing in this skill we can gather.
-    final resourceToGather = ((mapProvider.worldMap?.tiles ?? []) .map((tile) {
-      // Not a resource node, ignore it.
-      if (tile.content?.type != MapContentType.resource || tile.content?.code == null) {
-        return null;
-      }
+    final resourceToGather = ((mapProvider.worldMap?.tiles ?? [])
+            .map((tile) {
+              // Not a resource node, ignore it.
+              if (tile.content?.type != MapContentType.resource ||
+                  tile.content?.code == null) {
+                return null;
+              }
 
-      final resource = worldDataProvider.getResourceByCode(tile.content!.code);
-      if (resource == null) {
-        LoggerService.instance.log('No resource found for ${tile.content?.code}', character: state.character);
-        return null;
-      }
+              final resource =
+                  worldDataProvider.getResourceByCode(tile.content!.code);
+              if (resource == null) {
+                LoggerService.instance.log(
+                    'No resource found for ${tile.content?.code}',
+                    character: state.character);
+                return null;
+              }
 
-      // Only want resources for this skill.
-      if (resource.skill != skill) {
-        return null;
-      }
+              // Only want resources for this skill.
+              if (resource.skill != skill) {
+                return null;
+              }
 
-      // We can't gather it, we are too weak :(
-      if (resource.level > state.character.gatheringSkills[skill]!.level) {
-        return null;
-      }
+              // We can't gather it, we are too weak :(
+              if (resource.level >
+                  state.character.gatheringSkills[skill]!.level) {
+                return null;
+              }
 
-      return resource;
-    }).where((e) => e != null).toList()..sort((a,b) => (b?.level ?? 1) - (a?.level ?? 1))).firstOrNull;
+              return resource;
+            })
+            .where((e) => e != null)
+            .toList()
+          ..sort((a, b) => (b?.level ?? 1) - (a?.level ?? 1)))
+        .firstOrNull;
 
     if (resourceToGather == null) {
-      LoggerService.instance.log('No gatherable resources found.', character: state.character);
+      LoggerService.instance
+          .log('No gatherable resources found.', character: state.character);
       return;
     }
 
-    final location = mapProvider.findNearestTile(state.character.location, (tile) => tile.content?.type == MapContentType.resource && tile.content?.code == resourceToGather.code);
+    final location = mapProvider.findNearestTile(
+        state.character.location,
+        (tile) =>
+            tile.content?.type == MapContentType.resource &&
+            tile.content?.code == resourceToGather.code);
     if (location == null) {
-      LoggerService.instance.log('No gatherable resources found for skill: ${skill.name}.', character: state.character);
+      LoggerService.instance.log(
+          'No gatherable resources found for skill: ${skill.name}.',
+          character: state.character);
       return;
     }
 
     teamProvider.queueMoveTo(state.character, location);
-    teamProvider.queueAction(state.character.name, actionFactory.createGatherAction(state.character.name));
+    teamProvider.queueAction(state.character.name,
+        actionFactory.createGatherAction(state.character.name));
   }
 
   GatheringSkill? _expertGatherer(
@@ -125,8 +148,25 @@ class DefaultGatherGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(CharacterState state, TeamAIService aiService, CombatService combatService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates) {
-    final skill = _expertGatherer(state, worldDataProvider, bankProvider, characterStates,);
+  GearEvaluationContext? gearEvaluationContext(
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  ) {
+    final skill = _expertGatherer(
+      state,
+      worldDataProvider,
+      bankProvider,
+      characterStates,
+    );
     if (skill == null) {
       return null;
     }

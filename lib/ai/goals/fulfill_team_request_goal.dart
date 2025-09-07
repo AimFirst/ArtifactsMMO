@@ -13,6 +13,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:collection/collection.dart';
@@ -30,6 +31,7 @@ class FulfillTeamRequestGoal extends AIGoal {
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
+      LoadoutOptimizerService loadoutOptimizerService,
       WorldDataProvider worldDataProvider,
       ActionFactory actionFactory,
       MapProvider mapProvider,
@@ -47,6 +49,7 @@ class FulfillTeamRequestGoal extends AIGoal {
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
+      LoadoutOptimizerService loadoutOptimizerService,
       WorldDataProvider worldDataProvider,
       ActionFactory actionFactory,
       MapProvider mapProvider,
@@ -66,7 +69,8 @@ class FulfillTeamRequestGoal extends AIGoal {
     teamProvider.queueBankDeposit(
         state.character,
         BuiltList.of([
-          SimpleItemSchemaBuilder().fromCodeAndQuantity(request.requestedItem.code, request.requestedItem.quantity)
+          SimpleItemSchemaBuilder().fromCodeAndQuantity(
+              request.requestedItem.code, request.requestedItem.quantity)
         ]));
   }
 
@@ -75,6 +79,7 @@ class FulfillTeamRequestGoal extends AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,

@@ -27,6 +27,7 @@ abstract class AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -41,6 +42,7 @@ abstract class AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -54,6 +56,7 @@ abstract class AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -68,6 +71,7 @@ abstract class AIGoal {
         state,
         aiService,
         combatService,
+        loadoutOptimizerService,
         worldDataProvider,
         actionFactory,
         mapProvider,
@@ -81,6 +85,7 @@ abstract class AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -107,6 +112,7 @@ abstract class AIGoal {
         state,
         aiService,
         combatService,
+        loadoutOptimizerService,
         worldDataProvider,
         actionFactory,
         mapProvider,
@@ -181,7 +187,8 @@ abstract class AIGoal {
                 .map((item) => worldDataProvider.getItemByCode(item.code))
                 .toList());
 
-    for (final itemWithSlot in bestAvailableEquipment.loadout.itemsBySlot.entries) {
+    for (final itemWithSlot
+        in bestAvailableEquipment.loadout.itemsBySlot.entries) {
       final item = itemWithSlot.value;
       final slot = itemWithSlot.key;
       // If it's null, whatever item is currently equipped in this slot will be fine.
@@ -197,16 +204,17 @@ abstract class AIGoal {
       bool foundOneToEquip = false;
       // Check to see if it's in our inventory
       if ((state.character.inventory
-          ?.where((inventoryItem) => inventoryItem.code == item.code) ??
-          [])
+                  ?.where((inventoryItem) => inventoryItem.code == item.code) ??
+              [])
           .isNotEmpty) {
         foundOneToEquip = true;
       }
 
       // Check to see if it's in the bank
-      if (!foundOneToEquip && bankProvider.items
-          .where((bankItem) => bankItem.code == item.code)
-          .isNotEmpty) {
+      if (!foundOneToEquip &&
+          bankProvider.items
+              .where((bankItem) => bankItem.code == item.code)
+              .isNotEmpty) {
         teamBrainProvider.completeRequest(
             null,
             _createEquipRequestKeyPrefix(slot),
@@ -214,10 +222,8 @@ abstract class AIGoal {
             state.character.name);
         teamProvider.queueBankWithdraw(
             state.character,
-            BuiltList.of([
-              SimpleItemSchemaBuilder()
-                  .fromCodeAndQuantity(item.code, 1)
-            ]));
+            BuiltList.of(
+                [SimpleItemSchemaBuilder().fromCodeAndQuantity(item.code, 1)]));
         foundOneToEquip = true;
       }
 
@@ -228,15 +234,13 @@ abstract class AIGoal {
             state.character.name,
             actionFactory.createEquipAction(
                 state.character.name,
-                SimpleItemSchemaBuilder()
-                    .fromCodeAndQuantity(item.code, 1),
+                SimpleItemSchemaBuilder().fromCodeAndQuantity(item.code, 1),
                 slot));
       }
     }
   }
 
-  String _createEquipRequestKeyPrefix(
-      ItemSlot slot) {
+  String _createEquipRequestKeyPrefix(ItemSlot slot) {
     return '${slot.name}-gear';
   }
 }

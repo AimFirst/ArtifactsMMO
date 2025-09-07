@@ -12,6 +12,7 @@ import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
@@ -27,6 +28,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -38,7 +40,14 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     for (final request in teamBrainProvider.openRequests) {
       // We can gather this item by fighting, so do it.
       if (_canGather(
-          state, request.requestedItem.code, worldDataProvider, combatService) != null) {
+            state,
+            request.requestedItem.code,
+            worldDataProvider,
+            combatService,
+            bankProvider,
+            loadoutOptimizerService,
+          ) !=
+          null) {
         return true;
       }
     }
@@ -51,6 +60,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
     WorldDataProvider worldDataProvider,
     ActionFactory actionFactory,
     MapProvider mapProvider,
@@ -60,10 +70,14 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     List<CharacterState> characterStates,
   ) {
     for (final request in teamBrainProvider.openRequests) {
-
       // We can gather this item, so do it.
-      final monster =
-          _canGather(state, request.requestedItem.code, worldDataProvider, combatService);
+      final monster = _canGather(
+          state,
+          request.requestedItem.code,
+          worldDataProvider,
+          combatService,
+          bankProvider,
+          loadoutOptimizerService);
       if (monster != null) {
         final location = mapProvider.findNearestTile(
             state.character.location,
@@ -78,8 +92,10 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
           continue;
         }
         teamProvider.queueMoveTo(state.character, location);
-        teamProvider.queueAction(state.character.name,
-            actionFactory.createFightAction(state.character.name, monster.code));
+        teamProvider.queueAction(
+            state.character.name,
+            actionFactory.createFightAction(
+                state.character.name, monster.code));
         return;
       }
     }
@@ -90,6 +106,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
+      LoadoutOptimizerService loadoutOptimizerService,
       WorldDataProvider worldDataProvider,
       ActionFactory actionFactory,
       MapProvider mapProvider,
@@ -98,10 +115,14 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) {
     for (final request in teamBrainProvider.openRequests) {
-
       // We can gather this item by fighting, so do it.
-      final monster =
-          _canGather(state, request.requestedItem.code, worldDataProvider, combatService);
+      final monster = _canGather(
+          state,
+          request.requestedItem.code,
+          worldDataProvider,
+          combatService,
+          bankProvider,
+          loadoutOptimizerService);
       if (monster != null) {
         return GearEvaluationContext(
             taskType: 'overall', targetMonster: monster);
@@ -111,12 +132,32 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     return null;
   }
 
-  MonsterSchema? _canGather(CharacterState character, String itemCode,
-      WorldDataProvider worldDataProvider, CombatService combatService) {
+  MonsterSchema? _canGather(
+      CharacterState character,
+      String itemCode,
+      WorldDataProvider worldDataProvider,
+      CombatService combatService,
+      BankProvider bankProvider,
+      LoadoutOptimizerService loadoutOptimizerService) {
     final monsters = worldDataProvider.getMonstersByDropCode(itemCode);
 
     for (final monster in monsters) {
-      if (combatService.canWinFight(character.character, monster)) {
+      final idealLoadout = loadoutOptimizerService.bestLoadoutOfAvailableItems(
+        character.character,
+        GearEvaluationContext(
+            taskType: CharacterExtensions.overallLevelSkillName,
+            targetMonster: monster),
+        character.character.inventory
+                ?.map((i) => worldDataProvider.getItemByCode(i.code))
+                .toList() ??
+            [],
+        bankProvider.items
+            .map((i) => worldDataProvider.getItemByCode(i.code))
+            .toList(),
+      );
+      final tempCharacter = character.character.copyWithEquippedItems(
+          idealLoadout.loadout.itemsBySlot, worldDataProvider);
+      if (combatService.canWinFight(tempCharacter, monster)) {
         return monster;
       }
     }
