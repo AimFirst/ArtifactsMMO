@@ -88,6 +88,13 @@ class LoadoutOptimizerService {
         return aTotalCooldown.compareTo(bTotalCooldown);
       }
 
+      // More inventory space is better
+      final aInventorySpace = a.loadout.effectValue(EffectEnum.inventory_space);
+      final bInventorySpace = b.loadout.effectValue(EffectEnum.inventory_space);
+      if (bInventorySpace != aInventorySpace) {
+        return bInventorySpace.compareTo(aInventorySpace);
+      }
+
       // Pick the one with the highest number of null items since there's no point to crafting/equipping extra items if they don't help us with this.
       return b.loadout.items
           .where((item) => item == null)
@@ -100,6 +107,14 @@ class LoadoutOptimizerService {
       final aSkill = -a.loadout.effectValue(effectEnum);
       final bSkill = -b.loadout.effectValue(effectEnum);
       if (bSkill != aSkill) return bSkill.compareTo(aSkill);
+
+      // Pick the one with the highest inventory space
+      final aInventorySpace = a.loadout.effectValue(EffectEnum.inventory_space);
+      final bInventorySpace = b.loadout.effectValue(EffectEnum.inventory_space);
+      if (bInventorySpace != aInventorySpace) {
+        return bInventorySpace.compareTo(aInventorySpace);
+      }
+
       // Pick the one with the highest number of null items since there's no point to crafting/equipping extra items if they don't help us with this.
       return b.loadout.items
           .where((item) => item == null)
