@@ -24,7 +24,7 @@ class DefaultFightGoal extends AIGoal {
   int get priority => 10;
 
   @override
-  bool canRun(
+  Future<bool> canRun(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -35,12 +35,12 @@ class DefaultFightGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     return true;
   }
 
   @override
-  void execute(
+  Future<void> execute(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -51,8 +51,8 @@ class DefaultFightGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
-    final monsterCode = _monsterToFight(worldDataProvider, combatService,
+      List<CharacterState> characterStates) async {
+    final monsterCode = await _monsterToFight(worldDataProvider, combatService,
         state.character, bankProvider, loadoutOptimizerService);
 
     final location = mapProvider.findNearestTile(
@@ -73,17 +73,17 @@ class DefaultFightGoal extends AIGoal {
             state.character.name, monsterCode ?? ''));
   }
 
-  String? _monsterToFight(
+  Future<String?> _monsterToFight(
     WorldDataProvider worldDataProvider,
     CombatService combatService,
     CharacterSchema character,
     BankProvider bankProvider,
     LoadoutOptimizerService loadoutOptimizerService,
-  ) {
+  ) async {
     final monsters = worldDataProvider.allMonsters
       ..sort((b, a) => a.level.compareTo(b.level));
     for (final monster in monsters) {
-      final idealLoadout = loadoutOptimizerService.bestLoadoutOfAvailableItems(
+      final idealLoadout = await loadoutOptimizerService.bestLoadoutOfAvailableItems(
         character,
         GearEvaluationContext(
             taskType: CharacterExtensions.overallLevelSkillName,
@@ -107,7 +107,7 @@ class DefaultFightGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -118,8 +118,8 @@ class DefaultFightGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
-    final monsterCode = _monsterToFight(
+      List<CharacterState> characterStates) async {
+    final monsterCode = await _monsterToFight(
       worldDataProvider,
       combatService,
       state.character,

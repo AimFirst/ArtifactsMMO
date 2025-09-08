@@ -19,7 +19,7 @@ class HealGoal extends AIGoal {
   int get priority => 100;
 
   @override
-  bool canRun(
+  Future<bool> canRun(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -30,12 +30,12 @@ class HealGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     return state.character.hp < state.character.maxHp;
   }
 
   @override
-  void execute(
+  Future<void> execute(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -46,13 +46,13 @@ class HealGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     teamProvider.queueAction(state.character.name,
         actionFactory.createRestAction(state.character.name));
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -63,7 +63,7 @@ class HealGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     return null;
   }
 }

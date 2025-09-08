@@ -72,7 +72,11 @@ class TeamAIService {
   }
 
   // This is the main entry point for the AI update cycle.
-  void updateAI(List<CharacterState> characterStates) {
+  Future<void> updateAI(List<CharacterState> characterStates) async {
+    if (_teamProvider.isLoading || _worldDataProvider.isLoading || _bankProvider.isLoading || _mapProvider.isLoading) {
+      return;
+    }
+
     for (final state in characterStates) {
       // Ignore characters who are currently active.
       if (state.isPerformingAction ||
@@ -84,7 +88,7 @@ class TeamAIService {
 
       // Find the highest-priority goal that can be run.
       for (final goal in _goals) {
-        if (goal.canRun(
+        if (await goal.canRun(
           state,
           this,
           _combatService,
@@ -98,7 +102,7 @@ class TeamAIService {
           characterStates,
         )) {
           // Check equipment for it.
-          goal.handleBestEquipment(
+          await goal.handleBestEquipment(
             state,
             this,
             _combatService,
@@ -113,7 +117,7 @@ class TeamAIService {
           );
 
           // Execute it and immediately stop processing for this character.
-          goal.executeWrapper(
+          await goal.executeWrapper(
             state,
             this,
             _combatService,

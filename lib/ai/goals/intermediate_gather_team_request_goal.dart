@@ -28,7 +28,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
   int get priority => 40;
 
   @override
-  bool canRun(
+  Future<bool> canRun(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -40,7 +40,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     for (final request in teamBrainProvider.openRequests) {
       // We can gather this item, so do it.
       if (_canGather(state, request.requestedItem.code, worldDataProvider)) {
@@ -52,7 +52,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
   }
 
   @override
-  void execute(
+  Future<void> execute(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -64,7 +64,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     final requests = _requestsSortedBySkill(
         state.character, teamBrainProvider, worldDataProvider);
     for (final request in requests) {
@@ -93,7 +93,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -105,7 +105,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     final requests = _requestsSortedBySkill(
         state.character, teamBrainProvider, worldDataProvider);
     for (final request in requests) {

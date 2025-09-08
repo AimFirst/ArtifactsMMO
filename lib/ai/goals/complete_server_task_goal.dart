@@ -29,7 +29,7 @@ class CompleteServerTaskGoal extends AIGoal {
   String get name => 'Server Task';
 
   @override
-  bool canRun(
+  Future<bool> canRun(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -41,7 +41,7 @@ class CompleteServerTaskGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     // no task yet, can accept a new one
     if (state.character.task.isEmpty) {
       return true;
@@ -75,7 +75,7 @@ class CompleteServerTaskGoal extends AIGoal {
   }
 
   @override
-  void execute(
+  Future<void> execute(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -87,7 +87,7 @@ class CompleteServerTaskGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     final character = state.character;
 
     // --- State 1: NO TASK ---
@@ -249,7 +249,7 @@ class CompleteServerTaskGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -260,7 +260,7 @@ class CompleteServerTaskGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     // no task yet, can accept a new one
     if (state.character.task.isEmpty || _taskDone(state, bankProvider)) {
       return null;

@@ -7,9 +7,9 @@ class CombatDetails {
   final int monsterStartHp;
   final int haste;
 
-  int get turnsForPlayerToWin => (monsterStartHp / playerAvgDPT).ceil();
+  int get turnsForPlayerToWin => playerAvgDPT == 0 ? 100000 : (monsterStartHp / playerAvgDPT).ceil();
 
-  int get turnsForMonsterToWin => (playerStartHp / monsterAvgDPT).ceil();
+  int get turnsForMonsterToWin => monsterAvgDPT == 0 ? 100000 : (playerStartHp / monsterAvgDPT).ceil();
 
   int get totalTurns => min(turnsForPlayerToWin, turnsForMonsterToWin);
 

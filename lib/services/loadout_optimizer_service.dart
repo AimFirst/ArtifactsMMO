@@ -1,11 +1,13 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
+import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/logger_service.dart';
 
 class LoadoutOptimizerService {
   final CombatService _combatService;
@@ -33,19 +35,24 @@ class LoadoutOptimizerService {
     return "$relevantStatsKey|$gearOptionsKey";
   }
 
-  EquipmentLoadoutResult _getLoadoutResult(GearEvaluationContext gearContext,
-      CharacterSchema character, EquipmentLoadout loadout) {
+  Future<EquipmentLoadoutResult> _getLoadoutResult(
+      GearEvaluationContext gearContext,
+      CharacterSchema character,
+      EquipmentLoadout loadout) async {
     final contextKey = _generateGearEvaluationContextKey(gearContext);
     final characterKey = _generateCharacterSkillsAndGearCacheKey(
         character, gearContext.taskType, loadout.items);
 
     final mapForContext = _bestResults.putIfAbsent(contextKey, () => {});
     if (mapForContext.containsKey(characterKey)) {
+      // LoggerService.instance.log('Cached loadout tree leaf: ${loadout.items.where((i) => i!=null).length}', character: character);
       return mapForContext[characterKey]!;
     }
 
     CharacterSchema tempCharacter = character.copyWithEquippedItems(
         loadout.itemsBySlot, _worldDataProvider);
+
+    // LoggerService.instance.log('Calculated loadout tree leaf: ${loadout.items.where((i) => i!=null).length}', character: tempCharacter);
 
     if (gearContext.taskType == CharacterExtensions.overallLevelSkillName &&
         gearContext.targetMonster != null) {
@@ -90,30 +97,38 @@ class LoadoutOptimizerService {
         b is SkillEquipmentLoadoutResult) {
       final effectEnum =
           EffectEnum.values.firstWhere((e) => e.name == gearContext.taskType);
-      final aSkill = a.loadout.effectValue(effectEnum);
-      final bSkill = b.loadout.effectValue(effectEnum);
-      return bSkill.compareTo(aSkill);
+      final aSkill = -a.loadout.effectValue(effectEnum);
+      final bSkill = -b.loadout.effectValue(effectEnum);
+      if (bSkill != aSkill) return bSkill.compareTo(aSkill);
+      // Pick the one with the highest number of null items since there's no point to crafting/equipping extra items if they don't help us with this.
+      return b.loadout.items
+          .where((item) => item == null)
+          .length
+          .compareTo(a.loadout.items.where((item) => item == null).length);
     } else {
       return 0;
     }
   }
 
-  EquipmentLoadoutResult _bestOption(
+  Future<EquipmentLoadoutResult> _bestOption(
       CharacterSchema characterSchema,
       GearEvaluationContext gearContext,
       EquipmentLoadout loadout,
       Map<ItemSlot, List<ItemSchema?>> gearOptions,
-      int index) {
+      int index) async {
     final contextKey = _generateGearEvaluationContextKey(gearContext);
     final characterKey = _generateCharacterSkillsAndGearCacheKey(
         characterSchema,
         gearContext.taskType,
         gearOptions.values.expand((items) => items).toList());
 
-    if (_bestResults.containsKey(contextKey)) {
-      if (_bestResults[contextKey]!.containsKey(characterKey)) {
-        return _bestResults[contextKey]![characterKey]!;
-      }
+    final topLevel = _bestResults.putIfAbsent(
+        contextKey, () => <String, EquipmentLoadoutResult>{});
+
+    // If it's already cached, just use it!
+    if (topLevel.containsKey(characterKey)) {
+      // LoggerService.instance.log('Cached loadout $characterKey: ${loadout.items.where((i) => i!=null).length}', character: characterSchema);
+      return _bestResults[contextKey]![characterKey]!;
     }
 
     final itemSlots = ItemSlot.values.toList();
@@ -121,14 +136,17 @@ class LoadoutOptimizerService {
 
     // Test all combinations of loadouts and get one result for each combination (for this index).
     List<EquipmentLoadoutResult> results = [];
-    for (final item in (gearOptions[itemSlot] ?? <ItemSchema?>[])) {
+    final options = gearOptions[itemSlot] ?? [];
+    for (final item in options) {
       final newLoadout = loadout.copyWithItem(itemSlot, item);
+      final newGearOptions = {...gearOptions}..[itemSlot] = [item];
+
       if (index >= itemSlots.length - 1) {
-        results
-            .add(_getLoadoutResult(gearContext, characterSchema, newLoadout));
+        results.add(
+            await _getLoadoutResult(gearContext, characterSchema, newLoadout));
       } else {
-        results.add(_bestOption(
-            characterSchema, gearContext, newLoadout, gearOptions, index + 1));
+        results.add(await _bestOption(characterSchema, gearContext, newLoadout,
+            newGearOptions, index + 1));
       }
     }
 
@@ -137,31 +155,111 @@ class LoadoutOptimizerService {
 
     final bestResult = results.first;
 
-    final topLevel = _bestResults.putIfAbsent(
-        contextKey, () => <String, EquipmentLoadoutResult>{});
+    // Add the real result now that we've calculated it
     topLevel[characterKey] = bestResult;
+    // LoggerService.instance.log('Calculated loadout $characterKey: ${loadout.items.where((i) => i!=null).length}', character: characterSchema);
 
     return bestResult;
   }
 
-  EquipmentLoadoutResult bestLoadout(CharacterSchema character,
-      GearEvaluationContext gearContext, List<ItemSchema?> allItemsToConsider) {
+  bool _filterUsableItems(CharacterSchema character,
+      GearEvaluationContext gearContext, ItemSchema? item) {
+    // item is null?
+    if (item == null) {
+      return false;
+    }
+
+    // If we can't use it, don't include it
+    if (!character.canUseItem(item)) {
+      return false;
+    }
+
+    // No effects? Then it won't help reach our goal
+    if (item.effects == null) {
+      return false;
+    }
+
+    List<String> effectsToLookFor = [];
+    if (gearContext.taskType == CharacterExtensions.overallLevelSkillName) {
+      effectsToLookFor = [
+        EffectEnum.antipoison.name,
+        EffectEnum.attack_air.name,
+        EffectEnum.attack_earth.name,
+        EffectEnum.attack_fire.name,
+        EffectEnum.attack_water.name,
+        EffectEnum.boost_dmg_air.name,
+        EffectEnum.boost_dmg_earth.name,
+        EffectEnum.boost_dmg_fire.name,
+        EffectEnum.boost_dmg_water.name,
+        EffectEnum.boost_hp.name,
+        EffectEnum.boost_res_air.name,
+        EffectEnum.boost_res_earth.name,
+        EffectEnum.boost_res_fire.name,
+        EffectEnum.boost_res_water.name,
+        EffectEnum.critical_strike.name,
+        EffectEnum.dmg.name,
+        EffectEnum.dmg_air.name,
+        EffectEnum.dmg_earth.name,
+        EffectEnum.dmg_fire.name,
+        EffectEnum.dmg_water.name,
+        EffectEnum.haste.name,
+        EffectEnum.healing.name,
+        EffectEnum.hp.name,
+        EffectEnum.inventory_space.name,
+        EffectEnum.lifesteal.name,
+        EffectEnum.res_air.name,
+        EffectEnum.res_earth.name,
+        EffectEnum.res_fire.name,
+        EffectEnum.res_water.name,
+        EffectEnum.restore.name,
+        EffectEnum.wisdom.name,
+      ];
+    } else {
+      effectsToLookFor = [
+        gearContext.taskType,
+        EffectEnum.inventory_space.name,
+      ];
+    }
+
+    // Is there an effect we care about?
+    if (item.effects!.any((effect) => effectsToLookFor.contains(effect.code))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<EquipmentLoadoutResult> bestLoadout(
+      CharacterSchema character,
+      GearEvaluationContext gearContext,
+      List<ItemSchema?> allItemsToConsider) async {
     final List<ItemSchema?> itemsThisCharacterCanUse = allItemsToConsider
-        .where((item) => item != null && character.canUseItem(item))
-        .toList();
+        .where((item) => _filterUsableItems(character, gearContext, item))
+        .toList()
+      ..sort((a, b) {
+        if (a == null && b == null) return 0;
+        if (a == null) return 1;
+        if (b == null) return -1;
+        return a.code.compareTo(b.code);
+      });
     Map<ItemSlot, List<ItemSchema?>> gearOptions = {};
     for (final slot in ItemSlot.values) {
       gearOptions[slot] = itemsThisCharacterCanUse
-          .where((item) => item?.type == slot.name)
+          .where((item) => item?.canFitInSlot(slot) ?? false)
           .cast<ItemSchema?>()
           .toList()
         ..add(null);
     }
-    return _bestOption(
-        character, gearContext, EquipmentLoadout(), gearOptions, 0);
+
+    // Start it, but don't await it so it runs in the background.
+    LoggerService.instance.log(
+        'Starting gear discovery ${gearContext.toString()}',
+        character: character);
+    return _bestOption(character.copyWithEquippedItems({}, _worldDataProvider),
+        gearContext, EquipmentLoadout(), gearOptions, 0);
   }
 
-  EquipmentLoadoutResult bestLoadoutOfAvailableItems(
+  Future<EquipmentLoadoutResult> bestLoadoutOfAvailableItems(
       CharacterSchema character,
       GearEvaluationContext gearContext,
       List<ItemSchema?> inventoryItems,

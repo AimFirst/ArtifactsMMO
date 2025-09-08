@@ -13,7 +13,7 @@ import 'package:artifacts_mmo/services/team_ai_service.dart';
 
 class IdleGoal extends AIGoal {
   @override
-  bool canRun(
+  Future<bool> canRun(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -24,12 +24,12 @@ class IdleGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     return true;
   }
 
   @override
-  void execute(
+  Future<void> execute(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -40,7 +40,7 @@ class IdleGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     // Idle, do nothing.
   }
 
@@ -51,7 +51,7 @@ class IdleGoal extends AIGoal {
   int get priority => 0;
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -62,7 +62,7 @@ class IdleGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     return null;
   }
 }

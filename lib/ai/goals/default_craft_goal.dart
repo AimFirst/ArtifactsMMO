@@ -27,7 +27,7 @@ class DefaultCraftGoal extends AIGoal {
   int get priority => 12;
 
   @override
-  bool canRun(
+  Future<bool> canRun(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -39,7 +39,7 @@ class DefaultCraftGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     // Find any crafting skills that we are the "expert" on and see if we can craft anything.
     return _expertWithCraftability(
             state, worldDataProvider, bankProvider, characterStates) !=
@@ -47,7 +47,7 @@ class DefaultCraftGoal extends AIGoal {
   }
 
   @override
-  void execute(
+  Future<void> execute(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -59,7 +59,7 @@ class DefaultCraftGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     final recipe = _expertWithCraftability(
         state, worldDataProvider, bankProvider, characterStates);
 
@@ -177,7 +177,7 @@ class DefaultCraftGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -189,7 +189,7 @@ class DefaultCraftGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     return null;
   }
 }

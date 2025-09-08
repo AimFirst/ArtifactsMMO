@@ -23,7 +23,7 @@ abstract class AIGoal {
   String get name;
 
   // Can this goal be pursued by the character right now?
-  bool canRun(
+  Future<bool> canRun(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -38,7 +38,7 @@ abstract class AIGoal {
   );
 
   // Execute the logic for this goal (queueing actions, etc.)
-  void execute(
+  Future<void> execute(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -52,7 +52,7 @@ abstract class AIGoal {
     List<CharacterState> characterStates,
   );
 
-  void executeWrapper(
+  Future<void> executeWrapper(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -64,10 +64,10 @@ abstract class AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     state.setCurrentGoal(name);
     LoggerService.instance.log("GOAL: $name", character: state.character);
-    execute(
+    await execute(
         state,
         aiService,
         combatService,
@@ -81,7 +81,7 @@ abstract class AIGoal {
         characterStates);
   }
 
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -95,7 +95,7 @@ abstract class AIGoal {
     List<CharacterState> characterStates,
   );
 
-  void handleBestEquipment(
+  Future<void> handleBestEquipment(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -107,8 +107,8 @@ abstract class AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
-    final gearContext = gearEvaluationContext(
+  ) async {
+    final gearContext = await gearEvaluationContext(
         state,
         aiService,
         combatService,
@@ -131,8 +131,13 @@ abstract class AIGoal {
         EquipmentLoadout.fromCharacter(state.character, worldDataProvider);
 
     // Find our ideal equipment and request any that is missing.
-    final bestEquipment = loadoutOptimizerService.bestLoadout(
+    final bestEquipment = await loadoutOptimizerService.bestLoadout(
         state.character, gearContext, worldDataProvider.allItems);
+
+    if (bestEquipment.loadout.items.any((e) => e!=null)) {
+      LoggerService.instance.log('Found real best loadout for ${gearContext.toString()}', character: state.character);
+    }
+
     for (final itemWithSlot in bestEquipment.loadout.itemsBySlot.entries) {
       final item = itemWithSlot.value;
       final slot = itemWithSlot.key;
@@ -176,7 +181,7 @@ abstract class AIGoal {
 
     // Find the best equipment that we have available right now.
     final bestAvailableEquipment =
-        loadoutOptimizerService.bestLoadoutOfAvailableItems(
+        await loadoutOptimizerService.bestLoadoutOfAvailableItems(
             state.character,
             gearContext,
             state.character.inventory

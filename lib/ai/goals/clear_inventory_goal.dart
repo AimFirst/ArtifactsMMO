@@ -23,7 +23,7 @@ class ClearInventoryGoal extends AIGoal {
   String get name => 'Bank';
 
   @override
-  bool canRun(
+  Future<bool> canRun(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -35,13 +35,13 @@ class ClearInventoryGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     // This goal can only run if the character's inventory is almost full.
     return state.isInventoryNearlyFull;
   }
 
   @override
-  void execute(
+  Future<void> execute(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -53,7 +53,7 @@ class ClearInventoryGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     final character = state.character;
 
     // If we are working on a quest and have quest items, deposit those first.
@@ -75,7 +75,7 @@ class ClearInventoryGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -86,7 +86,7 @@ class ClearInventoryGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     return null;
   }
 }

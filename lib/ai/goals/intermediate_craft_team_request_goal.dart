@@ -30,7 +30,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
   int get priority => 85;
 
   @override
-  bool canRun(
+  Future<bool> canRun(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -42,7 +42,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     // See if we can accomplish any.
     for (final request in teamBrainProvider.openRequests) {
       // If someone besides us is already fulfilling this request, ignore it.
@@ -77,7 +77,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
   }
 
   @override
-  void execute(
+  Future<void> execute(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -89,7 +89,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     final requests = _requestsSortedBySkill(
         state.character, teamBrainProvider, worldDataProvider);
     // Try to accomplish a craft
@@ -125,7 +125,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -136,7 +136,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     return null;
   }
 

@@ -285,7 +285,7 @@ void main() {
             a: SkillEquipmentLoadoutResult(
                 EquipmentLoadout(), resultA.taskType),
             b: SkillEquipmentLoadoutResult(
-                EquipmentLoadout.fromItems([_createItemSchema(effects: [_createEffect(effect: EffectEnum.mining)])]), resultB.taskType),
+                EquipmentLoadout.fromItems([_createItemSchema(effects: [_createEffect(effect: EffectEnum.mining, value: -10)])]), resultB.taskType),
             expectedResult: ExpectedResult.b);
       });
 
@@ -296,7 +296,7 @@ void main() {
         final resultB = _createSkillEvaluationContext();
         _testSkillComparison(
             a: SkillEquipmentLoadoutResult(
-                EquipmentLoadout.fromItems([_createItemSchema(effects: [_createEffect(effect: EffectEnum.mining)])]), resultA.taskType),
+                EquipmentLoadout.fromItems([_createItemSchema(effects: [_createEffect(effect: EffectEnum.mining, value: -10)])]), resultA.taskType),
             b: SkillEquipmentLoadoutResult(
                 EquipmentLoadout(), resultB.taskType),
             expectedResult: ExpectedResult.a);

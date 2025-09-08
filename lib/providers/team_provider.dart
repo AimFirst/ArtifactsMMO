@@ -229,9 +229,9 @@ class TeamProvider with ChangeNotifier {
 
   void _startGameLoop() {
     _gameLoopTimer?.cancel();
-    _gameLoopTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _gameLoopTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       // --- THE AI LOGIC IS NOW A SINGLE, CLEAN LINE ---
-      _aiService.updateAI(_characterStates);
+      await _aiService.updateAI(_characterStates);
 
       // The queue processing remains here
       _processQueues();

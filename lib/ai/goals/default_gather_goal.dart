@@ -23,7 +23,7 @@ class DefaultGatherGoal extends AIGoal {
   int get priority => 11;
 
   @override
-  bool canRun(
+  Future<bool> canRun(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -35,7 +35,7 @@ class DefaultGatherGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     // Find any crafting skills that we are the "expert" on and see if we can craft anything.
     return _expertGatherer(
             state, worldDataProvider, bankProvider, characterStates) !=
@@ -43,7 +43,7 @@ class DefaultGatherGoal extends AIGoal {
   }
 
   @override
-  void execute(
+  Future<void> execute(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -55,7 +55,7 @@ class DefaultGatherGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     final skill = _expertGatherer(
         state, worldDataProvider, bankProvider, characterStates);
     if (skill == null) {
@@ -148,7 +148,7 @@ class DefaultGatherGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -160,7 +160,7 @@ class DefaultGatherGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     final skill = _expertGatherer(
       state,
       worldDataProvider,

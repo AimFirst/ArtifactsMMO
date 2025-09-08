@@ -24,7 +24,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
   int get priority => 50;
 
   @override
-  bool canRun(
+  Future<bool> canRun(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -36,10 +36,10 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     for (final request in teamBrainProvider.openRequests) {
       // We can gather this item by fighting, so do it.
-      if (_canGather(
+      if (await _canGather(
             state,
             request.requestedItem.code,
             worldDataProvider,
@@ -56,7 +56,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
   }
 
   @override
-  void execute(
+  Future<void> execute(
     CharacterState state,
     TeamAIService aiService,
     CombatService combatService,
@@ -68,10 +68,10 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     BankProvider bankProvider,
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
-  ) {
+  ) async {
     for (final request in teamBrainProvider.openRequests) {
       // We can gather this item, so do it.
-      final monster = _canGather(
+      final monster = await _canGather(
           state,
           request.requestedItem.code,
           worldDataProvider,
@@ -102,7 +102,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
   }
 
   @override
-  GearEvaluationContext? gearEvaluationContext(
+  Future<GearEvaluationContext?> gearEvaluationContext(
       CharacterState state,
       TeamAIService aiService,
       CombatService combatService,
@@ -113,10 +113,10 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
       TeamProvider teamProvider,
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
-      List<CharacterState> characterStates) {
+      List<CharacterState> characterStates) async {
     for (final request in teamBrainProvider.openRequests) {
       // We can gather this item by fighting, so do it.
-      final monster = _canGather(
+      final monster = await _canGather(
           state,
           request.requestedItem.code,
           worldDataProvider,
@@ -132,17 +132,17 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     return null;
   }
 
-  MonsterSchema? _canGather(
+  Future<MonsterSchema?> _canGather(
       CharacterState character,
       String itemCode,
       WorldDataProvider worldDataProvider,
       CombatService combatService,
       BankProvider bankProvider,
-      LoadoutOptimizerService loadoutOptimizerService) {
+      LoadoutOptimizerService loadoutOptimizerService) async {
     final monsters = worldDataProvider.getMonstersByDropCode(itemCode);
 
     for (final monster in monsters) {
-      final idealLoadout = loadoutOptimizerService.bestLoadoutOfAvailableItems(
+      final idealLoadout = await loadoutOptimizerService.bestLoadoutOfAvailableItems(
         character.character,
         GearEvaluationContext(
             taskType: CharacterExtensions.overallLevelSkillName,
