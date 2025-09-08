@@ -134,10 +134,6 @@ abstract class AIGoal {
     final bestEquipment = await loadoutOptimizerService.bestLoadout(
         state.character, gearContext, worldDataProvider.allItems);
 
-    if (bestEquipment.loadout.items.any((e) => e!=null)) {
-      LoggerService.instance.log('Found real best loadout for ${gearContext.toString()}', character: state.character);
-    }
-
     for (final itemWithSlot in bestEquipment.loadout.itemsBySlot.entries) {
       final item = itemWithSlot.value;
       final slot = itemWithSlot.key;

@@ -131,6 +131,12 @@ class LoadoutOptimizerService {
       return _bestResults[contextKey]![characterKey]!;
     }
 
+    if (index == 0) {
+      LoggerService.instance.log(
+          'Starting gear discovery ${gearContext.toString()}',
+          character: characterSchema);
+    }
+
     final itemSlots = ItemSlot.values.toList();
     final itemSlot = itemSlots[index];
 
@@ -157,7 +163,12 @@ class LoadoutOptimizerService {
 
     // Add the real result now that we've calculated it
     topLevel[characterKey] = bestResult;
-    // LoggerService.instance.log('Calculated loadout $characterKey: ${loadout.items.where((i) => i!=null).length}', character: characterSchema);
+
+    if (index == 0) {
+      LoggerService.instance.log(
+          'Finished gear discovery ${gearContext.toString()}',
+          character: characterSchema);
+    }
 
     return bestResult;
   }
@@ -251,10 +262,6 @@ class LoadoutOptimizerService {
         ..add(null);
     }
 
-    // Start it, but don't await it so it runs in the background.
-    LoggerService.instance.log(
-        'Starting gear discovery ${gearContext.toString()}',
-        character: character);
     return _bestOption(character.copyWithEquippedItems({}, _worldDataProvider),
         gearContext, EquipmentLoadout(), gearOptions, 0);
   }
