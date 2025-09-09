@@ -98,7 +98,33 @@ class CharacterDetailsPage extends StatelessWidget {
                   const Divider(height: 32),
 
                   // Inventory View
-                  Text('Inventory (${character.inventoryCount} / ${character.inventoryMaxItems})', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  Row(
+                    children: [
+                      Text('Inventory (${character.inventoryCount} / ${character.inventoryMaxItems})', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      Spacer(),
+                      Image.network('https://artifactsmmo.com/images/items/gold.png',
+                        fit: BoxFit.cover,
+                        width: 18,
+                        height: 18,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.person_off,
+                              color: Colors.red,
+                              size: 18); // Fallback for missing character image
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2));
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+                        child: Text('${character.gold}', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 8),
                   GridView.builder(
                     shrinkWrap: true,
