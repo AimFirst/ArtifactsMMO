@@ -95,13 +95,17 @@ class ActionFactory {
     );
   }
 
-  QueuedAction createUnequipAction(String characterName, ItemSlot itemSlot, int quantity) {
+  QueuedAction createUnequipAction(
+      String characterName, ItemSlot itemSlot, int quantity) {
     return QueuedAction(
         actionName: 'Unequip $itemSlot',
         apiCall: () =>
             _apiClient.myCharacters.actionUnequipItemMyNameActionUnequipPost(
               name: characterName,
-              unequipSchema: (UnequipSchemaBuilder()..slot = itemSlot..quantity = quantity).build(),
+              unequipSchema: (UnequipSchemaBuilder()
+                    ..slot = itemSlot
+                    ..quantity = quantity)
+                  .build(),
             ));
   }
 
@@ -133,10 +137,25 @@ class ActionFactory {
                     .build()));
   }
 
+  QueuedAction createNpcBuyAction(String characterName, SimpleItemSchema item) {
+    return QueuedAction(
+      actionName: 'Buy npc $item',
+      apiCall: () =>
+          _apiClient.myCharacters.actionNpcBuyItemMyNameActionNpcBuyPost(
+        name: characterName,
+        npcMerchantBuySchema: (NpcMerchantBuySchemaBuilder()
+              ..code = item.code
+              ..quantity = item.quantity)
+            .build(),
+      ),
+    );
+  }
+
   QueuedAction createBankWithdrawAction(
       String characterName, BuiltList<SimpleItemSchema> items) {
     return QueuedAction(
-        actionName: 'Withdraw ${items.map((item) => item.simpleName).join(', ')}',
+        actionName:
+            'Withdraw ${items.map((item) => item.simpleName).join(', ')}',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
                 .actionWithdrawBankItemMyNameActionBankWithdrawItemPost(
@@ -148,7 +167,8 @@ class ActionFactory {
   QueuedAction createBankDepositAction(
       String characterName, BuiltList<SimpleItemSchema> items) {
     return QueuedAction(
-        actionName: 'Deposit ${items.map((item) => item.simpleName).join(', ')}',
+        actionName:
+            'Deposit ${items.map((item) => item.simpleName).join(', ')}',
         // Use the correct generated API call
         apiCall: () => _apiClient.myCharacters
                 .actionDepositBankItemMyNameActionBankDepositItemPost(

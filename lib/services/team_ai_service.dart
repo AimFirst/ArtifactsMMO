@@ -12,6 +12,7 @@ import 'package:artifacts_mmo/ai/goals/idle_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_craft_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_fight_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_gather_team_request_goal.dart';
+import 'package:artifacts_mmo/ai/goals/intermediate_npc_buy_team_request_goal.dart';
 import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
@@ -66,6 +67,7 @@ class TeamAIService {
       IntermediateCraftTeamRequestGoal(),
       IntermediateFightTeamRequestGoal(),
       IntermediateGatherTeamRequestGoal(),
+      IntermediateNpcBuyTeamRequestGoal(),
     ]);
 
     // Sort them once by priority, descending.

@@ -18,6 +18,7 @@ class ApiClient {
   MyAccountApi get myAccount => _api.getMyAccountApi();
   ItemsApi get items => _api.getItemsApi();
   MonstersApi get monster => _api.getMonstersApi();
+  NPCsApi get npcs => _api.getNPCsApi();
 
   // Add other getters for other API groups as needed, e.g., market, crafting, etc.
   // MarketApi get market => _api.getMarketApi();

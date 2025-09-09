@@ -1,0 +1,257 @@
+import 'dart:math';
+
+import 'package:artifacts_api/artifacts_api.dart';
+import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
+import 'package:artifacts_mmo/extensions/character_extension.dart';
+import 'package:artifacts_mmo/extensions/inventory_extension.dart';
+import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
+import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
+import 'package:artifacts_mmo/factories/action_factory.dart';
+import 'package:artifacts_mmo/models/character_state.dart';
+import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
+import 'package:artifacts_mmo/providers/bank_provider.dart';
+import 'package:artifacts_mmo/providers/log_provider.dart';
+import 'package:artifacts_mmo/providers/map_provider.dart';
+import 'package:artifacts_mmo/providers/team_brain_provider.dart';
+import 'package:artifacts_mmo/providers/team_provider.dart';
+import 'package:artifacts_mmo/providers/world_data_provider.dart';
+import 'package:artifacts_mmo/services/combat_service.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
+import 'package:artifacts_mmo/services/logger_service.dart';
+import 'package:artifacts_mmo/services/team_ai_service.dart';
+import 'package:built_collection/built_collection.dart';
+
+class IntermediateNpcBuyTeamRequestGoal extends AIGoal {
+  @override
+  String get name => 'Intermediate Npc Buy Team Request';
+
+  @override
+  int get priority => 40;
+
+  @override
+  Future<bool> canRun(
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  ) async {
+    // See if we can accomplish any.
+    for (final request in teamBrainProvider.openRequests) {
+      // Can't buy this item anyways
+      if (!_canBuyItem(request.requestedItem.code, worldDataProvider)) {
+        continue;
+      }
+
+      final missingItems = _missingCurrencyNeededToBuy(state.character,
+          request.requestedItem, worldDataProvider, bankProvider);
+      // We have all the items we need, buy it.
+      if (missingItems.isEmpty) {
+        LoggerService.instance.log('Has all items for ${request.key}, can buy.',
+            character: state.character);
+        return true;
+      } else {
+        // If we haven't requested missing sub items, request it.
+        for (final item in missingItems) {
+          if (!teamBrainProvider.hasRequest(request, _keyForSubRequestPrefix(),
+              item.code, state.character.name)) {
+            LoggerService.instance.log(
+                'Need $item for ${request.key}, hasn\'t been requested before... requesting',
+                character: state.character);
+            return true;
+          }
+        }
+      }
+    }
+
+    // Nothing we can do with any of the requested items.
+    return false;
+  }
+
+  @override
+  Future<void> execute(
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  ) async {
+    final requests = teamBrainProvider.openRequests;
+
+    // Try to accomplish a craft
+    for (final request in requests) {
+      // Can't buy this item anyways
+      if (!_canBuyItem(request.requestedItem.code, worldDataProvider)) {
+        continue;
+      }
+
+      // Find what we're missing, if any
+      final missingItems = _missingCurrencyNeededToBuy(state.character,
+          request.requestedItem, worldDataProvider, bankProvider);
+      // We have all the items we need, craft it.
+      if (missingItems.isEmpty) {
+        _buyNpcItem(state, request, teamProvider, mapProvider,
+            worldDataProvider, actionFactory, teamBrainProvider);
+        return;
+      } else {
+        // If we haven't requested missing sub items, request it.
+        for (final item in missingItems) {
+          if (!teamBrainProvider.hasRequest(request, _keyForSubRequestPrefix(),
+              item.code, state.character.name)) {
+            teamBrainProvider.postRequest(ItemRequest(
+              parentRequest: request,
+              keyPrefix: _keyForSubRequestPrefix(),
+              requestedItem: item,
+              requestedBy: state.character.name,
+              childrenRequests: [],
+            ));
+          }
+        }
+      }
+    }
+  }
+
+  @override
+  Future<GearEvaluationContext?> gearEvaluationContext(
+      CharacterState state,
+      TeamAIService aiService,
+      CombatService combatService,
+      LoadoutOptimizerService loadoutOptimizerService,
+      WorldDataProvider worldDataProvider,
+      ActionFactory actionFactory,
+      MapProvider mapProvider,
+      TeamProvider teamProvider,
+      BankProvider bankProvider,
+      TeamBrainProvider teamBrainProvider,
+      List<CharacterState> characterStates) async {
+    return null;
+  }
+
+  void _buyNpcItem(
+    CharacterState state,
+    ItemRequest request,
+    TeamProvider teamProvider,
+    MapProvider mapProvider,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    TeamBrainProvider teamBrainProvider,
+  ) {
+    final npcItem = worldDataProvider
+        .getNPCItemWithNoOtherSource(request.requestedItem.code)!;
+
+    // See if we need to pull any items from the bank
+    List<SimpleItemSchema> itemsToPullFromBank = [];
+    for (final subItem in [
+          SimpleItemSchemaBuilder()
+              .fromCodeAndQuantity(npcItem.currency, npcItem.buyPrice!)
+        ]) {
+      final itemCode = subItem.code;
+      int neededCount = subItem.quantity;
+
+      neededCount -= state.character.inventory?.count(itemCode) ?? 0;
+
+      if (neededCount > 0) {
+        itemsToPullFromBank.add((SimpleItemSchemaBuilder()
+              ..code = subItem.code
+              ..quantity = neededCount)
+            .build());
+      }
+    }
+
+    if (itemsToPullFromBank.isNotEmpty) {
+      LoggerService.instance
+          .log('Need items from bank, fetching', character: state.character);
+      teamProvider.queueBankWithdraw(
+          state.character, BuiltList.of(itemsToPullFromBank));
+      for (final item in itemsToPullFromBank) {
+        teamBrainProvider.completeRequest(request, _keyForSubRequestPrefix(),
+            item.code, state.character.name);
+      }
+    }
+
+    // Find and move to our npc location.
+    final npcLocation = mapProvider.findNearestTile(
+        state.character.location,
+        (tile) =>
+            tile.content?.type == MapContentType.npc &&
+            tile.content?.code == npcItem.npc);
+    if (npcLocation == null) {
+      LoggerService.instance.log('Can\'t find npc for ${npcItem.code}',
+          character: state.character, level: LogLevel.warning);
+      return;
+    }
+    teamProvider.queueMoveTo(state.character, npcLocation);
+
+    // Buy the item
+    teamProvider.queueAction(
+        state.character.name,
+        actionFactory.createNpcBuyAction(state.character.name,
+            (request.requestedItem.toBuilder()..quantity = 1).build()));
+  }
+
+  bool _canBuyItem(String itemCode, WorldDataProvider worldDataProvider) {
+    final npcItem = worldDataProvider.getNPCItemWithNoOtherSource(itemCode);
+    if (npcItem == null || npcItem.buyPrice == null) {
+      return false;
+    }
+    return true;
+  }
+
+  List<SimpleItemSchema> _missingCurrencyNeededToBuy(
+      CharacterSchema character,
+      SimpleItemSchema item,
+      WorldDataProvider worldDataProvider,
+      BankProvider bankProvider) {
+    final List<SimpleItemSchema> itemsMissing = [];
+
+    if (!_canBuyItem(item.code, worldDataProvider)) {
+      return itemsMissing;
+    }
+
+    final npcItem = worldDataProvider.getNPCItemWithNoOtherSource(item.code)!;
+
+    List<SimpleItemSchema> itemsLeft = <SimpleItemSchema>[
+      SimpleItemSchemaBuilder()
+          .fromCodeAndQuantity(npcItem.currency, npcItem.buyPrice!)
+    ];
+
+    // How many items do we have
+    for (final subItem in itemsLeft) {
+      final neededItemCode = subItem.code;
+      int neededItemCount = subItem.quantity;
+
+      final inventoryCount = character.inventory?.count(neededItemCode) ?? 0;
+      neededItemCount = max(neededItemCount - inventoryCount, 0);
+
+      final bankCount = bankProvider.count(neededItemCode);
+      neededItemCount = max(neededItemCount - bankCount, 0);
+
+      // Unable to fulfill this request, so return false
+      if (neededItemCount > 0) {
+        itemsMissing.add((SimpleItemSchemaBuilder()
+              ..code = neededItemCode
+              ..quantity = neededItemCount)
+            .build());
+      }
+    }
+
+    // Met all demands, can craft.
+    return itemsMissing;
+  }
+
+  String _keyForSubRequestPrefix() {
+    return 'int-npc-buy';
+  }
+}

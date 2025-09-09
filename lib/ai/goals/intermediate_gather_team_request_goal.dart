@@ -25,7 +25,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
   String get name => 'Intermediate Gather Team Request';
 
   @override
-  int get priority => 40;
+  int get priority => 45;
 
   @override
   Future<bool> canRun(
