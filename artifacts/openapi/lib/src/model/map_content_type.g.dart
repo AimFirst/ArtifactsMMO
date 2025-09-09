@@ -31,12 +31,12 @@ MapContentType _$valueOf(String name) {
     case 'npc':
       return _$npc;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
 final BuiltSet<MapContentType> _$values =
-    BuiltSet<MapContentType>(const <MapContentType>[
+    new BuiltSet<MapContentType>(const <MapContentType>[
   _$monster,
   _$resource,
   _$workshop,
@@ -65,7 +65,7 @@ abstract class _$MapContentTypeMixin {
 }
 
 Serializer<MapContentType> _$mapContentTypeSerializer =
-    _$MapContentTypeSerializer();
+    new _$MapContentTypeSerializer();
 
 class _$MapContentTypeSerializer
     implements PrimitiveSerializer<MapContentType> {

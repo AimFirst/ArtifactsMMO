@@ -23,7 +23,7 @@ class _$TaskFullSchema extends TaskFullSchema {
   final RewardsSchema rewards;
 
   factory _$TaskFullSchema([void Function(TaskFullSchemaBuilder)? updates]) =>
-      (TaskFullSchemaBuilder()..update(updates))._build();
+      (new TaskFullSchemaBuilder()..update(updates))._build();
 
   _$TaskFullSchema._(
       {required this.code,
@@ -33,13 +33,25 @@ class _$TaskFullSchema extends TaskFullSchema {
       required this.maxQuantity,
       this.skill,
       required this.rewards})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'TaskFullSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(level, r'TaskFullSchema', 'level');
+    BuiltValueNullFieldError.checkNotNull(type, r'TaskFullSchema', 'type');
+    BuiltValueNullFieldError.checkNotNull(
+        minQuantity, r'TaskFullSchema', 'minQuantity');
+    BuiltValueNullFieldError.checkNotNull(
+        maxQuantity, r'TaskFullSchema', 'maxQuantity');
+    BuiltValueNullFieldError.checkNotNull(
+        rewards, r'TaskFullSchema', 'rewards');
+  }
+
   @override
   TaskFullSchema rebuild(void Function(TaskFullSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  TaskFullSchemaBuilder toBuilder() => TaskFullSchemaBuilder()..replace(this);
+  TaskFullSchemaBuilder toBuilder() =>
+      new TaskFullSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -112,7 +124,7 @@ class TaskFullSchemaBuilder
 
   RewardsSchemaBuilder? _rewards;
   RewardsSchemaBuilder get rewards =>
-      _$this._rewards ??= RewardsSchemaBuilder();
+      _$this._rewards ??= new RewardsSchemaBuilder();
   set rewards(RewardsSchemaBuilder? rewards) => _$this._rewards = rewards;
 
   TaskFullSchemaBuilder() {
@@ -136,6 +148,7 @@ class TaskFullSchemaBuilder
 
   @override
   void replace(TaskFullSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskFullSchema;
   }
 
@@ -151,27 +164,26 @@ class TaskFullSchemaBuilder
     _$TaskFullSchema _$result;
     try {
       _$result = _$v ??
-          _$TaskFullSchema._(
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'TaskFullSchema', 'code'),
-            level: BuiltValueNullFieldError.checkNotNull(
-                level, r'TaskFullSchema', 'level'),
-            type: BuiltValueNullFieldError.checkNotNull(
-                type, r'TaskFullSchema', 'type'),
-            minQuantity: BuiltValueNullFieldError.checkNotNull(
-                minQuantity, r'TaskFullSchema', 'minQuantity'),
-            maxQuantity: BuiltValueNullFieldError.checkNotNull(
-                maxQuantity, r'TaskFullSchema', 'maxQuantity'),
-            skill: skill,
-            rewards: rewards.build(),
-          );
+          new _$TaskFullSchema._(
+              code: BuiltValueNullFieldError.checkNotNull(
+                  code, r'TaskFullSchema', 'code'),
+              level: BuiltValueNullFieldError.checkNotNull(
+                  level, r'TaskFullSchema', 'level'),
+              type: BuiltValueNullFieldError.checkNotNull(
+                  type, r'TaskFullSchema', 'type'),
+              minQuantity: BuiltValueNullFieldError.checkNotNull(
+                  minQuantity, r'TaskFullSchema', 'minQuantity'),
+              maxQuantity: BuiltValueNullFieldError.checkNotNull(
+                  maxQuantity, r'TaskFullSchema', 'maxQuantity'),
+              skill: skill,
+              rewards: rewards.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'rewards';
         rewards.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'TaskFullSchema', _$failedField, e.toString());
       }
       rethrow;

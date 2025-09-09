@@ -16,20 +16,27 @@ class _$SeasonBadgeSchema extends SeasonBadgeSchema {
 
   factory _$SeasonBadgeSchema(
           [void Function(SeasonBadgeSchemaBuilder)? updates]) =>
-      (SeasonBadgeSchemaBuilder()..update(updates))._build();
+      (new SeasonBadgeSchemaBuilder()..update(updates))._build();
 
   _$SeasonBadgeSchema._(
       {required this.code,
       required this.description,
       required this.requiredPoints})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'SeasonBadgeSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        description, r'SeasonBadgeSchema', 'description');
+    BuiltValueNullFieldError.checkNotNull(
+        requiredPoints, r'SeasonBadgeSchema', 'requiredPoints');
+  }
+
   @override
   SeasonBadgeSchema rebuild(void Function(SeasonBadgeSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   SeasonBadgeSchemaBuilder toBuilder() =>
-      SeasonBadgeSchemaBuilder()..replace(this);
+      new SeasonBadgeSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -94,6 +101,7 @@ class SeasonBadgeSchemaBuilder
 
   @override
   void replace(SeasonBadgeSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SeasonBadgeSchema;
   }
 
@@ -107,14 +115,13 @@ class SeasonBadgeSchemaBuilder
 
   _$SeasonBadgeSchema _build() {
     final _$result = _$v ??
-        _$SeasonBadgeSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'SeasonBadgeSchema', 'code'),
-          description: BuiltValueNullFieldError.checkNotNull(
-              description, r'SeasonBadgeSchema', 'description'),
-          requiredPoints: BuiltValueNullFieldError.checkNotNull(
-              requiredPoints, r'SeasonBadgeSchema', 'requiredPoints'),
-        );
+        new _$SeasonBadgeSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'SeasonBadgeSchema', 'code'),
+            description: BuiltValueNullFieldError.checkNotNull(
+                description, r'SeasonBadgeSchema', 'description'),
+            requiredPoints: BuiltValueNullFieldError.checkNotNull(
+                requiredPoints, r'SeasonBadgeSchema', 'requiredPoints'));
     replace(_$result);
     return _$result;
   }

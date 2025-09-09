@@ -14,11 +14,17 @@ class _$PasswordResetConfirmSchema extends PasswordResetConfirmSchema {
 
   factory _$PasswordResetConfirmSchema(
           [void Function(PasswordResetConfirmSchemaBuilder)? updates]) =>
-      (PasswordResetConfirmSchemaBuilder()..update(updates))._build();
+      (new PasswordResetConfirmSchemaBuilder()..update(updates))._build();
 
   _$PasswordResetConfirmSchema._(
       {required this.token, required this.newPassword})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        token, r'PasswordResetConfirmSchema', 'token');
+    BuiltValueNullFieldError.checkNotNull(
+        newPassword, r'PasswordResetConfirmSchema', 'newPassword');
+  }
+
   @override
   PasswordResetConfirmSchema rebuild(
           void Function(PasswordResetConfirmSchemaBuilder) updates) =>
@@ -26,7 +32,7 @@ class _$PasswordResetConfirmSchema extends PasswordResetConfirmSchema {
 
   @override
   PasswordResetConfirmSchemaBuilder toBuilder() =>
-      PasswordResetConfirmSchemaBuilder()..replace(this);
+      new PasswordResetConfirmSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -83,6 +89,7 @@ class PasswordResetConfirmSchemaBuilder
 
   @override
   void replace(PasswordResetConfirmSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$PasswordResetConfirmSchema;
   }
 
@@ -96,12 +103,11 @@ class PasswordResetConfirmSchemaBuilder
 
   _$PasswordResetConfirmSchema _build() {
     final _$result = _$v ??
-        _$PasswordResetConfirmSchema._(
-          token: BuiltValueNullFieldError.checkNotNull(
-              token, r'PasswordResetConfirmSchema', 'token'),
-          newPassword: BuiltValueNullFieldError.checkNotNull(
-              newPassword, r'PasswordResetConfirmSchema', 'newPassword'),
-        );
+        new _$PasswordResetConfirmSchema._(
+            token: BuiltValueNullFieldError.checkNotNull(
+                token, r'PasswordResetConfirmSchema', 'token'),
+            newPassword: BuiltValueNullFieldError.checkNotNull(
+                newPassword, r'PasswordResetConfirmSchema', 'newPassword'));
     replace(_$result);
     return _$result;
   }

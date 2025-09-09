@@ -20,7 +20,7 @@ class _$AccountLeaderboardSchema extends AccountLeaderboardSchema {
 
   factory _$AccountLeaderboardSchema(
           [void Function(AccountLeaderboardSchemaBuilder)? updates]) =>
-      (AccountLeaderboardSchemaBuilder()..update(updates))._build();
+      (new AccountLeaderboardSchemaBuilder()..update(updates))._build();
 
   _$AccountLeaderboardSchema._(
       {required this.position,
@@ -28,7 +28,19 @@ class _$AccountLeaderboardSchema extends AccountLeaderboardSchema {
       required this.status,
       required this.achievementsPoints,
       required this.gold})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        position, r'AccountLeaderboardSchema', 'position');
+    BuiltValueNullFieldError.checkNotNull(
+        account, r'AccountLeaderboardSchema', 'account');
+    BuiltValueNullFieldError.checkNotNull(
+        status, r'AccountLeaderboardSchema', 'status');
+    BuiltValueNullFieldError.checkNotNull(
+        achievementsPoints, r'AccountLeaderboardSchema', 'achievementsPoints');
+    BuiltValueNullFieldError.checkNotNull(
+        gold, r'AccountLeaderboardSchema', 'gold');
+  }
+
   @override
   AccountLeaderboardSchema rebuild(
           void Function(AccountLeaderboardSchemaBuilder) updates) =>
@@ -36,7 +48,7 @@ class _$AccountLeaderboardSchema extends AccountLeaderboardSchema {
 
   @override
   AccountLeaderboardSchemaBuilder toBuilder() =>
-      AccountLeaderboardSchemaBuilder()..replace(this);
+      new AccountLeaderboardSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -118,6 +130,7 @@ class AccountLeaderboardSchemaBuilder
 
   @override
   void replace(AccountLeaderboardSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AccountLeaderboardSchema;
   }
 
@@ -131,20 +144,19 @@ class AccountLeaderboardSchemaBuilder
 
   _$AccountLeaderboardSchema _build() {
     final _$result = _$v ??
-        _$AccountLeaderboardSchema._(
-          position: BuiltValueNullFieldError.checkNotNull(
-              position, r'AccountLeaderboardSchema', 'position'),
-          account: BuiltValueNullFieldError.checkNotNull(
-              account, r'AccountLeaderboardSchema', 'account'),
-          status: BuiltValueNullFieldError.checkNotNull(
-              status, r'AccountLeaderboardSchema', 'status'),
-          achievementsPoints: BuiltValueNullFieldError.checkNotNull(
-              achievementsPoints,
-              r'AccountLeaderboardSchema',
-              'achievementsPoints'),
-          gold: BuiltValueNullFieldError.checkNotNull(
-              gold, r'AccountLeaderboardSchema', 'gold'),
-        );
+        new _$AccountLeaderboardSchema._(
+            position: BuiltValueNullFieldError.checkNotNull(
+                position, r'AccountLeaderboardSchema', 'position'),
+            account: BuiltValueNullFieldError.checkNotNull(
+                account, r'AccountLeaderboardSchema', 'account'),
+            status: BuiltValueNullFieldError.checkNotNull(
+                status, r'AccountLeaderboardSchema', 'status'),
+            achievementsPoints: BuiltValueNullFieldError.checkNotNull(
+                achievementsPoints,
+                r'AccountLeaderboardSchema',
+                'achievementsPoints'),
+            gold: BuiltValueNullFieldError.checkNotNull(
+                gold, r'AccountLeaderboardSchema', 'gold'));
     replace(_$result);
     return _$result;
   }

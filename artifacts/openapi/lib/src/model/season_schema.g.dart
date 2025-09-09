@@ -19,7 +19,7 @@ class _$SeasonSchema extends SeasonSchema {
   final DateTime? startDate;
 
   factory _$SeasonSchema([void Function(SeasonSchemaBuilder)? updates]) =>
-      (SeasonSchemaBuilder()..update(updates))._build();
+      (new SeasonSchemaBuilder()..update(updates))._build();
 
   _$SeasonSchema._(
       {required this.badges,
@@ -27,13 +27,17 @@ class _$SeasonSchema extends SeasonSchema {
       this.name,
       this.number,
       this.startDate})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(badges, r'SeasonSchema', 'badges');
+    BuiltValueNullFieldError.checkNotNull(skins, r'SeasonSchema', 'skins');
+  }
+
   @override
   SeasonSchema rebuild(void Function(SeasonSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  SeasonSchemaBuilder toBuilder() => SeasonSchemaBuilder()..replace(this);
+  SeasonSchemaBuilder toBuilder() => new SeasonSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -76,12 +80,12 @@ class SeasonSchemaBuilder
 
   ListBuilder<SeasonBadgeSchema>? _badges;
   ListBuilder<SeasonBadgeSchema> get badges =>
-      _$this._badges ??= ListBuilder<SeasonBadgeSchema>();
+      _$this._badges ??= new ListBuilder<SeasonBadgeSchema>();
   set badges(ListBuilder<SeasonBadgeSchema>? badges) => _$this._badges = badges;
 
   ListBuilder<SeasonSkinSchema>? _skins;
   ListBuilder<SeasonSkinSchema> get skins =>
-      _$this._skins ??= ListBuilder<SeasonSkinSchema>();
+      _$this._skins ??= new ListBuilder<SeasonSkinSchema>();
   set skins(ListBuilder<SeasonSkinSchema>? skins) => _$this._skins = skins;
 
   String? _name;
@@ -115,6 +119,7 @@ class SeasonSchemaBuilder
 
   @override
   void replace(SeasonSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SeasonSchema;
   }
 
@@ -130,13 +135,12 @@ class SeasonSchemaBuilder
     _$SeasonSchema _$result;
     try {
       _$result = _$v ??
-          _$SeasonSchema._(
-            badges: badges.build(),
-            skins: skins.build(),
-            name: name,
-            number: number,
-            startDate: startDate,
-          );
+          new _$SeasonSchema._(
+              badges: badges.build(),
+              skins: skins.build(),
+              name: name,
+              number: number,
+              startDate: startDate);
     } catch (_) {
       late String _$failedField;
       try {
@@ -145,7 +149,7 @@ class SeasonSchemaBuilder
         _$failedField = 'skins';
         skins.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'SeasonSchema', _$failedField, e.toString());
       }
       rethrow;

@@ -12,9 +12,13 @@ class _$RecyclingResponseSchema extends RecyclingResponseSchema {
 
   factory _$RecyclingResponseSchema(
           [void Function(RecyclingResponseSchemaBuilder)? updates]) =>
-      (RecyclingResponseSchemaBuilder()..update(updates))._build();
+      (new RecyclingResponseSchemaBuilder()..update(updates))._build();
 
-  _$RecyclingResponseSchema._({required this.data}) : super._();
+  _$RecyclingResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'RecyclingResponseSchema', 'data');
+  }
+
   @override
   RecyclingResponseSchema rebuild(
           void Function(RecyclingResponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$RecyclingResponseSchema extends RecyclingResponseSchema {
 
   @override
   RecyclingResponseSchemaBuilder toBuilder() =>
-      RecyclingResponseSchemaBuilder()..replace(this);
+      new RecyclingResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -53,7 +57,7 @@ class RecyclingResponseSchemaBuilder
 
   RecyclingDataSchemaBuilder? _data;
   RecyclingDataSchemaBuilder get data =>
-      _$this._data ??= RecyclingDataSchemaBuilder();
+      _$this._data ??= new RecyclingDataSchemaBuilder();
   set data(RecyclingDataSchemaBuilder? data) => _$this._data = data;
 
   RecyclingResponseSchemaBuilder() {
@@ -71,6 +75,7 @@ class RecyclingResponseSchemaBuilder
 
   @override
   void replace(RecyclingResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RecyclingResponseSchema;
   }
 
@@ -85,17 +90,14 @@ class RecyclingResponseSchemaBuilder
   _$RecyclingResponseSchema _build() {
     _$RecyclingResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$RecyclingResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$RecyclingResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'RecyclingResponseSchema', _$failedField, e.toString());
       }
       rethrow;

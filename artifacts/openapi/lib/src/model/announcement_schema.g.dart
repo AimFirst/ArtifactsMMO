@@ -14,9 +14,13 @@ class _$AnnouncementSchema extends AnnouncementSchema {
 
   factory _$AnnouncementSchema(
           [void Function(AnnouncementSchemaBuilder)? updates]) =>
-      (AnnouncementSchemaBuilder()..update(updates))._build();
+      (new AnnouncementSchemaBuilder()..update(updates))._build();
 
-  _$AnnouncementSchema._({required this.message, this.createdAt}) : super._();
+  _$AnnouncementSchema._({required this.message, this.createdAt}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        message, r'AnnouncementSchema', 'message');
+  }
+
   @override
   AnnouncementSchema rebuild(
           void Function(AnnouncementSchemaBuilder) updates) =>
@@ -24,7 +28,7 @@ class _$AnnouncementSchema extends AnnouncementSchema {
 
   @override
   AnnouncementSchemaBuilder toBuilder() =>
-      AnnouncementSchemaBuilder()..replace(this);
+      new AnnouncementSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -80,6 +84,7 @@ class AnnouncementSchemaBuilder
 
   @override
   void replace(AnnouncementSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AnnouncementSchema;
   }
 
@@ -93,11 +98,10 @@ class AnnouncementSchemaBuilder
 
   _$AnnouncementSchema _build() {
     final _$result = _$v ??
-        _$AnnouncementSchema._(
-          message: BuiltValueNullFieldError.checkNotNull(
-              message, r'AnnouncementSchema', 'message'),
-          createdAt: createdAt,
-        );
+        new _$AnnouncementSchema._(
+            message: BuiltValueNullFieldError.checkNotNull(
+                message, r'AnnouncementSchema', 'message'),
+            createdAt: createdAt);
     replace(_$result);
     return _$result;
   }

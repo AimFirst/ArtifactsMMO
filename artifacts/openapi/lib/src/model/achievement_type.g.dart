@@ -37,12 +37,12 @@ AchievementType _$valueOf(String name) {
     case 'use':
       return _$use;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
 final BuiltSet<AchievementType> _$values =
-    BuiltSet<AchievementType>(const <AchievementType>[
+    new BuiltSet<AchievementType>(const <AchievementType>[
   _$combatKill,
   _$combatDrop,
   _$combatLevel,
@@ -75,7 +75,7 @@ abstract class _$AchievementTypeMixin {
 }
 
 Serializer<AchievementType> _$achievementTypeSerializer =
-    _$AchievementTypeSerializer();
+    new _$AchievementTypeSerializer();
 
 class _$AchievementTypeSerializer
     implements PrimitiveSerializer<AchievementType> {

@@ -16,13 +16,21 @@ class _$NpcMerchantTransactionSchema extends NpcMerchantTransactionSchema {
 
   factory _$NpcMerchantTransactionSchema(
           [void Function(NpcMerchantTransactionSchemaBuilder)? updates]) =>
-      (NpcMerchantTransactionSchemaBuilder()..update(updates))._build();
+      (new NpcMerchantTransactionSchemaBuilder()..update(updates))._build();
 
   _$NpcMerchantTransactionSchema._(
       {required this.cooldown,
       required this.transaction,
       required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'NpcMerchantTransactionSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        transaction, r'NpcMerchantTransactionSchema', 'transaction');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'NpcMerchantTransactionSchema', 'character');
+  }
+
   @override
   NpcMerchantTransactionSchema rebuild(
           void Function(NpcMerchantTransactionSchemaBuilder) updates) =>
@@ -30,7 +38,7 @@ class _$NpcMerchantTransactionSchema extends NpcMerchantTransactionSchema {
 
   @override
   NpcMerchantTransactionSchemaBuilder toBuilder() =>
-      NpcMerchantTransactionSchemaBuilder()..replace(this);
+      new NpcMerchantTransactionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -69,18 +77,18 @@ class NpcMerchantTransactionSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   NpcItemTransactionSchemaBuilder? _transaction;
   NpcItemTransactionSchemaBuilder get transaction =>
-      _$this._transaction ??= NpcItemTransactionSchemaBuilder();
+      _$this._transaction ??= new NpcItemTransactionSchemaBuilder();
   set transaction(NpcItemTransactionSchemaBuilder? transaction) =>
       _$this._transaction = transaction;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -101,6 +109,7 @@ class NpcMerchantTransactionSchemaBuilder
 
   @override
   void replace(NpcMerchantTransactionSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NpcMerchantTransactionSchema;
   }
 
@@ -116,11 +125,10 @@ class NpcMerchantTransactionSchemaBuilder
     _$NpcMerchantTransactionSchema _$result;
     try {
       _$result = _$v ??
-          _$NpcMerchantTransactionSchema._(
-            cooldown: cooldown.build(),
-            transaction: transaction.build(),
-            character: character.build(),
-          );
+          new _$NpcMerchantTransactionSchema._(
+              cooldown: cooldown.build(),
+              transaction: transaction.build(),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -131,7 +139,7 @@ class NpcMerchantTransactionSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'NpcMerchantTransactionSchema', _$failedField, e.toString());
       }
       rethrow;

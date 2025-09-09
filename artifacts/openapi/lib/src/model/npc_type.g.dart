@@ -16,11 +16,11 @@ NPCType _$valueOf(String name) {
     case 'trader':
       return _$trader;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
-final BuiltSet<NPCType> _$values = BuiltSet<NPCType>(const <NPCType>[
+final BuiltSet<NPCType> _$values = new BuiltSet<NPCType>(const <NPCType>[
   _$merchant,
   _$trader,
 ]);
@@ -38,7 +38,7 @@ abstract class _$NPCTypeMixin {
   _$NPCTypeMeta get NPCType => const _$NPCTypeMeta();
 }
 
-Serializer<NPCType> _$nPCTypeSerializer = _$NPCTypeSerializer();
+Serializer<NPCType> _$nPCTypeSerializer = new _$NPCTypeSerializer();
 
 class _$NPCTypeSerializer implements PrimitiveSerializer<NPCType> {
   static const Map<String, Object> _toWire = const <String, Object>{

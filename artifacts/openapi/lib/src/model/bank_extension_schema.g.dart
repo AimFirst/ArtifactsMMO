@@ -12,9 +12,13 @@ class _$BankExtensionSchema extends BankExtensionSchema {
 
   factory _$BankExtensionSchema(
           [void Function(BankExtensionSchemaBuilder)? updates]) =>
-      (BankExtensionSchemaBuilder()..update(updates))._build();
+      (new BankExtensionSchemaBuilder()..update(updates))._build();
 
-  _$BankExtensionSchema._({required this.price}) : super._();
+  _$BankExtensionSchema._({required this.price}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        price, r'BankExtensionSchema', 'price');
+  }
+
   @override
   BankExtensionSchema rebuild(
           void Function(BankExtensionSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$BankExtensionSchema extends BankExtensionSchema {
 
   @override
   BankExtensionSchemaBuilder toBuilder() =>
-      BankExtensionSchemaBuilder()..replace(this);
+      new BankExtensionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -69,6 +73,7 @@ class BankExtensionSchemaBuilder
 
   @override
   void replace(BankExtensionSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BankExtensionSchema;
   }
 
@@ -82,10 +87,9 @@ class BankExtensionSchemaBuilder
 
   _$BankExtensionSchema _build() {
     final _$result = _$v ??
-        _$BankExtensionSchema._(
-          price: BuiltValueNullFieldError.checkNotNull(
-              price, r'BankExtensionSchema', 'price'),
-        );
+        new _$BankExtensionSchema._(
+            price: BuiltValueNullFieldError.checkNotNull(
+                price, r'BankExtensionSchema', 'price'));
     replace(_$result);
     return _$result;
   }

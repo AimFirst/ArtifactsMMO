@@ -11,15 +11,20 @@ class _$ResponseSchema extends ResponseSchema {
   final String message;
 
   factory _$ResponseSchema([void Function(ResponseSchemaBuilder)? updates]) =>
-      (ResponseSchemaBuilder()..update(updates))._build();
+      (new ResponseSchemaBuilder()..update(updates))._build();
 
-  _$ResponseSchema._({required this.message}) : super._();
+  _$ResponseSchema._({required this.message}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        message, r'ResponseSchema', 'message');
+  }
+
   @override
   ResponseSchema rebuild(void Function(ResponseSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  ResponseSchemaBuilder toBuilder() => ResponseSchemaBuilder()..replace(this);
+  ResponseSchemaBuilder toBuilder() =>
+      new ResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -66,6 +71,7 @@ class ResponseSchemaBuilder
 
   @override
   void replace(ResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ResponseSchema;
   }
 
@@ -79,10 +85,9 @@ class ResponseSchemaBuilder
 
   _$ResponseSchema _build() {
     final _$result = _$v ??
-        _$ResponseSchema._(
-          message: BuiltValueNullFieldError.checkNotNull(
-              message, r'ResponseSchema', 'message'),
-        );
+        new _$ResponseSchema._(
+            message: BuiltValueNullFieldError.checkNotNull(
+                message, r'ResponseSchema', 'message'));
     replace(_$result);
     return _$result;
   }

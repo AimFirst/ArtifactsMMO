@@ -15,16 +15,22 @@ class _$EventMapSchema extends EventMapSchema {
   final String skin;
 
   factory _$EventMapSchema([void Function(EventMapSchemaBuilder)? updates]) =>
-      (EventMapSchemaBuilder()..update(updates))._build();
+      (new EventMapSchemaBuilder()..update(updates))._build();
 
   _$EventMapSchema._({required this.x, required this.y, required this.skin})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(x, r'EventMapSchema', 'x');
+    BuiltValueNullFieldError.checkNotNull(y, r'EventMapSchema', 'y');
+    BuiltValueNullFieldError.checkNotNull(skin, r'EventMapSchema', 'skin');
+  }
+
   @override
   EventMapSchema rebuild(void Function(EventMapSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  EventMapSchemaBuilder toBuilder() => EventMapSchemaBuilder()..replace(this);
+  EventMapSchemaBuilder toBuilder() =>
+      new EventMapSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -88,6 +94,7 @@ class EventMapSchemaBuilder
 
   @override
   void replace(EventMapSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EventMapSchema;
   }
 
@@ -101,12 +108,11 @@ class EventMapSchemaBuilder
 
   _$EventMapSchema _build() {
     final _$result = _$v ??
-        _$EventMapSchema._(
-          x: BuiltValueNullFieldError.checkNotNull(x, r'EventMapSchema', 'x'),
-          y: BuiltValueNullFieldError.checkNotNull(y, r'EventMapSchema', 'y'),
-          skin: BuiltValueNullFieldError.checkNotNull(
-              skin, r'EventMapSchema', 'skin'),
-        );
+        new _$EventMapSchema._(
+            x: BuiltValueNullFieldError.checkNotNull(x, r'EventMapSchema', 'x'),
+            y: BuiltValueNullFieldError.checkNotNull(y, r'EventMapSchema', 'y'),
+            skin: BuiltValueNullFieldError.checkNotNull(
+                skin, r'EventMapSchema', 'skin'));
     replace(_$result);
     return _$result;
   }

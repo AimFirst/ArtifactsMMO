@@ -1,11 +1,18 @@
 import 'dart:math';
 
-class CombatDetails {
+import 'package:dart_mappable/dart_mappable.dart';
+
+part 'combat_details.mapper.dart';
+
+@MappableClass()
+class CombatDetails with CombatDetailsMappable {
   final double playerAvgDPT;
   final double monsterAvgDPT;
   final int playerStartHp;
   final int monsterStartHp;
   final int haste;
+
+  CombatDetails({required this.playerAvgDPT, required this.monsterAvgDPT, required this.playerStartHp, required this.monsterStartHp, required this.haste,});
 
   int get turnsForPlayerToWin => playerAvgDPT == 0 ? 100000 : (monsterStartHp / playerAvgDPT).ceil();
 
@@ -22,12 +29,4 @@ class CombatDetails {
   double get restToHealCooldown => (totalTurns * monsterAvgDPT) / 5;
 
   double get totalCooldown => fightCooldown + restToHealCooldown;
-
-  CombatDetails({
-    required this.playerAvgDPT,
-    required this.monsterAvgDPT,
-    required this.playerStartHp,
-    required this.monsterStartHp,
-    required this.haste,
-  });
 }

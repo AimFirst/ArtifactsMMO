@@ -19,7 +19,7 @@ class _$ResourceSchema extends ResourceSchema {
   final BuiltList<DropRateSchema> drops;
 
   factory _$ResourceSchema([void Function(ResourceSchemaBuilder)? updates]) =>
-      (ResourceSchemaBuilder()..update(updates))._build();
+      (new ResourceSchemaBuilder()..update(updates))._build();
 
   _$ResourceSchema._(
       {required this.name,
@@ -27,13 +27,21 @@ class _$ResourceSchema extends ResourceSchema {
       required this.skill,
       required this.level,
       required this.drops})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(name, r'ResourceSchema', 'name');
+    BuiltValueNullFieldError.checkNotNull(code, r'ResourceSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(skill, r'ResourceSchema', 'skill');
+    BuiltValueNullFieldError.checkNotNull(level, r'ResourceSchema', 'level');
+    BuiltValueNullFieldError.checkNotNull(drops, r'ResourceSchema', 'drops');
+  }
+
   @override
   ResourceSchema rebuild(void Function(ResourceSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  ResourceSchemaBuilder toBuilder() => ResourceSchemaBuilder()..replace(this);
+  ResourceSchemaBuilder toBuilder() =>
+      new ResourceSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -92,7 +100,7 @@ class ResourceSchemaBuilder
 
   ListBuilder<DropRateSchema>? _drops;
   ListBuilder<DropRateSchema> get drops =>
-      _$this._drops ??= ListBuilder<DropRateSchema>();
+      _$this._drops ??= new ListBuilder<DropRateSchema>();
   set drops(ListBuilder<DropRateSchema>? drops) => _$this._drops = drops;
 
   ResourceSchemaBuilder() {
@@ -114,6 +122,7 @@ class ResourceSchemaBuilder
 
   @override
   void replace(ResourceSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ResourceSchema;
   }
 
@@ -129,24 +138,23 @@ class ResourceSchemaBuilder
     _$ResourceSchema _$result;
     try {
       _$result = _$v ??
-          _$ResourceSchema._(
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'ResourceSchema', 'name'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'ResourceSchema', 'code'),
-            skill: BuiltValueNullFieldError.checkNotNull(
-                skill, r'ResourceSchema', 'skill'),
-            level: BuiltValueNullFieldError.checkNotNull(
-                level, r'ResourceSchema', 'level'),
-            drops: drops.build(),
-          );
+          new _$ResourceSchema._(
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'ResourceSchema', 'name'),
+              code: BuiltValueNullFieldError.checkNotNull(
+                  code, r'ResourceSchema', 'code'),
+              skill: BuiltValueNullFieldError.checkNotNull(
+                  skill, r'ResourceSchema', 'skill'),
+              level: BuiltValueNullFieldError.checkNotNull(
+                  level, r'ResourceSchema', 'level'),
+              drops: drops.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'drops';
         drops.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'ResourceSchema', _$failedField, e.toString());
       }
       rethrow;

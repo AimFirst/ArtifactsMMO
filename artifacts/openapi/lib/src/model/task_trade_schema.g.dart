@@ -13,15 +13,22 @@ class _$TaskTradeSchema extends TaskTradeSchema {
   final int quantity;
 
   factory _$TaskTradeSchema([void Function(TaskTradeSchemaBuilder)? updates]) =>
-      (TaskTradeSchemaBuilder()..update(updates))._build();
+      (new TaskTradeSchemaBuilder()..update(updates))._build();
 
-  _$TaskTradeSchema._({required this.code, required this.quantity}) : super._();
+  _$TaskTradeSchema._({required this.code, required this.quantity})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'TaskTradeSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        quantity, r'TaskTradeSchema', 'quantity');
+  }
+
   @override
   TaskTradeSchema rebuild(void Function(TaskTradeSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  TaskTradeSchemaBuilder toBuilder() => TaskTradeSchemaBuilder()..replace(this);
+  TaskTradeSchemaBuilder toBuilder() =>
+      new TaskTradeSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -77,6 +84,7 @@ class TaskTradeSchemaBuilder
 
   @override
   void replace(TaskTradeSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskTradeSchema;
   }
 
@@ -90,12 +98,11 @@ class TaskTradeSchemaBuilder
 
   _$TaskTradeSchema _build() {
     final _$result = _$v ??
-        _$TaskTradeSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'TaskTradeSchema', 'code'),
-          quantity: BuiltValueNullFieldError.checkNotNull(
-              quantity, r'TaskTradeSchema', 'quantity'),
-        );
+        new _$TaskTradeSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'TaskTradeSchema', 'code'),
+            quantity: BuiltValueNullFieldError.checkNotNull(
+                quantity, r'TaskTradeSchema', 'quantity'));
     replace(_$result);
     return _$result;
   }

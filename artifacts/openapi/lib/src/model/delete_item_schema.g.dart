@@ -16,18 +16,25 @@ class _$DeleteItemSchema extends DeleteItemSchema {
 
   factory _$DeleteItemSchema(
           [void Function(DeleteItemSchemaBuilder)? updates]) =>
-      (DeleteItemSchemaBuilder()..update(updates))._build();
+      (new DeleteItemSchemaBuilder()..update(updates))._build();
 
   _$DeleteItemSchema._(
       {required this.cooldown, required this.item, required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'DeleteItemSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(item, r'DeleteItemSchema', 'item');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'DeleteItemSchema', 'character');
+  }
+
   @override
   DeleteItemSchema rebuild(void Function(DeleteItemSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   DeleteItemSchemaBuilder toBuilder() =>
-      DeleteItemSchemaBuilder()..replace(this);
+      new DeleteItemSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -64,17 +71,17 @@ class DeleteItemSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   SimpleItemSchemaBuilder? _item;
   SimpleItemSchemaBuilder get item =>
-      _$this._item ??= SimpleItemSchemaBuilder();
+      _$this._item ??= new SimpleItemSchemaBuilder();
   set item(SimpleItemSchemaBuilder? item) => _$this._item = item;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -95,6 +102,7 @@ class DeleteItemSchemaBuilder
 
   @override
   void replace(DeleteItemSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DeleteItemSchema;
   }
 
@@ -110,11 +118,10 @@ class DeleteItemSchemaBuilder
     _$DeleteItemSchema _$result;
     try {
       _$result = _$v ??
-          _$DeleteItemSchema._(
-            cooldown: cooldown.build(),
-            item: item.build(),
-            character: character.build(),
-          );
+          new _$DeleteItemSchema._(
+              cooldown: cooldown.build(),
+              item: item.build(),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -125,7 +132,7 @@ class DeleteItemSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DeleteItemSchema', _$failedField, e.toString());
       }
       rethrow;

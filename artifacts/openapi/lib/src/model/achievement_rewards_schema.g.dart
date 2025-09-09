@@ -12,9 +12,13 @@ class _$AchievementRewardsSchema extends AchievementRewardsSchema {
 
   factory _$AchievementRewardsSchema(
           [void Function(AchievementRewardsSchemaBuilder)? updates]) =>
-      (AchievementRewardsSchemaBuilder()..update(updates))._build();
+      (new AchievementRewardsSchemaBuilder()..update(updates))._build();
 
-  _$AchievementRewardsSchema._({required this.gold}) : super._();
+  _$AchievementRewardsSchema._({required this.gold}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        gold, r'AchievementRewardsSchema', 'gold');
+  }
+
   @override
   AchievementRewardsSchema rebuild(
           void Function(AchievementRewardsSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$AchievementRewardsSchema extends AchievementRewardsSchema {
 
   @override
   AchievementRewardsSchemaBuilder toBuilder() =>
-      AchievementRewardsSchemaBuilder()..replace(this);
+      new AchievementRewardsSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -70,6 +74,7 @@ class AchievementRewardsSchemaBuilder
 
   @override
   void replace(AchievementRewardsSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AchievementRewardsSchema;
   }
 
@@ -83,10 +88,9 @@ class AchievementRewardsSchemaBuilder
 
   _$AchievementRewardsSchema _build() {
     final _$result = _$v ??
-        _$AchievementRewardsSchema._(
-          gold: BuiltValueNullFieldError.checkNotNull(
-              gold, r'AchievementRewardsSchema', 'gold'),
-        );
+        new _$AchievementRewardsSchema._(
+            gold: BuiltValueNullFieldError.checkNotNull(
+                gold, r'AchievementRewardsSchema', 'gold'));
     replace(_$result);
     return _$result;
   }

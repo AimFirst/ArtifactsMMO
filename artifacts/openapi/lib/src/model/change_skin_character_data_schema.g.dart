@@ -16,11 +16,19 @@ class _$ChangeSkinCharacterDataSchema extends ChangeSkinCharacterDataSchema {
 
   factory _$ChangeSkinCharacterDataSchema(
           [void Function(ChangeSkinCharacterDataSchemaBuilder)? updates]) =>
-      (ChangeSkinCharacterDataSchemaBuilder()..update(updates))._build();
+      (new ChangeSkinCharacterDataSchemaBuilder()..update(updates))._build();
 
   _$ChangeSkinCharacterDataSchema._(
       {required this.cooldown, required this.skin, required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'ChangeSkinCharacterDataSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        skin, r'ChangeSkinCharacterDataSchema', 'skin');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'ChangeSkinCharacterDataSchema', 'character');
+  }
+
   @override
   ChangeSkinCharacterDataSchema rebuild(
           void Function(ChangeSkinCharacterDataSchemaBuilder) updates) =>
@@ -28,7 +36,7 @@ class _$ChangeSkinCharacterDataSchema extends ChangeSkinCharacterDataSchema {
 
   @override
   ChangeSkinCharacterDataSchemaBuilder toBuilder() =>
-      ChangeSkinCharacterDataSchemaBuilder()..replace(this);
+      new ChangeSkinCharacterDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -67,7 +75,7 @@ class ChangeSkinCharacterDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   String? _skin;
@@ -76,7 +84,7 @@ class ChangeSkinCharacterDataSchemaBuilder
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -97,6 +105,7 @@ class ChangeSkinCharacterDataSchemaBuilder
 
   @override
   void replace(ChangeSkinCharacterDataSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ChangeSkinCharacterDataSchema;
   }
 
@@ -112,12 +121,11 @@ class ChangeSkinCharacterDataSchemaBuilder
     _$ChangeSkinCharacterDataSchema _$result;
     try {
       _$result = _$v ??
-          _$ChangeSkinCharacterDataSchema._(
-            cooldown: cooldown.build(),
-            skin: BuiltValueNullFieldError.checkNotNull(
-                skin, r'ChangeSkinCharacterDataSchema', 'skin'),
-            character: character.build(),
-          );
+          new _$ChangeSkinCharacterDataSchema._(
+              cooldown: cooldown.build(),
+              skin: BuiltValueNullFieldError.checkNotNull(
+                  skin, r'ChangeSkinCharacterDataSchema', 'skin'),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -127,7 +135,7 @@ class ChangeSkinCharacterDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'ChangeSkinCharacterDataSchema', _$failedField, e.toString());
       }
       rethrow;

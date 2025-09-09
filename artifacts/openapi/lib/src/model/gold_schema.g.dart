@@ -11,15 +11,18 @@ class _$GoldSchema extends GoldSchema {
   final int quantity;
 
   factory _$GoldSchema([void Function(GoldSchemaBuilder)? updates]) =>
-      (GoldSchemaBuilder()..update(updates))._build();
+      (new GoldSchemaBuilder()..update(updates))._build();
 
-  _$GoldSchema._({required this.quantity}) : super._();
+  _$GoldSchema._({required this.quantity}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(quantity, r'GoldSchema', 'quantity');
+  }
+
   @override
   GoldSchema rebuild(void Function(GoldSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  GoldSchemaBuilder toBuilder() => GoldSchemaBuilder()..replace(this);
+  GoldSchemaBuilder toBuilder() => new GoldSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -65,6 +68,7 @@ class GoldSchemaBuilder implements Builder<GoldSchema, GoldSchemaBuilder> {
 
   @override
   void replace(GoldSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GoldSchema;
   }
 
@@ -78,10 +82,9 @@ class GoldSchemaBuilder implements Builder<GoldSchema, GoldSchemaBuilder> {
 
   _$GoldSchema _build() {
     final _$result = _$v ??
-        _$GoldSchema._(
-          quantity: BuiltValueNullFieldError.checkNotNull(
-              quantity, r'GoldSchema', 'quantity'),
-        );
+        new _$GoldSchema._(
+            quantity: BuiltValueNullFieldError.checkNotNull(
+                quantity, r'GoldSchema', 'quantity'));
     replace(_$result);
     return _$result;
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
@@ -24,6 +25,7 @@ class TeamProvider with ChangeNotifier {
   WorldDataProvider _worldDataProvider; // Add a reference
   BankProvider _bankProvider; // Add a reference
   TeamBrainProvider _teamBrainProvider;
+  AppDatabase _appDatabase;
   late ActionFactory _actionFactory;
 
   List<CharacterState> _characterStates = []; // Use the new wrapper
@@ -45,10 +47,10 @@ class TeamProvider with ChangeNotifier {
   late final TeamAIService _aiService;
 
   TeamProvider(this._apiClient, this._mapProvider, this._worldDataProvider,
-      this._bankProvider, this._teamBrainProvider) {
+      this._bankProvider, this._teamBrainProvider, this._appDatabase,) {
     _actionFactory = ActionFactory(_apiClient);
     _aiService = TeamAIService(_apiClient, this, _worldDataProvider,
-        _bankProvider, _mapProvider, _combatService, _teamBrainProvider);
+        _bankProvider, _mapProvider, _combatService, _teamBrainProvider, _appDatabase,);
     fetchAllCharacters().then((_) {
       // Initialize queues and start the game loop after characters are loaded
       for (var state in _characterStates) {

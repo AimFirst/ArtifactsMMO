@@ -17,20 +17,26 @@ class _$TaskSchema extends TaskSchema {
   final RewardsSchema rewards;
 
   factory _$TaskSchema([void Function(TaskSchemaBuilder)? updates]) =>
-      (TaskSchemaBuilder()..update(updates))._build();
+      (new TaskSchemaBuilder()..update(updates))._build();
 
   _$TaskSchema._(
       {required this.code,
       required this.type,
       required this.total,
       required this.rewards})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'TaskSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(type, r'TaskSchema', 'type');
+    BuiltValueNullFieldError.checkNotNull(total, r'TaskSchema', 'total');
+    BuiltValueNullFieldError.checkNotNull(rewards, r'TaskSchema', 'rewards');
+  }
+
   @override
   TaskSchema rebuild(void Function(TaskSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  TaskSchemaBuilder toBuilder() => TaskSchemaBuilder()..replace(this);
+  TaskSchemaBuilder toBuilder() => new TaskSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -81,7 +87,7 @@ class TaskSchemaBuilder implements Builder<TaskSchema, TaskSchemaBuilder> {
 
   RewardsSchemaBuilder? _rewards;
   RewardsSchemaBuilder get rewards =>
-      _$this._rewards ??= RewardsSchemaBuilder();
+      _$this._rewards ??= new RewardsSchemaBuilder();
   set rewards(RewardsSchemaBuilder? rewards) => _$this._rewards = rewards;
 
   TaskSchemaBuilder() {
@@ -102,6 +108,7 @@ class TaskSchemaBuilder implements Builder<TaskSchema, TaskSchemaBuilder> {
 
   @override
   void replace(TaskSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskSchema;
   }
 
@@ -117,22 +124,21 @@ class TaskSchemaBuilder implements Builder<TaskSchema, TaskSchemaBuilder> {
     _$TaskSchema _$result;
     try {
       _$result = _$v ??
-          _$TaskSchema._(
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'TaskSchema', 'code'),
-            type: BuiltValueNullFieldError.checkNotNull(
-                type, r'TaskSchema', 'type'),
-            total: BuiltValueNullFieldError.checkNotNull(
-                total, r'TaskSchema', 'total'),
-            rewards: rewards.build(),
-          );
+          new _$TaskSchema._(
+              code: BuiltValueNullFieldError.checkNotNull(
+                  code, r'TaskSchema', 'code'),
+              type: BuiltValueNullFieldError.checkNotNull(
+                  type, r'TaskSchema', 'type'),
+              total: BuiltValueNullFieldError.checkNotNull(
+                  total, r'TaskSchema', 'total'),
+              rewards: rewards.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'rewards';
         rewards.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'TaskSchema', _$failedField, e.toString());
       }
       rethrow;

@@ -13,15 +13,19 @@ class _$CraftingSchema extends CraftingSchema {
   final int? quantity;
 
   factory _$CraftingSchema([void Function(CraftingSchemaBuilder)? updates]) =>
-      (CraftingSchemaBuilder()..update(updates))._build();
+      (new CraftingSchemaBuilder()..update(updates))._build();
 
-  _$CraftingSchema._({required this.code, this.quantity}) : super._();
+  _$CraftingSchema._({required this.code, this.quantity}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'CraftingSchema', 'code');
+  }
+
   @override
   CraftingSchema rebuild(void Function(CraftingSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  CraftingSchemaBuilder toBuilder() => CraftingSchemaBuilder()..replace(this);
+  CraftingSchemaBuilder toBuilder() =>
+      new CraftingSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -77,6 +81,7 @@ class CraftingSchemaBuilder
 
   @override
   void replace(CraftingSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CraftingSchema;
   }
 
@@ -90,11 +95,10 @@ class CraftingSchemaBuilder
 
   _$CraftingSchema _build() {
     final _$result = _$v ??
-        _$CraftingSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'CraftingSchema', 'code'),
-          quantity: quantity,
-        );
+        new _$CraftingSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'CraftingSchema', 'code'),
+            quantity: quantity);
     replace(_$result);
     return _$result;
   }

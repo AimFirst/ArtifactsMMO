@@ -12,6 +12,7 @@ import 'package:artifacts_mmo/ai/goals/idle_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_craft_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_fight_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_gather_team_request_goal.dart';
+import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
@@ -34,6 +35,7 @@ class TeamAIService {
   final MapProvider _mapProvider;
   final CombatService _combatService;
   final TeamBrainProvider _teamBrainProvider;
+  final AppDatabase _appDatabase;
   final List<AIGoal> _goals = [];
   late ActionFactory _actionFactory;
   late LoadoutOptimizerService _loadoutOptimizerService;
@@ -45,10 +47,11 @@ class TeamAIService {
       this._bankProvider,
       this._mapProvider,
       this._combatService,
-      this._teamBrainProvider) {
+      this._teamBrainProvider,
+      this._appDatabase,) {
     _actionFactory = ActionFactory(_apiClient);
     _loadoutOptimizerService =
-        LoadoutOptimizerService(_combatService, _worldDataProvider);
+        LoadoutOptimizerService(_combatService, _worldDataProvider, _appDatabase,);
 
     // Initialize all possible goals.
     _goals.addAll([

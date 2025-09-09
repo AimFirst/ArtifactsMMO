@@ -20,11 +20,15 @@ class _$DataPageActiveEventSchema extends DataPageActiveEventSchema {
 
   factory _$DataPageActiveEventSchema(
           [void Function(DataPageActiveEventSchemaBuilder)? updates]) =>
-      (DataPageActiveEventSchemaBuilder()..update(updates))._build();
+      (new DataPageActiveEventSchemaBuilder()..update(updates))._build();
 
   _$DataPageActiveEventSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'DataPageActiveEventSchema', 'data');
+  }
+
   @override
   DataPageActiveEventSchema rebuild(
           void Function(DataPageActiveEventSchemaBuilder) updates) =>
@@ -32,7 +36,7 @@ class _$DataPageActiveEventSchema extends DataPageActiveEventSchema {
 
   @override
   DataPageActiveEventSchemaBuilder toBuilder() =>
-      DataPageActiveEventSchemaBuilder()..replace(this);
+      new DataPageActiveEventSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +80,7 @@ class DataPageActiveEventSchemaBuilder
 
   ListBuilder<ActiveEventSchema>? _data;
   ListBuilder<ActiveEventSchema> get data =>
-      _$this._data ??= ListBuilder<ActiveEventSchema>();
+      _$this._data ??= new ListBuilder<ActiveEventSchema>();
   set data(ListBuilder<ActiveEventSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -114,6 +118,7 @@ class DataPageActiveEventSchemaBuilder
 
   @override
   void replace(DataPageActiveEventSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageActiveEventSchema;
   }
 
@@ -129,20 +134,19 @@ class DataPageActiveEventSchemaBuilder
     _$DataPageActiveEventSchema _$result;
     try {
       _$result = _$v ??
-          _$DataPageActiveEventSchema._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageActiveEventSchema._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageActiveEventSchema', _$failedField, e.toString());
       }
       rethrow;

@@ -16,13 +16,21 @@ class _$BankExtensionTransactionSchema extends BankExtensionTransactionSchema {
 
   factory _$BankExtensionTransactionSchema(
           [void Function(BankExtensionTransactionSchemaBuilder)? updates]) =>
-      (BankExtensionTransactionSchemaBuilder()..update(updates))._build();
+      (new BankExtensionTransactionSchemaBuilder()..update(updates))._build();
 
   _$BankExtensionTransactionSchema._(
       {required this.cooldown,
       required this.transaction,
       required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'BankExtensionTransactionSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        transaction, r'BankExtensionTransactionSchema', 'transaction');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'BankExtensionTransactionSchema', 'character');
+  }
+
   @override
   BankExtensionTransactionSchema rebuild(
           void Function(BankExtensionTransactionSchemaBuilder) updates) =>
@@ -30,7 +38,7 @@ class _$BankExtensionTransactionSchema extends BankExtensionTransactionSchema {
 
   @override
   BankExtensionTransactionSchemaBuilder toBuilder() =>
-      BankExtensionTransactionSchemaBuilder()..replace(this);
+      new BankExtensionTransactionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -69,18 +77,18 @@ class BankExtensionTransactionSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   BankExtensionSchemaBuilder? _transaction;
   BankExtensionSchemaBuilder get transaction =>
-      _$this._transaction ??= BankExtensionSchemaBuilder();
+      _$this._transaction ??= new BankExtensionSchemaBuilder();
   set transaction(BankExtensionSchemaBuilder? transaction) =>
       _$this._transaction = transaction;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -101,6 +109,7 @@ class BankExtensionTransactionSchemaBuilder
 
   @override
   void replace(BankExtensionTransactionSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BankExtensionTransactionSchema;
   }
 
@@ -116,11 +125,10 @@ class BankExtensionTransactionSchemaBuilder
     _$BankExtensionTransactionSchema _$result;
     try {
       _$result = _$v ??
-          _$BankExtensionTransactionSchema._(
-            cooldown: cooldown.build(),
-            transaction: transaction.build(),
-            character: character.build(),
-          );
+          new _$BankExtensionTransactionSchema._(
+              cooldown: cooldown.build(),
+              transaction: transaction.build(),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -131,7 +139,7 @@ class BankExtensionTransactionSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'BankExtensionTransactionSchema', _$failedField, e.toString());
       }
       rethrow;

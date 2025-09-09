@@ -18,14 +18,22 @@ class _$EquipRequestSchema extends EquipRequestSchema {
 
   factory _$EquipRequestSchema(
           [void Function(EquipRequestSchemaBuilder)? updates]) =>
-      (EquipRequestSchemaBuilder()..update(updates))._build();
+      (new EquipRequestSchemaBuilder()..update(updates))._build();
 
   _$EquipRequestSchema._(
       {required this.cooldown,
       required this.slot,
       required this.item,
       required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'EquipRequestSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(slot, r'EquipRequestSchema', 'slot');
+    BuiltValueNullFieldError.checkNotNull(item, r'EquipRequestSchema', 'item');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'EquipRequestSchema', 'character');
+  }
+
   @override
   EquipRequestSchema rebuild(
           void Function(EquipRequestSchemaBuilder) updates) =>
@@ -33,7 +41,7 @@ class _$EquipRequestSchema extends EquipRequestSchema {
 
   @override
   EquipRequestSchemaBuilder toBuilder() =>
-      EquipRequestSchemaBuilder()..replace(this);
+      new EquipRequestSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -73,7 +81,7 @@ class EquipRequestSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   ItemSlot? _slot;
@@ -81,12 +89,12 @@ class EquipRequestSchemaBuilder
   set slot(ItemSlot? slot) => _$this._slot = slot;
 
   ItemSchemaBuilder? _item;
-  ItemSchemaBuilder get item => _$this._item ??= ItemSchemaBuilder();
+  ItemSchemaBuilder get item => _$this._item ??= new ItemSchemaBuilder();
   set item(ItemSchemaBuilder? item) => _$this._item = item;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -108,6 +116,7 @@ class EquipRequestSchemaBuilder
 
   @override
   void replace(EquipRequestSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EquipRequestSchema;
   }
 
@@ -123,13 +132,12 @@ class EquipRequestSchemaBuilder
     _$EquipRequestSchema _$result;
     try {
       _$result = _$v ??
-          _$EquipRequestSchema._(
-            cooldown: cooldown.build(),
-            slot: BuiltValueNullFieldError.checkNotNull(
-                slot, r'EquipRequestSchema', 'slot'),
-            item: item.build(),
-            character: character.build(),
-          );
+          new _$EquipRequestSchema._(
+              cooldown: cooldown.build(),
+              slot: BuiltValueNullFieldError.checkNotNull(
+                  slot, r'EquipRequestSchema', 'slot'),
+              item: item.build(),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -141,7 +149,7 @@ class EquipRequestSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'EquipRequestSchema', _$failedField, e.toString());
       }
       rethrow;

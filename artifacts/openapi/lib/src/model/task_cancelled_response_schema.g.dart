@@ -12,9 +12,13 @@ class _$TaskCancelledResponseSchema extends TaskCancelledResponseSchema {
 
   factory _$TaskCancelledResponseSchema(
           [void Function(TaskCancelledResponseSchemaBuilder)? updates]) =>
-      (TaskCancelledResponseSchemaBuilder()..update(updates))._build();
+      (new TaskCancelledResponseSchemaBuilder()..update(updates))._build();
 
-  _$TaskCancelledResponseSchema._({required this.data}) : super._();
+  _$TaskCancelledResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'TaskCancelledResponseSchema', 'data');
+  }
+
   @override
   TaskCancelledResponseSchema rebuild(
           void Function(TaskCancelledResponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$TaskCancelledResponseSchema extends TaskCancelledResponseSchema {
 
   @override
   TaskCancelledResponseSchemaBuilder toBuilder() =>
-      TaskCancelledResponseSchemaBuilder()..replace(this);
+      new TaskCancelledResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -54,7 +58,7 @@ class TaskCancelledResponseSchemaBuilder
 
   TaskCancelledSchemaBuilder? _data;
   TaskCancelledSchemaBuilder get data =>
-      _$this._data ??= TaskCancelledSchemaBuilder();
+      _$this._data ??= new TaskCancelledSchemaBuilder();
   set data(TaskCancelledSchemaBuilder? data) => _$this._data = data;
 
   TaskCancelledResponseSchemaBuilder() {
@@ -72,6 +76,7 @@ class TaskCancelledResponseSchemaBuilder
 
   @override
   void replace(TaskCancelledResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskCancelledResponseSchema;
   }
 
@@ -86,17 +91,14 @@ class TaskCancelledResponseSchemaBuilder
   _$TaskCancelledResponseSchema _build() {
     _$TaskCancelledResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$TaskCancelledResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$TaskCancelledResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'TaskCancelledResponseSchema', _$failedField, e.toString());
       }
       rethrow;

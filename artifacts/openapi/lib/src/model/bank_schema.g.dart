@@ -17,20 +17,28 @@ class _$BankSchema extends BankSchema {
   final int gold;
 
   factory _$BankSchema([void Function(BankSchemaBuilder)? updates]) =>
-      (BankSchemaBuilder()..update(updates))._build();
+      (new BankSchemaBuilder()..update(updates))._build();
 
   _$BankSchema._(
       {required this.slots,
       required this.expansions,
       required this.nextExpansionCost,
       required this.gold})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(slots, r'BankSchema', 'slots');
+    BuiltValueNullFieldError.checkNotNull(
+        expansions, r'BankSchema', 'expansions');
+    BuiltValueNullFieldError.checkNotNull(
+        nextExpansionCost, r'BankSchema', 'nextExpansionCost');
+    BuiltValueNullFieldError.checkNotNull(gold, r'BankSchema', 'gold');
+  }
+
   @override
   BankSchema rebuild(void Function(BankSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  BankSchemaBuilder toBuilder() => BankSchemaBuilder()..replace(this);
+  BankSchemaBuilder toBuilder() => new BankSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -102,6 +110,7 @@ class BankSchemaBuilder implements Builder<BankSchema, BankSchemaBuilder> {
 
   @override
   void replace(BankSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BankSchema;
   }
 
@@ -115,16 +124,15 @@ class BankSchemaBuilder implements Builder<BankSchema, BankSchemaBuilder> {
 
   _$BankSchema _build() {
     final _$result = _$v ??
-        _$BankSchema._(
-          slots: BuiltValueNullFieldError.checkNotNull(
-              slots, r'BankSchema', 'slots'),
-          expansions: BuiltValueNullFieldError.checkNotNull(
-              expansions, r'BankSchema', 'expansions'),
-          nextExpansionCost: BuiltValueNullFieldError.checkNotNull(
-              nextExpansionCost, r'BankSchema', 'nextExpansionCost'),
-          gold: BuiltValueNullFieldError.checkNotNull(
-              gold, r'BankSchema', 'gold'),
-        );
+        new _$BankSchema._(
+            slots: BuiltValueNullFieldError.checkNotNull(
+                slots, r'BankSchema', 'slots'),
+            expansions: BuiltValueNullFieldError.checkNotNull(
+                expansions, r'BankSchema', 'expansions'),
+            nextExpansionCost: BuiltValueNullFieldError.checkNotNull(
+                nextExpansionCost, r'BankSchema', 'nextExpansionCost'),
+            gold: BuiltValueNullFieldError.checkNotNull(
+                gold, r'BankSchema', 'gold'));
     replace(_$result);
     return _$result;
   }

@@ -20,18 +20,21 @@ class _$DataPageLogSchema extends DataPageLogSchema {
 
   factory _$DataPageLogSchema(
           [void Function(DataPageLogSchemaBuilder)? updates]) =>
-      (DataPageLogSchemaBuilder()..update(updates))._build();
+      (new DataPageLogSchemaBuilder()..update(updates))._build();
 
   _$DataPageLogSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(data, r'DataPageLogSchema', 'data');
+  }
+
   @override
   DataPageLogSchema rebuild(void Function(DataPageLogSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   DataPageLogSchemaBuilder toBuilder() =>
-      DataPageLogSchemaBuilder()..replace(this);
+      new DataPageLogSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -73,7 +76,8 @@ class DataPageLogSchemaBuilder
   _$DataPageLogSchema? _$v;
 
   ListBuilder<LogSchema>? _data;
-  ListBuilder<LogSchema> get data => _$this._data ??= ListBuilder<LogSchema>();
+  ListBuilder<LogSchema> get data =>
+      _$this._data ??= new ListBuilder<LogSchema>();
   set data(ListBuilder<LogSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -111,6 +115,7 @@ class DataPageLogSchemaBuilder
 
   @override
   void replace(DataPageLogSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageLogSchema;
   }
 
@@ -126,20 +131,19 @@ class DataPageLogSchemaBuilder
     _$DataPageLogSchema _$result;
     try {
       _$result = _$v ??
-          _$DataPageLogSchema._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageLogSchema._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageLogSchema', _$failedField, e.toString());
       }
       rethrow;

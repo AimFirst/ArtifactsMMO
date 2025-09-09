@@ -34,12 +34,12 @@ CharacterSkin _$valueOf(String name) {
     case 'zombie1':
       return _$zombie1;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
 final BuiltSet<CharacterSkin> _$values =
-    BuiltSet<CharacterSkin>(const <CharacterSkin>[
+    new BuiltSet<CharacterSkin>(const <CharacterSkin>[
   _$men1,
   _$men2,
   _$men3,
@@ -70,7 +70,7 @@ abstract class _$CharacterSkinMixin {
 }
 
 Serializer<CharacterSkin> _$characterSkinSerializer =
-    _$CharacterSkinSerializer();
+    new _$CharacterSkinSerializer();
 
 class _$CharacterSkinSerializer implements PrimitiveSerializer<CharacterSkin> {
   static const Map<String, Object> _toWire = const <String, Object>{

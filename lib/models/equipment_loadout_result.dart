@@ -1,22 +1,26 @@
 // A simple class to represent a result when using a specific gear combination.
 import 'package:artifacts_mmo/models/combat_details.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-sealed class EquipmentLoadoutResult {
+part 'equipment_loadout_result.mapper.dart';
+
+@MappableClass()
+abstract class EquipmentLoadoutResult with EquipmentLoadoutResultMappable {
   final EquipmentLoadout loadout;
 
-  EquipmentLoadoutResult(this.loadout);
+  EquipmentLoadoutResult({required this.loadout});
+
 }
 
-final class CombatEquipmentLoadoutResult extends EquipmentLoadoutResult {
+@MappableClass(discriminatorKey: 'combat')
+class CombatEquipmentLoadoutResult extends EquipmentLoadoutResult with CombatEquipmentLoadoutResultMappable {
   final CombatDetails combatDetails;
-
-  CombatEquipmentLoadoutResult(super.loadout, this.combatDetails);
+  CombatEquipmentLoadoutResult({required super.loadout, required this.combatDetails});
 }
 
-final class SkillEquipmentLoadoutResult extends EquipmentLoadoutResult {
+@MappableClass(discriminatorKey: 'skill')
+class SkillEquipmentLoadoutResult extends EquipmentLoadoutResult with SkillEquipmentLoadoutResultMappable {
   final String skill;
-
-  SkillEquipmentLoadoutResult(
-      super.loadout, this.skill);
+  SkillEquipmentLoadoutResult({required super.loadout, required this.skill});
 }

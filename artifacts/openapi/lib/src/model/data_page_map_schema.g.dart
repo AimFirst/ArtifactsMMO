@@ -20,18 +20,21 @@ class _$DataPageMapSchema extends DataPageMapSchema {
 
   factory _$DataPageMapSchema(
           [void Function(DataPageMapSchemaBuilder)? updates]) =>
-      (DataPageMapSchemaBuilder()..update(updates))._build();
+      (new DataPageMapSchemaBuilder()..update(updates))._build();
 
   _$DataPageMapSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(data, r'DataPageMapSchema', 'data');
+  }
+
   @override
   DataPageMapSchema rebuild(void Function(DataPageMapSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   DataPageMapSchemaBuilder toBuilder() =>
-      DataPageMapSchemaBuilder()..replace(this);
+      new DataPageMapSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -73,7 +76,8 @@ class DataPageMapSchemaBuilder
   _$DataPageMapSchema? _$v;
 
   ListBuilder<MapSchema>? _data;
-  ListBuilder<MapSchema> get data => _$this._data ??= ListBuilder<MapSchema>();
+  ListBuilder<MapSchema> get data =>
+      _$this._data ??= new ListBuilder<MapSchema>();
   set data(ListBuilder<MapSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -111,6 +115,7 @@ class DataPageMapSchemaBuilder
 
   @override
   void replace(DataPageMapSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageMapSchema;
   }
 
@@ -126,20 +131,19 @@ class DataPageMapSchemaBuilder
     _$DataPageMapSchema _$result;
     try {
       _$result = _$v ??
-          _$DataPageMapSchema._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageMapSchema._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageMapSchema', _$failedField, e.toString());
       }
       rethrow;

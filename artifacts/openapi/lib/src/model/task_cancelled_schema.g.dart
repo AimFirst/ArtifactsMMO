@@ -14,10 +14,16 @@ class _$TaskCancelledSchema extends TaskCancelledSchema {
 
   factory _$TaskCancelledSchema(
           [void Function(TaskCancelledSchemaBuilder)? updates]) =>
-      (TaskCancelledSchemaBuilder()..update(updates))._build();
+      (new TaskCancelledSchemaBuilder()..update(updates))._build();
 
   _$TaskCancelledSchema._({required this.cooldown, required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'TaskCancelledSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'TaskCancelledSchema', 'character');
+  }
+
   @override
   TaskCancelledSchema rebuild(
           void Function(TaskCancelledSchemaBuilder) updates) =>
@@ -25,7 +31,7 @@ class _$TaskCancelledSchema extends TaskCancelledSchema {
 
   @override
   TaskCancelledSchemaBuilder toBuilder() =>
-      TaskCancelledSchemaBuilder()..replace(this);
+      new TaskCancelledSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -59,12 +65,12 @@ class TaskCancelledSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -84,6 +90,7 @@ class TaskCancelledSchemaBuilder
 
   @override
   void replace(TaskCancelledSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskCancelledSchema;
   }
 
@@ -99,10 +106,8 @@ class TaskCancelledSchemaBuilder
     _$TaskCancelledSchema _$result;
     try {
       _$result = _$v ??
-          _$TaskCancelledSchema._(
-            cooldown: cooldown.build(),
-            character: character.build(),
-          );
+          new _$TaskCancelledSchema._(
+              cooldown: cooldown.build(), character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -111,7 +116,7 @@ class TaskCancelledSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'TaskCancelledSchema', _$failedField, e.toString());
       }
       rethrow;

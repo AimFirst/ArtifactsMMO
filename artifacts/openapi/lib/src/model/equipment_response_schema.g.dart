@@ -12,9 +12,13 @@ class _$EquipmentResponseSchema extends EquipmentResponseSchema {
 
   factory _$EquipmentResponseSchema(
           [void Function(EquipmentResponseSchemaBuilder)? updates]) =>
-      (EquipmentResponseSchemaBuilder()..update(updates))._build();
+      (new EquipmentResponseSchemaBuilder()..update(updates))._build();
 
-  _$EquipmentResponseSchema._({required this.data}) : super._();
+  _$EquipmentResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'EquipmentResponseSchema', 'data');
+  }
+
   @override
   EquipmentResponseSchema rebuild(
           void Function(EquipmentResponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$EquipmentResponseSchema extends EquipmentResponseSchema {
 
   @override
   EquipmentResponseSchemaBuilder toBuilder() =>
-      EquipmentResponseSchemaBuilder()..replace(this);
+      new EquipmentResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -53,7 +57,7 @@ class EquipmentResponseSchemaBuilder
 
   EquipRequestSchemaBuilder? _data;
   EquipRequestSchemaBuilder get data =>
-      _$this._data ??= EquipRequestSchemaBuilder();
+      _$this._data ??= new EquipRequestSchemaBuilder();
   set data(EquipRequestSchemaBuilder? data) => _$this._data = data;
 
   EquipmentResponseSchemaBuilder() {
@@ -71,6 +75,7 @@ class EquipmentResponseSchemaBuilder
 
   @override
   void replace(EquipmentResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EquipmentResponseSchema;
   }
 
@@ -85,17 +90,14 @@ class EquipmentResponseSchemaBuilder
   _$EquipmentResponseSchema _build() {
     _$EquipmentResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$EquipmentResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$EquipmentResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'EquipmentResponseSchema', _$failedField, e.toString());
       }
       rethrow;

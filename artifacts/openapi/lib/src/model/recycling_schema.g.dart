@@ -13,15 +13,19 @@ class _$RecyclingSchema extends RecyclingSchema {
   final int? quantity;
 
   factory _$RecyclingSchema([void Function(RecyclingSchemaBuilder)? updates]) =>
-      (RecyclingSchemaBuilder()..update(updates))._build();
+      (new RecyclingSchemaBuilder()..update(updates))._build();
 
-  _$RecyclingSchema._({required this.code, this.quantity}) : super._();
+  _$RecyclingSchema._({required this.code, this.quantity}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'RecyclingSchema', 'code');
+  }
+
   @override
   RecyclingSchema rebuild(void Function(RecyclingSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  RecyclingSchemaBuilder toBuilder() => RecyclingSchemaBuilder()..replace(this);
+  RecyclingSchemaBuilder toBuilder() =>
+      new RecyclingSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -77,6 +81,7 @@ class RecyclingSchemaBuilder
 
   @override
   void replace(RecyclingSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RecyclingSchema;
   }
 
@@ -90,11 +95,10 @@ class RecyclingSchemaBuilder
 
   _$RecyclingSchema _build() {
     final _$result = _$v ??
-        _$RecyclingSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'RecyclingSchema', 'code'),
-          quantity: quantity,
-        );
+        new _$RecyclingSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'RecyclingSchema', 'code'),
+            quantity: quantity);
     replace(_$result);
     return _$result;
   }

@@ -17,16 +17,17 @@ class _$CraftSchema extends CraftSchema {
   final int? quantity;
 
   factory _$CraftSchema([void Function(CraftSchemaBuilder)? updates]) =>
-      (CraftSchemaBuilder()..update(updates))._build();
+      (new CraftSchemaBuilder()..update(updates))._build();
 
   _$CraftSchema._({this.skill, this.level, this.items, this.quantity})
       : super._();
+
   @override
   CraftSchema rebuild(void Function(CraftSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  CraftSchemaBuilder toBuilder() => CraftSchemaBuilder()..replace(this);
+  CraftSchemaBuilder toBuilder() => new CraftSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -73,7 +74,7 @@ class CraftSchemaBuilder implements Builder<CraftSchema, CraftSchemaBuilder> {
 
   ListBuilder<SimpleItemSchema>? _items;
   ListBuilder<SimpleItemSchema> get items =>
-      _$this._items ??= ListBuilder<SimpleItemSchema>();
+      _$this._items ??= new ListBuilder<SimpleItemSchema>();
   set items(ListBuilder<SimpleItemSchema>? items) => _$this._items = items;
 
   int? _quantity;
@@ -98,6 +99,7 @@ class CraftSchemaBuilder implements Builder<CraftSchema, CraftSchemaBuilder> {
 
   @override
   void replace(CraftSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CraftSchema;
   }
 
@@ -113,19 +115,18 @@ class CraftSchemaBuilder implements Builder<CraftSchema, CraftSchemaBuilder> {
     _$CraftSchema _$result;
     try {
       _$result = _$v ??
-          _$CraftSchema._(
-            skill: skill,
-            level: level,
-            items: _items?.build(),
-            quantity: quantity,
-          );
+          new _$CraftSchema._(
+              skill: skill,
+              level: level,
+              items: _items?.build(),
+              quantity: quantity);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'items';
         _items?.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'CraftSchema', _$failedField, e.toString());
       }
       rethrow;

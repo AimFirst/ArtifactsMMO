@@ -16,20 +16,27 @@ class _$SeasonSkinSchema extends SeasonSkinSchema {
 
   factory _$SeasonSkinSchema(
           [void Function(SeasonSkinSchemaBuilder)? updates]) =>
-      (SeasonSkinSchemaBuilder()..update(updates))._build();
+      (new SeasonSkinSchemaBuilder()..update(updates))._build();
 
   _$SeasonSkinSchema._(
       {required this.code,
       required this.description,
       required this.requiredPoints})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'SeasonSkinSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        description, r'SeasonSkinSchema', 'description');
+    BuiltValueNullFieldError.checkNotNull(
+        requiredPoints, r'SeasonSkinSchema', 'requiredPoints');
+  }
+
   @override
   SeasonSkinSchema rebuild(void Function(SeasonSkinSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   SeasonSkinSchemaBuilder toBuilder() =>
-      SeasonSkinSchemaBuilder()..replace(this);
+      new SeasonSkinSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -94,6 +101,7 @@ class SeasonSkinSchemaBuilder
 
   @override
   void replace(SeasonSkinSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SeasonSkinSchema;
   }
 
@@ -107,14 +115,13 @@ class SeasonSkinSchemaBuilder
 
   _$SeasonSkinSchema _build() {
     final _$result = _$v ??
-        _$SeasonSkinSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'SeasonSkinSchema', 'code'),
-          description: BuiltValueNullFieldError.checkNotNull(
-              description, r'SeasonSkinSchema', 'description'),
-          requiredPoints: BuiltValueNullFieldError.checkNotNull(
-              requiredPoints, r'SeasonSkinSchema', 'requiredPoints'),
-        );
+        new _$SeasonSkinSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'SeasonSkinSchema', 'code'),
+            description: BuiltValueNullFieldError.checkNotNull(
+                description, r'SeasonSkinSchema', 'description'),
+            requiredPoints: BuiltValueNullFieldError.checkNotNull(
+                requiredPoints, r'SeasonSkinSchema', 'requiredPoints'));
     replace(_$result);
     return _$result;
   }

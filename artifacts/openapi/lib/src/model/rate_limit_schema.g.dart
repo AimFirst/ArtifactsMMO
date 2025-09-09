@@ -13,15 +13,20 @@ class _$RateLimitSchema extends RateLimitSchema {
   final String value;
 
   factory _$RateLimitSchema([void Function(RateLimitSchemaBuilder)? updates]) =>
-      (RateLimitSchemaBuilder()..update(updates))._build();
+      (new RateLimitSchemaBuilder()..update(updates))._build();
 
-  _$RateLimitSchema._({required this.type, required this.value}) : super._();
+  _$RateLimitSchema._({required this.type, required this.value}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(type, r'RateLimitSchema', 'type');
+    BuiltValueNullFieldError.checkNotNull(value, r'RateLimitSchema', 'value');
+  }
+
   @override
   RateLimitSchema rebuild(void Function(RateLimitSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  RateLimitSchemaBuilder toBuilder() => RateLimitSchemaBuilder()..replace(this);
+  RateLimitSchemaBuilder toBuilder() =>
+      new RateLimitSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -77,6 +82,7 @@ class RateLimitSchemaBuilder
 
   @override
   void replace(RateLimitSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RateLimitSchema;
   }
 
@@ -90,12 +96,11 @@ class RateLimitSchemaBuilder
 
   _$RateLimitSchema _build() {
     final _$result = _$v ??
-        _$RateLimitSchema._(
-          type: BuiltValueNullFieldError.checkNotNull(
-              type, r'RateLimitSchema', 'type'),
-          value: BuiltValueNullFieldError.checkNotNull(
-              value, r'RateLimitSchema', 'value'),
-        );
+        new _$RateLimitSchema._(
+            type: BuiltValueNullFieldError.checkNotNull(
+                type, r'RateLimitSchema', 'type'),
+            value: BuiltValueNullFieldError.checkNotNull(
+                value, r'RateLimitSchema', 'value'));
     replace(_$result);
     return _$result;
   }

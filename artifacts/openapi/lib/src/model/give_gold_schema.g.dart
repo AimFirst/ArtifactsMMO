@@ -13,16 +13,23 @@ class _$GiveGoldSchema extends GiveGoldSchema {
   final String character;
 
   factory _$GiveGoldSchema([void Function(GiveGoldSchemaBuilder)? updates]) =>
-      (GiveGoldSchemaBuilder()..update(updates))._build();
+      (new GiveGoldSchemaBuilder()..update(updates))._build();
 
   _$GiveGoldSchema._({required this.quantity, required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        quantity, r'GiveGoldSchema', 'quantity');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'GiveGoldSchema', 'character');
+  }
+
   @override
   GiveGoldSchema rebuild(void Function(GiveGoldSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  GiveGoldSchemaBuilder toBuilder() => GiveGoldSchemaBuilder()..replace(this);
+  GiveGoldSchemaBuilder toBuilder() =>
+      new GiveGoldSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -78,6 +85,7 @@ class GiveGoldSchemaBuilder
 
   @override
   void replace(GiveGoldSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GiveGoldSchema;
   }
 
@@ -91,12 +99,11 @@ class GiveGoldSchemaBuilder
 
   _$GiveGoldSchema _build() {
     final _$result = _$v ??
-        _$GiveGoldSchema._(
-          quantity: BuiltValueNullFieldError.checkNotNull(
-              quantity, r'GiveGoldSchema', 'quantity'),
-          character: BuiltValueNullFieldError.checkNotNull(
-              character, r'GiveGoldSchema', 'character'),
-        );
+        new _$GiveGoldSchema._(
+            quantity: BuiltValueNullFieldError.checkNotNull(
+                quantity, r'GiveGoldSchema', 'quantity'),
+            character: BuiltValueNullFieldError.checkNotNull(
+                character, r'GiveGoldSchema', 'character'));
     replace(_$result);
     return _$result;
   }

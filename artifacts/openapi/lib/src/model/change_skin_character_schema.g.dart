@@ -12,9 +12,13 @@ class _$ChangeSkinCharacterSchema extends ChangeSkinCharacterSchema {
 
   factory _$ChangeSkinCharacterSchema(
           [void Function(ChangeSkinCharacterSchemaBuilder)? updates]) =>
-      (ChangeSkinCharacterSchemaBuilder()..update(updates))._build();
+      (new ChangeSkinCharacterSchemaBuilder()..update(updates))._build();
 
-  _$ChangeSkinCharacterSchema._({required this.skin}) : super._();
+  _$ChangeSkinCharacterSchema._({required this.skin}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        skin, r'ChangeSkinCharacterSchema', 'skin');
+  }
+
   @override
   ChangeSkinCharacterSchema rebuild(
           void Function(ChangeSkinCharacterSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$ChangeSkinCharacterSchema extends ChangeSkinCharacterSchema {
 
   @override
   ChangeSkinCharacterSchemaBuilder toBuilder() =>
-      ChangeSkinCharacterSchemaBuilder()..replace(this);
+      new ChangeSkinCharacterSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -70,6 +74,7 @@ class ChangeSkinCharacterSchemaBuilder
 
   @override
   void replace(ChangeSkinCharacterSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ChangeSkinCharacterSchema;
   }
 
@@ -83,10 +88,9 @@ class ChangeSkinCharacterSchemaBuilder
 
   _$ChangeSkinCharacterSchema _build() {
     final _$result = _$v ??
-        _$ChangeSkinCharacterSchema._(
-          skin: BuiltValueNullFieldError.checkNotNull(
-              skin, r'ChangeSkinCharacterSchema', 'skin'),
-        );
+        new _$ChangeSkinCharacterSchema._(
+            skin: BuiltValueNullFieldError.checkNotNull(
+                skin, r'ChangeSkinCharacterSchema', 'skin'));
     replace(_$result);
     return _$result;
   }

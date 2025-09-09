@@ -12,9 +12,13 @@ class _$DeleteCharacterSchema extends DeleteCharacterSchema {
 
   factory _$DeleteCharacterSchema(
           [void Function(DeleteCharacterSchemaBuilder)? updates]) =>
-      (DeleteCharacterSchemaBuilder()..update(updates))._build();
+      (new DeleteCharacterSchemaBuilder()..update(updates))._build();
 
-  _$DeleteCharacterSchema._({required this.name}) : super._();
+  _$DeleteCharacterSchema._({required this.name}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        name, r'DeleteCharacterSchema', 'name');
+  }
+
   @override
   DeleteCharacterSchema rebuild(
           void Function(DeleteCharacterSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$DeleteCharacterSchema extends DeleteCharacterSchema {
 
   @override
   DeleteCharacterSchemaBuilder toBuilder() =>
-      DeleteCharacterSchemaBuilder()..replace(this);
+      new DeleteCharacterSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -69,6 +73,7 @@ class DeleteCharacterSchemaBuilder
 
   @override
   void replace(DeleteCharacterSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DeleteCharacterSchema;
   }
 
@@ -82,10 +87,9 @@ class DeleteCharacterSchemaBuilder
 
   _$DeleteCharacterSchema _build() {
     final _$result = _$v ??
-        _$DeleteCharacterSchema._(
-          name: BuiltValueNullFieldError.checkNotNull(
-              name, r'DeleteCharacterSchema', 'name'),
-        );
+        new _$DeleteCharacterSchema._(
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, r'DeleteCharacterSchema', 'name'));
     replace(_$result);
     return _$result;
   }

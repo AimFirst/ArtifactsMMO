@@ -14,9 +14,13 @@ class _$BadgeConditionSchema extends BadgeConditionSchema {
 
   factory _$BadgeConditionSchema(
           [void Function(BadgeConditionSchemaBuilder)? updates]) =>
-      (BadgeConditionSchemaBuilder()..update(updates))._build();
+      (new BadgeConditionSchemaBuilder()..update(updates))._build();
 
-  _$BadgeConditionSchema._({required this.code, this.quantity}) : super._();
+  _$BadgeConditionSchema._({required this.code, this.quantity}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        code, r'BadgeConditionSchema', 'code');
+  }
+
   @override
   BadgeConditionSchema rebuild(
           void Function(BadgeConditionSchemaBuilder) updates) =>
@@ -24,7 +28,7 @@ class _$BadgeConditionSchema extends BadgeConditionSchema {
 
   @override
   BadgeConditionSchemaBuilder toBuilder() =>
-      BadgeConditionSchemaBuilder()..replace(this);
+      new BadgeConditionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -80,6 +84,7 @@ class BadgeConditionSchemaBuilder
 
   @override
   void replace(BadgeConditionSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BadgeConditionSchema;
   }
 
@@ -93,11 +98,10 @@ class BadgeConditionSchemaBuilder
 
   _$BadgeConditionSchema _build() {
     final _$result = _$v ??
-        _$BadgeConditionSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'BadgeConditionSchema', 'code'),
-          quantity: quantity,
-        );
+        new _$BadgeConditionSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'BadgeConditionSchema', 'code'),
+            quantity: quantity);
     replace(_$result);
     return _$result;
   }

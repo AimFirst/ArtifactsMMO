@@ -12,9 +12,12 @@ class _$BankResponseSchema extends BankResponseSchema {
 
   factory _$BankResponseSchema(
           [void Function(BankResponseSchemaBuilder)? updates]) =>
-      (BankResponseSchemaBuilder()..update(updates))._build();
+      (new BankResponseSchemaBuilder()..update(updates))._build();
 
-  _$BankResponseSchema._({required this.data}) : super._();
+  _$BankResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(data, r'BankResponseSchema', 'data');
+  }
+
   @override
   BankResponseSchema rebuild(
           void Function(BankResponseSchemaBuilder) updates) =>
@@ -22,7 +25,7 @@ class _$BankResponseSchema extends BankResponseSchema {
 
   @override
   BankResponseSchemaBuilder toBuilder() =>
-      BankResponseSchemaBuilder()..replace(this);
+      new BankResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -51,7 +54,7 @@ class BankResponseSchemaBuilder
   _$BankResponseSchema? _$v;
 
   BankSchemaBuilder? _data;
-  BankSchemaBuilder get data => _$this._data ??= BankSchemaBuilder();
+  BankSchemaBuilder get data => _$this._data ??= new BankSchemaBuilder();
   set data(BankSchemaBuilder? data) => _$this._data = data;
 
   BankResponseSchemaBuilder() {
@@ -69,6 +72,7 @@ class BankResponseSchemaBuilder
 
   @override
   void replace(BankResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BankResponseSchema;
   }
 
@@ -83,17 +87,14 @@ class BankResponseSchemaBuilder
   _$BankResponseSchema _build() {
     _$BankResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$BankResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$BankResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'BankResponseSchema', _$failedField, e.toString());
       }
       rethrow;

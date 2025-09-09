@@ -18,14 +18,24 @@ class _$GiveItemDataSchema extends GiveItemDataSchema {
 
   factory _$GiveItemDataSchema(
           [void Function(GiveItemDataSchemaBuilder)? updates]) =>
-      (GiveItemDataSchemaBuilder()..update(updates))._build();
+      (new GiveItemDataSchemaBuilder()..update(updates))._build();
 
   _$GiveItemDataSchema._(
       {required this.cooldown,
       required this.items,
       required this.receiverCharacter,
       required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'GiveItemDataSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        items, r'GiveItemDataSchema', 'items');
+    BuiltValueNullFieldError.checkNotNull(
+        receiverCharacter, r'GiveItemDataSchema', 'receiverCharacter');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'GiveItemDataSchema', 'character');
+  }
+
   @override
   GiveItemDataSchema rebuild(
           void Function(GiveItemDataSchemaBuilder) updates) =>
@@ -33,7 +43,7 @@ class _$GiveItemDataSchema extends GiveItemDataSchema {
 
   @override
   GiveItemDataSchemaBuilder toBuilder() =>
-      GiveItemDataSchemaBuilder()..replace(this);
+      new GiveItemDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -73,23 +83,23 @@ class GiveItemDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   ListBuilder<SimpleItemSchema>? _items;
   ListBuilder<SimpleItemSchema> get items =>
-      _$this._items ??= ListBuilder<SimpleItemSchema>();
+      _$this._items ??= new ListBuilder<SimpleItemSchema>();
   set items(ListBuilder<SimpleItemSchema>? items) => _$this._items = items;
 
   CharacterSchemaBuilder? _receiverCharacter;
   CharacterSchemaBuilder get receiverCharacter =>
-      _$this._receiverCharacter ??= CharacterSchemaBuilder();
+      _$this._receiverCharacter ??= new CharacterSchemaBuilder();
   set receiverCharacter(CharacterSchemaBuilder? receiverCharacter) =>
       _$this._receiverCharacter = receiverCharacter;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -111,6 +121,7 @@ class GiveItemDataSchemaBuilder
 
   @override
   void replace(GiveItemDataSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GiveItemDataSchema;
   }
 
@@ -126,12 +137,11 @@ class GiveItemDataSchemaBuilder
     _$GiveItemDataSchema _$result;
     try {
       _$result = _$v ??
-          _$GiveItemDataSchema._(
-            cooldown: cooldown.build(),
-            items: items.build(),
-            receiverCharacter: receiverCharacter.build(),
-            character: character.build(),
-          );
+          new _$GiveItemDataSchema._(
+              cooldown: cooldown.build(),
+              items: items.build(),
+              receiverCharacter: receiverCharacter.build(),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -144,7 +154,7 @@ class GiveItemDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'GiveItemDataSchema', _$failedField, e.toString());
       }
       rethrow;

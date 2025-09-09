@@ -12,9 +12,13 @@ class _$DeleteItemResponseSchema extends DeleteItemResponseSchema {
 
   factory _$DeleteItemResponseSchema(
           [void Function(DeleteItemResponseSchemaBuilder)? updates]) =>
-      (DeleteItemResponseSchemaBuilder()..update(updates))._build();
+      (new DeleteItemResponseSchemaBuilder()..update(updates))._build();
 
-  _$DeleteItemResponseSchema._({required this.data}) : super._();
+  _$DeleteItemResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'DeleteItemResponseSchema', 'data');
+  }
+
   @override
   DeleteItemResponseSchema rebuild(
           void Function(DeleteItemResponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$DeleteItemResponseSchema extends DeleteItemResponseSchema {
 
   @override
   DeleteItemResponseSchemaBuilder toBuilder() =>
-      DeleteItemResponseSchemaBuilder()..replace(this);
+      new DeleteItemResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -53,7 +57,7 @@ class DeleteItemResponseSchemaBuilder
 
   DeleteItemSchemaBuilder? _data;
   DeleteItemSchemaBuilder get data =>
-      _$this._data ??= DeleteItemSchemaBuilder();
+      _$this._data ??= new DeleteItemSchemaBuilder();
   set data(DeleteItemSchemaBuilder? data) => _$this._data = data;
 
   DeleteItemResponseSchemaBuilder() {
@@ -71,6 +75,7 @@ class DeleteItemResponseSchemaBuilder
 
   @override
   void replace(DeleteItemResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DeleteItemResponseSchema;
   }
 
@@ -85,17 +90,14 @@ class DeleteItemResponseSchemaBuilder
   _$DeleteItemResponseSchema _build() {
     _$DeleteItemResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$DeleteItemResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$DeleteItemResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DeleteItemResponseSchema', _$failedField, e.toString());
       }
       rethrow;

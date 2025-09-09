@@ -12,9 +12,13 @@ class _$GiveGoldReponseSchema extends GiveGoldReponseSchema {
 
   factory _$GiveGoldReponseSchema(
           [void Function(GiveGoldReponseSchemaBuilder)? updates]) =>
-      (GiveGoldReponseSchemaBuilder()..update(updates))._build();
+      (new GiveGoldReponseSchemaBuilder()..update(updates))._build();
 
-  _$GiveGoldReponseSchema._({required this.data}) : super._();
+  _$GiveGoldReponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'GiveGoldReponseSchema', 'data');
+  }
+
   @override
   GiveGoldReponseSchema rebuild(
           void Function(GiveGoldReponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$GiveGoldReponseSchema extends GiveGoldReponseSchema {
 
   @override
   GiveGoldReponseSchemaBuilder toBuilder() =>
-      GiveGoldReponseSchemaBuilder()..replace(this);
+      new GiveGoldReponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -52,7 +56,7 @@ class GiveGoldReponseSchemaBuilder
 
   GiveGoldDataSchemaBuilder? _data;
   GiveGoldDataSchemaBuilder get data =>
-      _$this._data ??= GiveGoldDataSchemaBuilder();
+      _$this._data ??= new GiveGoldDataSchemaBuilder();
   set data(GiveGoldDataSchemaBuilder? data) => _$this._data = data;
 
   GiveGoldReponseSchemaBuilder() {
@@ -70,6 +74,7 @@ class GiveGoldReponseSchemaBuilder
 
   @override
   void replace(GiveGoldReponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GiveGoldReponseSchema;
   }
 
@@ -84,17 +89,14 @@ class GiveGoldReponseSchemaBuilder
   _$GiveGoldReponseSchema _build() {
     _$GiveGoldReponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$GiveGoldReponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$GiveGoldReponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'GiveGoldReponseSchema', _$failedField, e.toString());
       }
       rethrow;

@@ -1,52 +1,90 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
+import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/item_type_extension.dart';
+import 'package:artifacts_mmo/models/combat_details.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
+import 'package:drift/drift.dart';
 
 class LoadoutOptimizerService {
+  static const optimizationAlgorithmVersion = 1;
+
   final CombatService _combatService;
   final WorldDataProvider _worldDataProvider;
+  final AppDatabase _database;
+
+  final Map<String, EquipmentLoadoutResult> _inProgressCalculations = {};
 
   // The cache: { GearEvaluationContext -> { CharacterSkillLevel,EquipmentOptions -> EquipmentLoadout } }
-  final Map<String, Map<String, EquipmentLoadoutResult>> _bestResults = {};
+  // final Map<String, Map<String, EquipmentLoadoutResult>> _bestResults = {};
 
-  LoadoutOptimizerService(this._combatService, this._worldDataProvider);
+  LoadoutOptimizerService(
+      this._combatService, this._worldDataProvider, this._database);
 
-  String _generateGearEvaluationContextKey(GearEvaluationContext gearContext) {
-    return gearContext.toString();
-  }
-
-  String _generateCharacterSkillsAndGearCacheKey(CharacterSchema character,
-      String skillName, List<ItemSchema?> gearOptions) {
+  String _generateEvaluationKey(GearEvaluationContext gearContext,
+      CharacterSchema character, List<ItemSchema?> gearOptions) {
     // Only include stats relevant to the combat calculation.
-    final relevantStatsKey = character.skills[skillName]?.level.toString();
+    final relevantStatsKey =
+        character.skills[gearContext.taskType]?.level.toString();
     final gearOptionsKey = gearOptions
         .where((item) => item != null)
         .map((item) => item!.code)
         .toList()
       ..sort((a, b) => a.compareTo(b))
       ..join(',');
-    return "$relevantStatsKey|$gearOptionsKey";
+    return "$optimizationAlgorithmVersion|$gearContext|$relevantStatsKey|$gearOptionsKey";
+  }
+
+  Future<EquipmentLoadoutResult?> _getCachedResult(String cacheKey) async {
+    final query = _database.select(_database.cachedLoadouts)
+      ..where((tbl) =>
+          tbl.cacheKey.equals(cacheKey) &
+          tbl.algorithmVersion.equals(optimizationAlgorithmVersion));
+    final cachedResult = await query.getSingleOrNull();
+    if (cachedResult != null) {
+      return EquipmentLoadoutResultMapper.fromJson(cachedResult.loadout);
+    }
+
+    return null;
+  }
+
+  Future<void> _saveCachedResult(
+      String cacheKey, EquipmentLoadoutResult result) async {
+    try {
+      await _database.into(_database.cachedLoadouts).insert(
+          CachedLoadout(
+              algorithmVersion: optimizationAlgorithmVersion,
+              cacheKey: cacheKey,
+              loadout: result.toJson()),
+          onConflict: DoNothing());
+    } catch (e) {
+      LoggerService.instance.log('Error saving cached result for $cacheKey: $e');
+    }
+  }
+
+  EquipmentLoadoutResult _getDefaultResult(GearEvaluationContext gearContext) {
+    if (gearContext.taskType == CharacterExtensions.overallLevelSkillName) {
+      return CombatEquipmentLoadoutResult(loadout: EquipmentLoadout(), combatDetails: CombatDetails(playerAvgDPT: 1, monsterAvgDPT: 10, playerStartHp: 1, monsterStartHp: 100, haste: 0));
+    } else {
+      return SkillEquipmentLoadoutResult(loadout: EquipmentLoadout(), skill: gearContext.taskType);
+    }
   }
 
   Future<EquipmentLoadoutResult> _getLoadoutResult(
       GearEvaluationContext gearContext,
       CharacterSchema character,
       EquipmentLoadout loadout) async {
-    final contextKey = _generateGearEvaluationContextKey(gearContext);
-    final characterKey = _generateCharacterSkillsAndGearCacheKey(
-        character, gearContext.taskType, loadout.items);
-
-    final mapForContext = _bestResults.putIfAbsent(contextKey, () => {});
-    if (mapForContext.containsKey(characterKey)) {
-      // LoggerService.instance.log('Cached loadout tree leaf: ${loadout.items.where((i) => i!=null).length}', character: character);
-      return mapForContext[characterKey]!;
+    final cacheKey =
+        _generateEvaluationKey(gearContext, character, loadout.items);
+    final cachedResult = await _getCachedResult(cacheKey);
+    if (cachedResult != null) {
+      return cachedResult;
     }
 
     CharacterSchema tempCharacter = character.copyWithEquippedItems(
@@ -54,14 +92,21 @@ class LoadoutOptimizerService {
 
     // LoggerService.instance.log('Calculated loadout tree leaf: ${loadout.items.where((i) => i!=null).length}', character: tempCharacter);
 
+    EquipmentLoadoutResult result;
     if (gearContext.taskType == CharacterExtensions.overallLevelSkillName &&
         gearContext.targetMonster != null) {
       final combatDetails = _combatService.getCombatDetails(
           tempCharacter, gearContext.targetMonster!);
-      return CombatEquipmentLoadoutResult(loadout, combatDetails);
+      result = CombatEquipmentLoadoutResult(
+          loadout: loadout, combatDetails: combatDetails);
+    } else {
+      result = SkillEquipmentLoadoutResult(
+          loadout: loadout, skill: gearContext.taskType);
     }
 
-    return SkillEquipmentLoadoutResult(loadout, gearContext.taskType);
+    await _saveCachedResult(cacheKey, result);
+
+    return result;
   }
 
   int compareLoadoutResults(
@@ -131,24 +176,18 @@ class LoadoutOptimizerService {
       EquipmentLoadout loadout,
       Map<ItemSlot, List<ItemSchema?>> gearOptions,
       int index) async {
-    final contextKey = _generateGearEvaluationContextKey(gearContext);
-    final characterKey = _generateCharacterSkillsAndGearCacheKey(
-        characterSchema,
-        gearContext.taskType,
+    final cacheKey = _generateEvaluationKey(gearContext, characterSchema,
         gearOptions.values.expand((items) => items).toList());
 
-    final topLevel = _bestResults.putIfAbsent(
-        contextKey, () => <String, EquipmentLoadoutResult>{});
-
-    // If it's already cached, just use it!
-    if (topLevel.containsKey(characterKey)) {
-      // LoggerService.instance.log('Cached loadout $characterKey: ${loadout.items.where((i) => i!=null).length}', character: characterSchema);
-      return _bestResults[contextKey]![characterKey]!;
+    final cachedResult = await _getCachedResult(cacheKey);
+    if (cachedResult != null) {
+      return cachedResult;
     }
 
+    _inProgressCalculations[cacheKey] = _getDefaultResult(gearContext);
+
     if (index == 0) {
-      LoggerService.instance.log(
-          'Starting gear discovery ${gearContext.toString()}',
+      LoggerService.instance.log('Starting gear discovery $cacheKey}',
           character: characterSchema);
     }
 
@@ -177,7 +216,7 @@ class LoadoutOptimizerService {
     final bestResult = results.first;
 
     // Add the real result now that we've calculated it
-    topLevel[characterKey] = bestResult;
+    await _saveCachedResult(cacheKey, bestResult);
 
     if (index == 0) {
       LoggerService.instance.log(
@@ -277,16 +316,25 @@ class LoadoutOptimizerService {
         ..add(null);
     }
 
-    return _bestOption(character.copyWithEquippedItems({}, _worldDataProvider),
-        gearContext, EquipmentLoadout(), gearOptions, 0);
+    final newCharacter = character.copyWithEquippedItems({}, _worldDataProvider);
+    final cacheKey = _generateEvaluationKey(gearContext, newCharacter,
+        gearOptions.values.expand((items) => items).toList());
+    final inProgress = _inProgressCalculations[cacheKey];
+    if (inProgress != null) {
+      return inProgress;
+    }
+
+    _inProgressCalculations[cacheKey] = _getDefaultResult(gearContext);
+
+    return await _bestOption(newCharacter, gearContext, EquipmentLoadout(), gearOptions, 0);
   }
 
   Future<EquipmentLoadoutResult> bestLoadoutOfAvailableItems(
       CharacterSchema character,
       GearEvaluationContext gearContext,
       List<ItemSchema?> inventoryItems,
-      List<ItemSchema?> bankItems) {
-    return bestLoadout(character, gearContext, [
+      List<ItemSchema?> bankItems) async {
+    return await bestLoadout(character, gearContext, [
       ...EquipmentLoadout.fromCharacter(character, _worldDataProvider).items,
       ...inventoryItems,
       ...bankItems

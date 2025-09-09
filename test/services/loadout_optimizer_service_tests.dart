@@ -1,9 +1,7 @@
-import 'dart:math';
-
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
+import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
-import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/models/combat_details.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
@@ -14,7 +12,6 @@ import 'package:artifacts_mmo/providers/world_data_provider.dart'; // Only if ne
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:collection/collection.dart';
 
 // Mocks (some might not be strictly necessary if Loadout/CombatDetails can be created directly)
 class MockCombatService extends Mock implements CombatService {}
@@ -29,6 +26,8 @@ class MockCombatDetails extends Mock implements CombatDetails {}
 
 class MockEquipmentLoadout extends Mock implements EquipmentLoadout {}
 
+class MockAppDatabase extends Mock implements AppDatabase {}
+
 enum ExpectedResult {
   same,
   a,
@@ -39,12 +38,14 @@ void main() {
   late LoadoutOptimizerService loadoutOptimizerService;
   late MockCombatService mockCombatService;
   late MockWorldDataProvider mockWorldDataProvider;
+  late MockAppDatabase mockAppDatabase;
 
   setUp(() {
     mockCombatService = MockCombatService();
     mockWorldDataProvider = MockWorldDataProvider();
-    loadoutOptimizerService =
-        LoadoutOptimizerService(mockCombatService, mockWorldDataProvider);
+    mockAppDatabase = MockAppDatabase();
+    loadoutOptimizerService = LoadoutOptimizerService(
+        mockCombatService, mockWorldDataProvider, mockAppDatabase);
   });
 
   group('LoadoutOptimizerService - compareLoadoutResults', () {
@@ -170,9 +171,10 @@ void main() {
     b.canWin = true
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
-            EquipmentLoadout(), _createCombatDetails(monsterAvgDPT: 100));
+            loadout: EquipmentLoadout(),
+            combatDetails: _createCombatDetails(monsterAvgDPT: 100));
         final resultB = CombatEquipmentLoadoutResult(
-            EquipmentLoadout(), _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
         _testCombatComparison(
             a: resultA,
             b: resultB,
@@ -183,18 +185,18 @@ void main() {
       test('''
     a.canWin = true
     b.canWin = true
-    
+
     a.wisdom = 0
     b.wisdom = 10
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
-            EquipmentLoadout(), _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
         final resultB = CombatEquipmentLoadoutResult(
-            EquipmentLoadout.fromItems([
+            loadout: EquipmentLoadout.fromItems([
               _createItemSchema(
                   effects: [_createEffect(effect: EffectEnum.wisdom)])
             ]),
-            _createCombatDetails());
+            combatDetails: _createCombatDetails());
         _testCombatComparison(
             a: resultA, b: resultB, expectedResult: ExpectedResult.b);
       });
@@ -205,13 +207,14 @@ void main() {
 
     a.wisdom = 0
     b.wisdom = 0
-    
+
     b.cooldown < a.cooldown
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
-            EquipmentLoadout(), _createCombatDetails(monsterAvgDPT: 5));
+            loadout: EquipmentLoadout(),
+            combatDetails: _createCombatDetails(monsterAvgDPT: 5));
         final resultB = CombatEquipmentLoadoutResult(
-            EquipmentLoadout(), _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
 
         expect(resultB.combatDetails.totalCooldown,
             lessThan(resultA.combatDetails.totalCooldown));
@@ -226,16 +229,16 @@ void main() {
 
     a.wisdom = 0
     b.wisdom = 0
-    
+
     b.cooldown == a.cooldown
-    
+
     b.nullItems < a.nullItems
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
-            EquipmentLoadout.fromItems([_createItemSchema()]),
-            _createCombatDetails());
+            loadout: EquipmentLoadout.fromItems([_createItemSchema()]),
+            combatDetails: _createCombatDetails());
         final resultB = CombatEquipmentLoadoutResult(
-            EquipmentLoadout(), _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
 
         _testCombatComparison(
             a: resultA, b: resultB, expectedResult: ExpectedResult.b);
@@ -247,15 +250,15 @@ void main() {
 
     a.wisdom = 0
     b.wisdom = 0
-    
+
     b.cooldown == a.cooldown
-    
+
     b.nullItems == a.nullItems
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
-            EquipmentLoadout(), _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
         final resultB = CombatEquipmentLoadoutResult(
-            EquipmentLoadout(), _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
 
         _testCombatComparison(
             a: resultA, b: resultB, expectedResult: ExpectedResult.same);
@@ -270,9 +273,9 @@ void main() {
         final resultB = _createSkillEvaluationContext();
         _testSkillComparison(
             a: SkillEquipmentLoadoutResult(
-                EquipmentLoadout(), resultA.taskType),
+                loadout: EquipmentLoadout(), skill: resultA.taskType),
             b: SkillEquipmentLoadoutResult(
-                EquipmentLoadout(), resultB.taskType),
+                loadout: EquipmentLoadout(), skill: resultB.taskType),
             expectedResult: ExpectedResult.same);
       });
 
@@ -283,9 +286,14 @@ void main() {
         final resultB = _createSkillEvaluationContext();
         _testSkillComparison(
             a: SkillEquipmentLoadoutResult(
-                EquipmentLoadout(), resultA.taskType),
+                loadout: EquipmentLoadout(), skill: resultA.taskType),
             b: SkillEquipmentLoadoutResult(
-                EquipmentLoadout.fromItems([_createItemSchema(effects: [_createEffect(effect: EffectEnum.mining, value: -10)])]), resultB.taskType),
+                loadout: EquipmentLoadout.fromItems([
+                  _createItemSchema(effects: [
+                    _createEffect(effect: EffectEnum.mining, value: -10)
+                  ])
+                ]),
+                skill: resultB.taskType),
             expectedResult: ExpectedResult.b);
       });
 
@@ -296,9 +304,14 @@ void main() {
         final resultB = _createSkillEvaluationContext();
         _testSkillComparison(
             a: SkillEquipmentLoadoutResult(
-                EquipmentLoadout.fromItems([_createItemSchema(effects: [_createEffect(effect: EffectEnum.mining, value: -10)])]), resultA.taskType),
+                loadout: EquipmentLoadout.fromItems([
+                  _createItemSchema(effects: [
+                    _createEffect(effect: EffectEnum.mining, value: -10)
+                  ])
+                ]),
+                skill: resultA.taskType),
             b: SkillEquipmentLoadoutResult(
-                EquipmentLoadout(), resultB.taskType),
+                loadout: EquipmentLoadout(), skill: resultB.taskType),
             expectedResult: ExpectedResult.a);
       });
     });

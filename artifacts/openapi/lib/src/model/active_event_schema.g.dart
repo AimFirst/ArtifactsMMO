@@ -24,7 +24,7 @@ class _$ActiveEventSchema extends ActiveEventSchema {
 
   factory _$ActiveEventSchema(
           [void Function(ActiveEventSchemaBuilder)? updates]) =>
-      (ActiveEventSchemaBuilder()..update(updates))._build();
+      (new ActiveEventSchemaBuilder()..update(updates))._build();
 
   _$ActiveEventSchema._(
       {required this.name,
@@ -34,14 +34,27 @@ class _$ActiveEventSchema extends ActiveEventSchema {
       required this.duration,
       required this.expiration,
       required this.createdAt})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(name, r'ActiveEventSchema', 'name');
+    BuiltValueNullFieldError.checkNotNull(code, r'ActiveEventSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(map, r'ActiveEventSchema', 'map');
+    BuiltValueNullFieldError.checkNotNull(
+        previousMap, r'ActiveEventSchema', 'previousMap');
+    BuiltValueNullFieldError.checkNotNull(
+        duration, r'ActiveEventSchema', 'duration');
+    BuiltValueNullFieldError.checkNotNull(
+        expiration, r'ActiveEventSchema', 'expiration');
+    BuiltValueNullFieldError.checkNotNull(
+        createdAt, r'ActiveEventSchema', 'createdAt');
+  }
+
   @override
   ActiveEventSchema rebuild(void Function(ActiveEventSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   ActiveEventSchemaBuilder toBuilder() =>
-      ActiveEventSchemaBuilder()..replace(this);
+      new ActiveEventSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -97,12 +110,12 @@ class ActiveEventSchemaBuilder
   set code(String? code) => _$this._code = code;
 
   MapSchemaBuilder? _map;
-  MapSchemaBuilder get map => _$this._map ??= MapSchemaBuilder();
+  MapSchemaBuilder get map => _$this._map ??= new MapSchemaBuilder();
   set map(MapSchemaBuilder? map) => _$this._map = map;
 
   MapSchemaBuilder? _previousMap;
   MapSchemaBuilder get previousMap =>
-      _$this._previousMap ??= MapSchemaBuilder();
+      _$this._previousMap ??= new MapSchemaBuilder();
   set previousMap(MapSchemaBuilder? previousMap) =>
       _$this._previousMap = previousMap;
 
@@ -139,6 +152,7 @@ class ActiveEventSchemaBuilder
 
   @override
   void replace(ActiveEventSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ActiveEventSchema;
   }
 
@@ -154,20 +168,19 @@ class ActiveEventSchemaBuilder
     _$ActiveEventSchema _$result;
     try {
       _$result = _$v ??
-          _$ActiveEventSchema._(
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'ActiveEventSchema', 'name'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'ActiveEventSchema', 'code'),
-            map: map.build(),
-            previousMap: previousMap.build(),
-            duration: BuiltValueNullFieldError.checkNotNull(
-                duration, r'ActiveEventSchema', 'duration'),
-            expiration: BuiltValueNullFieldError.checkNotNull(
-                expiration, r'ActiveEventSchema', 'expiration'),
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-                createdAt, r'ActiveEventSchema', 'createdAt'),
-          );
+          new _$ActiveEventSchema._(
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'ActiveEventSchema', 'name'),
+              code: BuiltValueNullFieldError.checkNotNull(
+                  code, r'ActiveEventSchema', 'code'),
+              map: map.build(),
+              previousMap: previousMap.build(),
+              duration: BuiltValueNullFieldError.checkNotNull(
+                  duration, r'ActiveEventSchema', 'duration'),
+              expiration: BuiltValueNullFieldError.checkNotNull(
+                  expiration, r'ActiveEventSchema', 'expiration'),
+              createdAt: BuiltValueNullFieldError.checkNotNull(
+                  createdAt, r'ActiveEventSchema', 'createdAt'));
     } catch (_) {
       late String _$failedField;
       try {
@@ -176,7 +189,7 @@ class ActiveEventSchemaBuilder
         _$failedField = 'previousMap';
         previousMap.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'ActiveEventSchema', _$failedField, e.toString());
       }
       rethrow;

@@ -17,20 +17,29 @@ class _$DropRateSchema extends DropRateSchema {
   final int maxQuantity;
 
   factory _$DropRateSchema([void Function(DropRateSchemaBuilder)? updates]) =>
-      (DropRateSchemaBuilder()..update(updates))._build();
+      (new DropRateSchemaBuilder()..update(updates))._build();
 
   _$DropRateSchema._(
       {required this.code,
       required this.rate,
       required this.minQuantity,
       required this.maxQuantity})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'DropRateSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(rate, r'DropRateSchema', 'rate');
+    BuiltValueNullFieldError.checkNotNull(
+        minQuantity, r'DropRateSchema', 'minQuantity');
+    BuiltValueNullFieldError.checkNotNull(
+        maxQuantity, r'DropRateSchema', 'maxQuantity');
+  }
+
   @override
   DropRateSchema rebuild(void Function(DropRateSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  DropRateSchemaBuilder toBuilder() => DropRateSchemaBuilder()..replace(this);
+  DropRateSchemaBuilder toBuilder() =>
+      new DropRateSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -102,6 +111,7 @@ class DropRateSchemaBuilder
 
   @override
   void replace(DropRateSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DropRateSchema;
   }
 
@@ -115,16 +125,15 @@ class DropRateSchemaBuilder
 
   _$DropRateSchema _build() {
     final _$result = _$v ??
-        _$DropRateSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'DropRateSchema', 'code'),
-          rate: BuiltValueNullFieldError.checkNotNull(
-              rate, r'DropRateSchema', 'rate'),
-          minQuantity: BuiltValueNullFieldError.checkNotNull(
-              minQuantity, r'DropRateSchema', 'minQuantity'),
-          maxQuantity: BuiltValueNullFieldError.checkNotNull(
-              maxQuantity, r'DropRateSchema', 'maxQuantity'),
-        );
+        new _$DropRateSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'DropRateSchema', 'code'),
+            rate: BuiltValueNullFieldError.checkNotNull(
+                rate, r'DropRateSchema', 'rate'),
+            minQuantity: BuiltValueNullFieldError.checkNotNull(
+                minQuantity, r'DropRateSchema', 'minQuantity'),
+            maxQuantity: BuiltValueNullFieldError.checkNotNull(
+                maxQuantity, r'DropRateSchema', 'maxQuantity'));
     replace(_$result);
     return _$result;
   }

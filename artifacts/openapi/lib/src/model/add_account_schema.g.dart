@@ -16,18 +16,25 @@ class _$AddAccountSchema extends AddAccountSchema {
 
   factory _$AddAccountSchema(
           [void Function(AddAccountSchemaBuilder)? updates]) =>
-      (AddAccountSchemaBuilder()..update(updates))._build();
+      (new AddAccountSchemaBuilder()..update(updates))._build();
 
   _$AddAccountSchema._(
       {required this.username, required this.password, required this.email})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        username, r'AddAccountSchema', 'username');
+    BuiltValueNullFieldError.checkNotNull(
+        password, r'AddAccountSchema', 'password');
+    BuiltValueNullFieldError.checkNotNull(email, r'AddAccountSchema', 'email');
+  }
+
   @override
   AddAccountSchema rebuild(void Function(AddAccountSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   AddAccountSchemaBuilder toBuilder() =>
-      AddAccountSchemaBuilder()..replace(this);
+      new AddAccountSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -91,6 +98,7 @@ class AddAccountSchemaBuilder
 
   @override
   void replace(AddAccountSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AddAccountSchema;
   }
 
@@ -104,14 +112,13 @@ class AddAccountSchemaBuilder
 
   _$AddAccountSchema _build() {
     final _$result = _$v ??
-        _$AddAccountSchema._(
-          username: BuiltValueNullFieldError.checkNotNull(
-              username, r'AddAccountSchema', 'username'),
-          password: BuiltValueNullFieldError.checkNotNull(
-              password, r'AddAccountSchema', 'password'),
-          email: BuiltValueNullFieldError.checkNotNull(
-              email, r'AddAccountSchema', 'email'),
-        );
+        new _$AddAccountSchema._(
+            username: BuiltValueNullFieldError.checkNotNull(
+                username, r'AddAccountSchema', 'username'),
+            password: BuiltValueNullFieldError.checkNotNull(
+                password, r'AddAccountSchema', 'password'),
+            email: BuiltValueNullFieldError.checkNotNull(
+                email, r'AddAccountSchema', 'email'));
     replace(_$result);
     return _$result;
   }

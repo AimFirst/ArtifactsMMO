@@ -20,7 +20,7 @@ class _$GETransactionSchema extends GETransactionSchema {
 
   factory _$GETransactionSchema(
           [void Function(GETransactionSchemaBuilder)? updates]) =>
-      (GETransactionSchemaBuilder()..update(updates))._build();
+      (new GETransactionSchemaBuilder()..update(updates))._build();
 
   _$GETransactionSchema._(
       {required this.id,
@@ -28,7 +28,17 @@ class _$GETransactionSchema extends GETransactionSchema {
       required this.quantity,
       required this.price,
       required this.totalPrice})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(id, r'GETransactionSchema', 'id');
+    BuiltValueNullFieldError.checkNotNull(code, r'GETransactionSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        quantity, r'GETransactionSchema', 'quantity');
+    BuiltValueNullFieldError.checkNotNull(
+        price, r'GETransactionSchema', 'price');
+    BuiltValueNullFieldError.checkNotNull(
+        totalPrice, r'GETransactionSchema', 'totalPrice');
+  }
+
   @override
   GETransactionSchema rebuild(
           void Function(GETransactionSchemaBuilder) updates) =>
@@ -36,7 +46,7 @@ class _$GETransactionSchema extends GETransactionSchema {
 
   @override
   GETransactionSchemaBuilder toBuilder() =>
-      GETransactionSchemaBuilder()..replace(this);
+      new GETransactionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -116,6 +126,7 @@ class GETransactionSchemaBuilder
 
   @override
   void replace(GETransactionSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GETransactionSchema;
   }
 
@@ -129,18 +140,17 @@ class GETransactionSchemaBuilder
 
   _$GETransactionSchema _build() {
     final _$result = _$v ??
-        _$GETransactionSchema._(
-          id: BuiltValueNullFieldError.checkNotNull(
-              id, r'GETransactionSchema', 'id'),
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'GETransactionSchema', 'code'),
-          quantity: BuiltValueNullFieldError.checkNotNull(
-              quantity, r'GETransactionSchema', 'quantity'),
-          price: BuiltValueNullFieldError.checkNotNull(
-              price, r'GETransactionSchema', 'price'),
-          totalPrice: BuiltValueNullFieldError.checkNotNull(
-              totalPrice, r'GETransactionSchema', 'totalPrice'),
-        );
+        new _$GETransactionSchema._(
+            id: BuiltValueNullFieldError.checkNotNull(
+                id, r'GETransactionSchema', 'id'),
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'GETransactionSchema', 'code'),
+            quantity: BuiltValueNullFieldError.checkNotNull(
+                quantity, r'GETransactionSchema', 'quantity'),
+            price: BuiltValueNullFieldError.checkNotNull(
+                price, r'GETransactionSchema', 'price'),
+            totalPrice: BuiltValueNullFieldError.checkNotNull(
+                totalPrice, r'GETransactionSchema', 'totalPrice'));
     replace(_$result);
     return _$result;
   }

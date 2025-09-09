@@ -12,9 +12,12 @@ class _$TaskResponseSchema extends TaskResponseSchema {
 
   factory _$TaskResponseSchema(
           [void Function(TaskResponseSchemaBuilder)? updates]) =>
-      (TaskResponseSchemaBuilder()..update(updates))._build();
+      (new TaskResponseSchemaBuilder()..update(updates))._build();
 
-  _$TaskResponseSchema._({required this.data}) : super._();
+  _$TaskResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(data, r'TaskResponseSchema', 'data');
+  }
+
   @override
   TaskResponseSchema rebuild(
           void Function(TaskResponseSchemaBuilder) updates) =>
@@ -22,7 +25,7 @@ class _$TaskResponseSchema extends TaskResponseSchema {
 
   @override
   TaskResponseSchemaBuilder toBuilder() =>
-      TaskResponseSchemaBuilder()..replace(this);
+      new TaskResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -51,7 +54,8 @@ class TaskResponseSchemaBuilder
   _$TaskResponseSchema? _$v;
 
   TaskDataSchemaBuilder? _data;
-  TaskDataSchemaBuilder get data => _$this._data ??= TaskDataSchemaBuilder();
+  TaskDataSchemaBuilder get data =>
+      _$this._data ??= new TaskDataSchemaBuilder();
   set data(TaskDataSchemaBuilder? data) => _$this._data = data;
 
   TaskResponseSchemaBuilder() {
@@ -69,6 +73,7 @@ class TaskResponseSchemaBuilder
 
   @override
   void replace(TaskResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TaskResponseSchema;
   }
 
@@ -83,17 +88,14 @@ class TaskResponseSchemaBuilder
   _$TaskResponseSchema _build() {
     _$TaskResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$TaskResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$TaskResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'TaskResponseSchema', _$failedField, e.toString());
       }
       rethrow;

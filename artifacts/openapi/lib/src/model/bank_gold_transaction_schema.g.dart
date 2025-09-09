@@ -16,11 +16,19 @@ class _$BankGoldTransactionSchema extends BankGoldTransactionSchema {
 
   factory _$BankGoldTransactionSchema(
           [void Function(BankGoldTransactionSchemaBuilder)? updates]) =>
-      (BankGoldTransactionSchemaBuilder()..update(updates))._build();
+      (new BankGoldTransactionSchemaBuilder()..update(updates))._build();
 
   _$BankGoldTransactionSchema._(
       {required this.cooldown, required this.bank, required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'BankGoldTransactionSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        bank, r'BankGoldTransactionSchema', 'bank');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'BankGoldTransactionSchema', 'character');
+  }
+
   @override
   BankGoldTransactionSchema rebuild(
           void Function(BankGoldTransactionSchemaBuilder) updates) =>
@@ -28,7 +36,7 @@ class _$BankGoldTransactionSchema extends BankGoldTransactionSchema {
 
   @override
   BankGoldTransactionSchemaBuilder toBuilder() =>
-      BankGoldTransactionSchemaBuilder()..replace(this);
+      new BankGoldTransactionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -66,16 +74,16 @@ class BankGoldTransactionSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   GoldSchemaBuilder? _bank;
-  GoldSchemaBuilder get bank => _$this._bank ??= GoldSchemaBuilder();
+  GoldSchemaBuilder get bank => _$this._bank ??= new GoldSchemaBuilder();
   set bank(GoldSchemaBuilder? bank) => _$this._bank = bank;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -96,6 +104,7 @@ class BankGoldTransactionSchemaBuilder
 
   @override
   void replace(BankGoldTransactionSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BankGoldTransactionSchema;
   }
 
@@ -111,11 +120,10 @@ class BankGoldTransactionSchemaBuilder
     _$BankGoldTransactionSchema _$result;
     try {
       _$result = _$v ??
-          _$BankGoldTransactionSchema._(
-            cooldown: cooldown.build(),
-            bank: bank.build(),
-            character: character.build(),
-          );
+          new _$BankGoldTransactionSchema._(
+              cooldown: cooldown.build(),
+              bank: bank.build(),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -126,7 +134,7 @@ class BankGoldTransactionSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'BankGoldTransactionSchema', _$failedField, e.toString());
       }
       rethrow;

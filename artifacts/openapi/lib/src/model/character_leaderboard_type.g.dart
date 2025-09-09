@@ -46,12 +46,12 @@ CharacterLeaderboardType _$valueOf(String name) {
     case 'alchemy':
       return _$alchemy;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
 final BuiltSet<CharacterLeaderboardType> _$values =
-    BuiltSet<CharacterLeaderboardType>(const <CharacterLeaderboardType>[
+    new BuiltSet<CharacterLeaderboardType>(const <CharacterLeaderboardType>[
   _$combat,
   _$woodcutting,
   _$mining,
@@ -85,7 +85,7 @@ abstract class _$CharacterLeaderboardTypeMixin {
 }
 
 Serializer<CharacterLeaderboardType> _$characterLeaderboardTypeSerializer =
-    _$CharacterLeaderboardTypeSerializer();
+    new _$CharacterLeaderboardTypeSerializer();
 
 class _$CharacterLeaderboardTypeSerializer
     implements PrimitiveSerializer<CharacterLeaderboardType> {

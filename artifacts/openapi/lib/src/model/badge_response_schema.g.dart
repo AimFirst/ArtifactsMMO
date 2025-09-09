@@ -12,9 +12,12 @@ class _$BadgeResponseSchema extends BadgeResponseSchema {
 
   factory _$BadgeResponseSchema(
           [void Function(BadgeResponseSchemaBuilder)? updates]) =>
-      (BadgeResponseSchemaBuilder()..update(updates))._build();
+      (new BadgeResponseSchemaBuilder()..update(updates))._build();
 
-  _$BadgeResponseSchema._({required this.data}) : super._();
+  _$BadgeResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(data, r'BadgeResponseSchema', 'data');
+  }
+
   @override
   BadgeResponseSchema rebuild(
           void Function(BadgeResponseSchemaBuilder) updates) =>
@@ -22,7 +25,7 @@ class _$BadgeResponseSchema extends BadgeResponseSchema {
 
   @override
   BadgeResponseSchemaBuilder toBuilder() =>
-      BadgeResponseSchemaBuilder()..replace(this);
+      new BadgeResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -51,7 +54,7 @@ class BadgeResponseSchemaBuilder
   _$BadgeResponseSchema? _$v;
 
   BadgeSchemaBuilder? _data;
-  BadgeSchemaBuilder get data => _$this._data ??= BadgeSchemaBuilder();
+  BadgeSchemaBuilder get data => _$this._data ??= new BadgeSchemaBuilder();
   set data(BadgeSchemaBuilder? data) => _$this._data = data;
 
   BadgeResponseSchemaBuilder() {
@@ -69,6 +72,7 @@ class BadgeResponseSchemaBuilder
 
   @override
   void replace(BadgeResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BadgeResponseSchema;
   }
 
@@ -83,17 +87,14 @@ class BadgeResponseSchemaBuilder
   _$BadgeResponseSchema _build() {
     _$BadgeResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$BadgeResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$BadgeResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'BadgeResponseSchema', _$failedField, e.toString());
       }
       rethrow;

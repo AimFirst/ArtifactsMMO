@@ -12,9 +12,13 @@ class _$PasswordResetRequestSchema extends PasswordResetRequestSchema {
 
   factory _$PasswordResetRequestSchema(
           [void Function(PasswordResetRequestSchemaBuilder)? updates]) =>
-      (PasswordResetRequestSchemaBuilder()..update(updates))._build();
+      (new PasswordResetRequestSchemaBuilder()..update(updates))._build();
 
-  _$PasswordResetRequestSchema._({required this.email}) : super._();
+  _$PasswordResetRequestSchema._({required this.email}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        email, r'PasswordResetRequestSchema', 'email');
+  }
+
   @override
   PasswordResetRequestSchema rebuild(
           void Function(PasswordResetRequestSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$PasswordResetRequestSchema extends PasswordResetRequestSchema {
 
   @override
   PasswordResetRequestSchemaBuilder toBuilder() =>
-      PasswordResetRequestSchemaBuilder()..replace(this);
+      new PasswordResetRequestSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -70,6 +74,7 @@ class PasswordResetRequestSchemaBuilder
 
   @override
   void replace(PasswordResetRequestSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$PasswordResetRequestSchema;
   }
 
@@ -83,10 +88,9 @@ class PasswordResetRequestSchemaBuilder
 
   _$PasswordResetRequestSchema _build() {
     final _$result = _$v ??
-        _$PasswordResetRequestSchema._(
-          email: BuiltValueNullFieldError.checkNotNull(
-              email, r'PasswordResetRequestSchema', 'email'),
-        );
+        new _$PasswordResetRequestSchema._(
+            email: BuiltValueNullFieldError.checkNotNull(
+                email, r'PasswordResetRequestSchema', 'email'));
     replace(_$result);
     return _$result;
   }

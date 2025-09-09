@@ -12,9 +12,13 @@ class _$StatusResponseSchema extends StatusResponseSchema {
 
   factory _$StatusResponseSchema(
           [void Function(StatusResponseSchemaBuilder)? updates]) =>
-      (StatusResponseSchemaBuilder()..update(updates))._build();
+      (new StatusResponseSchemaBuilder()..update(updates))._build();
 
-  _$StatusResponseSchema._({required this.data}) : super._();
+  _$StatusResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'StatusResponseSchema', 'data');
+  }
+
   @override
   StatusResponseSchema rebuild(
           void Function(StatusResponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$StatusResponseSchema extends StatusResponseSchema {
 
   @override
   StatusResponseSchemaBuilder toBuilder() =>
-      StatusResponseSchemaBuilder()..replace(this);
+      new StatusResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -51,7 +55,7 @@ class StatusResponseSchemaBuilder
   _$StatusResponseSchema? _$v;
 
   StatusSchemaBuilder? _data;
-  StatusSchemaBuilder get data => _$this._data ??= StatusSchemaBuilder();
+  StatusSchemaBuilder get data => _$this._data ??= new StatusSchemaBuilder();
   set data(StatusSchemaBuilder? data) => _$this._data = data;
 
   StatusResponseSchemaBuilder() {
@@ -69,6 +73,7 @@ class StatusResponseSchemaBuilder
 
   @override
   void replace(StatusResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$StatusResponseSchema;
   }
 
@@ -83,17 +88,14 @@ class StatusResponseSchemaBuilder
   _$StatusResponseSchema _build() {
     _$StatusResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$StatusResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$StatusResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'StatusResponseSchema', _$failedField, e.toString());
       }
       rethrow;

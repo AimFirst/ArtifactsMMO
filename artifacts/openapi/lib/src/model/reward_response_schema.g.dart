@@ -12,9 +12,13 @@ class _$RewardResponseSchema extends RewardResponseSchema {
 
   factory _$RewardResponseSchema(
           [void Function(RewardResponseSchemaBuilder)? updates]) =>
-      (RewardResponseSchemaBuilder()..update(updates))._build();
+      (new RewardResponseSchemaBuilder()..update(updates))._build();
 
-  _$RewardResponseSchema._({required this.data}) : super._();
+  _$RewardResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'RewardResponseSchema', 'data');
+  }
+
   @override
   RewardResponseSchema rebuild(
           void Function(RewardResponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$RewardResponseSchema extends RewardResponseSchema {
 
   @override
   RewardResponseSchemaBuilder toBuilder() =>
-      RewardResponseSchemaBuilder()..replace(this);
+      new RewardResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -51,7 +55,8 @@ class RewardResponseSchemaBuilder
   _$RewardResponseSchema? _$v;
 
   DropRateSchemaBuilder? _data;
-  DropRateSchemaBuilder get data => _$this._data ??= DropRateSchemaBuilder();
+  DropRateSchemaBuilder get data =>
+      _$this._data ??= new DropRateSchemaBuilder();
   set data(DropRateSchemaBuilder? data) => _$this._data = data;
 
   RewardResponseSchemaBuilder() {
@@ -69,6 +74,7 @@ class RewardResponseSchemaBuilder
 
   @override
   void replace(RewardResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RewardResponseSchema;
   }
 
@@ -83,17 +89,14 @@ class RewardResponseSchemaBuilder
   _$RewardResponseSchema _build() {
     _$RewardResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$RewardResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$RewardResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'RewardResponseSchema', _$failedField, e.toString());
       }
       rethrow;

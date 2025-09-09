@@ -16,13 +16,21 @@ class _$CharacterMovementDataSchema extends CharacterMovementDataSchema {
 
   factory _$CharacterMovementDataSchema(
           [void Function(CharacterMovementDataSchemaBuilder)? updates]) =>
-      (CharacterMovementDataSchemaBuilder()..update(updates))._build();
+      (new CharacterMovementDataSchemaBuilder()..update(updates))._build();
 
   _$CharacterMovementDataSchema._(
       {required this.cooldown,
       required this.destination,
       required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'CharacterMovementDataSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        destination, r'CharacterMovementDataSchema', 'destination');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'CharacterMovementDataSchema', 'character');
+  }
+
   @override
   CharacterMovementDataSchema rebuild(
           void Function(CharacterMovementDataSchemaBuilder) updates) =>
@@ -30,7 +38,7 @@ class _$CharacterMovementDataSchema extends CharacterMovementDataSchema {
 
   @override
   CharacterMovementDataSchemaBuilder toBuilder() =>
-      CharacterMovementDataSchemaBuilder()..replace(this);
+      new CharacterMovementDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -69,18 +77,18 @@ class CharacterMovementDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   MapSchemaBuilder? _destination;
   MapSchemaBuilder get destination =>
-      _$this._destination ??= MapSchemaBuilder();
+      _$this._destination ??= new MapSchemaBuilder();
   set destination(MapSchemaBuilder? destination) =>
       _$this._destination = destination;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -101,6 +109,7 @@ class CharacterMovementDataSchemaBuilder
 
   @override
   void replace(CharacterMovementDataSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CharacterMovementDataSchema;
   }
 
@@ -116,11 +125,10 @@ class CharacterMovementDataSchemaBuilder
     _$CharacterMovementDataSchema _$result;
     try {
       _$result = _$v ??
-          _$CharacterMovementDataSchema._(
-            cooldown: cooldown.build(),
-            destination: destination.build(),
-            character: character.build(),
-          );
+          new _$CharacterMovementDataSchema._(
+              cooldown: cooldown.build(),
+              destination: destination.build(),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -131,7 +139,7 @@ class CharacterMovementDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'CharacterMovementDataSchema', _$failedField, e.toString());
       }
       rethrow;

@@ -19,7 +19,7 @@ class _$CooldownSchema extends CooldownSchema {
   final ActionType reason;
 
   factory _$CooldownSchema([void Function(CooldownSchemaBuilder)? updates]) =>
-      (CooldownSchemaBuilder()..update(updates))._build();
+      (new CooldownSchemaBuilder()..update(updates))._build();
 
   _$CooldownSchema._(
       {required this.totalSeconds,
@@ -27,13 +27,25 @@ class _$CooldownSchema extends CooldownSchema {
       required this.startedAt,
       required this.expiration,
       required this.reason})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        totalSeconds, r'CooldownSchema', 'totalSeconds');
+    BuiltValueNullFieldError.checkNotNull(
+        remainingSeconds, r'CooldownSchema', 'remainingSeconds');
+    BuiltValueNullFieldError.checkNotNull(
+        startedAt, r'CooldownSchema', 'startedAt');
+    BuiltValueNullFieldError.checkNotNull(
+        expiration, r'CooldownSchema', 'expiration');
+    BuiltValueNullFieldError.checkNotNull(reason, r'CooldownSchema', 'reason');
+  }
+
   @override
   CooldownSchema rebuild(void Function(CooldownSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  CooldownSchemaBuilder toBuilder() => CooldownSchemaBuilder()..replace(this);
+  CooldownSchemaBuilder toBuilder() =>
+      new CooldownSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -114,6 +126,7 @@ class CooldownSchemaBuilder
 
   @override
   void replace(CooldownSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CooldownSchema;
   }
 
@@ -127,18 +140,17 @@ class CooldownSchemaBuilder
 
   _$CooldownSchema _build() {
     final _$result = _$v ??
-        _$CooldownSchema._(
-          totalSeconds: BuiltValueNullFieldError.checkNotNull(
-              totalSeconds, r'CooldownSchema', 'totalSeconds'),
-          remainingSeconds: BuiltValueNullFieldError.checkNotNull(
-              remainingSeconds, r'CooldownSchema', 'remainingSeconds'),
-          startedAt: BuiltValueNullFieldError.checkNotNull(
-              startedAt, r'CooldownSchema', 'startedAt'),
-          expiration: BuiltValueNullFieldError.checkNotNull(
-              expiration, r'CooldownSchema', 'expiration'),
-          reason: BuiltValueNullFieldError.checkNotNull(
-              reason, r'CooldownSchema', 'reason'),
-        );
+        new _$CooldownSchema._(
+            totalSeconds: BuiltValueNullFieldError.checkNotNull(
+                totalSeconds, r'CooldownSchema', 'totalSeconds'),
+            remainingSeconds: BuiltValueNullFieldError.checkNotNull(
+                remainingSeconds, r'CooldownSchema', 'remainingSeconds'),
+            startedAt: BuiltValueNullFieldError.checkNotNull(
+                startedAt, r'CooldownSchema', 'startedAt'),
+            expiration: BuiltValueNullFieldError.checkNotNull(
+                expiration, r'CooldownSchema', 'expiration'),
+            reason: BuiltValueNullFieldError.checkNotNull(
+                reason, r'CooldownSchema', 'reason'));
     replace(_$result);
     return _$result;
   }

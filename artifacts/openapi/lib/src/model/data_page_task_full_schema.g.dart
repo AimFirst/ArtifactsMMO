@@ -20,11 +20,15 @@ class _$DataPageTaskFullSchema extends DataPageTaskFullSchema {
 
   factory _$DataPageTaskFullSchema(
           [void Function(DataPageTaskFullSchemaBuilder)? updates]) =>
-      (DataPageTaskFullSchemaBuilder()..update(updates))._build();
+      (new DataPageTaskFullSchemaBuilder()..update(updates))._build();
 
   _$DataPageTaskFullSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'DataPageTaskFullSchema', 'data');
+  }
+
   @override
   DataPageTaskFullSchema rebuild(
           void Function(DataPageTaskFullSchemaBuilder) updates) =>
@@ -32,7 +36,7 @@ class _$DataPageTaskFullSchema extends DataPageTaskFullSchema {
 
   @override
   DataPageTaskFullSchemaBuilder toBuilder() =>
-      DataPageTaskFullSchemaBuilder()..replace(this);
+      new DataPageTaskFullSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -75,7 +79,7 @@ class DataPageTaskFullSchemaBuilder
 
   ListBuilder<TaskFullSchema>? _data;
   ListBuilder<TaskFullSchema> get data =>
-      _$this._data ??= ListBuilder<TaskFullSchema>();
+      _$this._data ??= new ListBuilder<TaskFullSchema>();
   set data(ListBuilder<TaskFullSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -113,6 +117,7 @@ class DataPageTaskFullSchemaBuilder
 
   @override
   void replace(DataPageTaskFullSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageTaskFullSchema;
   }
 
@@ -128,20 +133,19 @@ class DataPageTaskFullSchemaBuilder
     _$DataPageTaskFullSchema _$result;
     try {
       _$result = _$v ??
-          _$DataPageTaskFullSchema._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageTaskFullSchema._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageTaskFullSchema', _$failedField, e.toString());
       }
       rethrow;

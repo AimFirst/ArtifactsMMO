@@ -20,11 +20,15 @@ class _$DataPageEffectSchema extends DataPageEffectSchema {
 
   factory _$DataPageEffectSchema(
           [void Function(DataPageEffectSchemaBuilder)? updates]) =>
-      (DataPageEffectSchemaBuilder()..update(updates))._build();
+      (new DataPageEffectSchemaBuilder()..update(updates))._build();
 
   _$DataPageEffectSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'DataPageEffectSchema', 'data');
+  }
+
   @override
   DataPageEffectSchema rebuild(
           void Function(DataPageEffectSchemaBuilder) updates) =>
@@ -32,7 +36,7 @@ class _$DataPageEffectSchema extends DataPageEffectSchema {
 
   @override
   DataPageEffectSchemaBuilder toBuilder() =>
-      DataPageEffectSchemaBuilder()..replace(this);
+      new DataPageEffectSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -75,7 +79,7 @@ class DataPageEffectSchemaBuilder
 
   ListBuilder<EffectSchema>? _data;
   ListBuilder<EffectSchema> get data =>
-      _$this._data ??= ListBuilder<EffectSchema>();
+      _$this._data ??= new ListBuilder<EffectSchema>();
   set data(ListBuilder<EffectSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -113,6 +117,7 @@ class DataPageEffectSchemaBuilder
 
   @override
   void replace(DataPageEffectSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageEffectSchema;
   }
 
@@ -128,20 +133,19 @@ class DataPageEffectSchemaBuilder
     _$DataPageEffectSchema _$result;
     try {
       _$result = _$v ??
-          _$DataPageEffectSchema._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageEffectSchema._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageEffectSchema', _$failedField, e.toString());
       }
       rethrow;

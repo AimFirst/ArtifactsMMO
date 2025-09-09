@@ -25,7 +25,7 @@ class _$StatusSchema extends StatusSchema {
   final SeasonSchema? season;
 
   factory _$StatusSchema([void Function(StatusSchemaBuilder)? updates]) =>
-      (StatusSchemaBuilder()..update(updates))._build();
+      (new StatusSchemaBuilder()..update(updates))._build();
 
   _$StatusSchema._(
       {required this.version,
@@ -36,13 +36,28 @@ class _$StatusSchema extends StatusSchema {
       required this.announcements,
       required this.rateLimits,
       this.season})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(version, r'StatusSchema', 'version');
+    BuiltValueNullFieldError.checkNotNull(
+        serverTime, r'StatusSchema', 'serverTime');
+    BuiltValueNullFieldError.checkNotNull(
+        maxLevel, r'StatusSchema', 'maxLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        maxSkillLevel, r'StatusSchema', 'maxSkillLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        charactersOnline, r'StatusSchema', 'charactersOnline');
+    BuiltValueNullFieldError.checkNotNull(
+        announcements, r'StatusSchema', 'announcements');
+    BuiltValueNullFieldError.checkNotNull(
+        rateLimits, r'StatusSchema', 'rateLimits');
+  }
+
   @override
   StatusSchema rebuild(void Function(StatusSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  StatusSchemaBuilder toBuilder() => StatusSchemaBuilder()..replace(this);
+  StatusSchemaBuilder toBuilder() => new StatusSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -116,18 +131,19 @@ class StatusSchemaBuilder
 
   ListBuilder<AnnouncementSchema>? _announcements;
   ListBuilder<AnnouncementSchema> get announcements =>
-      _$this._announcements ??= ListBuilder<AnnouncementSchema>();
+      _$this._announcements ??= new ListBuilder<AnnouncementSchema>();
   set announcements(ListBuilder<AnnouncementSchema>? announcements) =>
       _$this._announcements = announcements;
 
   ListBuilder<RateLimitSchema>? _rateLimits;
   ListBuilder<RateLimitSchema> get rateLimits =>
-      _$this._rateLimits ??= ListBuilder<RateLimitSchema>();
+      _$this._rateLimits ??= new ListBuilder<RateLimitSchema>();
   set rateLimits(ListBuilder<RateLimitSchema>? rateLimits) =>
       _$this._rateLimits = rateLimits;
 
   SeasonSchemaBuilder? _season;
-  SeasonSchemaBuilder get season => _$this._season ??= SeasonSchemaBuilder();
+  SeasonSchemaBuilder get season =>
+      _$this._season ??= new SeasonSchemaBuilder();
   set season(SeasonSchemaBuilder? season) => _$this._season = season;
 
   StatusSchemaBuilder() {
@@ -152,6 +168,7 @@ class StatusSchemaBuilder
 
   @override
   void replace(StatusSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$StatusSchema;
   }
 
@@ -167,21 +184,20 @@ class StatusSchemaBuilder
     _$StatusSchema _$result;
     try {
       _$result = _$v ??
-          _$StatusSchema._(
-            version: BuiltValueNullFieldError.checkNotNull(
-                version, r'StatusSchema', 'version'),
-            serverTime: BuiltValueNullFieldError.checkNotNull(
-                serverTime, r'StatusSchema', 'serverTime'),
-            maxLevel: BuiltValueNullFieldError.checkNotNull(
-                maxLevel, r'StatusSchema', 'maxLevel'),
-            maxSkillLevel: BuiltValueNullFieldError.checkNotNull(
-                maxSkillLevel, r'StatusSchema', 'maxSkillLevel'),
-            charactersOnline: BuiltValueNullFieldError.checkNotNull(
-                charactersOnline, r'StatusSchema', 'charactersOnline'),
-            announcements: announcements.build(),
-            rateLimits: rateLimits.build(),
-            season: _season?.build(),
-          );
+          new _$StatusSchema._(
+              version: BuiltValueNullFieldError.checkNotNull(
+                  version, r'StatusSchema', 'version'),
+              serverTime: BuiltValueNullFieldError.checkNotNull(
+                  serverTime, r'StatusSchema', 'serverTime'),
+              maxLevel: BuiltValueNullFieldError.checkNotNull(
+                  maxLevel, r'StatusSchema', 'maxLevel'),
+              maxSkillLevel: BuiltValueNullFieldError.checkNotNull(
+                  maxSkillLevel, r'StatusSchema', 'maxSkillLevel'),
+              charactersOnline: BuiltValueNullFieldError.checkNotNull(
+                  charactersOnline, r'StatusSchema', 'charactersOnline'),
+              announcements: announcements.build(),
+              rateLimits: rateLimits.build(),
+              season: _season?.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -192,7 +208,7 @@ class StatusSchemaBuilder
         _$failedField = 'season';
         _season?.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'StatusSchema', _$failedField, e.toString());
       }
       rethrow;

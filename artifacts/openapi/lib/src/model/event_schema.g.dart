@@ -21,7 +21,7 @@ class _$EventSchema extends EventSchema {
   final int rate;
 
   factory _$EventSchema([void Function(EventSchemaBuilder)? updates]) =>
-      (EventSchemaBuilder()..update(updates))._build();
+      (new EventSchemaBuilder()..update(updates))._build();
 
   _$EventSchema._(
       {required this.name,
@@ -30,13 +30,21 @@ class _$EventSchema extends EventSchema {
       required this.maps,
       required this.duration,
       required this.rate})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(name, r'EventSchema', 'name');
+    BuiltValueNullFieldError.checkNotNull(code, r'EventSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(content, r'EventSchema', 'content');
+    BuiltValueNullFieldError.checkNotNull(maps, r'EventSchema', 'maps');
+    BuiltValueNullFieldError.checkNotNull(duration, r'EventSchema', 'duration');
+    BuiltValueNullFieldError.checkNotNull(rate, r'EventSchema', 'rate');
+  }
+
   @override
   EventSchema rebuild(void Function(EventSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  EventSchemaBuilder toBuilder() => EventSchemaBuilder()..replace(this);
+  EventSchemaBuilder toBuilder() => new EventSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -89,12 +97,12 @@ class EventSchemaBuilder implements Builder<EventSchema, EventSchemaBuilder> {
 
   EventContentSchemaBuilder? _content;
   EventContentSchemaBuilder get content =>
-      _$this._content ??= EventContentSchemaBuilder();
+      _$this._content ??= new EventContentSchemaBuilder();
   set content(EventContentSchemaBuilder? content) => _$this._content = content;
 
   ListBuilder<EventMapSchema>? _maps;
   ListBuilder<EventMapSchema> get maps =>
-      _$this._maps ??= ListBuilder<EventMapSchema>();
+      _$this._maps ??= new ListBuilder<EventMapSchema>();
   set maps(ListBuilder<EventMapSchema>? maps) => _$this._maps = maps;
 
   int? _duration;
@@ -125,6 +133,7 @@ class EventSchemaBuilder implements Builder<EventSchema, EventSchemaBuilder> {
 
   @override
   void replace(EventSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EventSchema;
   }
 
@@ -140,18 +149,17 @@ class EventSchemaBuilder implements Builder<EventSchema, EventSchemaBuilder> {
     _$EventSchema _$result;
     try {
       _$result = _$v ??
-          _$EventSchema._(
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'EventSchema', 'name'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'EventSchema', 'code'),
-            content: content.build(),
-            maps: maps.build(),
-            duration: BuiltValueNullFieldError.checkNotNull(
-                duration, r'EventSchema', 'duration'),
-            rate: BuiltValueNullFieldError.checkNotNull(
-                rate, r'EventSchema', 'rate'),
-          );
+          new _$EventSchema._(
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'EventSchema', 'name'),
+              code: BuiltValueNullFieldError.checkNotNull(
+                  code, r'EventSchema', 'code'),
+              content: content.build(),
+              maps: maps.build(),
+              duration: BuiltValueNullFieldError.checkNotNull(
+                  duration, r'EventSchema', 'duration'),
+              rate: BuiltValueNullFieldError.checkNotNull(
+                  rate, r'EventSchema', 'rate'));
     } catch (_) {
       late String _$failedField;
       try {
@@ -160,7 +168,7 @@ class EventSchemaBuilder implements Builder<EventSchema, EventSchemaBuilder> {
         _$failedField = 'maps';
         maps.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'EventSchema', _$failedField, e.toString());
       }
       rethrow;

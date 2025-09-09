@@ -16,18 +16,26 @@ class _$RewardDataSchema extends RewardDataSchema {
 
   factory _$RewardDataSchema(
           [void Function(RewardDataSchemaBuilder)? updates]) =>
-      (RewardDataSchemaBuilder()..update(updates))._build();
+      (new RewardDataSchemaBuilder()..update(updates))._build();
 
   _$RewardDataSchema._(
       {required this.cooldown, required this.rewards, required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'RewardDataSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        rewards, r'RewardDataSchema', 'rewards');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'RewardDataSchema', 'character');
+  }
+
   @override
   RewardDataSchema rebuild(void Function(RewardDataSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   RewardDataSchemaBuilder toBuilder() =>
-      RewardDataSchemaBuilder()..replace(this);
+      new RewardDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -64,17 +72,17 @@ class RewardDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   RewardsSchemaBuilder? _rewards;
   RewardsSchemaBuilder get rewards =>
-      _$this._rewards ??= RewardsSchemaBuilder();
+      _$this._rewards ??= new RewardsSchemaBuilder();
   set rewards(RewardsSchemaBuilder? rewards) => _$this._rewards = rewards;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -95,6 +103,7 @@ class RewardDataSchemaBuilder
 
   @override
   void replace(RewardDataSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RewardDataSchema;
   }
 
@@ -110,11 +119,10 @@ class RewardDataSchemaBuilder
     _$RewardDataSchema _$result;
     try {
       _$result = _$v ??
-          _$RewardDataSchema._(
-            cooldown: cooldown.build(),
-            rewards: rewards.build(),
-            character: character.build(),
-          );
+          new _$RewardDataSchema._(
+              cooldown: cooldown.build(),
+              rewards: rewards.build(),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -125,7 +133,7 @@ class RewardDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'RewardDataSchema', _$failedField, e.toString());
       }
       rethrow;

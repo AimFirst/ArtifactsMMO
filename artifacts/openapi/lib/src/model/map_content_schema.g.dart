@@ -14,16 +14,20 @@ class _$MapContentSchema extends MapContentSchema {
 
   factory _$MapContentSchema(
           [void Function(MapContentSchemaBuilder)? updates]) =>
-      (MapContentSchemaBuilder()..update(updates))._build();
+      (new MapContentSchemaBuilder()..update(updates))._build();
 
-  _$MapContentSchema._({required this.type, required this.code}) : super._();
+  _$MapContentSchema._({required this.type, required this.code}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(type, r'MapContentSchema', 'type');
+    BuiltValueNullFieldError.checkNotNull(code, r'MapContentSchema', 'code');
+  }
+
   @override
   MapContentSchema rebuild(void Function(MapContentSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   MapContentSchemaBuilder toBuilder() =>
-      MapContentSchemaBuilder()..replace(this);
+      new MapContentSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -79,6 +83,7 @@ class MapContentSchemaBuilder
 
   @override
   void replace(MapContentSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$MapContentSchema;
   }
 
@@ -92,12 +97,11 @@ class MapContentSchemaBuilder
 
   _$MapContentSchema _build() {
     final _$result = _$v ??
-        _$MapContentSchema._(
-          type: BuiltValueNullFieldError.checkNotNull(
-              type, r'MapContentSchema', 'type'),
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'MapContentSchema', 'code'),
-        );
+        new _$MapContentSchema._(
+            type: BuiltValueNullFieldError.checkNotNull(
+                type, r'MapContentSchema', 'type'),
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'MapContentSchema', 'code'));
     replace(_$result);
     return _$result;
   }

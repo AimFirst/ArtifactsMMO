@@ -32,7 +32,7 @@ class _$MyAccountDetails extends MyAccountDetails {
 
   factory _$MyAccountDetails(
           [void Function(MyAccountDetailsBuilder)? updates]) =>
-      (MyAccountDetailsBuilder()..update(updates))._build();
+      (new MyAccountDetailsBuilder()..update(updates))._build();
 
   _$MyAccountDetails._(
       {required this.username,
@@ -46,14 +46,29 @@ class _$MyAccountDetails extends MyAccountDetails {
       this.memberExpiration,
       this.badges,
       this.banReason})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        username, r'MyAccountDetails', 'username');
+    BuiltValueNullFieldError.checkNotNull(email, r'MyAccountDetails', 'email');
+    BuiltValueNullFieldError.checkNotNull(
+        member, r'MyAccountDetails', 'member');
+    BuiltValueNullFieldError.checkNotNull(
+        status, r'MyAccountDetails', 'status');
+    BuiltValueNullFieldError.checkNotNull(skins, r'MyAccountDetails', 'skins');
+    BuiltValueNullFieldError.checkNotNull(gems, r'MyAccountDetails', 'gems');
+    BuiltValueNullFieldError.checkNotNull(
+        achievementsPoints, r'MyAccountDetails', 'achievementsPoints');
+    BuiltValueNullFieldError.checkNotNull(
+        banned, r'MyAccountDetails', 'banned');
+  }
+
   @override
   MyAccountDetails rebuild(void Function(MyAccountDetailsBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   MyAccountDetailsBuilder toBuilder() =>
-      MyAccountDetailsBuilder()..replace(this);
+      new MyAccountDetailsBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -130,7 +145,7 @@ class MyAccountDetailsBuilder
 
   ListBuilder<JsonObject?>? _skins;
   ListBuilder<JsonObject?> get skins =>
-      _$this._skins ??= ListBuilder<JsonObject?>();
+      _$this._skins ??= new ListBuilder<JsonObject?>();
   set skins(ListBuilder<JsonObject?>? skins) => _$this._skins = skins;
 
   int? _gems;
@@ -153,7 +168,7 @@ class MyAccountDetailsBuilder
 
   ListBuilder<JsonObject?>? _badges;
   ListBuilder<JsonObject?> get badges =>
-      _$this._badges ??= ListBuilder<JsonObject?>();
+      _$this._badges ??= new ListBuilder<JsonObject?>();
   set badges(ListBuilder<JsonObject?>? badges) => _$this._badges = badges;
 
   String? _banReason;
@@ -185,6 +200,7 @@ class MyAccountDetailsBuilder
 
   @override
   void replace(MyAccountDetails other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$MyAccountDetails;
   }
 
@@ -200,26 +216,27 @@ class MyAccountDetailsBuilder
     _$MyAccountDetails _$result;
     try {
       _$result = _$v ??
-          _$MyAccountDetails._(
-            username: BuiltValueNullFieldError.checkNotNull(
-                username, r'MyAccountDetails', 'username'),
-            email: BuiltValueNullFieldError.checkNotNull(
-                email, r'MyAccountDetails', 'email'),
-            member: BuiltValueNullFieldError.checkNotNull(
-                member, r'MyAccountDetails', 'member'),
-            status: BuiltValueNullFieldError.checkNotNull(
-                status, r'MyAccountDetails', 'status'),
-            skins: skins.build(),
-            gems: BuiltValueNullFieldError.checkNotNull(
-                gems, r'MyAccountDetails', 'gems'),
-            achievementsPoints: BuiltValueNullFieldError.checkNotNull(
-                achievementsPoints, r'MyAccountDetails', 'achievementsPoints'),
-            banned: BuiltValueNullFieldError.checkNotNull(
-                banned, r'MyAccountDetails', 'banned'),
-            memberExpiration: memberExpiration,
-            badges: _badges?.build(),
-            banReason: banReason,
-          );
+          new _$MyAccountDetails._(
+              username: BuiltValueNullFieldError.checkNotNull(
+                  username, r'MyAccountDetails', 'username'),
+              email: BuiltValueNullFieldError.checkNotNull(
+                  email, r'MyAccountDetails', 'email'),
+              member: BuiltValueNullFieldError.checkNotNull(
+                  member, r'MyAccountDetails', 'member'),
+              status: BuiltValueNullFieldError.checkNotNull(
+                  status, r'MyAccountDetails', 'status'),
+              skins: skins.build(),
+              gems: BuiltValueNullFieldError.checkNotNull(
+                  gems, r'MyAccountDetails', 'gems'),
+              achievementsPoints: BuiltValueNullFieldError.checkNotNull(
+                  achievementsPoints,
+                  r'MyAccountDetails',
+                  'achievementsPoints'),
+              banned: BuiltValueNullFieldError.checkNotNull(
+                  banned, r'MyAccountDetails', 'banned'),
+              memberExpiration: memberExpiration,
+              badges: _badges?.build(),
+              banReason: banReason);
     } catch (_) {
       late String _$failedField;
       try {
@@ -229,7 +246,7 @@ class MyAccountDetailsBuilder
         _$failedField = 'badges';
         _badges?.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'MyAccountDetails', _$failedField, e.toString());
       }
       rethrow;

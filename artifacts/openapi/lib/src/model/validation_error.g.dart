@@ -15,17 +15,23 @@ class _$ValidationError extends ValidationError {
   final String type;
 
   factory _$ValidationError([void Function(ValidationErrorBuilder)? updates]) =>
-      (ValidationErrorBuilder()..update(updates))._build();
+      (new ValidationErrorBuilder()..update(updates))._build();
 
   _$ValidationError._(
       {required this.loc, required this.msg, required this.type})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(loc, r'ValidationError', 'loc');
+    BuiltValueNullFieldError.checkNotNull(msg, r'ValidationError', 'msg');
+    BuiltValueNullFieldError.checkNotNull(type, r'ValidationError', 'type');
+  }
+
   @override
   ValidationError rebuild(void Function(ValidationErrorBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  ValidationErrorBuilder toBuilder() => ValidationErrorBuilder()..replace(this);
+  ValidationErrorBuilder toBuilder() =>
+      new ValidationErrorBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -62,7 +68,7 @@ class ValidationErrorBuilder
 
   ListBuilder<ValidationErrorLocInner>? _loc;
   ListBuilder<ValidationErrorLocInner> get loc =>
-      _$this._loc ??= ListBuilder<ValidationErrorLocInner>();
+      _$this._loc ??= new ListBuilder<ValidationErrorLocInner>();
   set loc(ListBuilder<ValidationErrorLocInner>? loc) => _$this._loc = loc;
 
   String? _msg;
@@ -90,6 +96,7 @@ class ValidationErrorBuilder
 
   @override
   void replace(ValidationError other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ValidationError;
   }
 
@@ -105,20 +112,19 @@ class ValidationErrorBuilder
     _$ValidationError _$result;
     try {
       _$result = _$v ??
-          _$ValidationError._(
-            loc: loc.build(),
-            msg: BuiltValueNullFieldError.checkNotNull(
-                msg, r'ValidationError', 'msg'),
-            type: BuiltValueNullFieldError.checkNotNull(
-                type, r'ValidationError', 'type'),
-          );
+          new _$ValidationError._(
+              loc: loc.build(),
+              msg: BuiltValueNullFieldError.checkNotNull(
+                  msg, r'ValidationError', 'msg'),
+              type: BuiltValueNullFieldError.checkNotNull(
+                  type, r'ValidationError', 'type'));
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'loc';
         loc.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'ValidationError', _$failedField, e.toString());
       }
       rethrow;

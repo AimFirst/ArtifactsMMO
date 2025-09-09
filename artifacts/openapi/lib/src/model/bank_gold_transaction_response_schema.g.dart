@@ -13,9 +13,14 @@ class _$BankGoldTransactionResponseSchema
 
   factory _$BankGoldTransactionResponseSchema(
           [void Function(BankGoldTransactionResponseSchemaBuilder)? updates]) =>
-      (BankGoldTransactionResponseSchemaBuilder()..update(updates))._build();
+      (new BankGoldTransactionResponseSchemaBuilder()..update(updates))
+          ._build();
 
-  _$BankGoldTransactionResponseSchema._({required this.data}) : super._();
+  _$BankGoldTransactionResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'BankGoldTransactionResponseSchema', 'data');
+  }
+
   @override
   BankGoldTransactionResponseSchema rebuild(
           void Function(BankGoldTransactionResponseSchemaBuilder) updates) =>
@@ -23,7 +28,7 @@ class _$BankGoldTransactionResponseSchema
 
   @override
   BankGoldTransactionResponseSchemaBuilder toBuilder() =>
-      BankGoldTransactionResponseSchemaBuilder()..replace(this);
+      new BankGoldTransactionResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -55,7 +60,7 @@ class BankGoldTransactionResponseSchemaBuilder
 
   BankGoldTransactionSchemaBuilder? _data;
   BankGoldTransactionSchemaBuilder get data =>
-      _$this._data ??= BankGoldTransactionSchemaBuilder();
+      _$this._data ??= new BankGoldTransactionSchemaBuilder();
   set data(BankGoldTransactionSchemaBuilder? data) => _$this._data = data;
 
   BankGoldTransactionResponseSchemaBuilder() {
@@ -73,6 +78,7 @@ class BankGoldTransactionResponseSchemaBuilder
 
   @override
   void replace(BankGoldTransactionResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BankGoldTransactionResponseSchema;
   }
 
@@ -88,17 +94,15 @@ class BankGoldTransactionResponseSchemaBuilder
   _$BankGoldTransactionResponseSchema _build() {
     _$BankGoldTransactionResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$BankGoldTransactionResponseSchema._(
-            data: data.build(),
-          );
+      _$result =
+          _$v ?? new _$BankGoldTransactionResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'BankGoldTransactionResponseSchema', _$failedField, e.toString());
       }
       rethrow;

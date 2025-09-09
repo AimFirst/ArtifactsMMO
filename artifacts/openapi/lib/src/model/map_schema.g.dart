@@ -19,7 +19,7 @@ class _$MapSchema extends MapSchema {
   final MapContentSchema? content;
 
   factory _$MapSchema([void Function(MapSchemaBuilder)? updates]) =>
-      (MapSchemaBuilder()..update(updates))._build();
+      (new MapSchemaBuilder()..update(updates))._build();
 
   _$MapSchema._(
       {required this.name,
@@ -27,13 +27,19 @@ class _$MapSchema extends MapSchema {
       required this.x,
       required this.y,
       this.content})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(name, r'MapSchema', 'name');
+    BuiltValueNullFieldError.checkNotNull(skin, r'MapSchema', 'skin');
+    BuiltValueNullFieldError.checkNotNull(x, r'MapSchema', 'x');
+    BuiltValueNullFieldError.checkNotNull(y, r'MapSchema', 'y');
+  }
+
   @override
   MapSchema rebuild(void Function(MapSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  MapSchemaBuilder toBuilder() => MapSchemaBuilder()..replace(this);
+  MapSchemaBuilder toBuilder() => new MapSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -91,7 +97,7 @@ class MapSchemaBuilder implements Builder<MapSchema, MapSchemaBuilder> {
 
   MapContentSchemaBuilder? _content;
   MapContentSchemaBuilder get content =>
-      _$this._content ??= MapContentSchemaBuilder();
+      _$this._content ??= new MapContentSchemaBuilder();
   set content(MapContentSchemaBuilder? content) => _$this._content = content;
 
   MapSchemaBuilder() {
@@ -113,6 +119,7 @@ class MapSchemaBuilder implements Builder<MapSchema, MapSchemaBuilder> {
 
   @override
   void replace(MapSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$MapSchema;
   }
 
@@ -128,22 +135,21 @@ class MapSchemaBuilder implements Builder<MapSchema, MapSchemaBuilder> {
     _$MapSchema _$result;
     try {
       _$result = _$v ??
-          _$MapSchema._(
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'MapSchema', 'name'),
-            skin: BuiltValueNullFieldError.checkNotNull(
-                skin, r'MapSchema', 'skin'),
-            x: BuiltValueNullFieldError.checkNotNull(x, r'MapSchema', 'x'),
-            y: BuiltValueNullFieldError.checkNotNull(y, r'MapSchema', 'y'),
-            content: _content?.build(),
-          );
+          new _$MapSchema._(
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'MapSchema', 'name'),
+              skin: BuiltValueNullFieldError.checkNotNull(
+                  skin, r'MapSchema', 'skin'),
+              x: BuiltValueNullFieldError.checkNotNull(x, r'MapSchema', 'x'),
+              y: BuiltValueNullFieldError.checkNotNull(y, r'MapSchema', 'y'),
+              content: _content?.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'content';
         _content?.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'MapSchema', _$failedField, e.toString());
       }
       rethrow;

@@ -37,12 +37,12 @@ EffectSubtype _$valueOf(String name) {
     case 'gold':
       return _$gold;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
 final BuiltSet<EffectSubtype> _$values =
-    BuiltSet<EffectSubtype>(const <EffectSubtype>[
+    new BuiltSet<EffectSubtype>(const <EffectSubtype>[
   _$stat,
   _$other,
   _$heal,
@@ -75,7 +75,7 @@ abstract class _$EffectSubtypeMixin {
 }
 
 Serializer<EffectSubtype> _$effectSubtypeSerializer =
-    _$EffectSubtypeSerializer();
+    new _$EffectSubtypeSerializer();
 
 class _$EffectSubtypeSerializer implements PrimitiveSerializer<EffectSubtype> {
   static const Map<String, Object> _toWire = const <String, Object>{

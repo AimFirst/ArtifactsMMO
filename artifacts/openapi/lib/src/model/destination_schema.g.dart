@@ -14,16 +14,20 @@ class _$DestinationSchema extends DestinationSchema {
 
   factory _$DestinationSchema(
           [void Function(DestinationSchemaBuilder)? updates]) =>
-      (DestinationSchemaBuilder()..update(updates))._build();
+      (new DestinationSchemaBuilder()..update(updates))._build();
 
-  _$DestinationSchema._({required this.x, required this.y}) : super._();
+  _$DestinationSchema._({required this.x, required this.y}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(x, r'DestinationSchema', 'x');
+    BuiltValueNullFieldError.checkNotNull(y, r'DestinationSchema', 'y');
+  }
+
   @override
   DestinationSchema rebuild(void Function(DestinationSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   DestinationSchemaBuilder toBuilder() =>
-      DestinationSchemaBuilder()..replace(this);
+      new DestinationSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -77,6 +81,7 @@ class DestinationSchemaBuilder
 
   @override
   void replace(DestinationSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DestinationSchema;
   }
 
@@ -90,12 +95,11 @@ class DestinationSchemaBuilder
 
   _$DestinationSchema _build() {
     final _$result = _$v ??
-        _$DestinationSchema._(
-          x: BuiltValueNullFieldError.checkNotNull(
-              x, r'DestinationSchema', 'x'),
-          y: BuiltValueNullFieldError.checkNotNull(
-              y, r'DestinationSchema', 'y'),
-        );
+        new _$DestinationSchema._(
+            x: BuiltValueNullFieldError.checkNotNull(
+                x, r'DestinationSchema', 'x'),
+            y: BuiltValueNullFieldError.checkNotNull(
+                y, r'DestinationSchema', 'y'));
     replace(_$result);
     return _$result;
   }

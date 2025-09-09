@@ -14,9 +14,13 @@ class _$EventContentSchema extends EventContentSchema {
 
   factory _$EventContentSchema(
           [void Function(EventContentSchemaBuilder)? updates]) =>
-      (EventContentSchemaBuilder()..update(updates))._build();
+      (new EventContentSchemaBuilder()..update(updates))._build();
 
-  _$EventContentSchema._({required this.type, required this.code}) : super._();
+  _$EventContentSchema._({required this.type, required this.code}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(type, r'EventContentSchema', 'type');
+    BuiltValueNullFieldError.checkNotNull(code, r'EventContentSchema', 'code');
+  }
+
   @override
   EventContentSchema rebuild(
           void Function(EventContentSchemaBuilder) updates) =>
@@ -24,7 +28,7 @@ class _$EventContentSchema extends EventContentSchema {
 
   @override
   EventContentSchemaBuilder toBuilder() =>
-      EventContentSchemaBuilder()..replace(this);
+      new EventContentSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -80,6 +84,7 @@ class EventContentSchemaBuilder
 
   @override
   void replace(EventContentSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EventContentSchema;
   }
 
@@ -93,12 +98,11 @@ class EventContentSchemaBuilder
 
   _$EventContentSchema _build() {
     final _$result = _$v ??
-        _$EventContentSchema._(
-          type: BuiltValueNullFieldError.checkNotNull(
-              type, r'EventContentSchema', 'type'),
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'EventContentSchema', 'code'),
-        );
+        new _$EventContentSchema._(
+            type: BuiltValueNullFieldError.checkNotNull(
+                type, r'EventContentSchema', 'type'),
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'EventContentSchema', 'code'));
     replace(_$result);
     return _$result;
   }

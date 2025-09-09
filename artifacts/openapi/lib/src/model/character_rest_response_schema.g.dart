@@ -12,9 +12,13 @@ class _$CharacterRestResponseSchema extends CharacterRestResponseSchema {
 
   factory _$CharacterRestResponseSchema(
           [void Function(CharacterRestResponseSchemaBuilder)? updates]) =>
-      (CharacterRestResponseSchemaBuilder()..update(updates))._build();
+      (new CharacterRestResponseSchemaBuilder()..update(updates))._build();
 
-  _$CharacterRestResponseSchema._({required this.data}) : super._();
+  _$CharacterRestResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'CharacterRestResponseSchema', 'data');
+  }
+
   @override
   CharacterRestResponseSchema rebuild(
           void Function(CharacterRestResponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$CharacterRestResponseSchema extends CharacterRestResponseSchema {
 
   @override
   CharacterRestResponseSchemaBuilder toBuilder() =>
-      CharacterRestResponseSchemaBuilder()..replace(this);
+      new CharacterRestResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -54,7 +58,7 @@ class CharacterRestResponseSchemaBuilder
 
   CharacterRestDataSchemaBuilder? _data;
   CharacterRestDataSchemaBuilder get data =>
-      _$this._data ??= CharacterRestDataSchemaBuilder();
+      _$this._data ??= new CharacterRestDataSchemaBuilder();
   set data(CharacterRestDataSchemaBuilder? data) => _$this._data = data;
 
   CharacterRestResponseSchemaBuilder() {
@@ -72,6 +76,7 @@ class CharacterRestResponseSchemaBuilder
 
   @override
   void replace(CharacterRestResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CharacterRestResponseSchema;
   }
 
@@ -86,17 +91,14 @@ class CharacterRestResponseSchemaBuilder
   _$CharacterRestResponseSchema _build() {
     _$CharacterRestResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$CharacterRestResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$CharacterRestResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'CharacterRestResponseSchema', _$failedField, e.toString());
       }
       rethrow;

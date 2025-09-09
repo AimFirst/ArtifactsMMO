@@ -17,12 +17,12 @@ AccountLeaderboardType _$valueOf(String name) {
     case 'gold':
       return _$gold;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
 final BuiltSet<AccountLeaderboardType> _$values =
-    BuiltSet<AccountLeaderboardType>(const <AccountLeaderboardType>[
+    new BuiltSet<AccountLeaderboardType>(const <AccountLeaderboardType>[
   _$achievementsPoints,
   _$gold,
 ]);
@@ -42,7 +42,7 @@ abstract class _$AccountLeaderboardTypeMixin {
 }
 
 Serializer<AccountLeaderboardType> _$accountLeaderboardTypeSerializer =
-    _$AccountLeaderboardTypeSerializer();
+    new _$AccountLeaderboardTypeSerializer();
 
 class _$AccountLeaderboardTypeSerializer
     implements PrimitiveSerializer<AccountLeaderboardType> {

@@ -29,7 +29,7 @@ class _$ItemSchema extends ItemSchema {
   final CraftSchema? craft;
 
   factory _$ItemSchema([void Function(ItemSchemaBuilder)? updates]) =>
-      (ItemSchemaBuilder()..update(updates))._build();
+      (new ItemSchemaBuilder()..update(updates))._build();
 
   _$ItemSchema._(
       {required this.name,
@@ -42,13 +42,24 @@ class _$ItemSchema extends ItemSchema {
       this.conditions,
       this.effects,
       this.craft})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(name, r'ItemSchema', 'name');
+    BuiltValueNullFieldError.checkNotNull(code, r'ItemSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(level, r'ItemSchema', 'level');
+    BuiltValueNullFieldError.checkNotNull(type, r'ItemSchema', 'type');
+    BuiltValueNullFieldError.checkNotNull(subtype, r'ItemSchema', 'subtype');
+    BuiltValueNullFieldError.checkNotNull(
+        description, r'ItemSchema', 'description');
+    BuiltValueNullFieldError.checkNotNull(
+        tradeable, r'ItemSchema', 'tradeable');
+  }
+
   @override
   ItemSchema rebuild(void Function(ItemSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  ItemSchemaBuilder toBuilder() => ItemSchemaBuilder()..replace(this);
+  ItemSchemaBuilder toBuilder() => new ItemSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -133,18 +144,18 @@ class ItemSchemaBuilder implements Builder<ItemSchema, ItemSchemaBuilder> {
 
   ListBuilder<ConditionSchema>? _conditions;
   ListBuilder<ConditionSchema> get conditions =>
-      _$this._conditions ??= ListBuilder<ConditionSchema>();
+      _$this._conditions ??= new ListBuilder<ConditionSchema>();
   set conditions(ListBuilder<ConditionSchema>? conditions) =>
       _$this._conditions = conditions;
 
   ListBuilder<SimpleEffectSchema>? _effects;
   ListBuilder<SimpleEffectSchema> get effects =>
-      _$this._effects ??= ListBuilder<SimpleEffectSchema>();
+      _$this._effects ??= new ListBuilder<SimpleEffectSchema>();
   set effects(ListBuilder<SimpleEffectSchema>? effects) =>
       _$this._effects = effects;
 
   CraftSchemaBuilder? _craft;
-  CraftSchemaBuilder get craft => _$this._craft ??= CraftSchemaBuilder();
+  CraftSchemaBuilder get craft => _$this._craft ??= new CraftSchemaBuilder();
   set craft(CraftSchemaBuilder? craft) => _$this._craft = craft;
 
   ItemSchemaBuilder() {
@@ -171,6 +182,7 @@ class ItemSchemaBuilder implements Builder<ItemSchema, ItemSchemaBuilder> {
 
   @override
   void replace(ItemSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ItemSchema;
   }
 
@@ -186,25 +198,24 @@ class ItemSchemaBuilder implements Builder<ItemSchema, ItemSchemaBuilder> {
     _$ItemSchema _$result;
     try {
       _$result = _$v ??
-          _$ItemSchema._(
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'ItemSchema', 'name'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'ItemSchema', 'code'),
-            level: BuiltValueNullFieldError.checkNotNull(
-                level, r'ItemSchema', 'level'),
-            type: BuiltValueNullFieldError.checkNotNull(
-                type, r'ItemSchema', 'type'),
-            subtype: BuiltValueNullFieldError.checkNotNull(
-                subtype, r'ItemSchema', 'subtype'),
-            description: BuiltValueNullFieldError.checkNotNull(
-                description, r'ItemSchema', 'description'),
-            tradeable: BuiltValueNullFieldError.checkNotNull(
-                tradeable, r'ItemSchema', 'tradeable'),
-            conditions: _conditions?.build(),
-            effects: _effects?.build(),
-            craft: _craft?.build(),
-          );
+          new _$ItemSchema._(
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'ItemSchema', 'name'),
+              code: BuiltValueNullFieldError.checkNotNull(
+                  code, r'ItemSchema', 'code'),
+              level: BuiltValueNullFieldError.checkNotNull(
+                  level, r'ItemSchema', 'level'),
+              type: BuiltValueNullFieldError.checkNotNull(
+                  type, r'ItemSchema', 'type'),
+              subtype: BuiltValueNullFieldError.checkNotNull(
+                  subtype, r'ItemSchema', 'subtype'),
+              description: BuiltValueNullFieldError.checkNotNull(
+                  description, r'ItemSchema', 'description'),
+              tradeable: BuiltValueNullFieldError.checkNotNull(
+                  tradeable, r'ItemSchema', 'tradeable'),
+              conditions: _conditions?.build(),
+              effects: _effects?.build(),
+              craft: _craft?.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -215,7 +226,7 @@ class ItemSchemaBuilder implements Builder<ItemSchema, ItemSchemaBuilder> {
         _$failedField = 'craft';
         _craft?.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'ItemSchema', _$failedField, e.toString());
       }
       rethrow;

@@ -12,9 +12,13 @@ class _$ChangeSkinResponseSchema extends ChangeSkinResponseSchema {
 
   factory _$ChangeSkinResponseSchema(
           [void Function(ChangeSkinResponseSchemaBuilder)? updates]) =>
-      (ChangeSkinResponseSchemaBuilder()..update(updates))._build();
+      (new ChangeSkinResponseSchemaBuilder()..update(updates))._build();
 
-  _$ChangeSkinResponseSchema._({required this.data}) : super._();
+  _$ChangeSkinResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'ChangeSkinResponseSchema', 'data');
+  }
+
   @override
   ChangeSkinResponseSchema rebuild(
           void Function(ChangeSkinResponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$ChangeSkinResponseSchema extends ChangeSkinResponseSchema {
 
   @override
   ChangeSkinResponseSchemaBuilder toBuilder() =>
-      ChangeSkinResponseSchemaBuilder()..replace(this);
+      new ChangeSkinResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -53,7 +57,7 @@ class ChangeSkinResponseSchemaBuilder
 
   ChangeSkinCharacterDataSchemaBuilder? _data;
   ChangeSkinCharacterDataSchemaBuilder get data =>
-      _$this._data ??= ChangeSkinCharacterDataSchemaBuilder();
+      _$this._data ??= new ChangeSkinCharacterDataSchemaBuilder();
   set data(ChangeSkinCharacterDataSchemaBuilder? data) => _$this._data = data;
 
   ChangeSkinResponseSchemaBuilder() {
@@ -71,6 +75,7 @@ class ChangeSkinResponseSchemaBuilder
 
   @override
   void replace(ChangeSkinResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ChangeSkinResponseSchema;
   }
 
@@ -85,17 +90,14 @@ class ChangeSkinResponseSchemaBuilder
   _$ChangeSkinResponseSchema _build() {
     _$ChangeSkinResponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$ChangeSkinResponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$ChangeSkinResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'ChangeSkinResponseSchema', _$failedField, e.toString());
       }
       rethrow;

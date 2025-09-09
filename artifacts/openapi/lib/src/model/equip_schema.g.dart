@@ -15,16 +15,20 @@ class _$EquipSchema extends EquipSchema {
   final int? quantity;
 
   factory _$EquipSchema([void Function(EquipSchemaBuilder)? updates]) =>
-      (EquipSchemaBuilder()..update(updates))._build();
+      (new EquipSchemaBuilder()..update(updates))._build();
 
   _$EquipSchema._({required this.code, required this.slot, this.quantity})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'EquipSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(slot, r'EquipSchema', 'slot');
+  }
+
   @override
   EquipSchema rebuild(void Function(EquipSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  EquipSchemaBuilder toBuilder() => EquipSchemaBuilder()..replace(this);
+  EquipSchemaBuilder toBuilder() => new EquipSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -87,6 +91,7 @@ class EquipSchemaBuilder implements Builder<EquipSchema, EquipSchemaBuilder> {
 
   @override
   void replace(EquipSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$EquipSchema;
   }
 
@@ -100,13 +105,12 @@ class EquipSchemaBuilder implements Builder<EquipSchema, EquipSchemaBuilder> {
 
   _$EquipSchema _build() {
     final _$result = _$v ??
-        _$EquipSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'EquipSchema', 'code'),
-          slot: BuiltValueNullFieldError.checkNotNull(
-              slot, r'EquipSchema', 'slot'),
-          quantity: quantity,
-        );
+        new _$EquipSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'EquipSchema', 'code'),
+            slot: BuiltValueNullFieldError.checkNotNull(
+                slot, r'EquipSchema', 'slot'),
+            quantity: quantity);
     replace(_$result);
     return _$result;
   }

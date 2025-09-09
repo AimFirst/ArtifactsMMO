@@ -20,11 +20,15 @@ class _$DataPageResourceSchema extends DataPageResourceSchema {
 
   factory _$DataPageResourceSchema(
           [void Function(DataPageResourceSchemaBuilder)? updates]) =>
-      (DataPageResourceSchemaBuilder()..update(updates))._build();
+      (new DataPageResourceSchemaBuilder()..update(updates))._build();
 
   _$DataPageResourceSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'DataPageResourceSchema', 'data');
+  }
+
   @override
   DataPageResourceSchema rebuild(
           void Function(DataPageResourceSchemaBuilder) updates) =>
@@ -32,7 +36,7 @@ class _$DataPageResourceSchema extends DataPageResourceSchema {
 
   @override
   DataPageResourceSchemaBuilder toBuilder() =>
-      DataPageResourceSchemaBuilder()..replace(this);
+      new DataPageResourceSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -75,7 +79,7 @@ class DataPageResourceSchemaBuilder
 
   ListBuilder<ResourceSchema>? _data;
   ListBuilder<ResourceSchema> get data =>
-      _$this._data ??= ListBuilder<ResourceSchema>();
+      _$this._data ??= new ListBuilder<ResourceSchema>();
   set data(ListBuilder<ResourceSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -113,6 +117,7 @@ class DataPageResourceSchemaBuilder
 
   @override
   void replace(DataPageResourceSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageResourceSchema;
   }
 
@@ -128,20 +133,19 @@ class DataPageResourceSchemaBuilder
     _$DataPageResourceSchema _$result;
     try {
       _$result = _$v ??
-          _$DataPageResourceSchema._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageResourceSchema._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageResourceSchema', _$failedField, e.toString());
       }
       rethrow;

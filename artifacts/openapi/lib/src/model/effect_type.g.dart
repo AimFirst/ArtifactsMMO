@@ -19,11 +19,12 @@ EffectType _$valueOf(String name) {
     case 'combat':
       return _$combat;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
-final BuiltSet<EffectType> _$values = BuiltSet<EffectType>(const <EffectType>[
+final BuiltSet<EffectType> _$values =
+    new BuiltSet<EffectType>(const <EffectType>[
   _$equipment,
   _$consumable,
   _$combat,
@@ -43,7 +44,7 @@ abstract class _$EffectTypeMixin {
   _$EffectTypeMeta get EffectType => const _$EffectTypeMeta();
 }
 
-Serializer<EffectType> _$effectTypeSerializer = _$EffectTypeSerializer();
+Serializer<EffectType> _$effectTypeSerializer = new _$EffectTypeSerializer();
 
 class _$EffectTypeSerializer implements PrimitiveSerializer<EffectType> {
   static const Map<String, Object> _toWire = const <String, Object>{

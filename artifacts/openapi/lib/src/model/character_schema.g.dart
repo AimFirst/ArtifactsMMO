@@ -167,7 +167,7 @@ class _$CharacterSchema extends CharacterSchema {
   final BuiltList<InventorySlot>? inventory;
 
   factory _$CharacterSchema([void Function(CharacterSchemaBuilder)? updates]) =>
-      (CharacterSchemaBuilder()..update(updates))._build();
+      (new CharacterSchemaBuilder()..update(updates))._build();
 
   _$CharacterSchema._(
       {required this.name,
@@ -249,13 +249,153 @@ class _$CharacterSchema extends CharacterSchema {
       required this.inventoryMaxItems,
       this.cooldownExpiration,
       this.inventory})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(name, r'CharacterSchema', 'name');
+    BuiltValueNullFieldError.checkNotNull(
+        account, r'CharacterSchema', 'account');
+    BuiltValueNullFieldError.checkNotNull(skin, r'CharacterSchema', 'skin');
+    BuiltValueNullFieldError.checkNotNull(level, r'CharacterSchema', 'level');
+    BuiltValueNullFieldError.checkNotNull(xp, r'CharacterSchema', 'xp');
+    BuiltValueNullFieldError.checkNotNull(maxXp, r'CharacterSchema', 'maxXp');
+    BuiltValueNullFieldError.checkNotNull(gold, r'CharacterSchema', 'gold');
+    BuiltValueNullFieldError.checkNotNull(speed, r'CharacterSchema', 'speed');
+    BuiltValueNullFieldError.checkNotNull(
+        miningLevel, r'CharacterSchema', 'miningLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        miningXp, r'CharacterSchema', 'miningXp');
+    BuiltValueNullFieldError.checkNotNull(
+        miningMaxXp, r'CharacterSchema', 'miningMaxXp');
+    BuiltValueNullFieldError.checkNotNull(
+        woodcuttingLevel, r'CharacterSchema', 'woodcuttingLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        woodcuttingXp, r'CharacterSchema', 'woodcuttingXp');
+    BuiltValueNullFieldError.checkNotNull(
+        woodcuttingMaxXp, r'CharacterSchema', 'woodcuttingMaxXp');
+    BuiltValueNullFieldError.checkNotNull(
+        fishingLevel, r'CharacterSchema', 'fishingLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        fishingXp, r'CharacterSchema', 'fishingXp');
+    BuiltValueNullFieldError.checkNotNull(
+        fishingMaxXp, r'CharacterSchema', 'fishingMaxXp');
+    BuiltValueNullFieldError.checkNotNull(
+        weaponcraftingLevel, r'CharacterSchema', 'weaponcraftingLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        weaponcraftingXp, r'CharacterSchema', 'weaponcraftingXp');
+    BuiltValueNullFieldError.checkNotNull(
+        weaponcraftingMaxXp, r'CharacterSchema', 'weaponcraftingMaxXp');
+    BuiltValueNullFieldError.checkNotNull(
+        gearcraftingLevel, r'CharacterSchema', 'gearcraftingLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        gearcraftingXp, r'CharacterSchema', 'gearcraftingXp');
+    BuiltValueNullFieldError.checkNotNull(
+        gearcraftingMaxXp, r'CharacterSchema', 'gearcraftingMaxXp');
+    BuiltValueNullFieldError.checkNotNull(
+        jewelrycraftingLevel, r'CharacterSchema', 'jewelrycraftingLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        jewelrycraftingXp, r'CharacterSchema', 'jewelrycraftingXp');
+    BuiltValueNullFieldError.checkNotNull(
+        jewelrycraftingMaxXp, r'CharacterSchema', 'jewelrycraftingMaxXp');
+    BuiltValueNullFieldError.checkNotNull(
+        cookingLevel, r'CharacterSchema', 'cookingLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        cookingXp, r'CharacterSchema', 'cookingXp');
+    BuiltValueNullFieldError.checkNotNull(
+        cookingMaxXp, r'CharacterSchema', 'cookingMaxXp');
+    BuiltValueNullFieldError.checkNotNull(
+        alchemyLevel, r'CharacterSchema', 'alchemyLevel');
+    BuiltValueNullFieldError.checkNotNull(
+        alchemyXp, r'CharacterSchema', 'alchemyXp');
+    BuiltValueNullFieldError.checkNotNull(
+        alchemyMaxXp, r'CharacterSchema', 'alchemyMaxXp');
+    BuiltValueNullFieldError.checkNotNull(hp, r'CharacterSchema', 'hp');
+    BuiltValueNullFieldError.checkNotNull(maxHp, r'CharacterSchema', 'maxHp');
+    BuiltValueNullFieldError.checkNotNull(haste, r'CharacterSchema', 'haste');
+    BuiltValueNullFieldError.checkNotNull(
+        criticalStrike, r'CharacterSchema', 'criticalStrike');
+    BuiltValueNullFieldError.checkNotNull(wisdom, r'CharacterSchema', 'wisdom');
+    BuiltValueNullFieldError.checkNotNull(
+        prospecting, r'CharacterSchema', 'prospecting');
+    BuiltValueNullFieldError.checkNotNull(
+        attackFire, r'CharacterSchema', 'attackFire');
+    BuiltValueNullFieldError.checkNotNull(
+        attackEarth, r'CharacterSchema', 'attackEarth');
+    BuiltValueNullFieldError.checkNotNull(
+        attackWater, r'CharacterSchema', 'attackWater');
+    BuiltValueNullFieldError.checkNotNull(
+        attackAir, r'CharacterSchema', 'attackAir');
+    BuiltValueNullFieldError.checkNotNull(dmg, r'CharacterSchema', 'dmg');
+    BuiltValueNullFieldError.checkNotNull(
+        dmgFire, r'CharacterSchema', 'dmgFire');
+    BuiltValueNullFieldError.checkNotNull(
+        dmgEarth, r'CharacterSchema', 'dmgEarth');
+    BuiltValueNullFieldError.checkNotNull(
+        dmgWater, r'CharacterSchema', 'dmgWater');
+    BuiltValueNullFieldError.checkNotNull(dmgAir, r'CharacterSchema', 'dmgAir');
+    BuiltValueNullFieldError.checkNotNull(
+        resFire, r'CharacterSchema', 'resFire');
+    BuiltValueNullFieldError.checkNotNull(
+        resEarth, r'CharacterSchema', 'resEarth');
+    BuiltValueNullFieldError.checkNotNull(
+        resWater, r'CharacterSchema', 'resWater');
+    BuiltValueNullFieldError.checkNotNull(resAir, r'CharacterSchema', 'resAir');
+    BuiltValueNullFieldError.checkNotNull(x, r'CharacterSchema', 'x');
+    BuiltValueNullFieldError.checkNotNull(y, r'CharacterSchema', 'y');
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'CharacterSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        weaponSlot, r'CharacterSchema', 'weaponSlot');
+    BuiltValueNullFieldError.checkNotNull(
+        runeSlot, r'CharacterSchema', 'runeSlot');
+    BuiltValueNullFieldError.checkNotNull(
+        shieldSlot, r'CharacterSchema', 'shieldSlot');
+    BuiltValueNullFieldError.checkNotNull(
+        helmetSlot, r'CharacterSchema', 'helmetSlot');
+    BuiltValueNullFieldError.checkNotNull(
+        bodyArmorSlot, r'CharacterSchema', 'bodyArmorSlot');
+    BuiltValueNullFieldError.checkNotNull(
+        legArmorSlot, r'CharacterSchema', 'legArmorSlot');
+    BuiltValueNullFieldError.checkNotNull(
+        bootsSlot, r'CharacterSchema', 'bootsSlot');
+    BuiltValueNullFieldError.checkNotNull(
+        ring1Slot, r'CharacterSchema', 'ring1Slot');
+    BuiltValueNullFieldError.checkNotNull(
+        ring2Slot, r'CharacterSchema', 'ring2Slot');
+    BuiltValueNullFieldError.checkNotNull(
+        amuletSlot, r'CharacterSchema', 'amuletSlot');
+    BuiltValueNullFieldError.checkNotNull(
+        artifact1Slot, r'CharacterSchema', 'artifact1Slot');
+    BuiltValueNullFieldError.checkNotNull(
+        artifact2Slot, r'CharacterSchema', 'artifact2Slot');
+    BuiltValueNullFieldError.checkNotNull(
+        artifact3Slot, r'CharacterSchema', 'artifact3Slot');
+    BuiltValueNullFieldError.checkNotNull(
+        utility1Slot, r'CharacterSchema', 'utility1Slot');
+    BuiltValueNullFieldError.checkNotNull(
+        utility1SlotQuantity, r'CharacterSchema', 'utility1SlotQuantity');
+    BuiltValueNullFieldError.checkNotNull(
+        utility2Slot, r'CharacterSchema', 'utility2Slot');
+    BuiltValueNullFieldError.checkNotNull(
+        utility2SlotQuantity, r'CharacterSchema', 'utility2SlotQuantity');
+    BuiltValueNullFieldError.checkNotNull(
+        bagSlot, r'CharacterSchema', 'bagSlot');
+    BuiltValueNullFieldError.checkNotNull(task, r'CharacterSchema', 'task');
+    BuiltValueNullFieldError.checkNotNull(
+        taskType, r'CharacterSchema', 'taskType');
+    BuiltValueNullFieldError.checkNotNull(
+        taskProgress, r'CharacterSchema', 'taskProgress');
+    BuiltValueNullFieldError.checkNotNull(
+        taskTotal, r'CharacterSchema', 'taskTotal');
+    BuiltValueNullFieldError.checkNotNull(
+        inventoryMaxItems, r'CharacterSchema', 'inventoryMaxItems');
+  }
+
   @override
   CharacterSchema rebuild(void Function(CharacterSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  CharacterSchemaBuilder toBuilder() => CharacterSchemaBuilder()..replace(this);
+  CharacterSchemaBuilder toBuilder() =>
+      new CharacterSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -853,7 +993,7 @@ class CharacterSchemaBuilder
 
   ListBuilder<InventorySlot>? _inventory;
   ListBuilder<InventorySlot> get inventory =>
-      _$this._inventory ??= ListBuilder<InventorySlot>();
+      _$this._inventory ??= new ListBuilder<InventorySlot>();
   set inventory(ListBuilder<InventorySlot>? inventory) =>
       _$this._inventory = inventory;
 
@@ -950,6 +1090,7 @@ class CharacterSchemaBuilder
 
   @override
   void replace(CharacterSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CharacterSchema;
   }
 
@@ -965,179 +1106,102 @@ class CharacterSchemaBuilder
     _$CharacterSchema _$result;
     try {
       _$result = _$v ??
-          _$CharacterSchema._(
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'CharacterSchema', 'name'),
-            account: BuiltValueNullFieldError.checkNotNull(
-                account, r'CharacterSchema', 'account'),
-            skin: BuiltValueNullFieldError.checkNotNull(
-                skin, r'CharacterSchema', 'skin'),
-            level: BuiltValueNullFieldError.checkNotNull(
-                level, r'CharacterSchema', 'level'),
-            xp: BuiltValueNullFieldError.checkNotNull(
-                xp, r'CharacterSchema', 'xp'),
-            maxXp: BuiltValueNullFieldError.checkNotNull(
-                maxXp, r'CharacterSchema', 'maxXp'),
-            gold: BuiltValueNullFieldError.checkNotNull(
-                gold, r'CharacterSchema', 'gold'),
-            speed: BuiltValueNullFieldError.checkNotNull(
-                speed, r'CharacterSchema', 'speed'),
-            miningLevel: BuiltValueNullFieldError.checkNotNull(
-                miningLevel, r'CharacterSchema', 'miningLevel'),
-            miningXp: BuiltValueNullFieldError.checkNotNull(
-                miningXp, r'CharacterSchema', 'miningXp'),
-            miningMaxXp: BuiltValueNullFieldError.checkNotNull(
-                miningMaxXp, r'CharacterSchema', 'miningMaxXp'),
-            woodcuttingLevel: BuiltValueNullFieldError.checkNotNull(
-                woodcuttingLevel, r'CharacterSchema', 'woodcuttingLevel'),
-            woodcuttingXp: BuiltValueNullFieldError.checkNotNull(
-                woodcuttingXp, r'CharacterSchema', 'woodcuttingXp'),
-            woodcuttingMaxXp: BuiltValueNullFieldError.checkNotNull(
-                woodcuttingMaxXp, r'CharacterSchema', 'woodcuttingMaxXp'),
-            fishingLevel: BuiltValueNullFieldError.checkNotNull(
-                fishingLevel, r'CharacterSchema', 'fishingLevel'),
-            fishingXp: BuiltValueNullFieldError.checkNotNull(
-                fishingXp, r'CharacterSchema', 'fishingXp'),
-            fishingMaxXp: BuiltValueNullFieldError.checkNotNull(
-                fishingMaxXp, r'CharacterSchema', 'fishingMaxXp'),
-            weaponcraftingLevel: BuiltValueNullFieldError.checkNotNull(
-                weaponcraftingLevel, r'CharacterSchema', 'weaponcraftingLevel'),
-            weaponcraftingXp: BuiltValueNullFieldError.checkNotNull(
-                weaponcraftingXp, r'CharacterSchema', 'weaponcraftingXp'),
-            weaponcraftingMaxXp: BuiltValueNullFieldError.checkNotNull(
-                weaponcraftingMaxXp, r'CharacterSchema', 'weaponcraftingMaxXp'),
-            gearcraftingLevel: BuiltValueNullFieldError.checkNotNull(
-                gearcraftingLevel, r'CharacterSchema', 'gearcraftingLevel'),
-            gearcraftingXp: BuiltValueNullFieldError.checkNotNull(
-                gearcraftingXp, r'CharacterSchema', 'gearcraftingXp'),
-            gearcraftingMaxXp: BuiltValueNullFieldError.checkNotNull(
-                gearcraftingMaxXp, r'CharacterSchema', 'gearcraftingMaxXp'),
-            jewelrycraftingLevel: BuiltValueNullFieldError.checkNotNull(
-                jewelrycraftingLevel,
-                r'CharacterSchema',
-                'jewelrycraftingLevel'),
-            jewelrycraftingXp: BuiltValueNullFieldError.checkNotNull(
-                jewelrycraftingXp, r'CharacterSchema', 'jewelrycraftingXp'),
-            jewelrycraftingMaxXp: BuiltValueNullFieldError.checkNotNull(
-                jewelrycraftingMaxXp,
-                r'CharacterSchema',
-                'jewelrycraftingMaxXp'),
-            cookingLevel: BuiltValueNullFieldError.checkNotNull(
-                cookingLevel, r'CharacterSchema', 'cookingLevel'),
-            cookingXp: BuiltValueNullFieldError.checkNotNull(
-                cookingXp, r'CharacterSchema', 'cookingXp'),
-            cookingMaxXp: BuiltValueNullFieldError.checkNotNull(
-                cookingMaxXp, r'CharacterSchema', 'cookingMaxXp'),
-            alchemyLevel: BuiltValueNullFieldError.checkNotNull(
-                alchemyLevel, r'CharacterSchema', 'alchemyLevel'),
-            alchemyXp: BuiltValueNullFieldError.checkNotNull(
-                alchemyXp, r'CharacterSchema', 'alchemyXp'),
-            alchemyMaxXp: BuiltValueNullFieldError.checkNotNull(
-                alchemyMaxXp, r'CharacterSchema', 'alchemyMaxXp'),
-            hp: BuiltValueNullFieldError.checkNotNull(
-                hp, r'CharacterSchema', 'hp'),
-            maxHp: BuiltValueNullFieldError.checkNotNull(
-                maxHp, r'CharacterSchema', 'maxHp'),
-            haste: BuiltValueNullFieldError.checkNotNull(
-                haste, r'CharacterSchema', 'haste'),
-            criticalStrike: BuiltValueNullFieldError.checkNotNull(
-                criticalStrike, r'CharacterSchema', 'criticalStrike'),
-            wisdom: BuiltValueNullFieldError.checkNotNull(
-                wisdom, r'CharacterSchema', 'wisdom'),
-            prospecting: BuiltValueNullFieldError.checkNotNull(
-                prospecting, r'CharacterSchema', 'prospecting'),
-            attackFire: BuiltValueNullFieldError.checkNotNull(
-                attackFire, r'CharacterSchema', 'attackFire'),
-            attackEarth: BuiltValueNullFieldError.checkNotNull(
-                attackEarth, r'CharacterSchema', 'attackEarth'),
-            attackWater: BuiltValueNullFieldError.checkNotNull(
-                attackWater, r'CharacterSchema', 'attackWater'),
-            attackAir: BuiltValueNullFieldError.checkNotNull(
-                attackAir, r'CharacterSchema', 'attackAir'),
-            dmg: BuiltValueNullFieldError.checkNotNull(
-                dmg, r'CharacterSchema', 'dmg'),
-            dmgFire: BuiltValueNullFieldError.checkNotNull(
-                dmgFire, r'CharacterSchema', 'dmgFire'),
-            dmgEarth: BuiltValueNullFieldError.checkNotNull(
-                dmgEarth, r'CharacterSchema', 'dmgEarth'),
-            dmgWater: BuiltValueNullFieldError.checkNotNull(
-                dmgWater, r'CharacterSchema', 'dmgWater'),
-            dmgAir: BuiltValueNullFieldError.checkNotNull(
-                dmgAir, r'CharacterSchema', 'dmgAir'),
-            resFire: BuiltValueNullFieldError.checkNotNull(
-                resFire, r'CharacterSchema', 'resFire'),
-            resEarth: BuiltValueNullFieldError.checkNotNull(
-                resEarth, r'CharacterSchema', 'resEarth'),
-            resWater: BuiltValueNullFieldError.checkNotNull(
-                resWater, r'CharacterSchema', 'resWater'),
-            resAir: BuiltValueNullFieldError.checkNotNull(
-                resAir, r'CharacterSchema', 'resAir'),
-            x: BuiltValueNullFieldError.checkNotNull(
-                x, r'CharacterSchema', 'x'),
-            y: BuiltValueNullFieldError.checkNotNull(
-                y, r'CharacterSchema', 'y'),
-            cooldown: BuiltValueNullFieldError.checkNotNull(
-                cooldown, r'CharacterSchema', 'cooldown'),
-            weaponSlot: BuiltValueNullFieldError.checkNotNull(
-                weaponSlot, r'CharacterSchema', 'weaponSlot'),
-            runeSlot: BuiltValueNullFieldError.checkNotNull(
-                runeSlot, r'CharacterSchema', 'runeSlot'),
-            shieldSlot: BuiltValueNullFieldError.checkNotNull(
-                shieldSlot, r'CharacterSchema', 'shieldSlot'),
-            helmetSlot: BuiltValueNullFieldError.checkNotNull(
-                helmetSlot, r'CharacterSchema', 'helmetSlot'),
-            bodyArmorSlot: BuiltValueNullFieldError.checkNotNull(
-                bodyArmorSlot, r'CharacterSchema', 'bodyArmorSlot'),
-            legArmorSlot: BuiltValueNullFieldError.checkNotNull(
-                legArmorSlot, r'CharacterSchema', 'legArmorSlot'),
-            bootsSlot: BuiltValueNullFieldError.checkNotNull(
-                bootsSlot, r'CharacterSchema', 'bootsSlot'),
-            ring1Slot: BuiltValueNullFieldError.checkNotNull(
-                ring1Slot, r'CharacterSchema', 'ring1Slot'),
-            ring2Slot: BuiltValueNullFieldError.checkNotNull(
-                ring2Slot, r'CharacterSchema', 'ring2Slot'),
-            amuletSlot: BuiltValueNullFieldError.checkNotNull(
-                amuletSlot, r'CharacterSchema', 'amuletSlot'),
-            artifact1Slot: BuiltValueNullFieldError.checkNotNull(
-                artifact1Slot, r'CharacterSchema', 'artifact1Slot'),
-            artifact2Slot: BuiltValueNullFieldError.checkNotNull(
-                artifact2Slot, r'CharacterSchema', 'artifact2Slot'),
-            artifact3Slot: BuiltValueNullFieldError.checkNotNull(
-                artifact3Slot, r'CharacterSchema', 'artifact3Slot'),
-            utility1Slot: BuiltValueNullFieldError.checkNotNull(
-                utility1Slot, r'CharacterSchema', 'utility1Slot'),
-            utility1SlotQuantity: BuiltValueNullFieldError.checkNotNull(
-                utility1SlotQuantity,
-                r'CharacterSchema',
-                'utility1SlotQuantity'),
-            utility2Slot: BuiltValueNullFieldError.checkNotNull(
-                utility2Slot, r'CharacterSchema', 'utility2Slot'),
-            utility2SlotQuantity: BuiltValueNullFieldError.checkNotNull(
-                utility2SlotQuantity,
-                r'CharacterSchema',
-                'utility2SlotQuantity'),
-            bagSlot: BuiltValueNullFieldError.checkNotNull(
-                bagSlot, r'CharacterSchema', 'bagSlot'),
-            task: BuiltValueNullFieldError.checkNotNull(
-                task, r'CharacterSchema', 'task'),
-            taskType: BuiltValueNullFieldError.checkNotNull(
-                taskType, r'CharacterSchema', 'taskType'),
-            taskProgress: BuiltValueNullFieldError.checkNotNull(
-                taskProgress, r'CharacterSchema', 'taskProgress'),
-            taskTotal: BuiltValueNullFieldError.checkNotNull(
-                taskTotal, r'CharacterSchema', 'taskTotal'),
-            inventoryMaxItems: BuiltValueNullFieldError.checkNotNull(
-                inventoryMaxItems, r'CharacterSchema', 'inventoryMaxItems'),
-            cooldownExpiration: cooldownExpiration,
-            inventory: _inventory?.build(),
-          );
+          new _$CharacterSchema._(
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'CharacterSchema', 'name'),
+              account: BuiltValueNullFieldError.checkNotNull(
+                  account, r'CharacterSchema', 'account'),
+              skin: BuiltValueNullFieldError.checkNotNull(
+                  skin, r'CharacterSchema', 'skin'),
+              level: BuiltValueNullFieldError.checkNotNull(
+                  level, r'CharacterSchema', 'level'),
+              xp: BuiltValueNullFieldError.checkNotNull(
+                  xp, r'CharacterSchema', 'xp'),
+              maxXp: BuiltValueNullFieldError.checkNotNull(
+                  maxXp, r'CharacterSchema', 'maxXp'),
+              gold: BuiltValueNullFieldError.checkNotNull(
+                  gold, r'CharacterSchema', 'gold'),
+              speed: BuiltValueNullFieldError.checkNotNull(
+                  speed, r'CharacterSchema', 'speed'),
+              miningLevel: BuiltValueNullFieldError.checkNotNull(
+                  miningLevel, r'CharacterSchema', 'miningLevel'),
+              miningXp: BuiltValueNullFieldError.checkNotNull(miningXp, r'CharacterSchema', 'miningXp'),
+              miningMaxXp: BuiltValueNullFieldError.checkNotNull(miningMaxXp, r'CharacterSchema', 'miningMaxXp'),
+              woodcuttingLevel: BuiltValueNullFieldError.checkNotNull(woodcuttingLevel, r'CharacterSchema', 'woodcuttingLevel'),
+              woodcuttingXp: BuiltValueNullFieldError.checkNotNull(woodcuttingXp, r'CharacterSchema', 'woodcuttingXp'),
+              woodcuttingMaxXp: BuiltValueNullFieldError.checkNotNull(woodcuttingMaxXp, r'CharacterSchema', 'woodcuttingMaxXp'),
+              fishingLevel: BuiltValueNullFieldError.checkNotNull(fishingLevel, r'CharacterSchema', 'fishingLevel'),
+              fishingXp: BuiltValueNullFieldError.checkNotNull(fishingXp, r'CharacterSchema', 'fishingXp'),
+              fishingMaxXp: BuiltValueNullFieldError.checkNotNull(fishingMaxXp, r'CharacterSchema', 'fishingMaxXp'),
+              weaponcraftingLevel: BuiltValueNullFieldError.checkNotNull(weaponcraftingLevel, r'CharacterSchema', 'weaponcraftingLevel'),
+              weaponcraftingXp: BuiltValueNullFieldError.checkNotNull(weaponcraftingXp, r'CharacterSchema', 'weaponcraftingXp'),
+              weaponcraftingMaxXp: BuiltValueNullFieldError.checkNotNull(weaponcraftingMaxXp, r'CharacterSchema', 'weaponcraftingMaxXp'),
+              gearcraftingLevel: BuiltValueNullFieldError.checkNotNull(gearcraftingLevel, r'CharacterSchema', 'gearcraftingLevel'),
+              gearcraftingXp: BuiltValueNullFieldError.checkNotNull(gearcraftingXp, r'CharacterSchema', 'gearcraftingXp'),
+              gearcraftingMaxXp: BuiltValueNullFieldError.checkNotNull(gearcraftingMaxXp, r'CharacterSchema', 'gearcraftingMaxXp'),
+              jewelrycraftingLevel: BuiltValueNullFieldError.checkNotNull(jewelrycraftingLevel, r'CharacterSchema', 'jewelrycraftingLevel'),
+              jewelrycraftingXp: BuiltValueNullFieldError.checkNotNull(jewelrycraftingXp, r'CharacterSchema', 'jewelrycraftingXp'),
+              jewelrycraftingMaxXp: BuiltValueNullFieldError.checkNotNull(jewelrycraftingMaxXp, r'CharacterSchema', 'jewelrycraftingMaxXp'),
+              cookingLevel: BuiltValueNullFieldError.checkNotNull(cookingLevel, r'CharacterSchema', 'cookingLevel'),
+              cookingXp: BuiltValueNullFieldError.checkNotNull(cookingXp, r'CharacterSchema', 'cookingXp'),
+              cookingMaxXp: BuiltValueNullFieldError.checkNotNull(cookingMaxXp, r'CharacterSchema', 'cookingMaxXp'),
+              alchemyLevel: BuiltValueNullFieldError.checkNotNull(alchemyLevel, r'CharacterSchema', 'alchemyLevel'),
+              alchemyXp: BuiltValueNullFieldError.checkNotNull(alchemyXp, r'CharacterSchema', 'alchemyXp'),
+              alchemyMaxXp: BuiltValueNullFieldError.checkNotNull(alchemyMaxXp, r'CharacterSchema', 'alchemyMaxXp'),
+              hp: BuiltValueNullFieldError.checkNotNull(hp, r'CharacterSchema', 'hp'),
+              maxHp: BuiltValueNullFieldError.checkNotNull(maxHp, r'CharacterSchema', 'maxHp'),
+              haste: BuiltValueNullFieldError.checkNotNull(haste, r'CharacterSchema', 'haste'),
+              criticalStrike: BuiltValueNullFieldError.checkNotNull(criticalStrike, r'CharacterSchema', 'criticalStrike'),
+              wisdom: BuiltValueNullFieldError.checkNotNull(wisdom, r'CharacterSchema', 'wisdom'),
+              prospecting: BuiltValueNullFieldError.checkNotNull(prospecting, r'CharacterSchema', 'prospecting'),
+              attackFire: BuiltValueNullFieldError.checkNotNull(attackFire, r'CharacterSchema', 'attackFire'),
+              attackEarth: BuiltValueNullFieldError.checkNotNull(attackEarth, r'CharacterSchema', 'attackEarth'),
+              attackWater: BuiltValueNullFieldError.checkNotNull(attackWater, r'CharacterSchema', 'attackWater'),
+              attackAir: BuiltValueNullFieldError.checkNotNull(attackAir, r'CharacterSchema', 'attackAir'),
+              dmg: BuiltValueNullFieldError.checkNotNull(dmg, r'CharacterSchema', 'dmg'),
+              dmgFire: BuiltValueNullFieldError.checkNotNull(dmgFire, r'CharacterSchema', 'dmgFire'),
+              dmgEarth: BuiltValueNullFieldError.checkNotNull(dmgEarth, r'CharacterSchema', 'dmgEarth'),
+              dmgWater: BuiltValueNullFieldError.checkNotNull(dmgWater, r'CharacterSchema', 'dmgWater'),
+              dmgAir: BuiltValueNullFieldError.checkNotNull(dmgAir, r'CharacterSchema', 'dmgAir'),
+              resFire: BuiltValueNullFieldError.checkNotNull(resFire, r'CharacterSchema', 'resFire'),
+              resEarth: BuiltValueNullFieldError.checkNotNull(resEarth, r'CharacterSchema', 'resEarth'),
+              resWater: BuiltValueNullFieldError.checkNotNull(resWater, r'CharacterSchema', 'resWater'),
+              resAir: BuiltValueNullFieldError.checkNotNull(resAir, r'CharacterSchema', 'resAir'),
+              x: BuiltValueNullFieldError.checkNotNull(x, r'CharacterSchema', 'x'),
+              y: BuiltValueNullFieldError.checkNotNull(y, r'CharacterSchema', 'y'),
+              cooldown: BuiltValueNullFieldError.checkNotNull(cooldown, r'CharacterSchema', 'cooldown'),
+              weaponSlot: BuiltValueNullFieldError.checkNotNull(weaponSlot, r'CharacterSchema', 'weaponSlot'),
+              runeSlot: BuiltValueNullFieldError.checkNotNull(runeSlot, r'CharacterSchema', 'runeSlot'),
+              shieldSlot: BuiltValueNullFieldError.checkNotNull(shieldSlot, r'CharacterSchema', 'shieldSlot'),
+              helmetSlot: BuiltValueNullFieldError.checkNotNull(helmetSlot, r'CharacterSchema', 'helmetSlot'),
+              bodyArmorSlot: BuiltValueNullFieldError.checkNotNull(bodyArmorSlot, r'CharacterSchema', 'bodyArmorSlot'),
+              legArmorSlot: BuiltValueNullFieldError.checkNotNull(legArmorSlot, r'CharacterSchema', 'legArmorSlot'),
+              bootsSlot: BuiltValueNullFieldError.checkNotNull(bootsSlot, r'CharacterSchema', 'bootsSlot'),
+              ring1Slot: BuiltValueNullFieldError.checkNotNull(ring1Slot, r'CharacterSchema', 'ring1Slot'),
+              ring2Slot: BuiltValueNullFieldError.checkNotNull(ring2Slot, r'CharacterSchema', 'ring2Slot'),
+              amuletSlot: BuiltValueNullFieldError.checkNotNull(amuletSlot, r'CharacterSchema', 'amuletSlot'),
+              artifact1Slot: BuiltValueNullFieldError.checkNotNull(artifact1Slot, r'CharacterSchema', 'artifact1Slot'),
+              artifact2Slot: BuiltValueNullFieldError.checkNotNull(artifact2Slot, r'CharacterSchema', 'artifact2Slot'),
+              artifact3Slot: BuiltValueNullFieldError.checkNotNull(artifact3Slot, r'CharacterSchema', 'artifact3Slot'),
+              utility1Slot: BuiltValueNullFieldError.checkNotNull(utility1Slot, r'CharacterSchema', 'utility1Slot'),
+              utility1SlotQuantity: BuiltValueNullFieldError.checkNotNull(utility1SlotQuantity, r'CharacterSchema', 'utility1SlotQuantity'),
+              utility2Slot: BuiltValueNullFieldError.checkNotNull(utility2Slot, r'CharacterSchema', 'utility2Slot'),
+              utility2SlotQuantity: BuiltValueNullFieldError.checkNotNull(utility2SlotQuantity, r'CharacterSchema', 'utility2SlotQuantity'),
+              bagSlot: BuiltValueNullFieldError.checkNotNull(bagSlot, r'CharacterSchema', 'bagSlot'),
+              task: BuiltValueNullFieldError.checkNotNull(task, r'CharacterSchema', 'task'),
+              taskType: BuiltValueNullFieldError.checkNotNull(taskType, r'CharacterSchema', 'taskType'),
+              taskProgress: BuiltValueNullFieldError.checkNotNull(taskProgress, r'CharacterSchema', 'taskProgress'),
+              taskTotal: BuiltValueNullFieldError.checkNotNull(taskTotal, r'CharacterSchema', 'taskTotal'),
+              inventoryMaxItems: BuiltValueNullFieldError.checkNotNull(inventoryMaxItems, r'CharacterSchema', 'inventoryMaxItems'),
+              cooldownExpiration: cooldownExpiration,
+              inventory: _inventory?.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'inventory';
         _inventory?.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'CharacterSchema', _$failedField, e.toString());
       }
       rethrow;

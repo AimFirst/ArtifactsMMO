@@ -88,11 +88,12 @@ ActionType _$valueOf(String name) {
     case 'rename':
       return _$rename;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
-final BuiltSet<ActionType> _$values = BuiltSet<ActionType>(const <ActionType>[
+final BuiltSet<ActionType> _$values =
+    new BuiltSet<ActionType>(const <ActionType>[
   _$movement,
   _$fight,
   _$crafting,
@@ -158,7 +159,7 @@ abstract class _$ActionTypeMixin {
   _$ActionTypeMeta get ActionType => const _$ActionTypeMeta();
 }
 
-Serializer<ActionType> _$actionTypeSerializer = _$ActionTypeSerializer();
+Serializer<ActionType> _$actionTypeSerializer = new _$ActionTypeSerializer();
 
 class _$ActionTypeSerializer implements PrimitiveSerializer<ActionType> {
   static const Map<String, Object> _toWire = const <String, Object>{

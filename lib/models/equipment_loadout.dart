@@ -1,26 +1,31 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/extensions/item_type_extension.dart';
+import 'package:artifacts_mmo/models/item_schema_mapper.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+
+part 'equipment_loadout.mapper.dart';
 
 // note to self: HP starts at 120 and increased by 5 for every combat level
-class EquipmentLoadout {
+@MappableClass(includeCustomMappers: [ItemSchemaMapper()])
+class EquipmentLoadout with EquipmentLoadoutMappable {
   final ItemSchema? weapon;
-  final ItemSchema? helmet;
+     final  ItemSchema? helmet;
   final ItemSchema? shield;
-  final ItemSchema? bodyArmor;
+    final  ItemSchema? bodyArmor;
   final ItemSchema? legArmor;
-  final ItemSchema? boots;
+     final ItemSchema? boots;
   final ItemSchema? amulet;
-  final ItemSchema? ring1;
+   final    ItemSchema? ring1;
   final ItemSchema? ring2;
-  final ItemSchema? utility1;
+   final   ItemSchema? utility1;
   final ItemSchema? utility2;
-  final ItemSchema? artifact1;
+   final   ItemSchema? artifact1;
   final ItemSchema? artifact2;
-  final ItemSchema? artifact3;
+   final   ItemSchema? artifact3;
   final ItemSchema? rune;
-  final ItemSchema? bag;
+   final   ItemSchema? bag;
 
   EquipmentLoadout({
     this.weapon,

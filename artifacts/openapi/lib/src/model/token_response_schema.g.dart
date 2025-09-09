@@ -12,9 +12,13 @@ class _$TokenResponseSchema extends TokenResponseSchema {
 
   factory _$TokenResponseSchema(
           [void Function(TokenResponseSchemaBuilder)? updates]) =>
-      (TokenResponseSchemaBuilder()..update(updates))._build();
+      (new TokenResponseSchemaBuilder()..update(updates))._build();
 
-  _$TokenResponseSchema._({required this.token}) : super._();
+  _$TokenResponseSchema._({required this.token}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        token, r'TokenResponseSchema', 'token');
+  }
+
   @override
   TokenResponseSchema rebuild(
           void Function(TokenResponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$TokenResponseSchema extends TokenResponseSchema {
 
   @override
   TokenResponseSchemaBuilder toBuilder() =>
-      TokenResponseSchemaBuilder()..replace(this);
+      new TokenResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -69,6 +73,7 @@ class TokenResponseSchemaBuilder
 
   @override
   void replace(TokenResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$TokenResponseSchema;
   }
 
@@ -82,10 +87,9 @@ class TokenResponseSchemaBuilder
 
   _$TokenResponseSchema _build() {
     final _$result = _$v ??
-        _$TokenResponseSchema._(
-          token: BuiltValueNullFieldError.checkNotNull(
-              token, r'TokenResponseSchema', 'token'),
-        );
+        new _$TokenResponseSchema._(
+            token: BuiltValueNullFieldError.checkNotNull(
+                token, r'TokenResponseSchema', 'token'));
     replace(_$result);
     return _$result;
   }

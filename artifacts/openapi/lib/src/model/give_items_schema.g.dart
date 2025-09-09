@@ -13,16 +13,22 @@ class _$GiveItemsSchema extends GiveItemsSchema {
   final String character;
 
   factory _$GiveItemsSchema([void Function(GiveItemsSchemaBuilder)? updates]) =>
-      (GiveItemsSchemaBuilder()..update(updates))._build();
+      (new GiveItemsSchemaBuilder()..update(updates))._build();
 
   _$GiveItemsSchema._({required this.items, required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(items, r'GiveItemsSchema', 'items');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'GiveItemsSchema', 'character');
+  }
+
   @override
   GiveItemsSchema rebuild(void Function(GiveItemsSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  GiveItemsSchemaBuilder toBuilder() => GiveItemsSchemaBuilder()..replace(this);
+  GiveItemsSchemaBuilder toBuilder() =>
+      new GiveItemsSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -56,7 +62,7 @@ class GiveItemsSchemaBuilder
 
   ListBuilder<SimpleItemSchema>? _items;
   ListBuilder<SimpleItemSchema> get items =>
-      _$this._items ??= ListBuilder<SimpleItemSchema>();
+      _$this._items ??= new ListBuilder<SimpleItemSchema>();
   set items(ListBuilder<SimpleItemSchema>? items) => _$this._items = items;
 
   String? _character;
@@ -79,6 +85,7 @@ class GiveItemsSchemaBuilder
 
   @override
   void replace(GiveItemsSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GiveItemsSchema;
   }
 
@@ -94,18 +101,17 @@ class GiveItemsSchemaBuilder
     _$GiveItemsSchema _$result;
     try {
       _$result = _$v ??
-          _$GiveItemsSchema._(
-            items: items.build(),
-            character: BuiltValueNullFieldError.checkNotNull(
-                character, r'GiveItemsSchema', 'character'),
-          );
+          new _$GiveItemsSchema._(
+              items: items.build(),
+              character: BuiltValueNullFieldError.checkNotNull(
+                  character, r'GiveItemsSchema', 'character'));
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'items';
         items.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'GiveItemsSchema', _$failedField, e.toString());
       }
       rethrow;

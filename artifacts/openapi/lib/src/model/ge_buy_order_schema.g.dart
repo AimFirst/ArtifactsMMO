@@ -14,16 +14,21 @@ class _$GEBuyOrderSchema extends GEBuyOrderSchema {
 
   factory _$GEBuyOrderSchema(
           [void Function(GEBuyOrderSchemaBuilder)? updates]) =>
-      (GEBuyOrderSchemaBuilder()..update(updates))._build();
+      (new GEBuyOrderSchemaBuilder()..update(updates))._build();
 
-  _$GEBuyOrderSchema._({required this.id, required this.quantity}) : super._();
+  _$GEBuyOrderSchema._({required this.id, required this.quantity}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(id, r'GEBuyOrderSchema', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        quantity, r'GEBuyOrderSchema', 'quantity');
+  }
+
   @override
   GEBuyOrderSchema rebuild(void Function(GEBuyOrderSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   GEBuyOrderSchemaBuilder toBuilder() =>
-      GEBuyOrderSchemaBuilder()..replace(this);
+      new GEBuyOrderSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -79,6 +84,7 @@ class GEBuyOrderSchemaBuilder
 
   @override
   void replace(GEBuyOrderSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GEBuyOrderSchema;
   }
 
@@ -92,12 +98,11 @@ class GEBuyOrderSchemaBuilder
 
   _$GEBuyOrderSchema _build() {
     final _$result = _$v ??
-        _$GEBuyOrderSchema._(
-          id: BuiltValueNullFieldError.checkNotNull(
-              id, r'GEBuyOrderSchema', 'id'),
-          quantity: BuiltValueNullFieldError.checkNotNull(
-              quantity, r'GEBuyOrderSchema', 'quantity'),
-        );
+        new _$GEBuyOrderSchema._(
+            id: BuiltValueNullFieldError.checkNotNull(
+                id, r'GEBuyOrderSchema', 'id'),
+            quantity: BuiltValueNullFieldError.checkNotNull(
+                quantity, r'GEBuyOrderSchema', 'quantity'));
     replace(_$result);
     return _$result;
   }

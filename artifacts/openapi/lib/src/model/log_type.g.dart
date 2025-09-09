@@ -112,11 +112,11 @@ LogType _$valueOf(String name) {
     case 'rename':
       return _$rename;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
-final BuiltSet<LogType> _$values = BuiltSet<LogType>(const <LogType>[
+final BuiltSet<LogType> _$values = new BuiltSet<LogType>(const <LogType>[
   _$spawn,
   _$movement,
   _$fight,
@@ -198,7 +198,7 @@ abstract class _$LogTypeMixin {
   _$LogTypeMeta get LogType => const _$LogTypeMeta();
 }
 
-Serializer<LogType> _$logTypeSerializer = _$LogTypeSerializer();
+Serializer<LogType> _$logTypeSerializer = new _$LogTypeSerializer();
 
 class _$LogTypeSerializer implements PrimitiveSerializer<LogType> {
   static const Map<String, Object> _toWire = const <String, Object>{

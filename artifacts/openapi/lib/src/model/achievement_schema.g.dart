@@ -26,7 +26,7 @@ class _$AchievementSchema extends AchievementSchema {
 
   factory _$AchievementSchema(
           [void Function(AchievementSchemaBuilder)? updates]) =>
-      (AchievementSchemaBuilder()..update(updates))._build();
+      (new AchievementSchemaBuilder()..update(updates))._build();
 
   _$AchievementSchema._(
       {required this.name,
@@ -37,14 +37,26 @@ class _$AchievementSchema extends AchievementSchema {
       this.target,
       required this.total,
       required this.rewards})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(name, r'AchievementSchema', 'name');
+    BuiltValueNullFieldError.checkNotNull(code, r'AchievementSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        description, r'AchievementSchema', 'description');
+    BuiltValueNullFieldError.checkNotNull(
+        points, r'AchievementSchema', 'points');
+    BuiltValueNullFieldError.checkNotNull(type, r'AchievementSchema', 'type');
+    BuiltValueNullFieldError.checkNotNull(total, r'AchievementSchema', 'total');
+    BuiltValueNullFieldError.checkNotNull(
+        rewards, r'AchievementSchema', 'rewards');
+  }
+
   @override
   AchievementSchema rebuild(void Function(AchievementSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
   AchievementSchemaBuilder toBuilder() =>
-      AchievementSchemaBuilder()..replace(this);
+      new AchievementSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -124,7 +136,7 @@ class AchievementSchemaBuilder
 
   AchievementRewardsSchemaBuilder? _rewards;
   AchievementRewardsSchemaBuilder get rewards =>
-      _$this._rewards ??= AchievementRewardsSchemaBuilder();
+      _$this._rewards ??= new AchievementRewardsSchemaBuilder();
   set rewards(AchievementRewardsSchemaBuilder? rewards) =>
       _$this._rewards = rewards;
 
@@ -150,6 +162,7 @@ class AchievementSchemaBuilder
 
   @override
   void replace(AchievementSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AchievementSchema;
   }
 
@@ -165,29 +178,28 @@ class AchievementSchemaBuilder
     _$AchievementSchema _$result;
     try {
       _$result = _$v ??
-          _$AchievementSchema._(
-            name: BuiltValueNullFieldError.checkNotNull(
-                name, r'AchievementSchema', 'name'),
-            code: BuiltValueNullFieldError.checkNotNull(
-                code, r'AchievementSchema', 'code'),
-            description: BuiltValueNullFieldError.checkNotNull(
-                description, r'AchievementSchema', 'description'),
-            points: BuiltValueNullFieldError.checkNotNull(
-                points, r'AchievementSchema', 'points'),
-            type: BuiltValueNullFieldError.checkNotNull(
-                type, r'AchievementSchema', 'type'),
-            target: target,
-            total: BuiltValueNullFieldError.checkNotNull(
-                total, r'AchievementSchema', 'total'),
-            rewards: rewards.build(),
-          );
+          new _$AchievementSchema._(
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'AchievementSchema', 'name'),
+              code: BuiltValueNullFieldError.checkNotNull(
+                  code, r'AchievementSchema', 'code'),
+              description: BuiltValueNullFieldError.checkNotNull(
+                  description, r'AchievementSchema', 'description'),
+              points: BuiltValueNullFieldError.checkNotNull(
+                  points, r'AchievementSchema', 'points'),
+              type: BuiltValueNullFieldError.checkNotNull(
+                  type, r'AchievementSchema', 'type'),
+              target: target,
+              total: BuiltValueNullFieldError.checkNotNull(
+                  total, r'AchievementSchema', 'total'),
+              rewards: rewards.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'rewards';
         rewards.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'AchievementSchema', _$failedField, e.toString());
       }
       rethrow;

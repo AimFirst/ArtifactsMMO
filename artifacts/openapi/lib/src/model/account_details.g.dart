@@ -25,7 +25,7 @@ class _$AccountDetails extends AccountDetails {
   final String? banReason;
 
   factory _$AccountDetails([void Function(AccountDetailsBuilder)? updates]) =>
-      (AccountDetailsBuilder()..update(updates))._build();
+      (new AccountDetailsBuilder()..update(updates))._build();
 
   _$AccountDetails._(
       {required this.username,
@@ -36,13 +36,24 @@ class _$AccountDetails extends AccountDetails {
       required this.banned,
       this.badges,
       this.banReason})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        username, r'AccountDetails', 'username');
+    BuiltValueNullFieldError.checkNotNull(member, r'AccountDetails', 'member');
+    BuiltValueNullFieldError.checkNotNull(status, r'AccountDetails', 'status');
+    BuiltValueNullFieldError.checkNotNull(skins, r'AccountDetails', 'skins');
+    BuiltValueNullFieldError.checkNotNull(
+        achievementsPoints, r'AccountDetails', 'achievementsPoints');
+    BuiltValueNullFieldError.checkNotNull(banned, r'AccountDetails', 'banned');
+  }
+
   @override
   AccountDetails rebuild(void Function(AccountDetailsBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  AccountDetailsBuilder toBuilder() => AccountDetailsBuilder()..replace(this);
+  AccountDetailsBuilder toBuilder() =>
+      new AccountDetailsBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -106,7 +117,7 @@ class AccountDetailsBuilder
 
   ListBuilder<JsonObject?>? _skins;
   ListBuilder<JsonObject?> get skins =>
-      _$this._skins ??= ListBuilder<JsonObject?>();
+      _$this._skins ??= new ListBuilder<JsonObject?>();
   set skins(ListBuilder<JsonObject?>? skins) => _$this._skins = skins;
 
   int? _achievementsPoints;
@@ -120,7 +131,7 @@ class AccountDetailsBuilder
 
   ListBuilder<JsonObject?>? _badges;
   ListBuilder<JsonObject?> get badges =>
-      _$this._badges ??= ListBuilder<JsonObject?>();
+      _$this._badges ??= new ListBuilder<JsonObject?>();
   set badges(ListBuilder<JsonObject?>? badges) => _$this._badges = badges;
 
   String? _banReason;
@@ -149,6 +160,7 @@ class AccountDetailsBuilder
 
   @override
   void replace(AccountDetails other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AccountDetails;
   }
 
@@ -164,21 +176,20 @@ class AccountDetailsBuilder
     _$AccountDetails _$result;
     try {
       _$result = _$v ??
-          _$AccountDetails._(
-            username: BuiltValueNullFieldError.checkNotNull(
-                username, r'AccountDetails', 'username'),
-            member: BuiltValueNullFieldError.checkNotNull(
-                member, r'AccountDetails', 'member'),
-            status: BuiltValueNullFieldError.checkNotNull(
-                status, r'AccountDetails', 'status'),
-            skins: skins.build(),
-            achievementsPoints: BuiltValueNullFieldError.checkNotNull(
-                achievementsPoints, r'AccountDetails', 'achievementsPoints'),
-            banned: BuiltValueNullFieldError.checkNotNull(
-                banned, r'AccountDetails', 'banned'),
-            badges: _badges?.build(),
-            banReason: banReason,
-          );
+          new _$AccountDetails._(
+              username: BuiltValueNullFieldError.checkNotNull(
+                  username, r'AccountDetails', 'username'),
+              member: BuiltValueNullFieldError.checkNotNull(
+                  member, r'AccountDetails', 'member'),
+              status: BuiltValueNullFieldError.checkNotNull(
+                  status, r'AccountDetails', 'status'),
+              skins: skins.build(),
+              achievementsPoints: BuiltValueNullFieldError.checkNotNull(
+                  achievementsPoints, r'AccountDetails', 'achievementsPoints'),
+              banned: BuiltValueNullFieldError.checkNotNull(
+                  banned, r'AccountDetails', 'banned'),
+              badges: _badges?.build(),
+              banReason: banReason);
     } catch (_) {
       late String _$failedField;
       try {
@@ -188,7 +199,7 @@ class AccountDetailsBuilder
         _$failedField = 'badges';
         _badges?.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'AccountDetails', _$failedField, e.toString());
       }
       rethrow;

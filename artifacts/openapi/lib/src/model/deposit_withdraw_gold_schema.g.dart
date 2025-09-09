@@ -12,9 +12,13 @@ class _$DepositWithdrawGoldSchema extends DepositWithdrawGoldSchema {
 
   factory _$DepositWithdrawGoldSchema(
           [void Function(DepositWithdrawGoldSchemaBuilder)? updates]) =>
-      (DepositWithdrawGoldSchemaBuilder()..update(updates))._build();
+      (new DepositWithdrawGoldSchemaBuilder()..update(updates))._build();
 
-  _$DepositWithdrawGoldSchema._({required this.quantity}) : super._();
+  _$DepositWithdrawGoldSchema._({required this.quantity}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        quantity, r'DepositWithdrawGoldSchema', 'quantity');
+  }
+
   @override
   DepositWithdrawGoldSchema rebuild(
           void Function(DepositWithdrawGoldSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$DepositWithdrawGoldSchema extends DepositWithdrawGoldSchema {
 
   @override
   DepositWithdrawGoldSchemaBuilder toBuilder() =>
-      DepositWithdrawGoldSchemaBuilder()..replace(this);
+      new DepositWithdrawGoldSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -70,6 +74,7 @@ class DepositWithdrawGoldSchemaBuilder
 
   @override
   void replace(DepositWithdrawGoldSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DepositWithdrawGoldSchema;
   }
 
@@ -83,10 +88,9 @@ class DepositWithdrawGoldSchemaBuilder
 
   _$DepositWithdrawGoldSchema _build() {
     final _$result = _$v ??
-        _$DepositWithdrawGoldSchema._(
-          quantity: BuiltValueNullFieldError.checkNotNull(
-              quantity, r'DepositWithdrawGoldSchema', 'quantity'),
-        );
+        new _$DepositWithdrawGoldSchema._(
+            quantity: BuiltValueNullFieldError.checkNotNull(
+                quantity, r'DepositWithdrawGoldSchema', 'quantity'));
     replace(_$result);
     return _$result;
   }

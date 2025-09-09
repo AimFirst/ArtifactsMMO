@@ -15,17 +15,24 @@ class _$ConditionSchema extends ConditionSchema {
   final int value;
 
   factory _$ConditionSchema([void Function(ConditionSchemaBuilder)? updates]) =>
-      (ConditionSchemaBuilder()..update(updates))._build();
+      (new ConditionSchemaBuilder()..update(updates))._build();
 
   _$ConditionSchema._(
       {required this.code, required this.operator_, required this.value})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'ConditionSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        operator_, r'ConditionSchema', 'operator_');
+    BuiltValueNullFieldError.checkNotNull(value, r'ConditionSchema', 'value');
+  }
+
   @override
   ConditionSchema rebuild(void Function(ConditionSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  ConditionSchemaBuilder toBuilder() => ConditionSchemaBuilder()..replace(this);
+  ConditionSchemaBuilder toBuilder() =>
+      new ConditionSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -89,6 +96,7 @@ class ConditionSchemaBuilder
 
   @override
   void replace(ConditionSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$ConditionSchema;
   }
 
@@ -102,14 +110,13 @@ class ConditionSchemaBuilder
 
   _$ConditionSchema _build() {
     final _$result = _$v ??
-        _$ConditionSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'ConditionSchema', 'code'),
-          operator_: BuiltValueNullFieldError.checkNotNull(
-              operator_, r'ConditionSchema', 'operator_'),
-          value: BuiltValueNullFieldError.checkNotNull(
-              value, r'ConditionSchema', 'value'),
-        );
+        new _$ConditionSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'ConditionSchema', 'code'),
+            operator_: BuiltValueNullFieldError.checkNotNull(
+                operator_, r'ConditionSchema', 'operator_'),
+            value: BuiltValueNullFieldError.checkNotNull(
+                value, r'ConditionSchema', 'value'));
     replace(_$result);
     return _$result;
   }

@@ -58,11 +58,11 @@ ItemSlot _$valueOf(String name) {
     case 'rune':
       return _$rune;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
-final BuiltSet<ItemSlot> _$values = BuiltSet<ItemSlot>(const <ItemSlot>[
+final BuiltSet<ItemSlot> _$values = new BuiltSet<ItemSlot>(const <ItemSlot>[
   _$weapon,
   _$shield,
   _$helmet,
@@ -108,7 +108,7 @@ abstract class _$ItemSlotMixin {
   _$ItemSlotMeta get ItemSlot => const _$ItemSlotMeta();
 }
 
-Serializer<ItemSlot> _$itemSlotSerializer = _$ItemSlotSerializer();
+Serializer<ItemSlot> _$itemSlotSerializer = new _$ItemSlotSerializer();
 
 class _$ItemSlotSerializer implements PrimitiveSerializer<ItemSlot> {
   static const Map<String, Object> _toWire = const <String, Object>{

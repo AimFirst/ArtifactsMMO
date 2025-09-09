@@ -18,14 +18,24 @@ class _$GiveGoldDataSchema extends GiveGoldDataSchema {
 
   factory _$GiveGoldDataSchema(
           [void Function(GiveGoldDataSchemaBuilder)? updates]) =>
-      (GiveGoldDataSchemaBuilder()..update(updates))._build();
+      (new GiveGoldDataSchemaBuilder()..update(updates))._build();
 
   _$GiveGoldDataSchema._(
       {required this.cooldown,
       required this.quantity,
       required this.receiverCharacter,
       required this.character})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        cooldown, r'GiveGoldDataSchema', 'cooldown');
+    BuiltValueNullFieldError.checkNotNull(
+        quantity, r'GiveGoldDataSchema', 'quantity');
+    BuiltValueNullFieldError.checkNotNull(
+        receiverCharacter, r'GiveGoldDataSchema', 'receiverCharacter');
+    BuiltValueNullFieldError.checkNotNull(
+        character, r'GiveGoldDataSchema', 'character');
+  }
+
   @override
   GiveGoldDataSchema rebuild(
           void Function(GiveGoldDataSchemaBuilder) updates) =>
@@ -33,7 +43,7 @@ class _$GiveGoldDataSchema extends GiveGoldDataSchema {
 
   @override
   GiveGoldDataSchemaBuilder toBuilder() =>
-      GiveGoldDataSchemaBuilder()..replace(this);
+      new GiveGoldDataSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -73,7 +83,7 @@ class GiveGoldDataSchemaBuilder
 
   CooldownSchemaBuilder? _cooldown;
   CooldownSchemaBuilder get cooldown =>
-      _$this._cooldown ??= CooldownSchemaBuilder();
+      _$this._cooldown ??= new CooldownSchemaBuilder();
   set cooldown(CooldownSchemaBuilder? cooldown) => _$this._cooldown = cooldown;
 
   int? _quantity;
@@ -82,13 +92,13 @@ class GiveGoldDataSchemaBuilder
 
   CharacterSchemaBuilder? _receiverCharacter;
   CharacterSchemaBuilder get receiverCharacter =>
-      _$this._receiverCharacter ??= CharacterSchemaBuilder();
+      _$this._receiverCharacter ??= new CharacterSchemaBuilder();
   set receiverCharacter(CharacterSchemaBuilder? receiverCharacter) =>
       _$this._receiverCharacter = receiverCharacter;
 
   CharacterSchemaBuilder? _character;
   CharacterSchemaBuilder get character =>
-      _$this._character ??= CharacterSchemaBuilder();
+      _$this._character ??= new CharacterSchemaBuilder();
   set character(CharacterSchemaBuilder? character) =>
       _$this._character = character;
 
@@ -110,6 +120,7 @@ class GiveGoldDataSchemaBuilder
 
   @override
   void replace(GiveGoldDataSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GiveGoldDataSchema;
   }
 
@@ -125,13 +136,12 @@ class GiveGoldDataSchemaBuilder
     _$GiveGoldDataSchema _$result;
     try {
       _$result = _$v ??
-          _$GiveGoldDataSchema._(
-            cooldown: cooldown.build(),
-            quantity: BuiltValueNullFieldError.checkNotNull(
-                quantity, r'GiveGoldDataSchema', 'quantity'),
-            receiverCharacter: receiverCharacter.build(),
-            character: character.build(),
-          );
+          new _$GiveGoldDataSchema._(
+              cooldown: cooldown.build(),
+              quantity: BuiltValueNullFieldError.checkNotNull(
+                  quantity, r'GiveGoldDataSchema', 'quantity'),
+              receiverCharacter: receiverCharacter.build(),
+              character: character.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -143,7 +153,7 @@ class GiveGoldDataSchemaBuilder
         _$failedField = 'character';
         character.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'GiveGoldDataSchema', _$failedField, e.toString());
       }
       rethrow;

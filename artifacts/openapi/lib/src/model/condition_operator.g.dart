@@ -22,12 +22,12 @@ ConditionOperator _$valueOf(String name) {
     case 'lt':
       return _$lt;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
 final BuiltSet<ConditionOperator> _$values =
-    BuiltSet<ConditionOperator>(const <ConditionOperator>[
+    new BuiltSet<ConditionOperator>(const <ConditionOperator>[
   _$eq,
   _$ne,
   _$gt,
@@ -51,7 +51,7 @@ abstract class _$ConditionOperatorMixin {
 }
 
 Serializer<ConditionOperator> _$conditionOperatorSerializer =
-    _$ConditionOperatorSerializer();
+    new _$ConditionOperatorSerializer();
 
 class _$ConditionOperatorSerializer
     implements PrimitiveSerializer<ConditionOperator> {

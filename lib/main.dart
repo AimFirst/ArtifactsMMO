@@ -1,3 +1,4 @@
+import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/home_page.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
@@ -15,8 +16,8 @@ void main() {
   const String YOUR_BEARER_TOKEN = String.fromEnvironment('ARTIFACTS_TOKEN');
   // -------------------
 
-  // 1. Create the ApiClient instance
   final apiClient = ApiClient(YOUR_BEARER_TOKEN);
+  final database = AppDatabase();
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -52,6 +53,7 @@ void main() {
               context.read<WorldDataProvider>(),
               context.read<BankProvider>(),
               context.read<TeamBrainProvider>(),
+              database,
             );
           },
           update: (_, mapProvider, worldDataProvider, bankProvider,

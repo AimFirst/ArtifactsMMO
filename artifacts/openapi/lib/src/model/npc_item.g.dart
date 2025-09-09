@@ -19,7 +19,7 @@ class _$NPCItem extends NPCItem {
   final int? sellPrice;
 
   factory _$NPCItem([void Function(NPCItemBuilder)? updates]) =>
-      (NPCItemBuilder()..update(updates))._build();
+      (new NPCItemBuilder()..update(updates))._build();
 
   _$NPCItem._(
       {required this.code,
@@ -27,13 +27,18 @@ class _$NPCItem extends NPCItem {
       required this.currency,
       this.buyPrice,
       this.sellPrice})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'NPCItem', 'code');
+    BuiltValueNullFieldError.checkNotNull(npc, r'NPCItem', 'npc');
+    BuiltValueNullFieldError.checkNotNull(currency, r'NPCItem', 'currency');
+  }
+
   @override
   NPCItem rebuild(void Function(NPCItemBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  NPCItemBuilder toBuilder() => NPCItemBuilder()..replace(this);
+  NPCItemBuilder toBuilder() => new NPCItemBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -112,6 +117,7 @@ class NPCItemBuilder implements Builder<NPCItem, NPCItemBuilder> {
 
   @override
   void replace(NPCItem other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NPCItem;
   }
 
@@ -125,14 +131,14 @@ class NPCItemBuilder implements Builder<NPCItem, NPCItemBuilder> {
 
   _$NPCItem _build() {
     final _$result = _$v ??
-        _$NPCItem._(
-          code: BuiltValueNullFieldError.checkNotNull(code, r'NPCItem', 'code'),
-          npc: BuiltValueNullFieldError.checkNotNull(npc, r'NPCItem', 'npc'),
-          currency: BuiltValueNullFieldError.checkNotNull(
-              currency, r'NPCItem', 'currency'),
-          buyPrice: buyPrice,
-          sellPrice: sellPrice,
-        );
+        new _$NPCItem._(
+            code:
+                BuiltValueNullFieldError.checkNotNull(code, r'NPCItem', 'code'),
+            npc: BuiltValueNullFieldError.checkNotNull(npc, r'NPCItem', 'npc'),
+            currency: BuiltValueNullFieldError.checkNotNull(
+                currency, r'NPCItem', 'currency'),
+            buyPrice: buyPrice,
+            sellPrice: sellPrice);
     replace(_$result);
     return _$result;
   }

@@ -21,7 +21,7 @@ class _$FightSchema extends FightSchema {
   final FightResult result;
 
   factory _$FightSchema([void Function(FightSchemaBuilder)? updates]) =>
-      (FightSchemaBuilder()..update(updates))._build();
+      (new FightSchemaBuilder()..update(updates))._build();
 
   _$FightSchema._(
       {required this.xp,
@@ -30,13 +30,21 @@ class _$FightSchema extends FightSchema {
       required this.turns,
       required this.logs,
       required this.result})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(xp, r'FightSchema', 'xp');
+    BuiltValueNullFieldError.checkNotNull(gold, r'FightSchema', 'gold');
+    BuiltValueNullFieldError.checkNotNull(drops, r'FightSchema', 'drops');
+    BuiltValueNullFieldError.checkNotNull(turns, r'FightSchema', 'turns');
+    BuiltValueNullFieldError.checkNotNull(logs, r'FightSchema', 'logs');
+    BuiltValueNullFieldError.checkNotNull(result, r'FightSchema', 'result');
+  }
+
   @override
   FightSchema rebuild(void Function(FightSchemaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  FightSchemaBuilder toBuilder() => FightSchemaBuilder()..replace(this);
+  FightSchemaBuilder toBuilder() => new FightSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -89,7 +97,7 @@ class FightSchemaBuilder implements Builder<FightSchema, FightSchemaBuilder> {
 
   ListBuilder<DropSchema>? _drops;
   ListBuilder<DropSchema> get drops =>
-      _$this._drops ??= ListBuilder<DropSchema>();
+      _$this._drops ??= new ListBuilder<DropSchema>();
   set drops(ListBuilder<DropSchema>? drops) => _$this._drops = drops;
 
   int? _turns;
@@ -97,7 +105,7 @@ class FightSchemaBuilder implements Builder<FightSchema, FightSchemaBuilder> {
   set turns(int? turns) => _$this._turns = turns;
 
   ListBuilder<String>? _logs;
-  ListBuilder<String> get logs => _$this._logs ??= ListBuilder<String>();
+  ListBuilder<String> get logs => _$this._logs ??= new ListBuilder<String>();
   set logs(ListBuilder<String>? logs) => _$this._logs = logs;
 
   FightResult? _result;
@@ -124,6 +132,7 @@ class FightSchemaBuilder implements Builder<FightSchema, FightSchemaBuilder> {
 
   @override
   void replace(FightSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$FightSchema;
   }
 
@@ -139,17 +148,17 @@ class FightSchemaBuilder implements Builder<FightSchema, FightSchemaBuilder> {
     _$FightSchema _$result;
     try {
       _$result = _$v ??
-          _$FightSchema._(
-            xp: BuiltValueNullFieldError.checkNotNull(xp, r'FightSchema', 'xp'),
-            gold: BuiltValueNullFieldError.checkNotNull(
-                gold, r'FightSchema', 'gold'),
-            drops: drops.build(),
-            turns: BuiltValueNullFieldError.checkNotNull(
-                turns, r'FightSchema', 'turns'),
-            logs: logs.build(),
-            result: BuiltValueNullFieldError.checkNotNull(
-                result, r'FightSchema', 'result'),
-          );
+          new _$FightSchema._(
+              xp: BuiltValueNullFieldError.checkNotNull(
+                  xp, r'FightSchema', 'xp'),
+              gold: BuiltValueNullFieldError.checkNotNull(
+                  gold, r'FightSchema', 'gold'),
+              drops: drops.build(),
+              turns: BuiltValueNullFieldError.checkNotNull(
+                  turns, r'FightSchema', 'turns'),
+              logs: logs.build(),
+              result: BuiltValueNullFieldError.checkNotNull(
+                  result, r'FightSchema', 'result'));
     } catch (_) {
       late String _$failedField;
       try {
@@ -159,7 +168,7 @@ class FightSchemaBuilder implements Builder<FightSchema, FightSchemaBuilder> {
         _$failedField = 'logs';
         logs.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'FightSchema', _$failedField, e.toString());
       }
       rethrow;

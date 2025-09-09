@@ -14,9 +14,14 @@ class _$NpcMerchantTransactionResponseSchema
   factory _$NpcMerchantTransactionResponseSchema(
           [void Function(NpcMerchantTransactionResponseSchemaBuilder)?
               updates]) =>
-      (NpcMerchantTransactionResponseSchemaBuilder()..update(updates))._build();
+      (new NpcMerchantTransactionResponseSchemaBuilder()..update(updates))
+          ._build();
 
-  _$NpcMerchantTransactionResponseSchema._({required this.data}) : super._();
+  _$NpcMerchantTransactionResponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'NpcMerchantTransactionResponseSchema', 'data');
+  }
+
   @override
   NpcMerchantTransactionResponseSchema rebuild(
           void Function(NpcMerchantTransactionResponseSchemaBuilder) updates) =>
@@ -24,7 +29,7 @@ class _$NpcMerchantTransactionResponseSchema
 
   @override
   NpcMerchantTransactionResponseSchemaBuilder toBuilder() =>
-      NpcMerchantTransactionResponseSchemaBuilder()..replace(this);
+      new NpcMerchantTransactionResponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -56,7 +61,7 @@ class NpcMerchantTransactionResponseSchemaBuilder
 
   NpcMerchantTransactionSchemaBuilder? _data;
   NpcMerchantTransactionSchemaBuilder get data =>
-      _$this._data ??= NpcMerchantTransactionSchemaBuilder();
+      _$this._data ??= new NpcMerchantTransactionSchemaBuilder();
   set data(NpcMerchantTransactionSchemaBuilder? data) => _$this._data = data;
 
   NpcMerchantTransactionResponseSchemaBuilder() {
@@ -74,6 +79,7 @@ class NpcMerchantTransactionResponseSchemaBuilder
 
   @override
   void replace(NpcMerchantTransactionResponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NpcMerchantTransactionResponseSchema;
   }
 
@@ -90,16 +96,14 @@ class NpcMerchantTransactionResponseSchemaBuilder
     _$NpcMerchantTransactionResponseSchema _$result;
     try {
       _$result = _$v ??
-          _$NpcMerchantTransactionResponseSchema._(
-            data: data.build(),
-          );
+          new _$NpcMerchantTransactionResponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'NpcMerchantTransactionResponseSchema',
             _$failedField,
             e.toString());

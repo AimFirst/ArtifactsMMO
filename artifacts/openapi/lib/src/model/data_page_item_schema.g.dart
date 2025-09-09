@@ -20,11 +20,14 @@ class _$DataPageItemSchema extends DataPageItemSchema {
 
   factory _$DataPageItemSchema(
           [void Function(DataPageItemSchemaBuilder)? updates]) =>
-      (DataPageItemSchemaBuilder()..update(updates))._build();
+      (new DataPageItemSchemaBuilder()..update(updates))._build();
 
   _$DataPageItemSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(data, r'DataPageItemSchema', 'data');
+  }
+
   @override
   DataPageItemSchema rebuild(
           void Function(DataPageItemSchemaBuilder) updates) =>
@@ -32,7 +35,7 @@ class _$DataPageItemSchema extends DataPageItemSchema {
 
   @override
   DataPageItemSchemaBuilder toBuilder() =>
-      DataPageItemSchemaBuilder()..replace(this);
+      new DataPageItemSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -75,7 +78,7 @@ class DataPageItemSchemaBuilder
 
   ListBuilder<ItemSchema>? _data;
   ListBuilder<ItemSchema> get data =>
-      _$this._data ??= ListBuilder<ItemSchema>();
+      _$this._data ??= new ListBuilder<ItemSchema>();
   set data(ListBuilder<ItemSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -113,6 +116,7 @@ class DataPageItemSchemaBuilder
 
   @override
   void replace(DataPageItemSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageItemSchema;
   }
 
@@ -128,20 +132,19 @@ class DataPageItemSchemaBuilder
     _$DataPageItemSchema _$result;
     try {
       _$result = _$v ??
-          _$DataPageItemSchema._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageItemSchema._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageItemSchema', _$failedField, e.toString());
       }
       rethrow;

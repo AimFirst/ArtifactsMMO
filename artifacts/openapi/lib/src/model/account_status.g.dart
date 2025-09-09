@@ -22,12 +22,12 @@ AccountStatus _$valueOf(String name) {
     case 'vipFounder':
       return _$vipFounder;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
 final BuiltSet<AccountStatus> _$values =
-    BuiltSet<AccountStatus>(const <AccountStatus>[
+    new BuiltSet<AccountStatus>(const <AccountStatus>[
   _$standard,
   _$founder,
   _$goldFounder,
@@ -50,7 +50,7 @@ abstract class _$AccountStatusMixin {
 }
 
 Serializer<AccountStatus> _$accountStatusSerializer =
-    _$AccountStatusSerializer();
+    new _$AccountStatusSerializer();
 
 class _$AccountStatusSerializer implements PrimitiveSerializer<AccountStatus> {
   static const Map<String, Object> _toWire = const <String, Object>{

@@ -34,11 +34,11 @@ Skill _$valueOf(String name) {
     case 'fishing':
       return _$fishing;
     default:
-      throw ArgumentError(name);
+      throw new ArgumentError(name);
   }
 }
 
-final BuiltSet<Skill> _$values = BuiltSet<Skill>(const <Skill>[
+final BuiltSet<Skill> _$values = new BuiltSet<Skill>(const <Skill>[
   _$weaponcrafting,
   _$gearcrafting,
   _$jewelrycrafting,
@@ -68,7 +68,7 @@ abstract class _$SkillMixin {
   _$SkillMeta get Skill => const _$SkillMeta();
 }
 
-Serializer<Skill> _$skillSerializer = _$SkillSerializer();
+Serializer<Skill> _$skillSerializer = new _$SkillSerializer();
 
 class _$SkillSerializer implements PrimitiveSerializer<Skill> {
   static const Map<String, Object> _toWire = const <String, Object>{

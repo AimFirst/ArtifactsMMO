@@ -12,9 +12,13 @@ class _$GiveItemReponseSchema extends GiveItemReponseSchema {
 
   factory _$GiveItemReponseSchema(
           [void Function(GiveItemReponseSchemaBuilder)? updates]) =>
-      (GiveItemReponseSchemaBuilder()..update(updates))._build();
+      (new GiveItemReponseSchemaBuilder()..update(updates))._build();
 
-  _$GiveItemReponseSchema._({required this.data}) : super._();
+  _$GiveItemReponseSchema._({required this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'GiveItemReponseSchema', 'data');
+  }
+
   @override
   GiveItemReponseSchema rebuild(
           void Function(GiveItemReponseSchemaBuilder) updates) =>
@@ -22,7 +26,7 @@ class _$GiveItemReponseSchema extends GiveItemReponseSchema {
 
   @override
   GiveItemReponseSchemaBuilder toBuilder() =>
-      GiveItemReponseSchemaBuilder()..replace(this);
+      new GiveItemReponseSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -52,7 +56,7 @@ class GiveItemReponseSchemaBuilder
 
   GiveItemDataSchemaBuilder? _data;
   GiveItemDataSchemaBuilder get data =>
-      _$this._data ??= GiveItemDataSchemaBuilder();
+      _$this._data ??= new GiveItemDataSchemaBuilder();
   set data(GiveItemDataSchemaBuilder? data) => _$this._data = data;
 
   GiveItemReponseSchemaBuilder() {
@@ -70,6 +74,7 @@ class GiveItemReponseSchemaBuilder
 
   @override
   void replace(GiveItemReponseSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GiveItemReponseSchema;
   }
 
@@ -84,17 +89,14 @@ class GiveItemReponseSchemaBuilder
   _$GiveItemReponseSchema _build() {
     _$GiveItemReponseSchema _$result;
     try {
-      _$result = _$v ??
-          _$GiveItemReponseSchema._(
-            data: data.build(),
-          );
+      _$result = _$v ?? new _$GiveItemReponseSchema._(data: data.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'GiveItemReponseSchema', _$failedField, e.toString());
       }
       rethrow;

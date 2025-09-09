@@ -19,17 +19,21 @@ class _$DataPageNPCItem extends DataPageNPCItem {
   final int? pages;
 
   factory _$DataPageNPCItem([void Function(DataPageNPCItemBuilder)? updates]) =>
-      (DataPageNPCItemBuilder()..update(updates))._build();
+      (new DataPageNPCItemBuilder()..update(updates))._build();
 
   _$DataPageNPCItem._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(data, r'DataPageNPCItem', 'data');
+  }
+
   @override
   DataPageNPCItem rebuild(void Function(DataPageNPCItemBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  DataPageNPCItemBuilder toBuilder() => DataPageNPCItemBuilder()..replace(this);
+  DataPageNPCItemBuilder toBuilder() =>
+      new DataPageNPCItemBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -71,7 +75,7 @@ class DataPageNPCItemBuilder
   _$DataPageNPCItem? _$v;
 
   ListBuilder<NPCItem>? _data;
-  ListBuilder<NPCItem> get data => _$this._data ??= ListBuilder<NPCItem>();
+  ListBuilder<NPCItem> get data => _$this._data ??= new ListBuilder<NPCItem>();
   set data(ListBuilder<NPCItem>? data) => _$this._data = data;
 
   int? _total;
@@ -109,6 +113,7 @@ class DataPageNPCItemBuilder
 
   @override
   void replace(DataPageNPCItem other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageNPCItem;
   }
 
@@ -124,20 +129,19 @@ class DataPageNPCItemBuilder
     _$DataPageNPCItem _$result;
     try {
       _$result = _$v ??
-          _$DataPageNPCItem._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageNPCItem._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageNPCItem', _$failedField, e.toString());
       }
       rethrow;

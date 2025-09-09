@@ -20,11 +20,15 @@ class _$DataPageMonsterSchema extends DataPageMonsterSchema {
 
   factory _$DataPageMonsterSchema(
           [void Function(DataPageMonsterSchemaBuilder)? updates]) =>
-      (DataPageMonsterSchemaBuilder()..update(updates))._build();
+      (new DataPageMonsterSchemaBuilder()..update(updates))._build();
 
   _$DataPageMonsterSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'DataPageMonsterSchema', 'data');
+  }
+
   @override
   DataPageMonsterSchema rebuild(
           void Function(DataPageMonsterSchemaBuilder) updates) =>
@@ -32,7 +36,7 @@ class _$DataPageMonsterSchema extends DataPageMonsterSchema {
 
   @override
   DataPageMonsterSchemaBuilder toBuilder() =>
-      DataPageMonsterSchemaBuilder()..replace(this);
+      new DataPageMonsterSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -75,7 +79,7 @@ class DataPageMonsterSchemaBuilder
 
   ListBuilder<MonsterSchema>? _data;
   ListBuilder<MonsterSchema> get data =>
-      _$this._data ??= ListBuilder<MonsterSchema>();
+      _$this._data ??= new ListBuilder<MonsterSchema>();
   set data(ListBuilder<MonsterSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -113,6 +117,7 @@ class DataPageMonsterSchemaBuilder
 
   @override
   void replace(DataPageMonsterSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageMonsterSchema;
   }
 
@@ -128,20 +133,19 @@ class DataPageMonsterSchemaBuilder
     _$DataPageMonsterSchema _$result;
     try {
       _$result = _$v ??
-          _$DataPageMonsterSchema._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageMonsterSchema._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageMonsterSchema', _$failedField, e.toString());
       }
       rethrow;

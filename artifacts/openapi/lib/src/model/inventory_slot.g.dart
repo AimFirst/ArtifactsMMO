@@ -15,17 +15,23 @@ class _$InventorySlot extends InventorySlot {
   final int quantity;
 
   factory _$InventorySlot([void Function(InventorySlotBuilder)? updates]) =>
-      (InventorySlotBuilder()..update(updates))._build();
+      (new InventorySlotBuilder()..update(updates))._build();
 
   _$InventorySlot._(
       {required this.slot, required this.code, required this.quantity})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(slot, r'InventorySlot', 'slot');
+    BuiltValueNullFieldError.checkNotNull(code, r'InventorySlot', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        quantity, r'InventorySlot', 'quantity');
+  }
+
   @override
   InventorySlot rebuild(void Function(InventorySlotBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  InventorySlotBuilder toBuilder() => InventorySlotBuilder()..replace(this);
+  InventorySlotBuilder toBuilder() => new InventorySlotBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -89,6 +95,7 @@ class InventorySlotBuilder
 
   @override
   void replace(InventorySlot other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$InventorySlot;
   }
 
@@ -102,14 +109,13 @@ class InventorySlotBuilder
 
   _$InventorySlot _build() {
     final _$result = _$v ??
-        _$InventorySlot._(
-          slot: BuiltValueNullFieldError.checkNotNull(
-              slot, r'InventorySlot', 'slot'),
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'InventorySlot', 'code'),
-          quantity: BuiltValueNullFieldError.checkNotNull(
-              quantity, r'InventorySlot', 'quantity'),
-        );
+        new _$InventorySlot._(
+            slot: BuiltValueNullFieldError.checkNotNull(
+                slot, r'InventorySlot', 'slot'),
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'InventorySlot', 'code'),
+            quantity: BuiltValueNullFieldError.checkNotNull(
+                quantity, r'InventorySlot', 'quantity'));
     replace(_$result);
     return _$result;
   }

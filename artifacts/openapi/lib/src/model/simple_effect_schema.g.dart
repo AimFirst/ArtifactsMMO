@@ -16,11 +16,18 @@ class _$SimpleEffectSchema extends SimpleEffectSchema {
 
   factory _$SimpleEffectSchema(
           [void Function(SimpleEffectSchemaBuilder)? updates]) =>
-      (SimpleEffectSchemaBuilder()..update(updates))._build();
+      (new SimpleEffectSchemaBuilder()..update(updates))._build();
 
   _$SimpleEffectSchema._(
       {required this.code, required this.value, required this.description})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'SimpleEffectSchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        value, r'SimpleEffectSchema', 'value');
+    BuiltValueNullFieldError.checkNotNull(
+        description, r'SimpleEffectSchema', 'description');
+  }
+
   @override
   SimpleEffectSchema rebuild(
           void Function(SimpleEffectSchemaBuilder) updates) =>
@@ -28,7 +35,7 @@ class _$SimpleEffectSchema extends SimpleEffectSchema {
 
   @override
   SimpleEffectSchemaBuilder toBuilder() =>
-      SimpleEffectSchemaBuilder()..replace(this);
+      new SimpleEffectSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -92,6 +99,7 @@ class SimpleEffectSchemaBuilder
 
   @override
   void replace(SimpleEffectSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SimpleEffectSchema;
   }
 
@@ -105,14 +113,13 @@ class SimpleEffectSchemaBuilder
 
   _$SimpleEffectSchema _build() {
     final _$result = _$v ??
-        _$SimpleEffectSchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'SimpleEffectSchema', 'code'),
-          value: BuiltValueNullFieldError.checkNotNull(
-              value, r'SimpleEffectSchema', 'value'),
-          description: BuiltValueNullFieldError.checkNotNull(
-              description, r'SimpleEffectSchema', 'description'),
-        );
+        new _$SimpleEffectSchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'SimpleEffectSchema', 'code'),
+            value: BuiltValueNullFieldError.checkNotNull(
+                value, r'SimpleEffectSchema', 'value'),
+            description: BuiltValueNullFieldError.checkNotNull(
+                description, r'SimpleEffectSchema', 'description'));
     replace(_$result);
     return _$result;
   }

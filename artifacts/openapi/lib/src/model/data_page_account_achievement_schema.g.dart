@@ -21,11 +21,15 @@ class _$DataPageAccountAchievementSchema
 
   factory _$DataPageAccountAchievementSchema(
           [void Function(DataPageAccountAchievementSchemaBuilder)? updates]) =>
-      (DataPageAccountAchievementSchemaBuilder()..update(updates))._build();
+      (new DataPageAccountAchievementSchemaBuilder()..update(updates))._build();
 
   _$DataPageAccountAchievementSchema._(
       {required this.data, this.total, this.page, this.size, this.pages})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        data, r'DataPageAccountAchievementSchema', 'data');
+  }
+
   @override
   DataPageAccountAchievementSchema rebuild(
           void Function(DataPageAccountAchievementSchemaBuilder) updates) =>
@@ -33,7 +37,7 @@ class _$DataPageAccountAchievementSchema
 
   @override
   DataPageAccountAchievementSchemaBuilder toBuilder() =>
-      DataPageAccountAchievementSchemaBuilder()..replace(this);
+      new DataPageAccountAchievementSchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -78,7 +82,7 @@ class DataPageAccountAchievementSchemaBuilder
 
   ListBuilder<AccountAchievementSchema>? _data;
   ListBuilder<AccountAchievementSchema> get data =>
-      _$this._data ??= ListBuilder<AccountAchievementSchema>();
+      _$this._data ??= new ListBuilder<AccountAchievementSchema>();
   set data(ListBuilder<AccountAchievementSchema>? data) => _$this._data = data;
 
   int? _total;
@@ -116,6 +120,7 @@ class DataPageAccountAchievementSchemaBuilder
 
   @override
   void replace(DataPageAccountAchievementSchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$DataPageAccountAchievementSchema;
   }
 
@@ -131,20 +136,19 @@ class DataPageAccountAchievementSchemaBuilder
     _$DataPageAccountAchievementSchema _$result;
     try {
       _$result = _$v ??
-          _$DataPageAccountAchievementSchema._(
-            data: data.build(),
-            total: total,
-            page: page,
-            size: size,
-            pages: pages,
-          );
+          new _$DataPageAccountAchievementSchema._(
+              data: data.build(),
+              total: total,
+              page: page,
+              size: size,
+              pages: pages);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'data';
         data.build();
       } catch (e) {
-        throw BuiltValueNestedFieldError(
+        throw new BuiltValueNestedFieldError(
             r'DataPageAccountAchievementSchema', _$failedField, e.toString());
       }
       rethrow;

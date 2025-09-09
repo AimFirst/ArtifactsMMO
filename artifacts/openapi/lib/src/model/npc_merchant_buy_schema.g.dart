@@ -14,10 +14,16 @@ class _$NpcMerchantBuySchema extends NpcMerchantBuySchema {
 
   factory _$NpcMerchantBuySchema(
           [void Function(NpcMerchantBuySchemaBuilder)? updates]) =>
-      (NpcMerchantBuySchemaBuilder()..update(updates))._build();
+      (new NpcMerchantBuySchemaBuilder()..update(updates))._build();
 
   _$NpcMerchantBuySchema._({required this.code, required this.quantity})
-      : super._();
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        code, r'NpcMerchantBuySchema', 'code');
+    BuiltValueNullFieldError.checkNotNull(
+        quantity, r'NpcMerchantBuySchema', 'quantity');
+  }
+
   @override
   NpcMerchantBuySchema rebuild(
           void Function(NpcMerchantBuySchemaBuilder) updates) =>
@@ -25,7 +31,7 @@ class _$NpcMerchantBuySchema extends NpcMerchantBuySchema {
 
   @override
   NpcMerchantBuySchemaBuilder toBuilder() =>
-      NpcMerchantBuySchemaBuilder()..replace(this);
+      new NpcMerchantBuySchemaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -81,6 +87,7 @@ class NpcMerchantBuySchemaBuilder
 
   @override
   void replace(NpcMerchantBuySchema other) {
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NpcMerchantBuySchema;
   }
 
@@ -94,12 +101,11 @@ class NpcMerchantBuySchemaBuilder
 
   _$NpcMerchantBuySchema _build() {
     final _$result = _$v ??
-        _$NpcMerchantBuySchema._(
-          code: BuiltValueNullFieldError.checkNotNull(
-              code, r'NpcMerchantBuySchema', 'code'),
-          quantity: BuiltValueNullFieldError.checkNotNull(
-              quantity, r'NpcMerchantBuySchema', 'quantity'),
-        );
+        new _$NpcMerchantBuySchema._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'NpcMerchantBuySchema', 'code'),
+            quantity: BuiltValueNullFieldError.checkNotNull(
+                quantity, r'NpcMerchantBuySchema', 'quantity'));
     replace(_$result);
     return _$result;
   }
