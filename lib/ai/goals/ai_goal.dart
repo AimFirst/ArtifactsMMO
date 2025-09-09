@@ -1,4 +1,5 @@
 import 'package:artifacts_api/artifacts_api.dart';
+import 'package:artifacts_mmo/extensions/inventory_extension.dart';
 import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
@@ -147,17 +148,12 @@ abstract class AIGoal {
       }
 
       // Check to see if it's in our inventory
-      if ((state.character.inventory
-                  ?.where((inventoryItem) => inventoryItem.code == item.code) ??
-              [])
-          .isNotEmpty) {
+      if ((state.character.inventory?.count(item.code) ?? 0) > 0) {
         continue;
       }
 
       // Check to see if it's in the bank
-      if (bankProvider.items
-          .where((bankItem) => bankItem.code == item.code)
-          .isNotEmpty) {
+      if (bankProvider.count(item.code) > 0) {
         continue;
       }
 
@@ -204,18 +200,12 @@ abstract class AIGoal {
 
       bool foundOneToEquip = false;
       // Check to see if it's in our inventory
-      if ((state.character.inventory
-                  ?.where((inventoryItem) => inventoryItem.code == item.code) ??
-              [])
-          .isNotEmpty) {
+      if ((state.character.inventory?.count(item.code) ?? 0) > 0) {
         foundOneToEquip = true;
       }
 
       // Check to see if it's in the bank
-      if (!foundOneToEquip &&
-          bankProvider.items
-              .where((bankItem) => bankItem.code == item.code)
-              .isNotEmpty) {
+      if (!foundOneToEquip && bankProvider.count(item.code) > 0) {
         teamBrainProvider.completeRequest(
             null,
             _createEquipRequestKeyPrefix(slot),
