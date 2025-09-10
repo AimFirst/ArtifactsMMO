@@ -1,11 +1,11 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/data/database.dart';
-import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/models/combat_details.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
+import 'package:artifacts_mmo/models/quantity_item_schema.dart';
 import 'package:artifacts_mmo/services/combat_service.dart'; // For CombatDetails
 import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart'; // Only if needed for creating ItemSchema instances for loadouts
@@ -49,16 +49,14 @@ void main() {
   });
 
   group('LoadoutOptimizerService - compareLoadoutResults', () {
-    const defaultSkillType = GatheringSkill.mining;
     GearEvaluationContext _createCombatEvaluationContext() {
-      return GearEvaluationContext(
-          taskType: CharacterExtensions.overallLevelSkillName,
+      return CombatGearEvaluationContext(
           targetMonster: MockMonsterSchema());
     }
 
     GearEvaluationContext _createSkillEvaluationContext(
-        {GatheringSkill skill = defaultSkillType}) {
-      return GearEvaluationContext(taskType: skill.name);
+        {GatheringSkill skill = GatheringSkill.mining}) {
+      return SkillGearEvaluationContext(skillType: skill.name);
     }
 
     SimpleEffectSchema _createEffect(
@@ -72,7 +70,7 @@ void main() {
           .build();
     }
 
-    ItemSchema _createItemSchema({
+    QuantityItemSchema _createItemSchema({
       String name = 'fake item',
       String type = 'shield',
       String code = 'fake_item',
@@ -81,8 +79,9 @@ void main() {
       String subtype = 'type2',
       bool tradable = true,
       List<SimpleEffectSchema> effects = const [],
+      int quantity = 1,
     }) {
-      return (ItemSchemaBuilder()
+      return QuantityItemSchema ((ItemSchemaBuilder()
             ..name = name
             ..type = type
             ..code = code
@@ -91,7 +90,7 @@ void main() {
             ..subtype = subtype
             ..tradeable = tradable
             ..effects = ListBuilder(effects))
-          .build();
+          .build(), quantity);
     }
 
     CombatDetails _createCombatDetails({
@@ -172,9 +171,9 @@ void main() {
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
             loadout: EquipmentLoadout(),
-            combatDetails: _createCombatDetails(monsterAvgDPT: 100));
+            combatDetails: _createCombatDetails(monsterAvgDPT: 100), itemsToUse: []);
         final resultB = CombatEquipmentLoadoutResult(
-            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails(), itemsToUse: []);
         _testCombatComparison(
             a: resultA,
             b: resultB,
@@ -190,13 +189,13 @@ void main() {
     b.wisdom = 10
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
-            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails(), itemsToUse: []);
         final resultB = CombatEquipmentLoadoutResult(
             loadout: EquipmentLoadout.fromItems([
               _createItemSchema(
                   effects: [_createEffect(effect: EffectEnum.wisdom)])
             ]),
-            combatDetails: _createCombatDetails());
+            combatDetails: _createCombatDetails(), itemsToUse: []);
         _testCombatComparison(
             a: resultA, b: resultB, expectedResult: ExpectedResult.b);
       });
@@ -212,9 +211,9 @@ void main() {
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
             loadout: EquipmentLoadout(),
-            combatDetails: _createCombatDetails(monsterAvgDPT: 5));
+            combatDetails: _createCombatDetails(monsterAvgDPT: 5), itemsToUse: []);
         final resultB = CombatEquipmentLoadoutResult(
-            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails(), itemsToUse: []);
 
         expect(resultB.combatDetails.totalCooldown,
             lessThan(resultA.combatDetails.totalCooldown));
@@ -236,9 +235,9 @@ void main() {
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
             loadout: EquipmentLoadout.fromItems([_createItemSchema()]),
-            combatDetails: _createCombatDetails());
+            combatDetails: _createCombatDetails(), itemsToUse: []);
         final resultB = CombatEquipmentLoadoutResult(
-            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails(), itemsToUse: []);
 
         _testCombatComparison(
             a: resultA, b: resultB, expectedResult: ExpectedResult.b);
@@ -256,9 +255,9 @@ void main() {
     b.nullItems == a.nullItems
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
-            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails(), itemsToUse: []);
         final resultB = CombatEquipmentLoadoutResult(
-            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails());
+            loadout: EquipmentLoadout(), combatDetails: _createCombatDetails(), itemsToUse: []);
 
         _testCombatComparison(
             a: resultA, b: resultB, expectedResult: ExpectedResult.same);
@@ -269,49 +268,41 @@ void main() {
       test('''
     a.skill = b.skill
     ''', () {
-        final resultA = _createSkillEvaluationContext();
-        final resultB = _createSkillEvaluationContext();
         _testSkillComparison(
             a: SkillEquipmentLoadoutResult(
-                loadout: EquipmentLoadout(), skill: resultA.taskType),
+                loadout: EquipmentLoadout(), itemsToUse: []),
             b: SkillEquipmentLoadoutResult(
-                loadout: EquipmentLoadout(), skill: resultB.taskType),
+                loadout: EquipmentLoadout(), itemsToUse: []),
             expectedResult: ExpectedResult.same);
       });
 
       test('''
     a.skill < b.skill
     ''', () {
-        final resultA = _createSkillEvaluationContext();
-        final resultB = _createSkillEvaluationContext();
         _testSkillComparison(
             a: SkillEquipmentLoadoutResult(
-                loadout: EquipmentLoadout(), skill: resultA.taskType),
+                loadout: EquipmentLoadout(), itemsToUse: []),
             b: SkillEquipmentLoadoutResult(
                 loadout: EquipmentLoadout.fromItems([
                   _createItemSchema(effects: [
                     _createEffect(effect: EffectEnum.mining, value: -10)
                   ])
-                ]),
-                skill: resultB.taskType),
+                ]),itemsToUse: []),
             expectedResult: ExpectedResult.b);
       });
 
       test('''
     a.skill > b.skill
     ''', () {
-        final resultA = _createSkillEvaluationContext();
-        final resultB = _createSkillEvaluationContext();
         _testSkillComparison(
             a: SkillEquipmentLoadoutResult(
                 loadout: EquipmentLoadout.fromItems([
                   _createItemSchema(effects: [
                     _createEffect(effect: EffectEnum.mining, value: -10)
                   ])
-                ]),
-                skill: resultA.taskType),
+                ]), itemsToUse: [],),
             b: SkillEquipmentLoadoutResult(
-                loadout: EquipmentLoadout(), skill: resultB.taskType),
+                loadout: EquipmentLoadout(), itemsToUse: []),
             expectedResult: ExpectedResult.a);
       });
     });

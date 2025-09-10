@@ -5,6 +5,7 @@ import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
+import 'package:artifacts_mmo/models/quantity_item_schema.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
@@ -124,8 +125,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
           bankProvider,
           loadoutOptimizerService);
       if (monster != null) {
-        return GearEvaluationContext(
-            taskType: 'overall', targetMonster: monster);
+        return CombatGearEvaluationContext(targetMonster: monster);
       }
     }
 
@@ -142,18 +142,23 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     final monsters = worldDataProvider.getMonstersByDropCode(itemCode);
 
     for (final monster in monsters) {
-      final idealLoadout = await loadoutOptimizerService.bestLoadoutOfAvailableItems(
+      final idealLoadout =
+          await loadoutOptimizerService.bestLoadoutOfAvailableItems(
         character.character,
-        GearEvaluationContext(
-            taskType: CharacterExtensions.overallLevelSkillName,
-            targetMonster: monster),
-        character.character.inventory
-                ?.map((i) => worldDataProvider.getItemByCode(i.code))
-                .toList() ??
+        CombatGearEvaluationContext(targetMonster: monster),
+        character.character.inventory?.map((i) {
+              final itemSchema = worldDataProvider.getItemByCode(i.code);
+              return itemSchema == null
+                  ? null
+                  : QuantityItemSchema(itemSchema, i.quantity);
+            }).toList() ??
             [],
-        bankProvider.items
-            .map((i) => worldDataProvider.getItemByCode(i.code))
-            .toList(),
+        bankProvider.items.map((i) {
+          final itemSchema = worldDataProvider.getItemByCode(i.code);
+          return itemSchema == null
+              ? null
+              : QuantityItemSchema(itemSchema, i.quantity);
+        }).toList(),
       );
       final tempCharacter = character.character.copyWithEquippedItems(
           idealLoadout.loadout.itemsBySlot, worldDataProvider);

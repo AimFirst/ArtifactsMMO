@@ -17,7 +17,9 @@ class EquipmentLoadoutResultMapper
       MapperContainer.globals.use(_instance = EquipmentLoadoutResultMapper._());
       CombatEquipmentLoadoutResultMapper.ensureInitialized();
       SkillEquipmentLoadoutResultMapper.ensureInitialized();
+      HealEquipmentLoadoutResultMapper.ensureInitialized();
       EquipmentLoadoutMapper.ensureInitialized();
+      QuantityItemSchemaMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -28,10 +30,15 @@ class EquipmentLoadoutResultMapper
   static EquipmentLoadout _$loadout(EquipmentLoadoutResult v) => v.loadout;
   static const Field<EquipmentLoadoutResult, EquipmentLoadout> _f$loadout =
       Field('loadout', _$loadout);
+  static List<QuantityItemSchema> _$itemsToUse(EquipmentLoadoutResult v) =>
+      v.itemsToUse;
+  static const Field<EquipmentLoadoutResult, List<QuantityItemSchema>>
+  _f$itemsToUse = Field('itemsToUse', _$itemsToUse);
 
   @override
   final MappableFields<EquipmentLoadoutResult> fields = const {
     #loadout: _f$loadout,
+    #itemsToUse: _f$itemsToUse,
   };
 
   static EquipmentLoadoutResult _instantiate(DecodingData data) {
@@ -68,7 +75,13 @@ abstract class EquipmentLoadoutResultCopyWith<
 >
     implements ClassCopyWith<$R, $In, $Out> {
   EquipmentLoadoutCopyWith<$R, EquipmentLoadout, EquipmentLoadout> get loadout;
-  $R call({EquipmentLoadout? loadout});
+  ListCopyWith<
+    $R,
+    QuantityItemSchema,
+    QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>
+  >
+  get itemsToUse;
+  $R call({EquipmentLoadout? loadout, List<QuantityItemSchema>? itemsToUse});
   EquipmentLoadoutResultCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -86,6 +99,7 @@ class CombatEquipmentLoadoutResultMapper
       );
       EquipmentLoadoutResultMapper.ensureInitialized().addSubMapper(_instance!);
       EquipmentLoadoutMapper.ensureInitialized();
+      QuantityItemSchemaMapper.ensureInitialized();
       CombatDetailsMapper.ensureInitialized();
     }
     return _instance!;
@@ -98,6 +112,11 @@ class CombatEquipmentLoadoutResultMapper
       v.loadout;
   static const Field<CombatEquipmentLoadoutResult, EquipmentLoadout>
   _f$loadout = Field('loadout', _$loadout);
+  static List<QuantityItemSchema> _$itemsToUse(
+    CombatEquipmentLoadoutResult v,
+  ) => v.itemsToUse;
+  static const Field<CombatEquipmentLoadoutResult, List<QuantityItemSchema>>
+  _f$itemsToUse = Field('itemsToUse', _$itemsToUse);
   static CombatDetails _$combatDetails(CombatEquipmentLoadoutResult v) =>
       v.combatDetails;
   static const Field<CombatEquipmentLoadoutResult, CombatDetails>
@@ -106,6 +125,7 @@ class CombatEquipmentLoadoutResultMapper
   @override
   final MappableFields<CombatEquipmentLoadoutResult> fields = const {
     #loadout: _f$loadout,
+    #itemsToUse: _f$itemsToUse,
     #combatDetails: _f$combatDetails,
   };
 
@@ -120,6 +140,7 @@ class CombatEquipmentLoadoutResultMapper
   static CombatEquipmentLoadoutResult _instantiate(DecodingData data) {
     return CombatEquipmentLoadoutResult(
       loadout: data.dec(_f$loadout),
+      itemsToUse: data.dec(_f$itemsToUse),
       combatDetails: data.dec(_f$combatDetails),
     );
   }
@@ -198,9 +219,20 @@ abstract class CombatEquipmentLoadoutResultCopyWith<
     implements EquipmentLoadoutResultCopyWith<$R, $In, $Out> {
   @override
   EquipmentLoadoutCopyWith<$R, EquipmentLoadout, EquipmentLoadout> get loadout;
+  @override
+  ListCopyWith<
+    $R,
+    QuantityItemSchema,
+    QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>
+  >
+  get itemsToUse;
   CombatDetailsCopyWith<$R, CombatDetails, CombatDetails> get combatDetails;
   @override
-  $R call({EquipmentLoadout? loadout, CombatDetails? combatDetails});
+  $R call({
+    EquipmentLoadout? loadout,
+    List<QuantityItemSchema>? itemsToUse,
+    CombatDetails? combatDetails,
+  });
   CombatEquipmentLoadoutResultCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -227,12 +259,28 @@ class _CombatEquipmentLoadoutResultCopyWithImpl<$R, $Out>
   EquipmentLoadoutCopyWith<$R, EquipmentLoadout, EquipmentLoadout>
   get loadout => $value.loadout.copyWith.$chain((v) => call(loadout: v));
   @override
+  ListCopyWith<
+    $R,
+    QuantityItemSchema,
+    QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>
+  >
+  get itemsToUse => ListCopyWith(
+    $value.itemsToUse,
+    (v, t) => v.copyWith.$chain(t),
+    (v) => call(itemsToUse: v),
+  );
+  @override
   CombatDetailsCopyWith<$R, CombatDetails, CombatDetails> get combatDetails =>
       $value.combatDetails.copyWith.$chain((v) => call(combatDetails: v));
   @override
-  $R call({EquipmentLoadout? loadout, CombatDetails? combatDetails}) => $apply(
+  $R call({
+    EquipmentLoadout? loadout,
+    List<QuantityItemSchema>? itemsToUse,
+    CombatDetails? combatDetails,
+  }) => $apply(
     FieldCopyWithData({
       if (loadout != null) #loadout: loadout,
+      if (itemsToUse != null) #itemsToUse: itemsToUse,
       if (combatDetails != null) #combatDetails: combatDetails,
     }),
   );
@@ -240,6 +288,7 @@ class _CombatEquipmentLoadoutResultCopyWithImpl<$R, $Out>
   CombatEquipmentLoadoutResult $make(CopyWithData data) =>
       CombatEquipmentLoadoutResult(
         loadout: data.get(#loadout, or: $value.loadout),
+        itemsToUse: data.get(#itemsToUse, or: $value.itemsToUse),
         combatDetails: data.get(#combatDetails, or: $value.combatDetails),
       );
 
@@ -261,6 +310,7 @@ class SkillEquipmentLoadoutResultMapper
       );
       EquipmentLoadoutResultMapper.ensureInitialized().addSubMapper(_instance!);
       EquipmentLoadoutMapper.ensureInitialized();
+      QuantityItemSchemaMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -271,16 +321,15 @@ class SkillEquipmentLoadoutResultMapper
   static EquipmentLoadout _$loadout(SkillEquipmentLoadoutResult v) => v.loadout;
   static const Field<SkillEquipmentLoadoutResult, EquipmentLoadout> _f$loadout =
       Field('loadout', _$loadout);
-  static String _$skill(SkillEquipmentLoadoutResult v) => v.skill;
-  static const Field<SkillEquipmentLoadoutResult, String> _f$skill = Field(
-    'skill',
-    _$skill,
-  );
+  static List<QuantityItemSchema> _$itemsToUse(SkillEquipmentLoadoutResult v) =>
+      v.itemsToUse;
+  static const Field<SkillEquipmentLoadoutResult, List<QuantityItemSchema>>
+  _f$itemsToUse = Field('itemsToUse', _$itemsToUse);
 
   @override
   final MappableFields<SkillEquipmentLoadoutResult> fields = const {
     #loadout: _f$loadout,
-    #skill: _f$skill,
+    #itemsToUse: _f$itemsToUse,
   };
 
   @override
@@ -294,7 +343,7 @@ class SkillEquipmentLoadoutResultMapper
   static SkillEquipmentLoadoutResult _instantiate(DecodingData data) {
     return SkillEquipmentLoadoutResult(
       loadout: data.dec(_f$loadout),
-      skill: data.dec(_f$skill),
+      itemsToUse: data.dec(_f$itemsToUse),
     );
   }
 
@@ -374,7 +423,14 @@ abstract class SkillEquipmentLoadoutResultCopyWith<
   @override
   EquipmentLoadoutCopyWith<$R, EquipmentLoadout, EquipmentLoadout> get loadout;
   @override
-  $R call({EquipmentLoadout? loadout, String? skill});
+  ListCopyWith<
+    $R,
+    QuantityItemSchema,
+    QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>
+  >
+  get itemsToUse;
+  @override
+  $R call({EquipmentLoadout? loadout, List<QuantityItemSchema>? itemsToUse});
   SkillEquipmentLoadoutResultCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -401,22 +457,220 @@ class _SkillEquipmentLoadoutResultCopyWithImpl<$R, $Out>
   EquipmentLoadoutCopyWith<$R, EquipmentLoadout, EquipmentLoadout>
   get loadout => $value.loadout.copyWith.$chain((v) => call(loadout: v));
   @override
-  $R call({EquipmentLoadout? loadout, String? skill}) => $apply(
-    FieldCopyWithData({
-      if (loadout != null) #loadout: loadout,
-      if (skill != null) #skill: skill,
-    }),
+  ListCopyWith<
+    $R,
+    QuantityItemSchema,
+    QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>
+  >
+  get itemsToUse => ListCopyWith(
+    $value.itemsToUse,
+    (v, t) => v.copyWith.$chain(t),
+    (v) => call(itemsToUse: v),
   );
+  @override
+  $R call({EquipmentLoadout? loadout, List<QuantityItemSchema>? itemsToUse}) =>
+      $apply(
+        FieldCopyWithData({
+          if (loadout != null) #loadout: loadout,
+          if (itemsToUse != null) #itemsToUse: itemsToUse,
+        }),
+      );
   @override
   SkillEquipmentLoadoutResult $make(CopyWithData data) =>
       SkillEquipmentLoadoutResult(
         loadout: data.get(#loadout, or: $value.loadout),
-        skill: data.get(#skill, or: $value.skill),
+        itemsToUse: data.get(#itemsToUse, or: $value.itemsToUse),
       );
 
   @override
   SkillEquipmentLoadoutResultCopyWith<$R2, SkillEquipmentLoadoutResult, $Out2>
   $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _SkillEquipmentLoadoutResultCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
+class HealEquipmentLoadoutResultMapper
+    extends SubClassMapperBase<HealEquipmentLoadoutResult> {
+  HealEquipmentLoadoutResultMapper._();
+
+  static HealEquipmentLoadoutResultMapper? _instance;
+  static HealEquipmentLoadoutResultMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(
+        _instance = HealEquipmentLoadoutResultMapper._(),
+      );
+      EquipmentLoadoutResultMapper.ensureInitialized().addSubMapper(_instance!);
+      EquipmentLoadoutMapper.ensureInitialized();
+      QuantityItemSchemaMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'HealEquipmentLoadoutResult';
+
+  static EquipmentLoadout _$loadout(HealEquipmentLoadoutResult v) => v.loadout;
+  static const Field<HealEquipmentLoadoutResult, EquipmentLoadout> _f$loadout =
+      Field('loadout', _$loadout);
+  static List<QuantityItemSchema> _$itemsToUse(HealEquipmentLoadoutResult v) =>
+      v.itemsToUse;
+  static const Field<HealEquipmentLoadoutResult, List<QuantityItemSchema>>
+  _f$itemsToUse = Field('itemsToUse', _$itemsToUse);
+
+  @override
+  final MappableFields<HealEquipmentLoadoutResult> fields = const {
+    #loadout: _f$loadout,
+    #itemsToUse: _f$itemsToUse,
+  };
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'HealEquipmentLoadoutResult';
+  @override
+  late final ClassMapperBase superMapper =
+      EquipmentLoadoutResultMapper.ensureInitialized();
+
+  static HealEquipmentLoadoutResult _instantiate(DecodingData data) {
+    return HealEquipmentLoadoutResult(
+      loadout: data.dec(_f$loadout),
+      itemsToUse: data.dec(_f$itemsToUse),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static HealEquipmentLoadoutResult fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<HealEquipmentLoadoutResult>(map);
+  }
+
+  static HealEquipmentLoadoutResult fromJson(String json) {
+    return ensureInitialized().decodeJson<HealEquipmentLoadoutResult>(json);
+  }
+}
+
+mixin HealEquipmentLoadoutResultMappable {
+  String toJson() {
+    return HealEquipmentLoadoutResultMapper.ensureInitialized()
+        .encodeJson<HealEquipmentLoadoutResult>(
+          this as HealEquipmentLoadoutResult,
+        );
+  }
+
+  Map<String, dynamic> toMap() {
+    return HealEquipmentLoadoutResultMapper.ensureInitialized()
+        .encodeMap<HealEquipmentLoadoutResult>(
+          this as HealEquipmentLoadoutResult,
+        );
+  }
+
+  HealEquipmentLoadoutResultCopyWith<
+    HealEquipmentLoadoutResult,
+    HealEquipmentLoadoutResult,
+    HealEquipmentLoadoutResult
+  >
+  get copyWith => _HealEquipmentLoadoutResultCopyWithImpl<
+    HealEquipmentLoadoutResult,
+    HealEquipmentLoadoutResult
+  >(this as HealEquipmentLoadoutResult, $identity, $identity);
+  @override
+  String toString() {
+    return HealEquipmentLoadoutResultMapper.ensureInitialized().stringifyValue(
+      this as HealEquipmentLoadoutResult,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return HealEquipmentLoadoutResultMapper.ensureInitialized().equalsValue(
+      this as HealEquipmentLoadoutResult,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return HealEquipmentLoadoutResultMapper.ensureInitialized().hashValue(
+      this as HealEquipmentLoadoutResult,
+    );
+  }
+}
+
+extension HealEquipmentLoadoutResultValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, HealEquipmentLoadoutResult, $Out> {
+  HealEquipmentLoadoutResultCopyWith<$R, HealEquipmentLoadoutResult, $Out>
+  get $asHealEquipmentLoadoutResult => $base.as(
+    (v, t, t2) => _HealEquipmentLoadoutResultCopyWithImpl<$R, $Out>(v, t, t2),
+  );
+}
+
+abstract class HealEquipmentLoadoutResultCopyWith<
+  $R,
+  $In extends HealEquipmentLoadoutResult,
+  $Out
+>
+    implements EquipmentLoadoutResultCopyWith<$R, $In, $Out> {
+  @override
+  EquipmentLoadoutCopyWith<$R, EquipmentLoadout, EquipmentLoadout> get loadout;
+  @override
+  ListCopyWith<
+    $R,
+    QuantityItemSchema,
+    QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>
+  >
+  get itemsToUse;
+  @override
+  $R call({EquipmentLoadout? loadout, List<QuantityItemSchema>? itemsToUse});
+  HealEquipmentLoadoutResultCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  );
+}
+
+class _HealEquipmentLoadoutResultCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, HealEquipmentLoadoutResult, $Out>
+    implements
+        HealEquipmentLoadoutResultCopyWith<
+          $R,
+          HealEquipmentLoadoutResult,
+          $Out
+        > {
+  _HealEquipmentLoadoutResultCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<HealEquipmentLoadoutResult> $mapper =
+      HealEquipmentLoadoutResultMapper.ensureInitialized();
+  @override
+  EquipmentLoadoutCopyWith<$R, EquipmentLoadout, EquipmentLoadout>
+  get loadout => $value.loadout.copyWith.$chain((v) => call(loadout: v));
+  @override
+  ListCopyWith<
+    $R,
+    QuantityItemSchema,
+    QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>
+  >
+  get itemsToUse => ListCopyWith(
+    $value.itemsToUse,
+    (v, t) => v.copyWith.$chain(t),
+    (v) => call(itemsToUse: v),
+  );
+  @override
+  $R call({EquipmentLoadout? loadout, List<QuantityItemSchema>? itemsToUse}) =>
+      $apply(
+        FieldCopyWithData({
+          if (loadout != null) #loadout: loadout,
+          if (itemsToUse != null) #itemsToUse: itemsToUse,
+        }),
+      );
+  @override
+  HealEquipmentLoadoutResult $make(CopyWithData data) =>
+      HealEquipmentLoadoutResult(
+        loadout: data.get(#loadout, or: $value.loadout),
+        itemsToUse: data.get(#itemsToUse, or: $value.itemsToUse),
+      );
+
+  @override
+  HealEquipmentLoadoutResultCopyWith<$R2, HealEquipmentLoadoutResult, $Out2>
+  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _HealEquipmentLoadoutResultCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 

@@ -114,7 +114,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
         final item =
             worldDataProvider.getResourceByDropCode(request.requestedItem.code);
         if (item != null) {
-          return GearEvaluationContext(taskType: item.skill.name);
+          return SkillGearEvaluationContext(skillType: item.skill.name);
         }
       }
     }

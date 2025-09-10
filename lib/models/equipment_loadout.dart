@@ -1,7 +1,9 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
+import 'package:artifacts_mmo/extensions/item_extension.dart';
 import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/models/item_schema_mapper.dart';
+import 'package:artifacts_mmo/models/quantity_item_schema.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -11,21 +13,21 @@ part 'equipment_loadout.mapper.dart';
 @MappableClass(includeCustomMappers: [ItemSchemaMapper()])
 class EquipmentLoadout with EquipmentLoadoutMappable {
   final ItemSchema? weapon;
-     final  ItemSchema? helmet;
+  final ItemSchema? helmet;
   final ItemSchema? shield;
-    final  ItemSchema? bodyArmor;
+  final ItemSchema? bodyArmor;
   final ItemSchema? legArmor;
-     final ItemSchema? boots;
+  final ItemSchema? boots;
   final ItemSchema? amulet;
-   final    ItemSchema? ring1;
+  final ItemSchema? ring1;
   final ItemSchema? ring2;
-   final   ItemSchema? utility1;
-  final ItemSchema? utility2;
-   final   ItemSchema? artifact1;
+  final QuantityItemSchema? utility1;
+  final QuantityItemSchema? utility2;
+  final ItemSchema? artifact1;
   final ItemSchema? artifact2;
-   final   ItemSchema? artifact3;
+  final ItemSchema? artifact3;
   final ItemSchema? rune;
-   final   ItemSchema? bag;
+  final ItemSchema? bag;
 
   EquipmentLoadout({
     this.weapon,
@@ -48,6 +50,10 @@ class EquipmentLoadout with EquipmentLoadoutMappable {
 
   factory EquipmentLoadout.fromCharacter(
       CharacterSchema character, WorldDataProvider worldDataProvider) {
+    final utilitySlot1Item =
+        worldDataProvider.getItemByCode(character.utility1Slot);
+    final utilitySlot2Item =
+        worldDataProvider.getItemByCode(character.utility2Slot);
     return EquipmentLoadout(
       weapon: worldDataProvider.getItemByCode(character.weaponSlot),
       helmet: worldDataProvider.getItemByCode(character.helmetSlot),
@@ -58,8 +64,14 @@ class EquipmentLoadout with EquipmentLoadoutMappable {
       amulet: worldDataProvider.getItemByCode(character.amuletSlot),
       ring1: worldDataProvider.getItemByCode(character.ring1Slot),
       ring2: worldDataProvider.getItemByCode(character.ring2Slot),
-      utility1: worldDataProvider.getItemByCode(character.utility1Slot),
-      utility2: worldDataProvider.getItemByCode(character.utility2Slot),
+      utility1: utilitySlot1Item == null
+          ? null
+          : QuantityItemSchema(
+              utilitySlot1Item, character.utility1SlotQuantity),
+      utility2: utilitySlot2Item == null
+          ? null
+          : QuantityItemSchema(
+              utilitySlot2Item, character.utility2SlotQuantity),
       artifact1: worldDataProvider.getItemByCode(character.artifact1Slot),
       artifact2: worldDataProvider.getItemByCode(character.artifact2Slot),
       artifact3: worldDataProvider.getItemByCode(character.artifact3Slot),
@@ -68,14 +80,14 @@ class EquipmentLoadout with EquipmentLoadoutMappable {
     );
   }
 
-  factory EquipmentLoadout.fromItems(List<ItemSchema?> items) {
+  factory EquipmentLoadout.fromItems(List<QuantityItemSchema?> items) {
     EquipmentLoadout loadout = EquipmentLoadout();
     for (final item in items) {
       if (item == null) {
         continue;
       }
 
-      final slot = item.itemSlot;
+      final slot = item.item.itemSlot;
       if (slot != null) {
         loadout = loadout.copyWithItem(slot, item);
       }
@@ -83,45 +95,45 @@ class EquipmentLoadout with EquipmentLoadoutMappable {
     return loadout;
   }
 
-  Map<ItemSlot, ItemSchema?> get itemsBySlot {
+  Map<ItemSlot, QuantityItemSchema?> get itemsBySlot {
     return {
-      ItemSlot.weapon: weapon,
-      ItemSlot.helmet: helmet,
-      ItemSlot.shield: shield,
-      ItemSlot.bodyArmor: bodyArmor,
-      ItemSlot.legArmor: legArmor,
-      ItemSlot.boots: boots,
-      ItemSlot.amulet: amulet,
-      ItemSlot.ring1: ring1,
-      ItemSlot.ring2: ring2,
+      ItemSlot.weapon: weapon?.quantityItem,
+      ItemSlot.helmet: helmet?.quantityItem,
+      ItemSlot.shield: shield?.quantityItem,
+      ItemSlot.bodyArmor: bodyArmor?.quantityItem,
+      ItemSlot.legArmor: legArmor?.quantityItem,
+      ItemSlot.boots: boots?.quantityItem,
+      ItemSlot.amulet: amulet?.quantityItem,
+      ItemSlot.ring1: ring1?.quantityItem,
+      ItemSlot.ring2: ring2?.quantityItem,
       ItemSlot.utility1: utility1,
       ItemSlot.utility2: utility2,
-      ItemSlot.artifact1: artifact1,
-      ItemSlot.artifact2: artifact2,
-      ItemSlot.artifact3: artifact3,
-      ItemSlot.rune: rune,
-      ItemSlot.bag: bag,
+      ItemSlot.artifact1: artifact1?.quantityItem,
+      ItemSlot.artifact2: artifact2?.quantityItem,
+      ItemSlot.artifact3: artifact3?.quantityItem,
+      ItemSlot.rune: rune?.quantityItem,
+      ItemSlot.bag: bag?.quantityItem,
     };
   }
 
-  List<ItemSchema?> get items {
+  List<QuantityItemSchema?> get items {
     return [
-      weapon,
-      helmet,
-      shield,
-      bodyArmor,
-      legArmor,
-      boots,
-      amulet,
-      ring1,
-      ring2,
+      weapon?.quantityItem,
+      helmet?.quantityItem,
+      shield?.quantityItem,
+      bodyArmor?.quantityItem,
+      legArmor?.quantityItem,
+      boots?.quantityItem,
+      amulet?.quantityItem,
+      ring1?.quantityItem,
+      ring2?.quantityItem,
       utility1,
       utility2,
-      artifact1,
-      artifact2,
-      artifact3,
-      rune,
-      bag,
+      artifact1?.quantityItem,
+      artifact2?.quantityItem,
+      artifact3?.quantityItem,
+      rune?.quantityItem,
+      bag?.quantityItem,
     ];
   }
 
@@ -130,32 +142,35 @@ class EquipmentLoadout with EquipmentLoadoutMappable {
         0,
         (prevItemSum, item) =>
             prevItemSum +
-            (item?.effects?.fold(
-                    0,
-                    (prevEffectSum, effect) =>
-                        (prevEffectSum ?? 0) +
-                        (effect.code == effectEnum.name ? effect.value : 0)) ??
-                0));
+            (item?.item.effects?.fold(
+                        0,
+                        (prevEffectSum, effect) =>
+                            prevEffectSum +
+                            (effect.code == effectEnum.name
+                                ? effect.value
+                                : 0)) ??
+                    0) *
+                (item?.quantity ?? 0));
   }
 
-  EquipmentLoadout copyWithItem(ItemSlot itemSlot, ItemSchema? item) {
+  EquipmentLoadout copyWithItem(ItemSlot itemSlot, QuantityItemSchema? item) {
     return EquipmentLoadout(
-      weapon: itemSlot == ItemSlot.weapon ? item : weapon,
-      helmet: itemSlot == ItemSlot.helmet ? item : helmet,
-      shield: itemSlot == ItemSlot.shield ? item : shield,
-      bodyArmor: itemSlot == ItemSlot.bodyArmor ? item : bodyArmor,
-      legArmor: itemSlot == ItemSlot.legArmor ? item : legArmor,
-      boots: itemSlot == ItemSlot.boots ? item : boots,
-      amulet: itemSlot == ItemSlot.amulet ? item : amulet,
-      ring1: itemSlot == ItemSlot.ring1 ? item : ring1,
-      ring2: itemSlot == ItemSlot.ring2 ? item : ring2,
+      weapon: itemSlot == ItemSlot.weapon ? item?.item : weapon,
+      helmet: itemSlot == ItemSlot.helmet ? item?.item : helmet,
+      shield: itemSlot == ItemSlot.shield ? item?.item : shield,
+      bodyArmor: itemSlot == ItemSlot.bodyArmor ? item?.item : bodyArmor,
+      legArmor: itemSlot == ItemSlot.legArmor ? item?.item : legArmor,
+      boots: itemSlot == ItemSlot.boots ? item?.item : boots,
+      amulet: itemSlot == ItemSlot.amulet ? item?.item : amulet,
+      ring1: itemSlot == ItemSlot.ring1 ? item?.item : ring1,
+      ring2: itemSlot == ItemSlot.ring2 ? item?.item : ring2,
       utility1: itemSlot == ItemSlot.utility1 ? item : utility1,
       utility2: itemSlot == ItemSlot.utility2 ? item : utility2,
-      artifact1: itemSlot == ItemSlot.artifact1 ? item : artifact1,
-      artifact2: itemSlot == ItemSlot.artifact2 ? item : artifact2,
-      artifact3: itemSlot == ItemSlot.artifact3 ? item : artifact3,
-      rune: itemSlot == ItemSlot.rune ? item : rune,
-      bag: itemSlot == ItemSlot.bag ? item : bag,
+      artifact1: itemSlot == ItemSlot.artifact1 ? item?.item : artifact1,
+      artifact2: itemSlot == ItemSlot.artifact2 ? item?.item : artifact2,
+      artifact3: itemSlot == ItemSlot.artifact3 ? item?.item : artifact3,
+      rune: itemSlot == ItemSlot.rune ? item?.item : rune,
+      bag: itemSlot == ItemSlot.bag ? item?.item : bag,
     );
   }
 }

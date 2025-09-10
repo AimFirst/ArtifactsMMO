@@ -1,12 +1,18 @@
+import 'dart:math';
+
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/extensions/inventory_extension.dart';
+import 'package:artifacts_mmo/extensions/item_extension.dart';
+import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
+import 'package:artifacts_mmo/models/quantity_item_schema.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
+import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
@@ -18,6 +24,8 @@ import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:built_collection/built_collection.dart';
 
 abstract class AIGoal {
+  static const consumableItemFetchBatchSize = 10;
+
   // Higher number means higher priority
   int get priority;
 
@@ -127,62 +135,60 @@ abstract class AIGoal {
       return;
     }
 
+    // Find our ideal equipment/items and request missing ones.
+    await _requestAllMissingBestItems(
+      state,
+      gearContext,
+      loadoutOptimizerService,
+      worldDataProvider,
+      bankProvider,
+      teamBrainProvider,
+    );
+
+    // Find our best equipment/items that we have available right now and equip/use them.
+    await _useBestAvailableItems(
+      state,
+      gearContext,
+      loadoutOptimizerService,
+      worldDataProvider,
+      bankProvider,
+      teamProvider,
+      teamBrainProvider,
+      actionFactory,
+    );
+  }
+
+  Future<void> _useBestAvailableItems(
+      CharacterState state,
+      GearEvaluationContext gearContext,
+      LoadoutOptimizerService loadoutOptimizerService,
+      WorldDataProvider worldDataProvider,
+      BankProvider bankProvider,
+      TeamProvider teamProvider,
+      TeamBrainProvider teamBrainProvider,
+      ActionFactory actionFactory) async {
     // Currently equipped items
     final EquipmentLoadout currentLoadout =
         EquipmentLoadout.fromCharacter(state.character, worldDataProvider);
-
-    // Find our ideal equipment and request any that is missing.
-    final bestEquipment = await loadoutOptimizerService.bestLoadout(
-        state.character, gearContext, worldDataProvider.allItems);
-
-    for (final itemWithSlot in bestEquipment.loadout.itemsBySlot.entries) {
-      final item = itemWithSlot.value;
-      final slot = itemWithSlot.key;
-      if (item == null) {
-        continue;
-      }
-
-      // Check to see if it's already equipped
-      if (currentLoadout.itemsBySlot[slot]?.code == item.code) {
-        continue;
-      }
-
-      // Check to see if it's in our inventory
-      if ((state.character.inventory?.count(item.code) ?? 0) > 0) {
-        continue;
-      }
-
-      // Check to see if it's in the bank
-      if (bankProvider.count(item.code) > 0) {
-        continue;
-      }
-
-      // Not found anywhere, let's request it.
-      final keyPrefix = _createEquipRequestKeyPrefix(slot);
-      if (!teamBrainProvider.hasRequest(
-          null, keyPrefix, item.code, state.character.name)) {
-        teamBrainProvider.postRequest(ItemRequest(
-          keyPrefix: keyPrefix,
-          requestedBy: state.character.name,
-          requestedItem:
-              SimpleItemSchemaBuilder().fromCodeAndQuantity(item.code, 1),
-          childrenRequests: [],
-        ));
-      }
-    }
 
     // Find the best equipment that we have available right now.
     final bestAvailableEquipment =
         await loadoutOptimizerService.bestLoadoutOfAvailableItems(
             state.character,
             gearContext,
-            state.character.inventory
-                    ?.map((item) => worldDataProvider.getItemByCode(item.code))
-                    .toList() ??
-                <ItemSchema?>[],
-            bankProvider.items
-                .map((item) => worldDataProvider.getItemByCode(item.code))
-                .toList());
+            state.character.inventory?.map((item) {
+                  final itemSchema = worldDataProvider.getItemByCode(item.code);
+                  return itemSchema == null
+                      ? null
+                      : QuantityItemSchema(itemSchema, item.quantity);
+                }).toList() ??
+                <QuantityItemSchema?>[],
+            bankProvider.items.map((item) {
+              final itemSchema = worldDataProvider.getItemByCode(item.code);
+              return itemSchema == null
+                  ? null
+                  : QuantityItemSchema(itemSchema, item.quantity);
+            }).toList());
 
     for (final itemWithSlot
         in bestAvailableEquipment.loadout.itemsBySlot.entries) {
@@ -194,27 +200,28 @@ abstract class AIGoal {
       }
 
       // Check to see if it's already equipped
-      if (currentLoadout.itemsBySlot[slot]?.code == item.code) {
+      if (currentLoadout.itemsBySlot[slot]?.item.code == item.item.code) {
         continue;
       }
 
       bool foundOneToEquip = false;
       // Check to see if it's in our inventory
-      if ((state.character.inventory?.count(item.code) ?? 0) > 0) {
+      if ((state.character.inventory?.count(item.item.code) ?? 0) > 0) {
         foundOneToEquip = true;
       }
 
       // Check to see if it's in the bank
-      if (!foundOneToEquip && bankProvider.count(item.code) > 0) {
+      if (!foundOneToEquip && bankProvider.count(item.item.code) > 0) {
         teamBrainProvider.completeRequest(
             null,
             _createEquipRequestKeyPrefix(slot),
-            item.code,
+            item.item.code,
             state.character.name);
         teamProvider.queueBankWithdraw(
             state.character,
-            BuiltList.of(
-                [SimpleItemSchemaBuilder().fromCodeAndQuantity(item.code, 1)]));
+            BuiltList.of([
+              SimpleItemSchemaBuilder().fromCodeAndQuantity(item.item.code, 1)
+            ]));
         foundOneToEquip = true;
       }
 
@@ -225,13 +232,118 @@ abstract class AIGoal {
             state.character.name,
             actionFactory.createEquipAction(
                 state.character.name,
-                SimpleItemSchemaBuilder().fromCodeAndQuantity(item.code, 1),
+                SimpleItemSchemaBuilder()
+                    .fromCodeAndQuantity(item.item.code, 1),
                 slot));
+      }
+    }
+
+    // Check if there's any items to use
+    List<SimpleItemSchema> itemsToPullFromBank = [];
+    List<SimpleItemSchema> itemsToConsume = [];
+    for (final item in bestAvailableEquipment.itemsToUse) {
+      int quantityNeeded = item.quantity;
+
+      quantityNeeded -= state.character.inventory?.count(item.item.code) ?? 0;
+      if (quantityNeeded <= 0) {
+        final bankCount = bankProvider.count(item.item.code);
+        if (bankCount < quantityNeeded) {
+          LoggerService.instance.log(
+              'Not enough items in inventory or bank to use ${item.item}.',
+              character: state.character,
+              level: LogLevel.warning);
+          continue;
+        }
+        teamBrainProvider.completeRequest(
+            null,
+            _createEquipRequestKeyPrefix(null),
+            item.item.code,
+            state.character.name);
+        itemsToPullFromBank.add((SimpleItemSchemaBuilder()
+              ..code = item.item.code
+              ..quantity = max(
+                  min(bankCount, consumableItemFetchBatchSize), quantityNeeded))
+            .build());
+        itemsToConsume.add(item.toSimpleItemSchema());
+      }
+    }
+
+    if (itemsToPullFromBank.isNotEmpty) {
+      teamProvider.queueBankWithdraw(
+          state.character, BuiltList.of(itemsToPullFromBank));
+    }
+    for (final item in itemsToConsume) {
+      teamProvider.queueAction(state.character.name,
+          actionFactory.createUseItemAction(state.character.name, item));
+    }
+  }
+
+  Future<void> _requestAllMissingBestItems(
+    CharacterState state,
+    GearEvaluationContext gearContext,
+    LoadoutOptimizerService loadoutOptimizerService,
+    WorldDataProvider worldDataProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+  ) async {
+    // Currently equipped items
+    final EquipmentLoadout currentLoadout =
+        EquipmentLoadout.fromCharacter(state.character, worldDataProvider);
+
+    // Find our ideal equipment and request any that is missing.
+    final bestEquipment = await loadoutOptimizerService.bestLoadout(
+      state.character,
+      gearContext,
+      worldDataProvider.allItems.map((item) => item.quantityItem).toList(),
+    );
+
+    final allItems = [
+      ...bestEquipment.loadout.items,
+      ...bestEquipment.itemsToUse
+    ];
+    for (final item in allItems) {
+      if (item == null) {
+        continue;
+      }
+
+      final slot = item.item.itemSlot;
+
+      // Check to see if it's already equipped
+      if (slot != null &&
+          currentLoadout.itemsBySlot[slot]?.item.code == item.item.code) {
+        continue;
+      }
+
+      int quantityNeeded = max(item.quantity, consumableItemFetchBatchSize);
+
+      // Check to see if it's in our inventory
+      quantityNeeded -= state.character.inventory?.count(item.item.code) ?? 0;
+      if (quantityNeeded <= 0) {
+        continue;
+      }
+
+      // Check to see if it's in the bank
+      quantityNeeded -= bankProvider.count(item.item.code);
+      if (quantityNeeded <= 0) {
+        continue;
+      }
+
+      // Not found anywhere, let's request it.
+      final keyPrefix = _createEquipRequestKeyPrefix(slot);
+      if (!teamBrainProvider.hasRequest(
+          null, keyPrefix, item.item.code, state.character.name)) {
+        teamBrainProvider.postRequest(ItemRequest(
+          keyPrefix: keyPrefix,
+          requestedBy: state.character.name,
+          requestedItem: SimpleItemSchemaBuilder()
+              .fromCodeAndQuantity(item.item.code, quantityNeeded),
+          childrenRequests: [],
+        ));
       }
     }
   }
 
-  String _createEquipRequestKeyPrefix(ItemSlot slot) {
-    return '${slot.name}-gear';
+  String _createEquipRequestKeyPrefix(ItemSlot? slot) {
+    return '${slot?.name ?? 'other'}-gear';
   }
 }

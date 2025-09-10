@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
@@ -122,6 +124,14 @@ class ActionFactory {
                     ..quantity = item.quantity)
                   .build()),
     );
+  }
+
+  QueuedAction createUseItemAction(
+      String characterName, SimpleItemSchema item) {
+    return QueuedAction(
+        actionName: 'Use $item',
+        apiCall: () => _apiClient.myCharacters.actionUseItemMyNameActionUsePost(
+            name: characterName, simpleItemSchema: item));
   }
 
   QueuedAction createCraftAction(String characterName, SimpleItemSchema item) {

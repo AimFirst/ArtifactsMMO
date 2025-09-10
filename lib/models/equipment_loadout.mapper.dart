@@ -15,6 +15,7 @@ class EquipmentLoadoutMapper extends ClassMapperBase<EquipmentLoadout> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = EquipmentLoadoutMapper._());
       MapperContainer.globals.useAll([ItemSchemaMapper()]);
+      QuantityItemSchemaMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -76,14 +77,14 @@ class EquipmentLoadoutMapper extends ClassMapperBase<EquipmentLoadout> {
     _$ring2,
     opt: true,
   );
-  static ItemSchema? _$utility1(EquipmentLoadout v) => v.utility1;
-  static const Field<EquipmentLoadout, ItemSchema> _f$utility1 = Field(
+  static QuantityItemSchema? _$utility1(EquipmentLoadout v) => v.utility1;
+  static const Field<EquipmentLoadout, QuantityItemSchema> _f$utility1 = Field(
     'utility1',
     _$utility1,
     opt: true,
   );
-  static ItemSchema? _$utility2(EquipmentLoadout v) => v.utility2;
-  static const Field<EquipmentLoadout, ItemSchema> _f$utility2 = Field(
+  static QuantityItemSchema? _$utility2(EquipmentLoadout v) => v.utility2;
+  static const Field<EquipmentLoadout, QuantityItemSchema> _f$utility2 = Field(
     'utility2',
     _$utility2,
     opt: true,
@@ -118,16 +119,13 @@ class EquipmentLoadoutMapper extends ClassMapperBase<EquipmentLoadout> {
     _$bag,
     opt: true,
   );
-  static Map<ItemSlot, ItemSchema?> _$itemsBySlot(EquipmentLoadout v) =>
+  static Map<ItemSlot, QuantityItemSchema?> _$itemsBySlot(EquipmentLoadout v) =>
       v.itemsBySlot;
-  static const Field<EquipmentLoadout, Map<ItemSlot, ItemSchema?>>
+  static const Field<EquipmentLoadout, Map<ItemSlot, QuantityItemSchema?>>
   _f$itemsBySlot = Field('itemsBySlot', _$itemsBySlot, mode: FieldMode.member);
-  static List<ItemSchema?> _$items(EquipmentLoadout v) => v.items;
-  static const Field<EquipmentLoadout, List<ItemSchema?>> _f$items = Field(
-    'items',
-    _$items,
-    mode: FieldMode.member,
-  );
+  static List<QuantityItemSchema?> _$items(EquipmentLoadout v) => v.items;
+  static const Field<EquipmentLoadout, List<QuantityItemSchema?>> _f$items =
+      Field('items', _$items, mode: FieldMode.member);
 
   @override
   final MappableFields<EquipmentLoadout> fields = const {
@@ -234,6 +232,10 @@ extension EquipmentLoadoutValueCopy<$R, $Out>
 
 abstract class EquipmentLoadoutCopyWith<$R, $In extends EquipmentLoadout, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>?
+  get utility1;
+  QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>?
+  get utility2;
   $R call({
     ItemSchema? weapon,
     ItemSchema? helmet,
@@ -244,8 +246,8 @@ abstract class EquipmentLoadoutCopyWith<$R, $In extends EquipmentLoadout, $Out>
     ItemSchema? amulet,
     ItemSchema? ring1,
     ItemSchema? ring2,
-    ItemSchema? utility1,
-    ItemSchema? utility2,
+    QuantityItemSchema? utility1,
+    QuantityItemSchema? utility2,
     ItemSchema? artifact1,
     ItemSchema? artifact2,
     ItemSchema? artifact3,
@@ -265,6 +267,12 @@ class _EquipmentLoadoutCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<EquipmentLoadout> $mapper =
       EquipmentLoadoutMapper.ensureInitialized();
+  @override
+  QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>?
+  get utility1 => $value.utility1?.copyWith.$chain((v) => call(utility1: v));
+  @override
+  QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>?
+  get utility2 => $value.utility2?.copyWith.$chain((v) => call(utility2: v));
   @override
   $R call({
     Object? weapon = $none,

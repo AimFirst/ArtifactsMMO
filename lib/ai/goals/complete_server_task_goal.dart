@@ -270,8 +270,7 @@ class CompleteServerTaskGoal extends AIGoal {
     if (state.character.taskType == TaskType.monsters.name) {
       final monster = worldDataProvider.getMonsterByCode(state.character.task);
       if (monster != null) {
-        return GearEvaluationContext(
-            taskType: 'overall', targetMonster: monster);
+        return CombatGearEvaluationContext(targetMonster: monster);
       }
     }
 

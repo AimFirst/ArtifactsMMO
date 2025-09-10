@@ -170,6 +170,6 @@ class DefaultGatherGoal extends AIGoal {
     if (skill == null) {
       return null;
     }
-    return GearEvaluationContext(taskType: skill.name);
+    return SkillGearEvaluationContext(skillType: skill.name);
   }
 }
