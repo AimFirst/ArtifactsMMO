@@ -91,7 +91,7 @@ class IntermediateNpcBuyTeamRequestGoal extends AIGoal {
     final requests = teamBrainProvider.openRequests;
 
     // Try to accomplish a craft
-    for (final request in requests) {
+    for (final request in [...requests]) {
       // Can't buy this item anyways
       if (!_canBuyItem(request.requestedItem.code, worldDataProvider)) {
         continue;

@@ -8,6 +8,7 @@ import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
 import 'package:artifacts_mmo/models/quantity_item_schema.dart';
+import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
@@ -517,4 +518,28 @@ class LoadoutOptimizerService {
       ...bankItems
     ]);
   }
+
+  Future<EquipmentLoadoutResult> bestLoadoutOfAvailableCharacterItems(CharacterSchema character,
+      GearEvaluationContext gearContext,
+      WorldDataProvider worldDataProvider,
+      BankProvider bankProvider,
+      ) async {
+    return await bestLoadoutOfAvailableItems(
+        character,
+        gearContext,
+        character.inventory?.map((item) {
+          final itemSchema = worldDataProvider.getItemByCode(item.code);
+          return itemSchema == null
+              ? null
+              : QuantityItemSchema(itemSchema, item.quantity);
+        }).toList() ??
+            <QuantityItemSchema?>[],
+        bankProvider.items.map((item) {
+          final itemSchema = worldDataProvider.getItemByCode(item.code);
+          return itemSchema == null
+              ? null
+              : QuantityItemSchema(itemSchema, item.quantity);
+        }).toList());
+  }
+
 }

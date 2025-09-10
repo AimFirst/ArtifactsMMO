@@ -4,8 +4,8 @@ import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
+import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
-import 'package:artifacts_mmo/models/quantity_item_schema.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
@@ -84,28 +84,9 @@ class DefaultFightGoal extends AIGoal {
     final monsters = worldDataProvider.allMonsters
       ..sort((b, a) => a.level.compareTo(b.level));
     for (final monster in monsters) {
-      final idealLoadout =
-          await loadoutOptimizerService.bestLoadoutOfAvailableItems(
-        character,
-        CombatGearEvaluationContext(targetMonster: monster),
-        character.inventory?.map((i) {
-              final itemSchema = worldDataProvider.getItemByCode(i.code);
-              return itemSchema == null
-                  ? null
-                  : QuantityItemSchema(itemSchema, i.quantity);
-            }).toList() ??
-            <QuantityItemSchema>[],
-        bankProvider.items.map((i) {
-          final itemSchema = worldDataProvider.getItemByCode(i.code);
-          return itemSchema == null
-              ? null
-              : QuantityItemSchema(itemSchema, i.quantity);
-        }).toList(),
-      );
-      final tempCharacter = character.copyWithEquippedItems(
-          idealLoadout.loadout.itemsBySlot, worldDataProvider);
-
-      if (combatService.canWinFight(tempCharacter, monster)) {
+      final idealLoadout = await loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(character,
+          CombatGearEvaluationContext(targetMonster: monster), worldDataProvider, bankProvider);
+      if (idealLoadout is CombatEquipmentLoadoutResult && idealLoadout.canWinFight) {
         return monster.code;
       }
     }

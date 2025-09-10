@@ -121,12 +121,16 @@ class CombatEquipmentLoadoutResultMapper
       v.combatDetails;
   static const Field<CombatEquipmentLoadoutResult, CombatDetails>
   _f$combatDetails = Field('combatDetails', _$combatDetails);
+  static dynamic _$canWinFight(CombatEquipmentLoadoutResult v) => v.canWinFight;
+  static const Field<CombatEquipmentLoadoutResult, dynamic> _f$canWinFight =
+      Field('canWinFight', _$canWinFight, mode: FieldMode.member);
 
   @override
   final MappableFields<CombatEquipmentLoadoutResult> fields = const {
     #loadout: _f$loadout,
     #itemsToUse: _f$itemsToUse,
     #combatDetails: _f$combatDetails,
+    #canWinFight: _f$canWinFight,
   };
 
   @override

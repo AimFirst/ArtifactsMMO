@@ -8,6 +8,7 @@ import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
+import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
@@ -56,7 +57,13 @@ class CompleteServerTaskGoal extends AIGoal {
     if (state.character.taskType == TaskType.monsters.name) {
       final monster = worldDataProvider.getMonsterByCode(state.character.task);
       if (monster != null) {
-        return combatService.canWinFight(state.character, monster);
+        CombatGearEvaluationContext gearContext =
+            CombatGearEvaluationContext(targetMonster: monster);
+        final bestResult =
+            await loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(
+                state.character, gearContext, worldDataProvider, bankProvider);
+        return bestResult is CombatEquipmentLoadoutResult &&
+            bestResult.canWinFight;
       }
     }
 
