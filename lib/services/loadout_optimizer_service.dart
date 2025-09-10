@@ -45,7 +45,7 @@ class LoadoutOptimizerService {
     // Use the list of item options as part of the key
     final itemOptionsKey = itemOptions
         .where((item) => item != null)
-        .map((item) => '${item!.item.code}x${item.quantity}')
+        .map((item) => '${item!.item.code}')
         .toList()
       ..sort((a, b) => a.compareTo(b))
       ..join(',');
@@ -261,8 +261,6 @@ class LoadoutOptimizerService {
     if (cachedResult != null) {
       return cachedResult;
     }
-
-    _inProgressCalculations[cacheKey] = _getDefaultResult(gearContext);
 
     if (index == 0) {
       LoggerService.instance.log('Starting gear discovery $cacheKey}',
@@ -504,7 +502,9 @@ class LoadoutOptimizerService {
     final bestUseOption = await _bestUseOption(
         newCharacter, gearContext, itemsThisCharacterCanUse);
 
-    return bestGearOption.copyWith(itemsToUse: bestUseOption.itemsToUse);
+    final bestResult = bestGearOption.copyWith(itemsToUse: bestUseOption.itemsToUse);
+    _inProgressCalculations[cacheKey] = bestResult;
+    return bestResult;
   }
 
   Future<EquipmentLoadoutResult> bestLoadoutOfAvailableItems(

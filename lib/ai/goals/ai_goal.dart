@@ -314,7 +314,9 @@ abstract class AIGoal {
         continue;
       }
 
-      int quantityNeeded = max(item.quantity, consumableItemFetchBatchSize);
+      int quantityNeeded = slot != null
+          ? item.quantity
+          : max(item.quantity, consumableItemFetchBatchSize);
 
       // Check to see if it's in our inventory
       quantityNeeded -= state.character.inventory?.count(item.item.code) ?? 0;

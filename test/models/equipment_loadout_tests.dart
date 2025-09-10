@@ -3,6 +3,7 @@
 import 'package:artifacts_api/artifacts_api.dart'; // You'll need to mock this
 import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
+import 'package:artifacts_mmo/models/quantity_item_schema.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart'; // You'll need to mock this
 import 'package:built_collection/src/list.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,6 +17,8 @@ class MockCharacterSchema extends Mock implements CharacterSchema {}
 class MockWorldDataProvider extends Mock implements WorldDataProvider {}
 
 class MockSimpleEffectSchema extends Mock implements SimpleEffectSchema {}
+
+class MockQuantityItemSchema extends Mock implements QuantityItemSchema {}
 
 void main() {
   group('EquipmentLoadout', () {
@@ -115,9 +118,9 @@ void main() {
       final itemsList = loadout.items;
 
       expect(itemsList.length, 16); // Ensure all slots are accounted for
-      expect(itemsList, contains(weapon));
-      expect(itemsList, contains(helmet));
-      expect(itemsList, contains(shield));
+      expect(itemsList, contains(QuantityItemSchema(weapon, 1)));
+      expect(itemsList, contains(QuantityItemSchema(helmet, 1)));
+      expect(itemsList, contains(QuantityItemSchema(shield, 1)));
       expect(itemsList.where((item) => item == null).length,
           13); // If only 3 items are set
     });
