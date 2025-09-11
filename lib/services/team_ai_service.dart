@@ -1,5 +1,6 @@
 // lib/services/team_ai_service.dart
 
+import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/ai/goals/clear_inventory_goal.dart';
 import 'package:artifacts_mmo/ai/goals/complete_server_task_goal.dart';
@@ -16,6 +17,8 @@ import 'package:artifacts_mmo/ai/goals/intermediate_npc_buy_team_request_goal.da
 import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
+import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
+import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
@@ -42,17 +45,21 @@ class TeamAIService {
   late LoadoutOptimizerService _loadoutOptimizerService;
 
   TeamAIService(
-      this._apiClient,
-      this._teamProvider,
-      this._worldDataProvider,
-      this._bankProvider,
-      this._mapProvider,
-      this._combatService,
-      this._teamBrainProvider,
-      this._appDatabase,) {
+    this._apiClient,
+    this._teamProvider,
+    this._worldDataProvider,
+    this._bankProvider,
+    this._mapProvider,
+    this._combatService,
+    this._teamBrainProvider,
+    this._appDatabase,
+  ) {
     _actionFactory = ActionFactory(_apiClient);
-    _loadoutOptimizerService =
-        LoadoutOptimizerService(_combatService, _worldDataProvider, _appDatabase,);
+    _loadoutOptimizerService = LoadoutOptimizerService(
+      _combatService,
+      _worldDataProvider,
+      _appDatabase,
+    );
 
     // Initialize all possible goals.
     _goals.addAll([
@@ -78,7 +85,10 @@ class TeamAIService {
 
   // This is the main entry point for the AI update cycle.
   Future<void> updateAI(List<CharacterState> characterStates) async {
-    if (_teamProvider.isLoading || _worldDataProvider.isLoading || _bankProvider.isLoading || _mapProvider.isLoading) {
+    if (_teamProvider.isLoading ||
+        _worldDataProvider.isLoading ||
+        _bankProvider.isLoading ||
+        _mapProvider.isLoading) {
       return;
     }
 
@@ -140,5 +150,20 @@ class TeamAIService {
       }
       // If no goals can be run, the character will implicitly remain idle.
     }
+  }
+
+  Future<EquipmentLoadoutResult> bestLoadoutOfAvailableCharacterItems(
+    CharacterSchema character,
+    GearEvaluationContext gearContext,
+    WorldDataProvider worldDataProvider,
+    BankProvider bankProvider, {bool forceCalculate = false}
+  ) {
+    return _loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(
+      character,
+      gearContext,
+      worldDataProvider,
+      bankProvider,
+      forceCalculate: forceCalculate,
+    );
   }
 }

@@ -1,7 +1,11 @@
+import 'package:artifacts_mmo/loadout_simulator_page.dart';
+import 'package:artifacts_mmo/providers/bank_provider.dart';
+import 'package:artifacts_mmo/providers/team_provider.dart';
+import 'package:artifacts_mmo/providers/world_data_provider.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import '../providers/team_provider.dart';
 
 class QuickSettingsPanel extends StatefulWidget {
   const QuickSettingsPanel({super.key});
@@ -16,6 +20,8 @@ class _QuickSettingsPanelState extends State<QuickSettingsPanel> {
   @override
   Widget build(BuildContext context) {
     final teamProvider = context.watch<TeamProvider>();
+    final worldDataProvider = context.watch<WorldDataProvider>();
+    final bankProvider = context.watch<BankProvider>();
 
     // Determine the label for the master pause/resume button.
     final bool isAnyCharacterActive = teamProvider.characters.any((c) => !c.isPaused);
@@ -58,6 +64,23 @@ class _QuickSettingsPanelState extends State<QuickSettingsPanel> {
               label: Text(isAnyCharacterActive ? "Pause All" : "Resume All"),
               onPressed: () {
                 teamProvider.togglePauseAll();
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.calculate),
+              label: const Text("Loadout Sim"),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => LoadoutSimulatorPage(
+                    worldDataProvider: worldDataProvider,
+                    teamProvider: teamProvider,
+                    bankProvider: bankProvider,
+                  )),
+                );
               },
             ),
           ),

@@ -108,11 +108,11 @@ class LoadoutOptimizerService {
   Future<EquipmentLoadoutResult> _getLoadoutResult(
       GearEvaluationContext gearContext,
       CharacterSchema character,
-      EquipmentLoadout loadout) async {
+      EquipmentLoadout loadout, {bool forceCalculate = false}) async {
     final cacheKey =
         _generateEvaluationKey(gearContext, character, loadout.items);
     final cachedResult = await _getCachedResult(cacheKey);
-    if (cachedResult != null) {
+    if (!forceCalculate && cachedResult != null) {
       return cachedResult;
     }
 
@@ -253,12 +253,12 @@ class LoadoutOptimizerService {
       GearEvaluationContext gearContext,
       EquipmentLoadout loadout,
       Map<ItemSlot, List<QuantityItemSchema?>> gearOptions,
-      int index) async {
+      int index, {bool forceCalculate = false}) async {
     final cacheKey = _generateEvaluationKey(gearContext, characterSchema,
         gearOptions.values.expand((items) => items).toList());
 
     final cachedResult = await _getCachedResult(cacheKey);
-    if (cachedResult != null) {
+    if (!forceCalculate && cachedResult != null) {
       return cachedResult;
     }
 
@@ -279,10 +279,10 @@ class LoadoutOptimizerService {
 
       if (index >= itemSlots.length - 1) {
         results.add(
-            await _getLoadoutResult(gearContext, characterSchema, newLoadout));
+            await _getLoadoutResult(gearContext, characterSchema, newLoadout, forceCalculate: forceCalculate));
       } else {
         results.add(await _bestGearOption(characterSchema, gearContext,
-            newLoadout, newGearOptions, index + 1));
+            newLoadout, newGearOptions, index + 1, forceCalculate: forceCalculate));
       }
     }
 
@@ -296,7 +296,7 @@ class LoadoutOptimizerService {
 
     if (index == 0) {
       LoggerService.instance.log(
-          'Finished gear discovery ${gearContext.toString()}',
+          'Finished gear discovery ${gearContext.toString()}:\n${bestResult.loadout.itemsBySlot.entries.map((entry) => '${entry.key}: ${entry.value?.item.code}').join(',')}',
           character: characterSchema);
     }
 
@@ -428,7 +428,7 @@ class LoadoutOptimizerService {
   }
 
   EquipmentLoadoutResult _bestUseOption(CharacterSchema character,
-      GearEvaluationContext gearContext, List<QuantityItemSchema?> options) {
+      GearEvaluationContext gearContext, List<QuantityItemSchema?> options, {bool forceCalculate = false}) {
     switch (gearContext) {
       case CombatGearEvaluationContext():
         return _getDefaultResult(gearContext);
@@ -440,6 +440,7 @@ class LoadoutOptimizerService {
 
         final filteredOptions = (options.where((option) =>
             option != null &&
+            option.totalEffect(EffectEnum.healing) > 0 &&
             option.totalEffect(EffectEnum.healing) <= missingHp)).toList()
           ..sort((a, b) => b!
               .totalEffect(EffectEnum.healing)
@@ -463,7 +464,7 @@ class LoadoutOptimizerService {
   Future<EquipmentLoadoutResult> bestLoadout(
       CharacterSchema character,
       GearEvaluationContext gearContext,
-      List<QuantityItemSchema?> allItemsToConsider) async {
+      List<QuantityItemSchema?> allItemsToConsider, {bool forceCalculate = false}) async {
     // Filter items to what we can equip and use to help with this goal
     final itemsThisCharacterCanEquip = allItemsToConsider
         .where((item) => _filterEquipableItems(character, gearContext, item))
@@ -474,18 +475,6 @@ class LoadoutOptimizerService {
         .toList()
       ..sort(_sortItems);
 
-    // Get the equipable items split by slot.
-    Map<ItemSlot, List<QuantityItemSchema?>> gearOptions = {};
-    for (final slot in ItemSlot.values) {
-      gearOptions[slot] = itemsThisCharacterCanEquip
-          .where((item) {
-            return (item?.item.canFitInSlot(slot) ?? false);
-          })
-          .cast<QuantityItemSchema?>()
-          .toList()
-        ..add(null);
-    }
-
     final newCharacter =
         character.copyWithEquippedItems({}, _worldDataProvider);
     final cacheKey = _generateEvaluationKey(gearContext, newCharacter,
@@ -495,14 +484,28 @@ class LoadoutOptimizerService {
       return inProgress;
     }
 
+    // Get the equipable items split by slot.
+    Map<ItemSlot, List<QuantityItemSchema?>> gearOptions = {};
+    for (final slot in ItemSlot.values) {
+      gearOptions[slot] = itemsThisCharacterCanEquip
+          .where((item) {
+            return (item?.item.canFitInSlot(slot) ?? false);
+          })
+          .cast<QuantityItemSchema?>()
+          .toSet()
+          .toList()
+        ..add(null);
+    }
+
     _inProgressCalculations[cacheKey] = _getDefaultResult(gearContext);
 
     final bestGearOption = await _bestGearOption(
-        newCharacter, gearContext, EquipmentLoadout(), gearOptions, 0);
+        newCharacter, gearContext, EquipmentLoadout(), gearOptions, 0, forceCalculate: forceCalculate);
     final bestUseOption = await _bestUseOption(
-        newCharacter, gearContext, itemsThisCharacterCanUse);
+        newCharacter, gearContext, itemsThisCharacterCanUse, forceCalculate: forceCalculate);
 
-    final bestResult = bestGearOption.copyWith(itemsToUse: bestUseOption.itemsToUse);
+    final bestResult =
+        bestGearOption.copyWith(itemsToUse: bestUseOption.itemsToUse);
     _inProgressCalculations[cacheKey] = bestResult;
     return bestResult;
   }
@@ -511,35 +514,38 @@ class LoadoutOptimizerService {
       CharacterSchema character,
       GearEvaluationContext gearContext,
       List<QuantityItemSchema?> inventoryItems,
-      List<QuantityItemSchema?> bankItems) async {
+      List<QuantityItemSchema?> bankItems, {bool forceCalculate = false}) async {
     return await bestLoadout(character, gearContext, [
       ...EquipmentLoadout.fromCharacter(character, _worldDataProvider).items,
       ...inventoryItems,
       ...bankItems
-    ]);
+    ],
+    forceCalculate: forceCalculate);
   }
 
-  Future<EquipmentLoadoutResult> bestLoadoutOfAvailableCharacterItems(CharacterSchema character,
+  Future<EquipmentLoadoutResult> bestLoadoutOfAvailableCharacterItems(
+      CharacterSchema character,
       GearEvaluationContext gearContext,
       WorldDataProvider worldDataProvider,
       BankProvider bankProvider,
-      ) async {
+      {bool forceCalculate = false}) async {
     return await bestLoadoutOfAvailableItems(
-        character,
-        gearContext,
-        character.inventory?.map((item) {
-          final itemSchema = worldDataProvider.getItemByCode(item.code);
-          return itemSchema == null
-              ? null
-              : QuantityItemSchema(itemSchema, item.quantity);
-        }).toList() ??
-            <QuantityItemSchema?>[],
-        bankProvider.items.map((item) {
-          final itemSchema = worldDataProvider.getItemByCode(item.code);
-          return itemSchema == null
-              ? null
-              : QuantityItemSchema(itemSchema, item.quantity);
-        }).toList());
+      character,
+      gearContext,
+      character.inventory?.map((item) {
+            final itemSchema = worldDataProvider.getItemByCode(item.code);
+            return itemSchema == null
+                ? null
+                : QuantityItemSchema(itemSchema, item.quantity);
+          }).toList() ??
+          <QuantityItemSchema?>[],
+      bankProvider.items.map((item) {
+        final itemSchema = worldDataProvider.getItemByCode(item.code);
+        return itemSchema == null
+            ? null
+            : QuantityItemSchema(itemSchema, item.quantity);
+      }).toList(),
+      forceCalculate: forceCalculate,
+    );
   }
-
 }

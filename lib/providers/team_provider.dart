@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:collection';
 import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
+import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
+import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
@@ -49,8 +51,15 @@ class TeamProvider with ChangeNotifier {
   TeamProvider(this._apiClient, this._mapProvider, this._worldDataProvider,
       this._bankProvider, this._teamBrainProvider, this._appDatabase,) {
     _actionFactory = ActionFactory(_apiClient);
-    _aiService = TeamAIService(_apiClient, this, _worldDataProvider,
-        _bankProvider, _mapProvider, _combatService, _teamBrainProvider, _appDatabase,);
+    _aiService = TeamAIService(
+      _apiClient,
+      this,
+      _worldDataProvider,
+      _bankProvider,
+      _mapProvider,
+      _combatService,
+      _teamBrainProvider,
+      _appDatabase,);
     fetchAllCharacters().then((_) {
       // Initialize queues and start the game loop after characters are loaded
       for (var state in _characterStates) {
@@ -66,7 +75,7 @@ class TeamProvider with ChangeNotifier {
 
     try {
       final charactersResponse =
-          await _apiClient.myCharacters.getMyCharactersMyCharactersGet();
+      await _apiClient.myCharacters.getMyCharactersMyCharactersGet();
       if (charactersResponse.statusCode == 200 &&
           charactersResponse.data != null) {
         _characterStates = charactersResponse.data!.data
@@ -93,7 +102,9 @@ class TeamProvider with ChangeNotifier {
         }
       }
     } catch (e) {
-      LoggerService.instance.log('Error refreshing character: $e', level: LogLevel.warning, character: character);
+      LoggerService.instance.log(
+          'Error refreshing character: $e', level: LogLevel.warning,
+          character: character);
     }
   }
 
@@ -106,7 +117,7 @@ class TeamProvider with ChangeNotifier {
     required Future<Response<T>> Function() apiCall,
   }) async {
     final state =
-        _characterStates.firstWhere((s) => s.character.name == character.name);
+    _characterStates.firstWhere((s) => s.character.name == character.name);
 
     if (state.isOnCooldown || state.isPerformingAction) {
       LoggerService.instance
@@ -123,19 +134,19 @@ class TeamProvider with ChangeNotifier {
       // Check if the response was successful and the data is valid
       if (response.statusCode == 200 && data != null) {
         // --- Robustly extract shared properties ---
-          // We assume all successful action responses contain 'character' and 'cooldown'.
-          // This is a safe way to access properties on a 'dynamic' object.
-          final CharacterSchema? updatedCharacter = data?.data?.character;
-          final CooldownSchema? cooldown = data?.data?.cooldown;
+        // We assume all successful action responses contain 'character' and 'cooldown'.
+        // This is a safe way to access properties on a 'dynamic' object.
+        final CharacterSchema? updatedCharacter = data?.data?.character;
+        final CooldownSchema? cooldown = data?.data?.cooldown;
 
-          if (updatedCharacter != null && cooldown != null) {
-            state.setActionComplete(updatedCharacter, cooldown);
-          } else {
-            // This error means the API changed its response format
-            LoggerService.instance.log('Invalid response format',
-                level: LogLevel.warning, character: character);
-            state.setActionFailed('Invalid response format');
-          }
+        if (updatedCharacter != null && cooldown != null) {
+          state.setActionComplete(updatedCharacter, cooldown);
+        } else {
+          // This error means the API changed its response format
+          LoggerService.instance.log('Invalid response format',
+              level: LogLevel.warning, character: character);
+          state.setActionFailed('Invalid response format');
+        }
 
         if (data is BankItemTransactionResponseSchema) {
           _bankProvider.updateBankInventory(data.data.bank);
@@ -150,7 +161,8 @@ class TeamProvider with ChangeNotifier {
                 (s) => s.character.name == character.name,
           );
           characterToUpdate?.updateCharacter(data);
-          state.setActionComplete(data, (CooldownSchemaBuilder()..expiration = data.cooldownExpiration).build());
+          state.setActionComplete(data, (CooldownSchemaBuilder()
+            ..expiration = data.cooldownExpiration).build());
         }
       } else {
         _actionQueues[character.name]?.clear();
@@ -188,9 +200,9 @@ class TeamProvider with ChangeNotifier {
             break;
           case 452: // code_token_invalid
           case 453: // code_token_expired
-            // These are critical errors.
+          // These are critical errors.
             errorMessage =
-                "CRITICAL: API Token is invalid or expired. Please update it in settings.";
+            "CRITICAL: API Token is invalid or expired. Please update it in settings.";
             break;
         }
       }
@@ -308,8 +320,20 @@ class TeamProvider with ChangeNotifier {
       }
     }
 
-    LoggerService.instance.log(shouldPause ? "TEAM: Pausing all characters." : "TEAM: Resuming all characters.");
+    LoggerService.instance.log(shouldPause
+        ? "TEAM: Pausing all characters."
+        : "TEAM: Resuming all characters.");
     notifyListeners();
+  }
+
+  Future<EquipmentLoadoutResult> bestLoadoutOfAvailableCharacterItems(
+      CharacterSchema character,
+      GearEvaluationContext gearContext,
+      WorldDataProvider worldDataProvider,
+      BankProvider bankProvider, {bool forceCalculate = false}) {
+    return _aiService.bestLoadoutOfAvailableCharacterItems(
+      character, gearContext, worldDataProvider, bankProvider,
+      forceCalculate: forceCalculate,);
   }
 
   @override

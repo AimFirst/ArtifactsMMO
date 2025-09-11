@@ -235,7 +235,7 @@ class WorldDataProvider with ChangeNotifier {
       currentPage <= totalPages); // Continue until all pages are fetched.
 
       LoggerService.instance.log(
-          '📚 Monster Data loaded successfully! Found ${_npcItems.length} total npc items.');
+          '📚 NPC Data loaded successfully! Found ${_npcItems.length} total npc items.');
     } catch (e) {
       LoggerService.instance
           .log('Failed to load npc item data: $e', level: LogLevel.error);

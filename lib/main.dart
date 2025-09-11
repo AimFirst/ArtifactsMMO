@@ -5,6 +5,7 @@ import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
+import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
