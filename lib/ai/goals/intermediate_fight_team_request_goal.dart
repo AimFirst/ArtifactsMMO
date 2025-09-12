@@ -47,6 +47,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
             combatService,
             bankProvider,
             loadoutOptimizerService,
+            teamBrainProvider,
           ) !=
           null) {
         return true;
@@ -73,12 +74,14 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     for (final request in teamBrainProvider.openRequests) {
       // We can gather this item, so do it.
       final monster = await _canGather(
-          state,
-          request.requestedItem.code,
-          worldDataProvider,
-          combatService,
-          bankProvider,
-          loadoutOptimizerService);
+        state,
+        request.requestedItem.code,
+        worldDataProvider,
+        combatService,
+        bankProvider,
+        loadoutOptimizerService,
+        teamBrainProvider,
+      );
       if (monster != null) {
         final location = mapProvider.findNearestTile(
             state.character.location,
@@ -118,12 +121,14 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     for (final request in teamBrainProvider.openRequests) {
       // We can gather this item by fighting, so do it.
       final monster = await _canGather(
-          state,
-          request.requestedItem.code,
-          worldDataProvider,
-          combatService,
-          bankProvider,
-          loadoutOptimizerService);
+        state,
+        request.requestedItem.code,
+        worldDataProvider,
+        combatService,
+        bankProvider,
+        loadoutOptimizerService,
+        teamBrainProvider,
+      );
       if (monster != null) {
         return CombatGearEvaluationContext(targetMonster: monster);
       }
@@ -138,16 +143,30 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
       WorldDataProvider worldDataProvider,
       CombatService combatService,
       BankProvider bankProvider,
-      LoadoutOptimizerService loadoutOptimizerService) async {
+      LoadoutOptimizerService loadoutOptimizerService,
+      TeamBrainProvider teamBrainProvider) async {
     final monsters = worldDataProvider.getMonstersByDropCode(itemCode);
 
     for (final monster in monsters) {
-      final idealLoadout = await loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(
-        character.character,
-        CombatGearEvaluationContext(targetMonster: monster),
-        worldDataProvider, bankProvider);
-      if (idealLoadout is CombatEquipmentLoadoutResult && idealLoadout.canWinFight) {
-        return monster;
+      final gearContext = CombatGearEvaluationContext(targetMonster: monster);
+      final idealLoadout =
+          await loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(
+              character.character,
+              gearContext,
+              worldDataProvider,
+              bankProvider);
+      if (idealLoadout is CombatEquipmentLoadoutResult) {
+        if (idealLoadout.canWinFight) {
+          return monster;
+        } else {
+          await requestAllMissingBestItems(
+              character,
+              gearContext,
+              loadoutOptimizerService,
+              worldDataProvider,
+              bankProvider,
+              teamBrainProvider);
+        }
       }
     }
 
