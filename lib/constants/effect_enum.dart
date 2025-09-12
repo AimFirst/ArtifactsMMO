@@ -1,5 +1,5 @@
 enum EffectEnum {
-  alchemy('Reduces cooldown by -10% when a character harvest a plant.'),
+  alchemy('Reduces cooldown by -X% when a character harvest a plant.', negativeIsBetter: true),
   antipoison(
       'At the beginning of the turn, if the character has at least one poison on him, removes x poison damage.'),
   attack_air('Adds X Air Attack to its stats when equipped.'),
@@ -26,7 +26,7 @@ enum EffectEnum {
   dmg_earth('Adds X% Earth Damage to its stats when equipped.'),
   dmg_fire('Adds X% Fire Damage to its stats when equipped.'),
   dmg_water('Adds X% Water Damage to its stats when equipped.'),
-  fishing('Reduces cooldown by -10% when a character is fishing.'),
+  fishing('Reduces cooldown by -X% when a character is fishing.', negativeIsBetter: true),
   gold('Adds X gold in your inventory.'),
   haste('Adds X Haste to its stats when equipped. The haste reduces the cooldown of a fight.'),
   heal('Heal X HP when the item is used.'),
@@ -36,7 +36,7 @@ enum EffectEnum {
       'Adds X to the maximum number of items in the inventory when equipped.'),
   lifesteal(
       'Restores x% of the total attack of all elements in HP after a critical strike.'),
-  mining('Reduces cooldown by -10% when a character mines a resource.'),
+  mining('Reduces cooldown by -X% when a character mines a resource.', negativeIsBetter: true),
   poison(
       'At the start of its first turn, applies a x poison to its opponent. Loses x HP per turn.'),
   reconstitution('At the beginning of the turn x, restores all HP.'),
@@ -47,10 +47,11 @@ enum EffectEnum {
   restore('Heals X HP when the player has lost 50% of their life.'),
   wisdom(
       'Adds X Wisdom to its stats when equipped. Each point of wisdom increases your xp in combat and with skills. (1% extra per 10 wisdom)'),
-  woodcutting('Reduces cooldown by -X% when a character logs a tree.'),
+  woodcutting('Reduces cooldown by -X% when a character logs a tree.', negativeIsBetter: true),
   ;
 
-  const EffectEnum(this.description);
+  const EffectEnum(this.description, {this.negativeIsBetter = false});
 
   final String description;
+  final bool negativeIsBetter;
 }

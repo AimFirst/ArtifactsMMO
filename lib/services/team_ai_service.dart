@@ -166,4 +166,17 @@ class TeamAIService {
       forceCalculate: forceCalculate,
     );
   }
+
+  Future<EquipmentLoadoutResult> bestLoadoutOfAllItems(
+      CharacterSchema character,
+      GearEvaluationContext gearContext,
+      WorldDataProvider worldDataProvider,
+      {bool forceCalculate = false}) async {
+    return await _loadoutOptimizerService.bestLoadoutOfAllItems(
+      character,
+      gearContext,
+      worldDataProvider,
+      forceCalculate: forceCalculate,
+    );
+  }
 }

@@ -173,22 +173,12 @@ abstract class AIGoal {
 
     // Find the best equipment that we have available right now.
     final bestAvailableEquipment =
-        await loadoutOptimizerService.bestLoadoutOfAvailableItems(
-            state.character,
-            gearContext,
-            state.character.inventory?.map((item) {
-                  final itemSchema = worldDataProvider.getItemByCode(item.code);
-                  return itemSchema == null
-                      ? null
-                      : QuantityItemSchema(itemSchema, item.quantity);
-                }).toList() ??
-                <QuantityItemSchema?>[],
-            bankProvider.items.map((item) {
-              final itemSchema = worldDataProvider.getItemByCode(item.code);
-              return itemSchema == null
-                  ? null
-                  : QuantityItemSchema(itemSchema, item.quantity);
-            }).toList());
+        await loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(
+      state.character,
+      gearContext,
+      worldDataProvider,
+      bankProvider,
+    );
 
     for (final itemWithSlot
         in bestAvailableEquipment.loadout.itemsBySlot.entries) {
@@ -291,10 +281,10 @@ abstract class AIGoal {
         EquipmentLoadout.fromCharacter(state.character, worldDataProvider);
 
     // Find our ideal equipment and request any that is missing.
-    final bestEquipment = await loadoutOptimizerService.bestLoadout(
+    final bestEquipment = await loadoutOptimizerService.bestLoadoutOfAllItems(
       state.character,
       gearContext,
-      worldDataProvider.allItems.map((item) => item.quantityItem).toList(),
+      worldDataProvider,
     );
 
     final allItems = [

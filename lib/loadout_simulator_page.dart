@@ -40,6 +40,7 @@ class _LoadoutSimulatorPageState extends State<LoadoutSimulatorPage> {
   MonsterSchema? _selectedMonster;
   String? _selectedSkillType;
   bool? _selectedForceCalculate = false;
+  bool? _selectedCurrentItemsOnly = true;
 
   // State to hold the final result
   EquipmentLoadoutResult? _result;
@@ -84,13 +85,23 @@ class _LoadoutSimulatorPageState extends State<LoadoutSimulatorPage> {
     }
 
     // Get the service from your provider setup
-    final result = await teamProvider.bestLoadoutOfAvailableCharacterItems(
-      _selectedCharacter!,
-      gearContext,
-      worldDataProvider,
-      bankProvider,
-      forceCalculate: _selectedForceCalculate ?? false,
-    );
+    EquipmentLoadoutResult result;
+    if (_selectedCurrentItemsOnly ?? true) {
+      result = await teamProvider.bestLoadoutOfAvailableCharacterItems(
+        _selectedCharacter!,
+        gearContext,
+        worldDataProvider,
+        bankProvider,
+        forceCalculate: _selectedForceCalculate ?? false,
+      );
+    } else {
+      result = await teamProvider.bestLoadoutOfAllItems(
+        _selectedCharacter!,
+        gearContext,
+        worldDataProvider,
+        forceCalculate: _selectedForceCalculate ?? false,
+      );
+    }
 
     setState(() {
       _result = result;
@@ -179,6 +190,15 @@ class _LoadoutSimulatorPageState extends State<LoadoutSimulatorPage> {
                     _selectedSkillType = value;
                   },
                 )),
+              Expanded(
+                  child: CheckboxListTile(
+                      title: const Text('Current Items Only'),
+                      value: _selectedCurrentItemsOnly,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCurrentItemsOnly = value;
+                        });
+                      })),
               Expanded(
                   child: CheckboxListTile(
                       title: const Text('Force Calculate'),

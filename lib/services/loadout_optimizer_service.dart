@@ -2,6 +2,7 @@ import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
+import 'package:artifacts_mmo/extensions/item_extension.dart';
 import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/models/combat_details.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
@@ -13,6 +14,7 @@ import 'package:artifacts_mmo/providers/world_data_provider.dart';
 import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:drift/drift.dart';
+import 'package:collection/collection.dart';
 
 class LoadoutOptimizerService {
   static const optimizationAlgorithmVersion = 2;
@@ -108,7 +110,8 @@ class LoadoutOptimizerService {
   Future<EquipmentLoadoutResult> _getLoadoutResult(
       GearEvaluationContext gearContext,
       CharacterSchema character,
-      EquipmentLoadout loadout, {bool forceCalculate = false}) async {
+      EquipmentLoadout loadout,
+      {bool forceCalculate = false}) async {
     final cacheKey =
         _generateEvaluationKey(gearContext, character, loadout.items);
     final cachedResult = await _getCachedResult(cacheKey);
@@ -253,13 +256,16 @@ class LoadoutOptimizerService {
       GearEvaluationContext gearContext,
       EquipmentLoadout loadout,
       Map<ItemSlot, List<QuantityItemSchema?>> gearOptions,
-      int index, {bool forceCalculate = false}) async {
+      int index,
+      {bool forceCalculate = false}) async {
     final cacheKey = _generateEvaluationKey(gearContext, characterSchema,
         gearOptions.values.expand((items) => items).toList());
 
-    final cachedResult = await _getCachedResult(cacheKey);
-    if (!forceCalculate && cachedResult != null) {
-      return cachedResult;
+    if (!forceCalculate) {
+      final cachedResult = await _getCachedResult(cacheKey);
+      if (cachedResult != null) {
+        return cachedResult;
+      }
     }
 
     if (index == 0) {
@@ -273,16 +279,26 @@ class LoadoutOptimizerService {
     // Test all combinations of loadouts and get one result for each combination (for this index).
     List<EquipmentLoadoutResult> results = [];
     final options = gearOptions[itemSlot] ?? [];
+    int itemIndex = 0;
     for (final item in options) {
       final newLoadout = loadout.copyWithItem(itemSlot, item);
       final newGearOptions = {...gearOptions}..[itemSlot] = [item];
 
+      if (index == 0) {
+        LoggerService.instance.log(
+            'Gear discovery progress ($gearContext): $itemIndex / ${options.length}',
+            character: characterSchema);
+        itemIndex++;
+      }
+
       if (index >= itemSlots.length - 1) {
-        results.add(
-            await _getLoadoutResult(gearContext, characterSchema, newLoadout, forceCalculate: forceCalculate));
+        results.add(await _getLoadoutResult(
+            gearContext, characterSchema, newLoadout,
+            forceCalculate: forceCalculate));
       } else {
-        results.add(await _bestGearOption(characterSchema, gearContext,
-            newLoadout, newGearOptions, index + 1, forceCalculate: forceCalculate));
+        results.add(await _bestGearOption(
+            characterSchema, gearContext, newLoadout, newGearOptions, index + 1,
+            forceCalculate: forceCalculate));
       }
     }
 
@@ -342,6 +358,52 @@ class LoadoutOptimizerService {
     return false;
   }
 
+  List<EffectEnum> _effectsToLookFor(GearEvaluationContext gearContext) {
+    switch (gearContext) {
+      case CombatGearEvaluationContext():
+        return [
+          EffectEnum.antipoison,
+          EffectEnum.attack_air,
+          EffectEnum.attack_earth,
+          EffectEnum.attack_fire,
+          EffectEnum.attack_water,
+          EffectEnum.boost_dmg_air,
+          EffectEnum.boost_dmg_earth,
+          EffectEnum.boost_dmg_fire,
+          EffectEnum.boost_dmg_water,
+          EffectEnum.boost_hp,
+          EffectEnum.boost_res_air,
+          EffectEnum.boost_res_earth,
+          EffectEnum.boost_res_fire,
+          EffectEnum.boost_res_water,
+          EffectEnum.critical_strike,
+          EffectEnum.dmg,
+          EffectEnum.dmg_air,
+          EffectEnum.dmg_earth,
+          EffectEnum.dmg_fire,
+          EffectEnum.dmg_water,
+          EffectEnum.haste,
+          EffectEnum.healing,
+          EffectEnum.hp,
+          EffectEnum.inventory_space,
+          EffectEnum.lifesteal,
+          EffectEnum.res_air,
+          EffectEnum.res_earth,
+          EffectEnum.res_fire,
+          EffectEnum.res_water,
+          EffectEnum.restore,
+          EffectEnum.wisdom,
+        ];
+      case SkillGearEvaluationContext():
+        return [
+          EffectEnum.values.firstWhere((e) => e.name == gearContext.skillType),
+          EffectEnum.inventory_space,
+        ];
+      case HealGearEvaluationContext():
+        return [];
+    }
+  }
+
   bool _filterEquipableItems(CharacterSchema character,
       GearEvaluationContext gearContext, QuantityItemSchema? item) {
     // item is null?
@@ -364,52 +426,7 @@ class LoadoutOptimizerService {
       return false;
     }
 
-    List<String> effectsToLookFor = [];
-    switch (gearContext) {
-      case CombatGearEvaluationContext():
-        effectsToLookFor = [
-          EffectEnum.antipoison.name,
-          EffectEnum.attack_air.name,
-          EffectEnum.attack_earth.name,
-          EffectEnum.attack_fire.name,
-          EffectEnum.attack_water.name,
-          EffectEnum.boost_dmg_air.name,
-          EffectEnum.boost_dmg_earth.name,
-          EffectEnum.boost_dmg_fire.name,
-          EffectEnum.boost_dmg_water.name,
-          EffectEnum.boost_hp.name,
-          EffectEnum.boost_res_air.name,
-          EffectEnum.boost_res_earth.name,
-          EffectEnum.boost_res_fire.name,
-          EffectEnum.boost_res_water.name,
-          EffectEnum.critical_strike.name,
-          EffectEnum.dmg.name,
-          EffectEnum.dmg_air.name,
-          EffectEnum.dmg_earth.name,
-          EffectEnum.dmg_fire.name,
-          EffectEnum.dmg_water.name,
-          EffectEnum.haste.name,
-          EffectEnum.healing.name,
-          EffectEnum.hp.name,
-          EffectEnum.inventory_space.name,
-          EffectEnum.lifesteal.name,
-          EffectEnum.res_air.name,
-          EffectEnum.res_earth.name,
-          EffectEnum.res_fire.name,
-          EffectEnum.res_water.name,
-          EffectEnum.restore.name,
-          EffectEnum.wisdom.name,
-        ];
-        break;
-      case SkillGearEvaluationContext():
-        effectsToLookFor = [
-          gearContext.skillType,
-          EffectEnum.inventory_space.name,
-        ];
-        break;
-      case HealGearEvaluationContext():
-        break;
-    }
+    final effectsToLookFor = _effectsToLookFor(gearContext).map((e) => e.name);
 
     // Is there an effect we care about?
     if (item.item.effects!
@@ -427,8 +444,59 @@ class LoadoutOptimizerService {
     return a.item.code.compareTo(b.item.code);
   }
 
+  bool _hasBetterItem(QuantityItemSchema? item,
+      List<EffectEnum> effectsToLookFor, List<QuantityItemSchema?> others) {
+    // If our item is null, assume someone can do better than that.
+    if (item == null) {
+      return true;
+    }
+
+    // Compare against all the other items to see if someone just does it better
+    for (final otherItem in others) {
+      // Other item is null (or our same item!), let's assume we're better.
+      if (otherItem == null || otherItem.item.code == item.item.code) {
+        continue;
+      }
+
+      // Go through each effect we have and see if the other item is better in
+      // every single effect we provide
+      bool hasBetterEffect = false;
+      for (final ourEffect in item.item.effects!) {
+        final effectEnum =
+            EffectEnum.values.firstWhere((e) => e.name == ourEffect.code);
+        // Only compare effects that are relevant
+        if (!effectsToLookFor.contains(effectEnum)) {
+          continue;
+        }
+
+        // Find the other's effect value for this effect
+        final otherEffect = otherItem.item.effects!
+            .firstWhereOrNull((e) => e.code == ourEffect.code);
+        // If the other doesn't have this effect or ours is better than theirs,
+        // then stop checking effects for this item since we know we are better
+        // in at least 1 effect case
+        if (otherEffect == null ||
+            (effectEnum.negativeIsBetter
+                ? ourEffect.value < otherEffect.value
+                : ourEffect.value > otherEffect.value)) {
+          hasBetterEffect = true;
+          break;
+        }
+      }
+
+      // Not a single one of our effects were better, so we can remove this item
+      // knowing that another item will be better.
+      if (!hasBetterEffect) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   EquipmentLoadoutResult _bestUseOption(CharacterSchema character,
-      GearEvaluationContext gearContext, List<QuantityItemSchema?> options, {bool forceCalculate = false}) {
+      GearEvaluationContext gearContext, List<QuantityItemSchema?> options,
+      {bool forceCalculate = false}) {
     switch (gearContext) {
       case CombatGearEvaluationContext():
         return _getDefaultResult(gearContext);
@@ -461,17 +529,20 @@ class LoadoutOptimizerService {
     }
   }
 
-  Future<EquipmentLoadoutResult> bestLoadout(
+  Future<EquipmentLoadoutResult> _bestLoadout(
       CharacterSchema character,
       GearEvaluationContext gearContext,
-      List<QuantityItemSchema?> allItemsToConsider, {bool forceCalculate = false}) async {
+      List<QuantityItemSchema?> allItemsToConsider,
+      {bool forceCalculate = false}) async {
     // Filter items to what we can equip and use to help with this goal
     final itemsThisCharacterCanEquip = allItemsToConsider
         .where((item) => _filterEquipableItems(character, gearContext, item))
+        .toSet()
         .toList()
       ..sort(_sortItems);
     final itemsThisCharacterCanUse = allItemsToConsider
         .where((item) => _filterUsableItems(character, gearContext, item))
+        .toSet()
         .toList()
       ..sort(_sortItems);
 
@@ -487,22 +558,32 @@ class LoadoutOptimizerService {
     // Get the equipable items split by slot.
     Map<ItemSlot, List<QuantityItemSchema?>> gearOptions = {};
     for (final slot in ItemSlot.values) {
-      gearOptions[slot] = itemsThisCharacterCanEquip
+      final slotOptions = itemsThisCharacterCanEquip
           .where((item) {
             return (item?.item.canFitInSlot(slot) ?? false);
           })
-          .cast<QuantityItemSchema?>()
           .toSet()
-          .toList()
-        ..add(null);
+          .toList();
+
+      // Get rid of options that are just worse than others (another item has
+      // the same effects but better)
+      slotOptions.removeWhere((item) =>
+          _hasBetterItem(item, _effectsToLookFor(gearContext), slotOptions));
+
+      // Add null as a valid choice in case no item is just as good as our
+      // "best" item. There's no point in crafting/equipping an item that isn't
+      // better than just having nothing there.
+      gearOptions[slot] = [...slotOptions, null];
     }
 
     _inProgressCalculations[cacheKey] = _getDefaultResult(gearContext);
 
     final bestGearOption = await _bestGearOption(
-        newCharacter, gearContext, EquipmentLoadout(), gearOptions, 0, forceCalculate: forceCalculate);
+        newCharacter, gearContext, EquipmentLoadout(), gearOptions, 0,
+        forceCalculate: forceCalculate);
     final bestUseOption = await _bestUseOption(
-        newCharacter, gearContext, itemsThisCharacterCanUse, forceCalculate: forceCalculate);
+        newCharacter, gearContext, itemsThisCharacterCanUse,
+        forceCalculate: forceCalculate);
 
     final bestResult =
         bestGearOption.copyWith(itemsToUse: bestUseOption.itemsToUse);
@@ -510,17 +591,35 @@ class LoadoutOptimizerService {
     return bestResult;
   }
 
-  Future<EquipmentLoadoutResult> bestLoadoutOfAvailableItems(
+  Future<EquipmentLoadoutResult> bestLoadoutOfAllItems(
+      CharacterSchema character,
+      GearEvaluationContext gearContext,
+      WorldDataProvider worldDataProvider,
+      {bool forceCalculate = false}) async {
+    return await _bestLoadout(
+      character,
+      gearContext,
+      worldDataProvider.allItems.map((item) => item.quantityItem).toList(),
+      forceCalculate: forceCalculate,
+    );
+  }
+
+  Future<EquipmentLoadoutResult> _bestLoadoutOfAvailableItems(
       CharacterSchema character,
       GearEvaluationContext gearContext,
       List<QuantityItemSchema?> inventoryItems,
-      List<QuantityItemSchema?> bankItems, {bool forceCalculate = false}) async {
-    return await bestLoadout(character, gearContext, [
-      ...EquipmentLoadout.fromCharacter(character, _worldDataProvider).items,
-      ...inventoryItems,
-      ...bankItems
-    ],
-    forceCalculate: forceCalculate);
+      List<QuantityItemSchema?> bankItems,
+      {bool forceCalculate = false}) async {
+    return await _bestLoadout(
+        character,
+        gearContext,
+        [
+          ...EquipmentLoadout.fromCharacter(character, _worldDataProvider)
+              .items,
+          ...inventoryItems,
+          ...bankItems
+        ],
+        forceCalculate: forceCalculate);
   }
 
   Future<EquipmentLoadoutResult> bestLoadoutOfAvailableCharacterItems(
@@ -529,7 +628,7 @@ class LoadoutOptimizerService {
       WorldDataProvider worldDataProvider,
       BankProvider bankProvider,
       {bool forceCalculate = false}) async {
-    return await bestLoadoutOfAvailableItems(
+    return await _bestLoadoutOfAvailableItems(
       character,
       gearContext,
       character.inventory?.map((item) {

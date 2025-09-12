@@ -48,8 +48,14 @@ class TeamProvider with ChangeNotifier {
 
   late final TeamAIService _aiService;
 
-  TeamProvider(this._apiClient, this._mapProvider, this._worldDataProvider,
-      this._bankProvider, this._teamBrainProvider, this._appDatabase,) {
+  TeamProvider(
+    this._apiClient,
+    this._mapProvider,
+    this._worldDataProvider,
+    this._bankProvider,
+    this._teamBrainProvider,
+    this._appDatabase,
+  ) {
     _actionFactory = ActionFactory(_apiClient);
     _aiService = TeamAIService(
       _apiClient,
@@ -59,7 +65,8 @@ class TeamProvider with ChangeNotifier {
       _mapProvider,
       _combatService,
       _teamBrainProvider,
-      _appDatabase,);
+      _appDatabase,
+    );
     fetchAllCharacters().then((_) {
       // Initialize queues and start the game loop after characters are loaded
       for (var state in _characterStates) {
@@ -75,7 +82,7 @@ class TeamProvider with ChangeNotifier {
 
     try {
       final charactersResponse =
-      await _apiClient.myCharacters.getMyCharactersMyCharactersGet();
+          await _apiClient.myCharacters.getMyCharactersMyCharactersGet();
       if (charactersResponse.statusCode == 200 &&
           charactersResponse.data != null) {
         _characterStates = charactersResponse.data!.data
@@ -92,8 +99,8 @@ class TeamProvider with ChangeNotifier {
 
   Future<void> refreshCharacter(CharacterSchema character) async {
     try {
-      final state = _characterStates.firstWhereOrNull((s) =>
-      s.character.name == character.name);
+      final state = _characterStates
+          .firstWhereOrNull((s) => s.character.name == character.name);
       if (state != null) {
         final updatedCharacter = await _apiClient.character
             .getCharacterCharactersNameGet(name: character.name);
@@ -102,9 +109,8 @@ class TeamProvider with ChangeNotifier {
         }
       }
     } catch (e) {
-      LoggerService.instance.log(
-          'Error refreshing character: $e', level: LogLevel.warning,
-          character: character);
+      LoggerService.instance.log('Error refreshing character: $e',
+          level: LogLevel.warning, character: character);
     }
   }
 
@@ -117,7 +123,7 @@ class TeamProvider with ChangeNotifier {
     required Future<Response<T>> Function() apiCall,
   }) async {
     final state =
-    _characterStates.firstWhere((s) => s.character.name == character.name);
+        _characterStates.firstWhere((s) => s.character.name == character.name);
 
     if (state.isOnCooldown || state.isPerformingAction) {
       LoggerService.instance
@@ -153,16 +159,18 @@ class TeamProvider with ChangeNotifier {
         } else if (data is GiveItemReponseSchema) {
           final receiverCharacter = data.data.receiverCharacter;
           final characterToUpdate = _characterStates.firstWhereOrNull(
-                (s) => s.character.name == receiverCharacter.name,
+            (s) => s.character.name == receiverCharacter.name,
           );
           characterToUpdate?.updateCharacter(receiverCharacter);
         } else if (data is CharacterSchema) {
           final characterToUpdate = _characterStates.firstWhereOrNull(
-                (s) => s.character.name == character.name,
+            (s) => s.character.name == character.name,
           );
           characterToUpdate?.updateCharacter(data);
-          state.setActionComplete(data, (CooldownSchemaBuilder()
-            ..expiration = data.cooldownExpiration).build());
+          state.setActionComplete(
+              data,
+              (CooldownSchemaBuilder()..expiration = data.cooldownExpiration)
+                  .build());
         }
       } else {
         _actionQueues[character.name]?.clear();
@@ -200,9 +208,9 @@ class TeamProvider with ChangeNotifier {
             break;
           case 452: // code_token_invalid
           case 453: // code_token_expired
-          // These are critical errors.
+            // These are critical errors.
             errorMessage =
-            "CRITICAL: API Token is invalid or expired. Please update it in settings.";
+                "CRITICAL: API Token is invalid or expired. Please update it in settings.";
             break;
         }
       }
@@ -330,10 +338,28 @@ class TeamProvider with ChangeNotifier {
       CharacterSchema character,
       GearEvaluationContext gearContext,
       WorldDataProvider worldDataProvider,
-      BankProvider bankProvider, {bool forceCalculate = false}) {
+      BankProvider bankProvider,
+      {bool forceCalculate = false}) {
     return _aiService.bestLoadoutOfAvailableCharacterItems(
-      character, gearContext, worldDataProvider, bankProvider,
-      forceCalculate: forceCalculate,);
+      character,
+      gearContext,
+      worldDataProvider,
+      bankProvider,
+      forceCalculate: forceCalculate,
+    );
+  }
+
+  Future<EquipmentLoadoutResult> bestLoadoutOfAllItems(
+      CharacterSchema character,
+      GearEvaluationContext gearContext,
+      WorldDataProvider worldDataProvider,
+      {bool forceCalculate = false}) async {
+    return await _aiService.bestLoadoutOfAllItems(
+      character,
+      gearContext,
+      worldDataProvider,
+      forceCalculate: forceCalculate,
+    );
   }
 
   @override
