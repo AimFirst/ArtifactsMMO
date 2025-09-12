@@ -4,7 +4,8 @@ import 'package:artifacts_api/artifacts_api.dart';
 sealed class GearEvaluationContext {
   GearEvaluationContext();
 
-  String toCacheKey();
+  String typeName();
+  String subTypeName();
 }
 
 final class CombatGearEvaluationContext extends GearEvaluationContext {
@@ -12,13 +13,18 @@ final class CombatGearEvaluationContext extends GearEvaluationContext {
   CombatGearEvaluationContext({required this.targetMonster});
 
   @override
-  toString() {
-    return 'CombatGearEvaluationContext(targetMonster: ${targetMonster.name})';
+  String typeName() {
+    return 'combat';
   }
 
   @override
-  String toCacheKey() {
-    return 'combat-${targetMonster.code}';
+  String subTypeName() {
+    return targetMonster.name;
+  }
+
+  @override
+  toString() {
+    return 'CombatGearEvaluationContext(targetMonster: ${targetMonster.name})';
   }
 }
 
@@ -32,9 +38,10 @@ final class SkillGearEvaluationContext extends GearEvaluationContext {
   }
 
   @override
-  String toCacheKey() {
-    return 'skill-$skillType';
-  }
+  String typeName() =>'skill';
+
+  @override
+  String subTypeName() => skillType;
 }
 
 final class HealGearEvaluationContext extends GearEvaluationContext {
@@ -47,7 +54,8 @@ final class HealGearEvaluationContext extends GearEvaluationContext {
   }
 
   @override
-  String toCacheKey() {
-    return 'heal-$hpToRestore';
-  }
+  String typeName() => 'heal';
+
+  @override
+  String subTypeName() => '';
 }

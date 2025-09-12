@@ -8,6 +8,7 @@ import 'package:artifacts_mmo/models/combat_details.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
+import 'package:artifacts_mmo/models/gear_evaluation_context_key.dart';
 import 'package:artifacts_mmo/models/quantity_item_schema.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
@@ -17,18 +18,18 @@ import 'package:drift/drift.dart';
 import 'package:collection/collection.dart';
 
 class LoadoutOptimizerService {
-  static const optimizationAlgorithmVersion = 2;
+  static const optimizationAlgorithmVersion = 1;
 
   final CombatService _combatService;
   final WorldDataProvider _worldDataProvider;
   final AppDatabase _database;
 
-  final Map<String, EquipmentLoadoutResult> _inProgressCalculations = {};
+  final Map<GearEvaluationContextKey, EquipmentLoadoutResult> _inProgressCalculations = {};
 
   LoadoutOptimizerService(
       this._combatService, this._worldDataProvider, this._database);
 
-  String _generateEvaluationKey(GearEvaluationContext gearContext,
+  GearEvaluationContextKey _generateEvaluationKey(GearEvaluationContext gearContext,
       CharacterSchema character, List<QuantityItemSchema?> itemOptions) {
     // Only include stats relevant to this specific type of gear calculation.
     int relevantStatsKey;
@@ -46,21 +47,28 @@ class LoadoutOptimizerService {
 
     // Use the list of item options as part of the key
     final itemOptionsKey = itemOptions
-        .where((item) => item != null)
-        .map((item) => '${item!.item.code}')
+        .map((item) => '${item?.item.code ?? 'null'}')
         .toList()
-      ..sort((a, b) => a.compareTo(b))
-      ..join(',');
+      ..sort((a, b) => a.compareTo(b));
 
-    // Return the complex key
-    return "$optimizationAlgorithmVersion|${gearContext.toCacheKey()}|$relevantStatsKey|$itemOptionsKey";
+    return GearEvaluationContextKey(
+      algorithmVersion: optimizationAlgorithmVersion,
+      contextType: gearContext.typeName(),
+      contextSubType: gearContext.subTypeName(),
+      contextLevel: relevantStatsKey,
+      optionsHash: itemOptionsKey.join(',').hashCode.toString(),
+    );
   }
 
-  Future<EquipmentLoadoutResult?> _getCachedResult(String cacheKey) async {
+  Future<EquipmentLoadoutResult?> _getCachedResult(
+      GearEvaluationContextKey cacheKey) async {
     final query = _database.select(_database.cachedLoadouts)
       ..where((tbl) =>
-          tbl.cacheKey.equals(cacheKey) &
-          tbl.algorithmVersion.equals(optimizationAlgorithmVersion));
+          tbl.algorithmVersion.equals(cacheKey.algorithmVersion) &
+          tbl.contextType.equals(cacheKey.contextType) &
+          tbl.contextSubType.equals(cacheKey.contextSubType) &
+          tbl.contextLevel.equals(cacheKey.contextLevel) &
+          tbl.optionsHash.equals(cacheKey.optionsHash));
     final cachedResult = await query.getSingleOrNull();
     if (cachedResult != null) {
       return EquipmentLoadoutResultMapper.fromJson(cachedResult.loadout);
@@ -70,13 +78,17 @@ class LoadoutOptimizerService {
   }
 
   Future<void> _saveCachedResult(
-      String cacheKey, EquipmentLoadoutResult result) async {
+      GearEvaluationContextKey cacheKey, EquipmentLoadoutResult result) async {
     try {
       await _database.into(_database.cachedLoadouts).insert(
           CachedLoadout(
-              algorithmVersion: optimizationAlgorithmVersion,
-              cacheKey: cacheKey,
-              loadout: result.toJson()),
+            algorithmVersion: cacheKey.algorithmVersion,
+            loadout: result.toJson(),
+            contextType: cacheKey.contextType,
+            contextSubType: cacheKey.contextSubType,
+            contextLevel: cacheKey.contextLevel,
+            optionsHash: cacheKey.optionsHash,
+          ),
           onConflict: DoNothing());
     } catch (e) {
       LoggerService.instance
@@ -313,7 +325,7 @@ class LoadoutOptimizerService {
 
       if (index == 0) {
         LoggerService.instance.log(
-            'Gear discovery progress ($gearContext): $itemIndex / ${options.length}',
+            'Gear discovery progress ($gearContext): ${itemIndex+1} / ${options.length}',
             character: characterSchema);
         itemIndex++;
       }
