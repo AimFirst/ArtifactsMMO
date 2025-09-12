@@ -154,16 +154,35 @@ class LoadoutOptimizerService {
       return 0;
     }
 
+    // If one can win, but the other can't...
     if (b.combatDetails.canWin != a.combatDetails.canWin) {
       return b.combatDetails.canWin ? 1 : -1;
     }
 
+    // If neither can win, just return the one with the smallest item count
+    // since there's no point trying to equip for this combat anyways.
+    if (!b.combatDetails.canWin) {
+      return b.loadout.items
+          .where((item) => item == null)
+          .length
+          .compareTo(a.loadout.items.where((item) => item == null).length);
+    }
+
+    // Prospecting gives more items, prioritize this in tie breakers.
+    final aProspecting = a.loadout.effectValue(EffectEnum.prospecting);
+    final bProspecting = b.loadout.effectValue(EffectEnum.prospecting);
+    if (bProspecting != aProspecting) {
+      return bProspecting.compareTo(aProspecting);
+    }
+
+    // Wisdom gives more xp, this is a good tie breaker.
     final aWisdom = a.loadout.effectValue(EffectEnum.wisdom);
     final bWisdom = b.loadout.effectValue(EffectEnum.wisdom);
     if (bWisdom != aWisdom) {
       return bWisdom.compareTo(aWisdom);
     }
 
+    // Lower cooldown = more fighting, good tie breaker.
     final aTotalCooldown = a.combatDetails.totalCooldown;
     final bTotalCooldown = b.combatDetails.totalCooldown;
     if (bTotalCooldown != aTotalCooldown) {
@@ -196,6 +215,14 @@ class LoadoutOptimizerService {
       return 0;
     }
 
+    // Prospecting gives more items, prioritize this.
+    final aProspecting = a.loadout.effectValue(EffectEnum.prospecting);
+    final bProspecting = b.loadout.effectValue(EffectEnum.prospecting);
+    if (bProspecting != aProspecting) {
+      return bProspecting.compareTo(aProspecting);
+    }
+
+    // Pick the one that will reduce our cooldown the most
     final effectEnum =
         EffectEnum.values.firstWhere((e) => e.name == gearContext.skillType);
     final aSkill = -a.loadout.effectValue(effectEnum);
@@ -387,6 +414,7 @@ class LoadoutOptimizerService {
           EffectEnum.hp,
           EffectEnum.inventory_space,
           EffectEnum.lifesteal,
+          EffectEnum.prospecting,
           EffectEnum.res_air,
           EffectEnum.res_earth,
           EffectEnum.res_fire,
@@ -397,6 +425,7 @@ class LoadoutOptimizerService {
       case SkillGearEvaluationContext():
         return [
           EffectEnum.values.firstWhere((e) => e.name == gearContext.skillType),
+          EffectEnum.prospecting,
           EffectEnum.inventory_space,
         ];
       case HealGearEvaluationContext():

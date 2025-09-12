@@ -186,7 +186,9 @@ extension CharacterExtensions on CharacterSchema {
           break;
       }
 
-      final previousItemSchema = previousItemCode == null ? null : worldDataProvider.getItemByCode(previousItemCode);
+      final previousItemSchema = previousItemCode == null
+          ? null
+          : worldDataProvider.getItemByCode(previousItemCode);
       QuantityItemSchema? oldItem = previousItemSchema == null
           ? null
           : QuantityItemSchema(previousItemSchema, previousItemCount);
@@ -204,84 +206,108 @@ extension CharacterExtensions on CharacterSchema {
 
   void _updateStats(
       CharacterSchemaBuilder builder, QuantityItemSchema item, bool subtract) {
-    try {
-      for (final effect in item.item.effects ?? <SimpleEffectSchema>[]) {
+    for (final effect in item.item.effects ?? <SimpleEffectSchema>[]) {
+      try {
         final effectEnum =
             EffectEnum.values.firstWhere((e) => e.name == effect.code);
         switch (effectEnum) {
           case EffectEnum.attack_air:
             builder.attackAir = ((builder.attackAir ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.attack_earth:
             builder.attackEarth = ((builder.attackEarth ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.attack_fire:
             builder.attackFire = ((builder.attackFire ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.attack_water:
             builder.attackWater = ((builder.attackWater ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.dmg:
             builder.dmg = ((builder.dmg ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.dmg_air:
             builder.dmgAir = ((builder.dmgAir ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.dmg_earth:
             builder.dmgEarth = ((builder.dmgEarth ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.dmg_fire:
             builder.dmgFire = ((builder.dmgFire ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.dmg_water:
             builder.dmgWater = ((builder.dmgWater ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.res_air:
             builder.resAir = ((builder.resAir ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.res_earth:
             builder.resEarth = ((builder.resEarth ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.res_fire:
             builder.resFire = ((builder.resFire ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.res_water:
             builder.resWater = ((builder.resWater ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.hp:
             builder.hp = ((builder.hp ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             builder.maxHp = ((builder.maxHp ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.critical_strike:
             builder.criticalStrike = ((builder.criticalStrike ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.wisdom:
             builder.wisdom = ((builder.wisdom ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.inventory_space:
             builder.inventoryMaxItems = ((builder.inventoryMaxItems ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.haste:
             builder.haste = ((builder.haste ?? 0) +
-                ((subtract ? -1 : 1) * effect.value) * item.quantity).round();
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
+            break;
+          case EffectEnum.prospecting:
+            builder.prospecting = ((builder.prospecting ?? 0) +
+                    ((subtract ? -1 : 1) * effect.value) * item.quantity)
+                .round();
             break;
           case EffectEnum.alchemy:
           case EffectEnum.antipoison:
@@ -308,13 +334,13 @@ extension CharacterExtensions on CharacterSchema {
           case EffectEnum.woodcutting:
             break;
         }
+      } catch (e) {
+        LoggerService.instance.log(
+          'Error mapping effect ${effect.code} for ${item.item.code}: $e',
+          character: this,
+          level: LogLevel.warning,
+        );
       }
-    } catch (e) {
-      LoggerService.instance.log(
-        'Error mapping effect enum for ${item.item.code}: $e',
-        character: this,
-        level: LogLevel.warning,
-      );
     }
   }
 

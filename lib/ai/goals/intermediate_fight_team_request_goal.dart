@@ -38,7 +38,7 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) async {
-    for (final request in teamBrainProvider.openRequests) {
+    for (final request in [...teamBrainProvider.openRequests]) {
       // We can gather this item by fighting, so do it.
       if (await _canGather(
             state,

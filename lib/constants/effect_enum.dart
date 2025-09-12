@@ -39,6 +39,7 @@ enum EffectEnum {
   mining('Reduces cooldown by -X% when a character mines a resource.', negativeIsBetter: true),
   poison(
       'At the start of its first turn, applies a x poison to its opponent. Loses x HP per turn.'),
+  prospecting('Adds X Prospecting to its stats when equipped. Each PP increases your chance of obtaining drops in combat and with skills. (1% extra per 10 PP)'),
   reconstitution('At the beginning of the turn x, restores all HP.'),
   res_air('Adds X Air Resistance to its stats when equipped.'),
   res_earth('Adds X Earth Resistance to its stats when equipped.'),

@@ -136,7 +136,7 @@ abstract class AIGoal {
     }
 
     // Find our ideal equipment/items and request missing ones.
-    await _requestAllMissingBestItems(
+    await requestAllMissingBestItems(
       state,
       gearContext,
       loadoutOptimizerService,
@@ -268,7 +268,7 @@ abstract class AIGoal {
     }
   }
 
-  Future<void> _requestAllMissingBestItems(
+  Future<void> requestAllMissingBestItems(
     CharacterState state,
     GearEvaluationContext gearContext,
     LoadoutOptimizerService loadoutOptimizerService,

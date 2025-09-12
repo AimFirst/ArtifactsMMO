@@ -59,11 +59,23 @@ class CompleteServerTaskGoal extends AIGoal {
       if (monster != null) {
         CombatGearEvaluationContext gearContext =
             CombatGearEvaluationContext(targetMonster: monster);
+
+        // See if we can win with the stuff we can equip now
         final bestResult =
             await loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(
                 state.character, gearContext, worldDataProvider, bankProvider);
-        return bestResult is CombatEquipmentLoadoutResult &&
-            bestResult.canWinFight;
+        if (bestResult is CombatEquipmentLoadoutResult) {
+          if (bestResult.canWinFight) {
+            return true;
+          } else {
+            // Request all the best items so our crafters start working towards this.
+            await requestAllMissingBestItems(state, gearContext, loadoutOptimizerService, worldDataProvider, bankProvider, teamBrainProvider);
+            return false;
+          }
+        }
+
+        LoggerService.instance.log('Invalid bestResult type: $bestResult', character: state.character, level: LogLevel.warning);
+        return false;
       }
     }
 
