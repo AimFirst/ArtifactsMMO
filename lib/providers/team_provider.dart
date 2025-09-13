@@ -181,47 +181,48 @@ class TeamProvider with ChangeNotifier {
     } on DioException catch (e) {
       String errorMessage = "An unknown API error occurred.";
       LogLevel logLevel = LogLevel.error;
+      try {
+        if (e.response?.data != null) {
+          final errorData = e.response!.data;
+          // The API returns errors like {'code': 499, 'message': '...'}
+          final code = errorData['code'];
+          final message = errorData['message'];
 
-      if (e.response?.data != null) {
-        final errorData = e.response!.data;
-        // The API returns errors like {'code': 499, 'message': '...'}
-        final code = errorData['code'];
-        final message = errorData['message'];
+          errorMessage = "Error (${character.name}) $code: $message";
 
-        errorMessage = "Error (${character.name}) $code: $message";
-
-        // Handle specific, non-critical errors
-        switch (code) {
-          case 499: // code_character_in_cooldown
-          case 429: // code_too_many_requests
-            logLevel = LogLevel
-                .warning; // This is an expected issue, not a critical error
-            // We can also manually sync the cooldown based on the error
-            state.setCooldown(DateTime.now().add(const Duration(
-                seconds: 5))); // Assume a default cooldown on failure
-            break;
-          case 497: // code_character_inventory_full
-            logLevel = LogLevel.info; // This is a state change, not an error
-            break;
-          case 493: // code_character_not_skill_level_required
-            logLevel = LogLevel.warning;
-            break;
-          case 452: // code_token_invalid
-          case 453: // code_token_expired
-            // These are critical errors.
-            errorMessage =
-                "CRITICAL: API Token is invalid or expired. Please update it in settings.";
-            break;
+          // Handle specific, non-critical errors
+          switch (code) {
+            case 499: // code_character_in_cooldown
+            case 429: // code_too_many_requests
+              logLevel = LogLevel
+                  .warning; // This is an expected issue, not a critical error
+              // We can also manually sync the cooldown based on the error
+              state.setCooldown(DateTime.now().add(const Duration(
+                  seconds: 5))); // Assume a default cooldown on failure
+              break;
+            case 497: // code_character_inventory_full
+              logLevel = LogLevel.info; // This is a state change, not an error
+              break;
+            case 493: // code_character_not_skill_level_required
+              logLevel = LogLevel.warning;
+              break;
+            case 452: // code_token_invalid
+            case 453: // code_token_expired
+              // These are critical errors.
+              errorMessage =
+                  "CRITICAL: API Token is invalid or expired. Please update it in settings.";
+              break;
+          }
         }
+      } finally {
+        _actionQueues[character.name]?.clear();
+        LoggerService.instance
+            .log(errorMessage, level: logLevel, character: character);
+        state.setActionFailed(errorMessage);
+
+        // Try to reset this character's status.
+        await refreshCharacter(character);
       }
-
-      _actionQueues[character.name]?.clear();
-      LoggerService.instance
-          .log(errorMessage, level: logLevel, character: character);
-      state.setActionFailed(errorMessage);
-
-      // Try to reset this character's status.
-      await refreshCharacter(character);
     } catch (e) {
       _actionQueues[character.name]?.clear();
       LoggerService.instance
