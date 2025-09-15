@@ -16,7 +16,7 @@ class CachedLoadouts extends Table {
   TextColumn get contextSubType => text()();
   IntColumn get contextLevel => integer()();
   TextColumn get optionsHash => text()();
-  TextColumn get loadout => text()();
+  BlobColumn get loadoutResult => blob()();
 
   @override
   Set<Column> get primaryKey => {algorithmVersion, contextType, contextSubType, contextLevel, optionsHash};

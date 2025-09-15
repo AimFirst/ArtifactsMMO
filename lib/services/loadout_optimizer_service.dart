@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/data/database.dart';
@@ -24,13 +27,16 @@ class LoadoutOptimizerService {
   final WorldDataProvider _worldDataProvider;
   final AppDatabase _database;
 
-  final Map<GearEvaluationContextKey, EquipmentLoadoutResult> _inProgressCalculations = {};
+  final Map<GearEvaluationContextKey, EquipmentLoadoutResult>
+      _inProgressCalculations = {};
 
   LoadoutOptimizerService(
       this._combatService, this._worldDataProvider, this._database);
 
-  GearEvaluationContextKey _generateEvaluationKey(GearEvaluationContext gearContext,
-      CharacterSchema character, List<QuantityItemSchema?> itemOptions) {
+  GearEvaluationContextKey _generateEvaluationKey(
+      GearEvaluationContext gearContext,
+      CharacterSchema character,
+      List<QuantityItemSchema?> itemOptions) {
     // Only include stats relevant to this specific type of gear calculation.
     int relevantStatsKey;
     switch (gearContext) {
@@ -60,39 +66,64 @@ class LoadoutOptimizerService {
     );
   }
 
+  Uint8List encode(EquipmentLoadoutResult result) {
+    final json = result.toJson();
+    final stringBytes = utf8.encode(json);
+    final compressedBytesList = gzip.encode(stringBytes);
+    return Uint8List.fromList(compressedBytesList);
+  }
+
+  EquipmentLoadoutResult decode(Uint8List compressedBytes) {
+    final originalBytes = gzip.decode(compressedBytes);
+    final stringBytes = utf8.decode(originalBytes);
+    return EquipmentLoadoutResultMapper.fromJson(stringBytes);
+  }
+
   Future<EquipmentLoadoutResult?> _getCachedResult(
-      GearEvaluationContextKey cacheKey) async {
-    final query = _database.select(_database.cachedLoadouts)
-      ..where((tbl) =>
-          tbl.algorithmVersion.equals(cacheKey.algorithmVersion) &
-          tbl.contextType.equals(cacheKey.contextType) &
-          tbl.contextSubType.equals(cacheKey.contextSubType) &
-          tbl.contextLevel.equals(cacheKey.contextLevel) &
-          tbl.optionsHash.equals(cacheKey.optionsHash));
-    final cachedResult = await query.getSingleOrNull();
-    if (cachedResult != null) {
-      return EquipmentLoadoutResultMapper.fromJson(cachedResult.loadout);
+      GearEvaluationContextKey cacheKey, bool fromLongTerm) async {
+    if (_inProgressCalculations.containsKey(cacheKey)) {
+      return _inProgressCalculations[cacheKey];
+    }
+
+    if (fromLongTerm) {
+      final query = _database.select(_database.cachedLoadouts)
+        ..where((tbl) =>
+            tbl.algorithmVersion.equals(cacheKey.algorithmVersion) &
+            tbl.contextType.equals(cacheKey.contextType) &
+            tbl.contextSubType.equals(cacheKey.contextSubType) &
+            tbl.contextLevel.equals(cacheKey.contextLevel) &
+            tbl.optionsHash.equals(cacheKey.optionsHash));
+      final cachedResult = await query.getSingleOrNull();
+      if (cachedResult != null) {
+        final loadoutResult = decode(cachedResult.loadoutResult);
+        _inProgressCalculations[cacheKey] = loadoutResult;
+        return loadoutResult;
+      }
     }
 
     return null;
   }
 
-  Future<void> _saveCachedResult(
-      GearEvaluationContextKey cacheKey, EquipmentLoadoutResult result) async {
-    try {
-      await _database.into(_database.cachedLoadouts).insert(
-          CachedLoadout(
-            algorithmVersion: cacheKey.algorithmVersion,
-            loadout: result.toJson(),
-            contextType: cacheKey.contextType,
-            contextSubType: cacheKey.contextSubType,
-            contextLevel: cacheKey.contextLevel,
-            optionsHash: cacheKey.optionsHash,
-          ),
-          onConflict: DoNothing());
-    } catch (e) {
-      LoggerService.instance
-          .log('Error saving cached result for $cacheKey: $e');
+  Future<void> _saveCachedResult(GearEvaluationContextKey cacheKey,
+      EquipmentLoadoutResult result, bool toLongTerm) async {
+    _inProgressCalculations[cacheKey] = result;
+
+    if (toLongTerm) {
+      try {
+        await _database.into(_database.cachedLoadouts).insert(
+            CachedLoadout(
+              algorithmVersion: cacheKey.algorithmVersion,
+              contextType: cacheKey.contextType,
+              contextSubType: cacheKey.contextSubType,
+              contextLevel: cacheKey.contextLevel,
+              optionsHash: cacheKey.optionsHash,
+              loadoutResult: encode(result),
+            ),
+            onConflict: DoNothing());
+      } catch (e) {
+        LoggerService.instance
+            .log('Error saving cached result for $cacheKey: $e');
+      }
     }
   }
 
@@ -126,15 +157,13 @@ class LoadoutOptimizerService {
       {bool forceCalculate = false}) async {
     final cacheKey =
         _generateEvaluationKey(gearContext, character, loadout.items);
-    final cachedResult = await _getCachedResult(cacheKey);
+    final cachedResult = await _getCachedResult(cacheKey, false);
     if (!forceCalculate && cachedResult != null) {
       return cachedResult;
     }
 
     CharacterSchema tempCharacter = character.copyWithEquippedItems(
         loadout.itemsBySlot, _worldDataProvider);
-
-    // LoggerService.instance.log('Calculated loadout tree leaf: ${loadout.items.where((i) => i!=null).length}', character: tempCharacter);
 
     EquipmentLoadoutResult result;
     switch (gearContext) {
@@ -152,7 +181,7 @@ class LoadoutOptimizerService {
         break;
     }
 
-    await _saveCachedResult(cacheKey, result);
+    await _saveCachedResult(cacheKey, result, false);
 
     return result;
   }
@@ -301,7 +330,7 @@ class LoadoutOptimizerService {
         gearOptions.values.expand((items) => items).toList());
 
     if (!forceCalculate) {
-      final cachedResult = await _getCachedResult(cacheKey);
+      final cachedResult = await _getCachedResult(cacheKey, false);
       if (cachedResult != null) {
         return cachedResult;
       }
@@ -325,7 +354,7 @@ class LoadoutOptimizerService {
 
       if (index == 0) {
         LoggerService.instance.log(
-            'Gear discovery progress ($gearContext): ${itemIndex+1} / ${options.length}',
+            'Gear discovery progress ($gearContext): ${itemIndex + 1} / ${options.length}',
             character: characterSchema);
         itemIndex++;
       }
@@ -347,7 +376,7 @@ class LoadoutOptimizerService {
     final bestResult = results.first;
 
     // Add the real result now that we've calculated it
-    await _saveCachedResult(cacheKey, bestResult);
+    await _saveCachedResult(cacheKey, bestResult, false);
 
     if (index == 0) {
       LoggerService.instance.log(
@@ -591,9 +620,13 @@ class LoadoutOptimizerService {
         character.copyWithEquippedItems({}, _worldDataProvider);
     final cacheKey = _generateEvaluationKey(gearContext, newCharacter,
         [...itemsThisCharacterCanEquip, ...itemsThisCharacterCanUse]);
-    final inProgress = _inProgressCalculations[cacheKey];
-    if (inProgress != null) {
-      return inProgress;
+
+    // See if we have this result also available.
+    if (!forceCalculate) {
+      final cachedResult = await _getCachedResult(cacheKey, true);
+      if (cachedResult != null) {
+        return cachedResult;
+      }
     }
 
     // Get the equipable items split by slot.
@@ -617,18 +650,26 @@ class LoadoutOptimizerService {
       gearOptions[slot] = [...slotOptions, null];
     }
 
-    _inProgressCalculations[cacheKey] = _getDefaultResult(gearContext);
+    // Save a fake result to short term memory so we don't start multiple
+    // calculations for the same gearContext.
+    _saveCachedResult(cacheKey, _getDefaultResult(gearContext), false);
 
+    // Find the best gear combination
     final bestGearOption = await _bestGearOption(
         newCharacter, gearContext, EquipmentLoadout(), gearOptions, 0,
         forceCalculate: forceCalculate);
+    // Find the best item combination
     final bestUseOption = await _bestUseOption(
         newCharacter, gearContext, itemsThisCharacterCanUse,
         forceCalculate: forceCalculate);
 
+    // Combine the best into a single result
     final bestResult =
         bestGearOption.copyWith(itemsToUse: bestUseOption.itemsToUse);
-    _inProgressCalculations[cacheKey] = bestResult;
+
+    // Save this result to long term storage so we can always look it up in
+    // future runs.
+    _saveCachedResult(cacheKey, bestResult, true);
     return bestResult;
   }
 

@@ -39,12 +39,12 @@ class $CachedLoadoutsTable extends CachedLoadouts
   late final GeneratedColumn<String> optionsHash = GeneratedColumn<String>(
       'options_hash', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _loadoutMeta =
-      const VerificationMeta('loadout');
+  static const VerificationMeta _loadoutResultMeta =
+      const VerificationMeta('loadoutResult');
   @override
-  late final GeneratedColumn<String> loadout = GeneratedColumn<String>(
-      'loadout', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<Uint8List> loadoutResult =
+      GeneratedColumn<Uint8List>('loadout_result', aliasedName, false,
+          type: DriftSqlType.blob, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         algorithmVersion,
@@ -52,7 +52,7 @@ class $CachedLoadoutsTable extends CachedLoadouts
         contextSubType,
         contextLevel,
         optionsHash,
-        loadout
+        loadoutResult
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -104,11 +104,13 @@ class $CachedLoadoutsTable extends CachedLoadouts
     } else if (isInserting) {
       context.missing(_optionsHashMeta);
     }
-    if (data.containsKey('loadout')) {
-      context.handle(_loadoutMeta,
-          loadout.isAcceptableOrUnknown(data['loadout']!, _loadoutMeta));
+    if (data.containsKey('loadout_result')) {
+      context.handle(
+          _loadoutResultMeta,
+          loadoutResult.isAcceptableOrUnknown(
+              data['loadout_result']!, _loadoutResultMeta));
     } else if (isInserting) {
-      context.missing(_loadoutMeta);
+      context.missing(_loadoutResultMeta);
     }
     return context;
   }
@@ -135,8 +137,8 @@ class $CachedLoadoutsTable extends CachedLoadouts
           .read(DriftSqlType.int, data['${effectivePrefix}context_level'])!,
       optionsHash: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}options_hash'])!,
-      loadout: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}loadout'])!,
+      loadoutResult: attachedDatabase.typeMapping
+          .read(DriftSqlType.blob, data['${effectivePrefix}loadout_result'])!,
     );
   }
 
@@ -152,14 +154,14 @@ class CachedLoadout extends DataClass implements Insertable<CachedLoadout> {
   final String contextSubType;
   final int contextLevel;
   final String optionsHash;
-  final String loadout;
+  final Uint8List loadoutResult;
   const CachedLoadout(
       {required this.algorithmVersion,
       required this.contextType,
       required this.contextSubType,
       required this.contextLevel,
       required this.optionsHash,
-      required this.loadout});
+      required this.loadoutResult});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -168,7 +170,7 @@ class CachedLoadout extends DataClass implements Insertable<CachedLoadout> {
     map['context_sub_type'] = Variable<String>(contextSubType);
     map['context_level'] = Variable<int>(contextLevel);
     map['options_hash'] = Variable<String>(optionsHash);
-    map['loadout'] = Variable<String>(loadout);
+    map['loadout_result'] = Variable<Uint8List>(loadoutResult);
     return map;
   }
 
@@ -179,7 +181,7 @@ class CachedLoadout extends DataClass implements Insertable<CachedLoadout> {
       contextSubType: Value(contextSubType),
       contextLevel: Value(contextLevel),
       optionsHash: Value(optionsHash),
-      loadout: Value(loadout),
+      loadoutResult: Value(loadoutResult),
     );
   }
 
@@ -192,7 +194,7 @@ class CachedLoadout extends DataClass implements Insertable<CachedLoadout> {
       contextSubType: serializer.fromJson<String>(json['contextSubType']),
       contextLevel: serializer.fromJson<int>(json['contextLevel']),
       optionsHash: serializer.fromJson<String>(json['optionsHash']),
-      loadout: serializer.fromJson<String>(json['loadout']),
+      loadoutResult: serializer.fromJson<Uint8List>(json['loadoutResult']),
     );
   }
   @override
@@ -204,7 +206,7 @@ class CachedLoadout extends DataClass implements Insertable<CachedLoadout> {
       'contextSubType': serializer.toJson<String>(contextSubType),
       'contextLevel': serializer.toJson<int>(contextLevel),
       'optionsHash': serializer.toJson<String>(optionsHash),
-      'loadout': serializer.toJson<String>(loadout),
+      'loadoutResult': serializer.toJson<Uint8List>(loadoutResult),
     };
   }
 
@@ -214,14 +216,14 @@ class CachedLoadout extends DataClass implements Insertable<CachedLoadout> {
           String? contextSubType,
           int? contextLevel,
           String? optionsHash,
-          String? loadout}) =>
+          Uint8List? loadoutResult}) =>
       CachedLoadout(
         algorithmVersion: algorithmVersion ?? this.algorithmVersion,
         contextType: contextType ?? this.contextType,
         contextSubType: contextSubType ?? this.contextSubType,
         contextLevel: contextLevel ?? this.contextLevel,
         optionsHash: optionsHash ?? this.optionsHash,
-        loadout: loadout ?? this.loadout,
+        loadoutResult: loadoutResult ?? this.loadoutResult,
       );
   CachedLoadout copyWithCompanion(CachedLoadoutsCompanion data) {
     return CachedLoadout(
@@ -238,7 +240,9 @@ class CachedLoadout extends DataClass implements Insertable<CachedLoadout> {
           : this.contextLevel,
       optionsHash:
           data.optionsHash.present ? data.optionsHash.value : this.optionsHash,
-      loadout: data.loadout.present ? data.loadout.value : this.loadout,
+      loadoutResult: data.loadoutResult.present
+          ? data.loadoutResult.value
+          : this.loadoutResult,
     );
   }
 
@@ -250,14 +254,14 @@ class CachedLoadout extends DataClass implements Insertable<CachedLoadout> {
           ..write('contextSubType: $contextSubType, ')
           ..write('contextLevel: $contextLevel, ')
           ..write('optionsHash: $optionsHash, ')
-          ..write('loadout: $loadout')
+          ..write('loadoutResult: $loadoutResult')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(algorithmVersion, contextType, contextSubType,
-      contextLevel, optionsHash, loadout);
+      contextLevel, optionsHash, $driftBlobEquality.hash(loadoutResult));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -267,7 +271,7 @@ class CachedLoadout extends DataClass implements Insertable<CachedLoadout> {
           other.contextSubType == this.contextSubType &&
           other.contextLevel == this.contextLevel &&
           other.optionsHash == this.optionsHash &&
-          other.loadout == this.loadout);
+          $driftBlobEquality.equals(other.loadoutResult, this.loadoutResult));
 }
 
 class CachedLoadoutsCompanion extends UpdateCompanion<CachedLoadout> {
@@ -276,7 +280,7 @@ class CachedLoadoutsCompanion extends UpdateCompanion<CachedLoadout> {
   final Value<String> contextSubType;
   final Value<int> contextLevel;
   final Value<String> optionsHash;
-  final Value<String> loadout;
+  final Value<Uint8List> loadoutResult;
   final Value<int> rowid;
   const CachedLoadoutsCompanion({
     this.algorithmVersion = const Value.absent(),
@@ -284,7 +288,7 @@ class CachedLoadoutsCompanion extends UpdateCompanion<CachedLoadout> {
     this.contextSubType = const Value.absent(),
     this.contextLevel = const Value.absent(),
     this.optionsHash = const Value.absent(),
-    this.loadout = const Value.absent(),
+    this.loadoutResult = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   CachedLoadoutsCompanion.insert({
@@ -293,21 +297,21 @@ class CachedLoadoutsCompanion extends UpdateCompanion<CachedLoadout> {
     required String contextSubType,
     required int contextLevel,
     required String optionsHash,
-    required String loadout,
+    required Uint8List loadoutResult,
     this.rowid = const Value.absent(),
   })  : algorithmVersion = Value(algorithmVersion),
         contextType = Value(contextType),
         contextSubType = Value(contextSubType),
         contextLevel = Value(contextLevel),
         optionsHash = Value(optionsHash),
-        loadout = Value(loadout);
+        loadoutResult = Value(loadoutResult);
   static Insertable<CachedLoadout> custom({
     Expression<int>? algorithmVersion,
     Expression<String>? contextType,
     Expression<String>? contextSubType,
     Expression<int>? contextLevel,
     Expression<String>? optionsHash,
-    Expression<String>? loadout,
+    Expression<Uint8List>? loadoutResult,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -316,7 +320,7 @@ class CachedLoadoutsCompanion extends UpdateCompanion<CachedLoadout> {
       if (contextSubType != null) 'context_sub_type': contextSubType,
       if (contextLevel != null) 'context_level': contextLevel,
       if (optionsHash != null) 'options_hash': optionsHash,
-      if (loadout != null) 'loadout': loadout,
+      if (loadoutResult != null) 'loadout_result': loadoutResult,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -327,7 +331,7 @@ class CachedLoadoutsCompanion extends UpdateCompanion<CachedLoadout> {
       Value<String>? contextSubType,
       Value<int>? contextLevel,
       Value<String>? optionsHash,
-      Value<String>? loadout,
+      Value<Uint8List>? loadoutResult,
       Value<int>? rowid}) {
     return CachedLoadoutsCompanion(
       algorithmVersion: algorithmVersion ?? this.algorithmVersion,
@@ -335,7 +339,7 @@ class CachedLoadoutsCompanion extends UpdateCompanion<CachedLoadout> {
       contextSubType: contextSubType ?? this.contextSubType,
       contextLevel: contextLevel ?? this.contextLevel,
       optionsHash: optionsHash ?? this.optionsHash,
-      loadout: loadout ?? this.loadout,
+      loadoutResult: loadoutResult ?? this.loadoutResult,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -358,8 +362,8 @@ class CachedLoadoutsCompanion extends UpdateCompanion<CachedLoadout> {
     if (optionsHash.present) {
       map['options_hash'] = Variable<String>(optionsHash.value);
     }
-    if (loadout.present) {
-      map['loadout'] = Variable<String>(loadout.value);
+    if (loadoutResult.present) {
+      map['loadout_result'] = Variable<Uint8List>(loadoutResult.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -375,7 +379,7 @@ class CachedLoadoutsCompanion extends UpdateCompanion<CachedLoadout> {
           ..write('contextSubType: $contextSubType, ')
           ..write('contextLevel: $contextLevel, ')
           ..write('optionsHash: $optionsHash, ')
-          ..write('loadout: $loadout, ')
+          ..write('loadoutResult: $loadoutResult, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -400,7 +404,7 @@ typedef $$CachedLoadoutsTableCreateCompanionBuilder = CachedLoadoutsCompanion
   required String contextSubType,
   required int contextLevel,
   required String optionsHash,
-  required String loadout,
+  required Uint8List loadoutResult,
   Value<int> rowid,
 });
 typedef $$CachedLoadoutsTableUpdateCompanionBuilder = CachedLoadoutsCompanion
@@ -410,7 +414,7 @@ typedef $$CachedLoadoutsTableUpdateCompanionBuilder = CachedLoadoutsCompanion
   Value<String> contextSubType,
   Value<int> contextLevel,
   Value<String> optionsHash,
-  Value<String> loadout,
+  Value<Uint8List> loadoutResult,
   Value<int> rowid,
 });
 
@@ -440,8 +444,8 @@ class $$CachedLoadoutsTableFilterComposer
   ColumnFilters<String> get optionsHash => $composableBuilder(
       column: $table.optionsHash, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get loadout => $composableBuilder(
-      column: $table.loadout, builder: (column) => ColumnFilters(column));
+  ColumnFilters<Uint8List> get loadoutResult => $composableBuilder(
+      column: $table.loadoutResult, builder: (column) => ColumnFilters(column));
 }
 
 class $$CachedLoadoutsTableOrderingComposer
@@ -471,8 +475,9 @@ class $$CachedLoadoutsTableOrderingComposer
   ColumnOrderings<String> get optionsHash => $composableBuilder(
       column: $table.optionsHash, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get loadout => $composableBuilder(
-      column: $table.loadout, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<Uint8List> get loadoutResult => $composableBuilder(
+      column: $table.loadoutResult,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$CachedLoadoutsTableAnnotationComposer
@@ -499,8 +504,8 @@ class $$CachedLoadoutsTableAnnotationComposer
   GeneratedColumn<String> get optionsHash => $composableBuilder(
       column: $table.optionsHash, builder: (column) => column);
 
-  GeneratedColumn<String> get loadout =>
-      $composableBuilder(column: $table.loadout, builder: (column) => column);
+  GeneratedColumn<Uint8List> get loadoutResult => $composableBuilder(
+      column: $table.loadoutResult, builder: (column) => column);
 }
 
 class $$CachedLoadoutsTableTableManager extends RootTableManager<
@@ -535,7 +540,7 @@ class $$CachedLoadoutsTableTableManager extends RootTableManager<
             Value<String> contextSubType = const Value.absent(),
             Value<int> contextLevel = const Value.absent(),
             Value<String> optionsHash = const Value.absent(),
-            Value<String> loadout = const Value.absent(),
+            Value<Uint8List> loadoutResult = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               CachedLoadoutsCompanion(
@@ -544,7 +549,7 @@ class $$CachedLoadoutsTableTableManager extends RootTableManager<
             contextSubType: contextSubType,
             contextLevel: contextLevel,
             optionsHash: optionsHash,
-            loadout: loadout,
+            loadoutResult: loadoutResult,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -553,7 +558,7 @@ class $$CachedLoadoutsTableTableManager extends RootTableManager<
             required String contextSubType,
             required int contextLevel,
             required String optionsHash,
-            required String loadout,
+            required Uint8List loadoutResult,
             Value<int> rowid = const Value.absent(),
           }) =>
               CachedLoadoutsCompanion.insert(
@@ -562,7 +567,7 @@ class $$CachedLoadoutsTableTableManager extends RootTableManager<
             contextSubType: contextSubType,
             contextLevel: contextLevel,
             optionsHash: optionsHash,
-            loadout: loadout,
+            loadoutResult: loadoutResult,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
