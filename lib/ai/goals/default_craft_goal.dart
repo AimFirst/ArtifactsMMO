@@ -24,7 +24,7 @@ class DefaultCraftGoal extends AIGoal {
   String get name => 'Default Craft';
 
   @override
-  int get priority => 12;
+  int get priority => 15;
 
   @override
   Future<bool> canRun(

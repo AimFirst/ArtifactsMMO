@@ -202,4 +202,9 @@ class ActionFactory {
           .actionFightMyNameActionFightPost(name: characterName),
     );
   }
+
+  QueuedAction createRecycleAction(String characterName, SimpleItemSchema item) {
+    return QueuedAction(actionName: 'Recycling $item', apiCall: () => _apiClient.myCharacters.actionRecyclingMyNameActionRecyclingPost(
+        name: characterName, recyclingSchema: (RecyclingSchemaBuilder()..code = item.code..quantity = item.quantity).build()));
+  }
 }
