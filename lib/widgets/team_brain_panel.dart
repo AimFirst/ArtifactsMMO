@@ -9,19 +9,23 @@ class TeamBrainPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final teamBrain = context.watch<TeamBrainProvider>();
-    final openRequests = [...teamBrain.openRequests]..sort((a, b) => a.key.compareTo(b.key));
+    final openRequests = teamBrain.openRequests
+      ..sort((a, b) => a.key.compareTo(b.key));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.all(8.0),
-          child: Text("Team Requests (${openRequests.length})", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          child: Text("Team Requests (${openRequests.length})",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
         const Divider(height: 1),
         if (openRequests.isEmpty)
           const Expanded(
-            child: Center(child: Text("No open team requests.", style: TextStyle(color: Colors.grey))),
+            child: Center(
+                child: Text("No open team requests.",
+                    style: TextStyle(color: Colors.grey))),
           )
         else
           Expanded(
@@ -32,12 +36,16 @@ class TeamBrainPanel extends StatelessWidget {
                 return ListTile(
                   dense: true,
                   leading: Padding(
-                    padding: EdgeInsets.fromLTRB(16.0 * (request.depthCount-1), 0 ,0 ,0),
+                    padding: EdgeInsets.fromLTRB(
+                        16.0 * (request.depthCount - 1), 0, 0, 0),
                     child: _imageForItem(request.requestedItem.code),
                   ),
                   title: Text('${request.requestedItem.simpleName}'),
                   subtitle: Text('Requested by: ${request.requestedBy}'),
-                  trailing: Text(request.key, style: TextStyle(fontSize: 8),),
+                  trailing: Text(
+                    request.key,
+                    style: TextStyle(fontSize: 8),
+                  ),
                 );
               },
             ),
@@ -48,16 +56,23 @@ class TeamBrainPanel extends StatelessWidget {
 
   Widget _imageForItem(String code) {
     return Image.network(
-        'https://artifactsmmo.com/images/items/$code.png',
-        fit: BoxFit.cover,
-        width: 24, // Control character image size
-        height: 24,
-        errorBuilder: (context, error, stackTrace) {
-          return Icon(Icons.person_off, color: Colors.red, size: 18); // Fallback for missing character image
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2));
-        },);
+      'https://artifactsmmo.com/images/items/$code.png',
+      fit: BoxFit.cover,
+      width: 24,
+      // Control character image size
+      height: 24,
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(Icons.person_off,
+            color: Colors.red,
+            size: 18); // Fallback for missing character image
+      },
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2));
+      },
+    );
   }
 }

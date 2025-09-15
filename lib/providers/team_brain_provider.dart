@@ -42,7 +42,7 @@ class ItemRequest {
 class TeamBrainProvider with ChangeNotifier {
   final List<ItemRequest> _requests = [];
 
-  List<ItemRequest> get openRequests => _requests;
+  List<ItemRequest> get openRequests => [..._requests];
 
   void postRequest(ItemRequest request) {
     // Remove any duplicate requests first.

@@ -145,29 +145,27 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
       TeamBrainProvider teamBrainProvider,
       WorldDataProvider worldDataProvider) {
     // Try to sort by our best skills first.
-    return [
-      ...teamBrainProvider.openRequests
-        ..sort((a, b) {
-          final aRecipe =
-              worldDataProvider.getRecipeForItem(a.requestedItem.code);
-          final bRecipe =
-              worldDataProvider.getRecipeForItem(b.requestedItem.code);
+    return teamBrainProvider.openRequests
+      ..sort((a, b) {
+        final aRecipe =
+            worldDataProvider.getRecipeForItem(a.requestedItem.code);
+        final bRecipe =
+            worldDataProvider.getRecipeForItem(b.requestedItem.code);
 
-          if (aRecipe != null && bRecipe != null) {
-            final aSkill = aRecipe.skill;
-            final bSkill = bRecipe.skill;
+        if (aRecipe != null && bRecipe != null) {
+          final aSkill = aRecipe.skill;
+          final bSkill = bRecipe.skill;
 
-            final myASkill = character.skills[aSkill?.name];
-            final myBSkill = character.skills[bSkill?.name];
+          final myASkill = character.skills[aSkill?.name];
+          final myBSkill = character.skills[bSkill?.name];
 
-            if (myASkill != null && myBSkill != null) {
-              return myBSkill.level.compareTo(myASkill.level);
-            }
+          if (myASkill != null && myBSkill != null) {
+            return myBSkill.level.compareTo(myASkill.level);
           }
+        }
 
-          return random.nextBool() ? 1 : -1;
-        })
-    ];
+        return random.nextBool() ? 1 : -1;
+      });
   }
 
   void _craftItem(

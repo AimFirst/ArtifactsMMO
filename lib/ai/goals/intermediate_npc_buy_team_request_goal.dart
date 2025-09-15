@@ -154,9 +154,9 @@ class IntermediateNpcBuyTeamRequestGoal extends AIGoal {
     // See if we need to pull any items from the bank
     List<SimpleItemSchema> itemsToPullFromBank = [];
     for (final subItem in [
-          SimpleItemSchemaBuilder()
-              .fromCodeAndQuantity(npcItem.currency, npcItem.buyPrice!)
-        ]) {
+      SimpleItemSchemaBuilder()
+          .fromCodeAndQuantity(npcItem.currency, npcItem.buyPrice!)
+    ]) {
       final itemCode = subItem.code;
       int neededCount = subItem.quantity;
 
