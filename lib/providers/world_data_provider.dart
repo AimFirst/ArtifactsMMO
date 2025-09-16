@@ -295,6 +295,11 @@ class WorldDataProvider with ChangeNotifier {
       return null;
     }
 
+    // Can only be sold at the merchant, not bought
+    if (item.buyPrice == null) {
+      return null;
+    }
+
     // Can craft it.
     if (getRecipeForItem(code) != null) {
       return null;
