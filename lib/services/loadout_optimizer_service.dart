@@ -621,13 +621,17 @@ class LoadoutOptimizerService {
     final cacheKey = _generateEvaluationKey(gearContext, newCharacter,
         [...itemsThisCharacterCanEquip, ...itemsThisCharacterCanUse]);
 
-    // See if we have this result also available.
+    // See if we have this result already available.
     if (!forceCalculate) {
       final cachedResult = await _getCachedResult(cacheKey, true);
       if (cachedResult != null) {
         return cachedResult;
       }
     }
+
+    // Save a fake result to short term memory so we don't start multiple
+    // calculations for the same gearContext.
+    await _saveCachedResult(cacheKey, _getDefaultResult(gearContext), false);
 
     // Get the equipable items split by slot.
     Map<ItemSlot, List<QuantityItemSchema?>> gearOptions = {};
@@ -650,10 +654,6 @@ class LoadoutOptimizerService {
       gearOptions[slot] = [...slotOptions, null];
     }
 
-    // Save a fake result to short term memory so we don't start multiple
-    // calculations for the same gearContext.
-    _saveCachedResult(cacheKey, _getDefaultResult(gearContext), false);
-
     // Find the best gear combination
     final bestGearOption = await _bestGearOption(
         newCharacter, gearContext, EquipmentLoadout(), gearOptions, 0,
@@ -669,7 +669,7 @@ class LoadoutOptimizerService {
 
     // Save this result to long term storage so we can always look it up in
     // future runs.
-    _saveCachedResult(cacheKey, bestResult, true);
+    await _saveCachedResult(cacheKey, bestResult, true);
     return bestResult;
   }
 
