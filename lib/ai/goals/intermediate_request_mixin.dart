@@ -3,7 +3,7 @@ import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/team_brain_provider.dart';
 
-mixin class IntermediateRequestGoal {
+mixin class IntermediateRequestMixin {
   Map<String, SimpleItemSchema> neededRequestItems(TeamBrainProvider teamBrainProvider) {
     final Map<String, SimpleItemSchema> itemsNeeded = {};
     for (final request in teamBrainProvider.openRequests) {

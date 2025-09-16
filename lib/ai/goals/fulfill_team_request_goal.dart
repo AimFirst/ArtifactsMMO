@@ -21,7 +21,7 @@ import 'package:built_collection/built_collection.dart';
 
 class FulfillTeamRequestGoal extends AIGoal {
   @override
-  int get priority => 70;
+  int get priority => 86;
 
   @override
   String get name => 'Fulfill Request';

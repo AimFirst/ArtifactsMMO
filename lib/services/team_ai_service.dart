@@ -3,7 +3,8 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/ai/goals/clear_inventory_goal.dart';
-import 'package:artifacts_mmo/ai/goals/complete_server_task_goal.dart';
+import 'package:artifacts_mmo/ai/goals/server_task_accept_new_goal.dart';
+import 'package:artifacts_mmo/ai/goals/server_task_complete_goal.dart';
 import 'package:artifacts_mmo/ai/goals/default_craft_goal.dart';
 import 'package:artifacts_mmo/ai/goals/default_fight_goal.dart';
 import 'package:artifacts_mmo/ai/goals/default_gather_goal.dart';
@@ -15,6 +16,7 @@ import 'package:artifacts_mmo/ai/goals/intermediate_craft_team_request_goal.dart
 import 'package:artifacts_mmo/ai/goals/intermediate_fight_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_gather_team_request_goal.dart';
 import 'package:artifacts_mmo/ai/goals/intermediate_npc_buy_team_request_goal.dart';
+import 'package:artifacts_mmo/ai/goals/server_task_make_progress_goal.dart';
 import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
@@ -65,7 +67,6 @@ class TeamAIService {
     // Initialize all possible goals.
     _goals.addAll([
       ClearInventoryGoal(),
-      CompleteServerTaskGoal(),
       DefaultCraftGoal(),
       DefaultFightGoal(),
       DefaultGatherGoal(),
@@ -77,6 +78,9 @@ class TeamAIService {
       IntermediateFightTeamRequestGoal(),
       IntermediateGatherTeamRequestGoal(),
       IntermediateNpcBuyTeamRequestGoal(),
+      ServerTaskAcceptNewGoal(),
+      ServerTaskCompleteGoal(),
+      ServerTaskMakeProgressGoal(),
     ]);
 
     // Sort them once by priority, descending.

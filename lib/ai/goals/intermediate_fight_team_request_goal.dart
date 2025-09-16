@@ -1,6 +1,6 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
-import 'package:artifacts_mmo/ai/goals/intermediate_request_goal.dart';
+import 'package:artifacts_mmo/ai/goals/intermediate_request_mixin.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
@@ -19,7 +19,7 @@ import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
 class IntermediateFightTeamRequestGoal extends AIGoal
-    with IntermediateRequestGoal {
+    with IntermediateRequestMixin {
   @override
   String get name => 'Intermediate Fight Team Request';
 
