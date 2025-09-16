@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
+import 'package:artifacts_mmo/ai/goals/intermediate_request_goal.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
@@ -18,7 +19,8 @@ import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
-class IntermediateGatherTeamRequestGoal extends AIGoal {
+class IntermediateGatherTeamRequestGoal extends AIGoal
+    with IntermediateRequestGoal {
   final random = Random();
 
   @override
@@ -41,9 +43,10 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) async {
-    for (final request in teamBrainProvider.openRequests) {
-      // We can gather this item, so do it.
-      if (_canGather(state, request.requestedItem.code, worldDataProvider)) {
+    final neededItemsForRequests =
+        remainingNeededItems(teamBrainProvider, bankProvider);
+    for (final requestedItem in neededItemsForRequests) {
+      if (_canGather(state, requestedItem.code, worldDataProvider)) {
         return true;
       }
     }
@@ -66,12 +69,15 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     List<CharacterState> characterStates,
   ) async {
     final requests = _requestsSortedBySkill(
-        state.character, teamBrainProvider, worldDataProvider);
+      state.character,
+      teamBrainProvider,
+      worldDataProvider,
+      bankProvider,
+    );
     for (final request in requests) {
       // We can gather this item, so do it.
-      if (_canGather(state, request.requestedItem.code, worldDataProvider)) {
-        final item =
-            worldDataProvider.getResourceByDropCode(request.requestedItem.code);
+      if (_canGather(state, request.code, worldDataProvider)) {
+        final item = worldDataProvider.getResourceByDropCode(request.code);
         final location = mapProvider.findNearestTile(
             state.character.location,
             (tile) =>
@@ -79,7 +85,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
                 tile.content?.code == item?.code);
         if (location == null) {
           LoggerService.instance.log(
-              'No gather location found for ${request.requestedItem.code}',
+              'No gather location found for ${request.code}',
               level: LogLevel.warning,
               character: state.character);
           continue;
@@ -107,12 +113,15 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     List<CharacterState> characterStates,
   ) async {
     final requests = _requestsSortedBySkill(
-        state.character, teamBrainProvider, worldDataProvider);
+      state.character,
+      teamBrainProvider,
+      worldDataProvider,
+      bankProvider,
+    );
     for (final request in requests) {
       // We can gather this item, so do it.
-      if (_canGather(state, request.requestedItem.code, worldDataProvider)) {
-        final item =
-            worldDataProvider.getResourceByDropCode(request.requestedItem.code);
+      if (_canGather(state, request.code, worldDataProvider)) {
+        final item = worldDataProvider.getResourceByDropCode(request.code);
         if (item != null) {
           return SkillGearEvaluationContext(skillType: item.skill.name);
         }
@@ -122,17 +131,17 @@ class IntermediateGatherTeamRequestGoal extends AIGoal {
     return null;
   }
 
-  List<ItemRequest> _requestsSortedBySkill(
-      CharacterSchema character,
-      TeamBrainProvider teamBrainProvider,
-      WorldDataProvider worldDataProvider) {
+  List<SimpleItemSchema> _requestsSortedBySkill(
+    CharacterSchema character,
+    TeamBrainProvider teamBrainProvider,
+    WorldDataProvider worldDataProvider,
+    BankProvider bankProvider,
+  ) {
     // Try to sort by our best skills first.
-    return teamBrainProvider.openRequests
+    return remainingNeededItems(teamBrainProvider, bankProvider)
       ..sort((a, b) {
-        final aResource =
-            worldDataProvider.getResourceByDropCode(a.requestedItem.code);
-        final bResource =
-            worldDataProvider.getResourceByDropCode(b.requestedItem.code);
+        final aResource = worldDataProvider.getResourceByDropCode(a.code);
+        final bResource = worldDataProvider.getResourceByDropCode(b.code);
 
         if (aResource != null && bResource != null) {
           final aSkill = aResource.skill;

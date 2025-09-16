@@ -1,5 +1,6 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
+import 'package:artifacts_mmo/ai/goals/intermediate_request_goal.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
@@ -17,7 +18,8 @@ import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
 
-class IntermediateFightTeamRequestGoal extends AIGoal {
+class IntermediateFightTeamRequestGoal extends AIGoal
+    with IntermediateRequestGoal {
   @override
   String get name => 'Intermediate Fight Team Request';
 
@@ -38,11 +40,11 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) async {
-    for (final request in teamBrainProvider.openRequests) {
-      // We can gather this item by fighting, so do it.
+    final neededItems = remainingNeededItems(teamBrainProvider, bankProvider);
+    for (final neededItem in neededItems) {
       if (await _canGather(
             state,
-            request.requestedItem.code,
+            neededItem.code,
             worldDataProvider,
             combatService,
             bankProvider,
@@ -71,11 +73,12 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
     TeamBrainProvider teamBrainProvider,
     List<CharacterState> characterStates,
   ) async {
-    for (final request in teamBrainProvider.openRequests) {
+    final neededItems = remainingNeededItems(teamBrainProvider, bankProvider);
+    for (final request in neededItems) {
       // We can gather this item, so do it.
       final monster = await _canGather(
         state,
-        request.requestedItem.code,
+        request.code,
         worldDataProvider,
         combatService,
         bankProvider,
@@ -118,11 +121,12 @@ class IntermediateFightTeamRequestGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) async {
-    for (final request in teamBrainProvider.openRequests) {
+    final neededItems = remainingNeededItems(teamBrainProvider, bankProvider);
+    for (final request in neededItems) {
       // We can gather this item by fighting, so do it.
       final monster = await _canGather(
         state,
-        request.requestedItem.code,
+        request.code,
         worldDataProvider,
         combatService,
         bankProvider,

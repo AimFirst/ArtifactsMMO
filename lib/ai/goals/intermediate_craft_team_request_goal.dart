@@ -45,7 +45,7 @@ class IntermediateCraftTeamRequestGoal extends AIGoal {
   ) async {
     // See if we can accomplish any.
     for (final request in teamBrainProvider.openRequests) {
-      // If someone besides us is already fulfilling this request, ignore it.
+
       final missingItems = _missingItemsNeededToCraft(state.character,
           request.requestedItem, worldDataProvider, bankProvider);
       // Can we craft something?
