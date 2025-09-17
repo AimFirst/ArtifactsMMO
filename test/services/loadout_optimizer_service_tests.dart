@@ -2,6 +2,7 @@ import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/models/combat_details.dart';
+import 'package:artifacts_mmo/models/combat_prediction.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
@@ -93,19 +94,14 @@ void main() {
           .build(), quantity);
     }
 
-    CombatDetails _createCombatDetails({
-      double playerAvgDPT = 10,
-      double monsterAvgDPT = 1,
-      int playerStartHp = 200,
-      int monsterStartHp = 200,
+    CombatPrediction _createCombatDetails({
+      double winPercentage = .99,
+      double averageTurnsToWin = 10,
+      double averageHpRemaining = 100,
       int haste = 0,
+      int startHp = 200,
     }) {
-      return CombatDetails(
-          playerAvgDPT: playerAvgDPT,
-          monsterAvgDPT: monsterAvgDPT,
-          playerStartHp: playerStartHp,
-          monsterStartHp: monsterStartHp,
-          haste: haste);
+      return CombatPrediction(winPercentage: winPercentage, averageTurnsToWin: averageTurnsToWin, averageHpRemaining: averageHpRemaining, haste: haste, startHp: startHp);
     }
 
     void _testComparison({
@@ -171,7 +167,7 @@ void main() {
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
             loadout: EquipmentLoadout(),
-            combatDetails: _createCombatDetails(monsterAvgDPT: 100), itemsToUse: []);
+            combatDetails: _createCombatDetails(winPercentage: 0), itemsToUse: []);
         final resultB = CombatEquipmentLoadoutResult(
             loadout: EquipmentLoadout(), combatDetails: _createCombatDetails(), itemsToUse: []);
         _testCombatComparison(
@@ -211,7 +207,7 @@ void main() {
     ''', () {
         final resultA = CombatEquipmentLoadoutResult(
             loadout: EquipmentLoadout(),
-            combatDetails: _createCombatDetails(monsterAvgDPT: 5), itemsToUse: []);
+            combatDetails: _createCombatDetails(averageTurnsToWin: 20), itemsToUse: []);
         final resultB = CombatEquipmentLoadoutResult(
             loadout: EquipmentLoadout(), combatDetails: _createCombatDetails(), itemsToUse: []);
 

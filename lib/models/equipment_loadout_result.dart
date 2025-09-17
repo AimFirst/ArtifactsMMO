@@ -1,5 +1,4 @@
-// A simple class to represent a result when using a specific gear combination.
-import 'package:artifacts_mmo/models/combat_details.dart';
+import 'package:artifacts_mmo/models/combat_prediction.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/quantity_item_schema.dart';
 import 'package:dart_mappable/dart_mappable.dart';
@@ -14,10 +13,10 @@ sealed class EquipmentLoadoutResult with EquipmentLoadoutResultMappable {
   EquipmentLoadoutResult({required this.loadout, required this.itemsToUse});
 }
 
-@MappableClass(discriminatorKey: 'combat')
+@MappableClass(discriminatorKey: 'type', discriminatorValue: 'combat')
 final class CombatEquipmentLoadoutResult extends EquipmentLoadoutResult
     with CombatEquipmentLoadoutResultMappable {
-  final CombatDetails combatDetails;
+  final CombatPrediction combatDetails;
   get canWinFight => combatDetails.canWin;
 
   CombatEquipmentLoadoutResult({
@@ -27,14 +26,14 @@ final class CombatEquipmentLoadoutResult extends EquipmentLoadoutResult
   });
 }
 
-@MappableClass(discriminatorKey: 'skill')
+@MappableClass(discriminatorKey: 'type', discriminatorValue: 'skill')
 final class SkillEquipmentLoadoutResult extends EquipmentLoadoutResult
     with SkillEquipmentLoadoutResultMappable {
   SkillEquipmentLoadoutResult(
       {required super.loadout, required super.itemsToUse});
 }
 
-@MappableClass(discriminatorKey: 'heal')
+@MappableClass(discriminatorKey: 'type', discriminatorValue: 'heal')
 final class HealEquipmentLoadoutResult extends EquipmentLoadoutResult
     with HealEquipmentLoadoutResultMappable {
   HealEquipmentLoadoutResult(

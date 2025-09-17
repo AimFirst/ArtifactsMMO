@@ -100,7 +100,7 @@ class CombatEquipmentLoadoutResultMapper
       EquipmentLoadoutResultMapper.ensureInitialized().addSubMapper(_instance!);
       EquipmentLoadoutMapper.ensureInitialized();
       QuantityItemSchemaMapper.ensureInitialized();
-      CombatDetailsMapper.ensureInitialized();
+      CombatPredictionMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -117,9 +117,9 @@ class CombatEquipmentLoadoutResultMapper
   ) => v.itemsToUse;
   static const Field<CombatEquipmentLoadoutResult, List<QuantityItemSchema>>
   _f$itemsToUse = Field('itemsToUse', _$itemsToUse);
-  static CombatDetails _$combatDetails(CombatEquipmentLoadoutResult v) =>
+  static CombatPrediction _$combatDetails(CombatEquipmentLoadoutResult v) =>
       v.combatDetails;
-  static const Field<CombatEquipmentLoadoutResult, CombatDetails>
+  static const Field<CombatEquipmentLoadoutResult, CombatPrediction>
   _f$combatDetails = Field('combatDetails', _$combatDetails);
   static dynamic _$canWinFight(CombatEquipmentLoadoutResult v) => v.canWinFight;
   static const Field<CombatEquipmentLoadoutResult, dynamic> _f$canWinFight =
@@ -136,7 +136,7 @@ class CombatEquipmentLoadoutResultMapper
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'CombatEquipmentLoadoutResult';
+  final dynamic discriminatorValue = 'combat';
   @override
   late final ClassMapperBase superMapper =
       EquipmentLoadoutResultMapper.ensureInitialized();
@@ -230,12 +230,13 @@ abstract class CombatEquipmentLoadoutResultCopyWith<
     QuantityItemSchemaCopyWith<$R, QuantityItemSchema, QuantityItemSchema>
   >
   get itemsToUse;
-  CombatDetailsCopyWith<$R, CombatDetails, CombatDetails> get combatDetails;
+  CombatPredictionCopyWith<$R, CombatPrediction, CombatPrediction>
+  get combatDetails;
   @override
   $R call({
     EquipmentLoadout? loadout,
     List<QuantityItemSchema>? itemsToUse,
-    CombatDetails? combatDetails,
+    CombatPrediction? combatDetails,
   });
   CombatEquipmentLoadoutResultCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -274,13 +275,14 @@ class _CombatEquipmentLoadoutResultCopyWithImpl<$R, $Out>
     (v) => call(itemsToUse: v),
   );
   @override
-  CombatDetailsCopyWith<$R, CombatDetails, CombatDetails> get combatDetails =>
+  CombatPredictionCopyWith<$R, CombatPrediction, CombatPrediction>
+  get combatDetails =>
       $value.combatDetails.copyWith.$chain((v) => call(combatDetails: v));
   @override
   $R call({
     EquipmentLoadout? loadout,
     List<QuantityItemSchema>? itemsToUse,
-    CombatDetails? combatDetails,
+    CombatPrediction? combatDetails,
   }) => $apply(
     FieldCopyWithData({
       if (loadout != null) #loadout: loadout,
@@ -339,7 +341,7 @@ class SkillEquipmentLoadoutResultMapper
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'SkillEquipmentLoadoutResult';
+  final dynamic discriminatorValue = 'skill';
   @override
   late final ClassMapperBase superMapper =
       EquipmentLoadoutResultMapper.ensureInitialized();
@@ -529,7 +531,7 @@ class HealEquipmentLoadoutResultMapper
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'HealEquipmentLoadoutResult';
+  final dynamic discriminatorValue = 'heal';
   @override
   late final ClassMapperBase superMapper =
       EquipmentLoadoutResultMapper.ensureInitialized();

@@ -1,113 +1,182 @@
-// lib/services/combat_service.dart
-
 import 'dart:math';
-
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/element_enum.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/monster_extension.dart';
-import 'package:artifacts_mmo/models/combat_details.dart';
+import 'package:artifacts_mmo/models/combat_prediction.dart';
 
 class CombatService {
-  // Simulates a fight and predicts if the character will win.
-  bool canWinFight(CharacterSchema character, MonsterSchema monster) {
-    // Calculate the average damage per turn for both combatants.
-    final combatDetails = getCombatDetails(character, monster);
+  final Random _random = Random();
 
-    return combatDetails.canWin;
-  }
+  // The main public method.
+  Future<CombatPrediction> runSimulations({
+    required CharacterSchema character,
+    required MonsterSchema monster,
+    int simulationCount = 1000, // Run 1000 fights for a good statistical sample
+  }) async {
+    int wins = 0;
+    List<int> turnsToWin = [];
+    List<double> hpRemaining = [];
 
-  CombatDetails getCombatDetails(
-      CharacterSchema character, MonsterSchema monster) {
-    // Calculate the average damage per turn for both combatants.
-    final playerAvgDPT = _calculateAverageDamagerPerTurnCharacter(
-      attacker: character,
-      defender: monster,
-    );
-    final monsterAvgDPT = _calculateAverageDamagerPerTurnMonster(
-      attacker: monster,
-      defender: character,
-    );
+    for (int i = 0; i < simulationCount; i++) {
+      final result = await _runSingleFightSimulation(character, monster);
+      if (result.playerWin) {
+        wins++;
+        turnsToWin.add(result.turns);
+        hpRemaining.add(result.hpRemaining);
+      }
+    }
 
-    return CombatDetails(
-      playerAvgDPT: playerAvgDPT,
-      monsterAvgDPT: monsterAvgDPT,
-      playerStartHp: character.maxHp,
-      monsterStartHp: monster.hp,
+    return CombatPrediction(
+      winPercentage: wins / simulationCount,
+      averageTurnsToWin: turnsToWin.isEmpty
+          ? 0
+          : turnsToWin.reduce((a, b) => a + b) / turnsToWin.length,
+      averageHpRemaining: hpRemaining.isEmpty
+          ? 0
+          : hpRemaining.reduce((a, b) => a + b) / hpRemaining.length,
       haste: character.haste,
+      startHp: character.hp,
     );
   }
 
-  /// Calculates the total average damage a character does to a monster in one turn.
-  double _calculateAverageDamagerPerTurnCharacter({
-    required CharacterSchema attacker,
-    required MonsterSchema defender,
-  }) {
-    return _calculateAverageDamagePerTurn(
-      attackerAttacks: attacker.attacks,
-      attackerDamages: attacker.damages,
-      attackerBaseDamage: attacker.dmg,
-      attackerCriticalStrike: attacker.criticalStrike,
-      defenderResistances: defender.resistances,
-    );
+  // This simulates a single, complete fight from start to finish.
+  Future<_SingleFightResult> _runSingleFightSimulation(
+      CharacterSchema character, MonsterSchema monster) async {
+    final player = _CombatantState.fromCharacter(character);
+    final opponent = _CombatantState.fromMonster(monster);
+
+    // TODO: Apply start-of-fight effects (e.g., 'Boost' utility) here.
+    // player.strength += 20;
+
+    for (int i = 1; i <= 100; i++) {
+      // Max 100 turns
+      // --- Player's Turn (if their turn number is odd) ---
+      if (i.isOdd) {
+        // TODO: Apply player's start-of-turn effects (Healing, Burn, Poison)
+        await _performAttack(attacker: player, defender: opponent);
+        if (opponent.currentHp <= 0) {
+          return _SingleFightResult(
+              playerWin: true,
+              turns: (i / 2).ceil(),
+              hpRemaining: player.currentHp);
+        }
+      }
+      // --- Monster's Turn (if their turn number is even) ---
+      else {
+        // TODO: Apply monster's start-of-turn effects
+        await _performAttack(attacker: opponent, defender: player);
+        if (player.currentHp <= 0) {
+          return _SingleFightResult(
+              playerWin: false, turns: (i / 2).ceil(), hpRemaining: 0);
+        }
+      }
+    }
+
+    // Player loses after 100 turns
+    return _SingleFightResult(playerWin: false, turns: 50, hpRemaining: 0);
   }
 
-  /// Calculates the total average damage a monster does to a character in one turn.
-  double _calculateAverageDamagerPerTurnMonster({
-    required MonsterSchema attacker,
-    required CharacterSchema defender,
-  }) {
-    return _calculateAverageDamagePerTurn(
-      attackerAttacks: attacker.attacks,
-      attackerDamages: attacker.damages,
-      attackerBaseDamage: 0,
-      attackerCriticalStrike: attacker.criticalStrike,
-      defenderResistances: defender.resistances,
-    );
-  }
+  // This performs a single attack, including crit chance.
+  Future<void> _performAttack(
+      {required _CombatantState attacker, required _CombatantState defender}) async {
+    double totalDamage = 0;
 
-  /// Calculates the total average damage an attacker does to a defender in one turn.
-  double _calculateAverageDamagePerTurn({
-    required Map<ElementEnum, int> attackerAttacks,
-    required Map<ElementEnum, int> attackerDamages,
-    required int attackerBaseDamage,
-    required int attackerCriticalStrike,
-    required Map<ElementEnum, int> defenderResistances,
-  }) {
-    double totalAverageDamage = 0;
+    // Check for critical hit (this is the random element)
+    final isCrit = _random.nextDouble() < ((attacker.criticalStrike) / 100.0);
+    final critMultiplier = isCrit ? 1.5 : 1.0;
 
-    // Damage is calculated independently for each element.
     for (final element in ElementEnum.values) {
-      final int baseAttack = attackerAttacks[element] ?? 0;
+      final int baseAttack = attacker.attacks[element] ?? 0;
       if (baseAttack == 0) continue;
 
       // 1. Apply damage buffs to the base attack.
       // 1 damage buff = 1% extra damage.
-      final damageBuff = attackerBaseDamage + (attackerDamages[element] ?? 0);
+      final damageBuff = attacker.damage + (attacker.damages[element] ?? 0);
       final totalAttack = baseAttack * (1 + (damageBuff / 100));
 
       // 2. Apply defender's resistance.
       // 1 resistance = 1% damage reduction.
-      final resistanceBuff = defenderResistances[element] ?? 0;
+      final resistanceBuff = defender.resistances[element] ?? 0;
       final damageBlocked = totalAttack * (resistanceBuff / 100);
       final damageAfterResistance = max(0, totalAttack - damageBlocked);
 
       // 3. Factor in critical strike chance for an average result.
       // Crit deals 1.5x damage. Avg Dmg = NormalDmg * (1 + 0.5 * CritChance)
-      final critChance = (attackerCriticalStrike) / 100.0;
+      final critChance = (attacker.criticalStrike) / 100.0;
       final averageElementalDamage =
           damageAfterResistance * (1 + 0.5 * critChance);
 
-      totalAverageDamage += averageElementalDamage;
+      totalDamage += averageElementalDamage;
     }
 
-    // Use the game's specific rounding rule (.5 rounds up).
-    return _customRound(totalAverageDamage);
+    defender.currentHp -= _customRound(totalDamage * critMultiplier);
+
+    // TODO: Apply on-hit effects (e.g., 'Lifesteal' on a critical strike)
+    // if (isCrit) { attacker.currentHp += totalDamage * 0.1; }
   }
 
-  // Implements the rounding rule: .5 rounds up.
-  double _customRound(double value) {
-    // A small epsilon is added to handle floating point inaccuracies around .5
-    return (value + 0.00001).round().toDouble();
+  double _customRound(double value) => (value + 0.00001).round().toDouble();
+}
+
+class _CombatantState {
+  String name;
+  double currentHp;
+
+  // You would copy all relevant combat stats here from the Character/Monster
+  int criticalStrike;
+  int damage;
+  Map<ElementEnum, int> attacks;
+  Map<ElementEnum, int> damages;
+  Map<ElementEnum, int> resistances;
+
+  // TODO: Add a list to track active effects like Burn or Poison
+  // List<ActiveEffect> effects = [];
+
+  _CombatantState({
+    required this.name,
+    required this.currentHp,
+    required this.criticalStrike,
+    required this.damage,
+    required this.attacks,
+    required this.damages,
+    required this.resistances,
+  });
+
+  factory _CombatantState.fromCharacter(CharacterSchema character) {
+    return _CombatantState(
+      name: character.name,
+      currentHp: character.hp.toDouble(),
+      criticalStrike: character.criticalStrike,
+      damage: character.dmg,
+      attacks: character.attacks,
+      damages: character.damages,
+      resistances: character.resistances,
+    );
   }
+
+  factory _CombatantState.fromMonster(MonsterSchema monster) {
+    return _CombatantState(
+      name: monster.name,
+      currentHp: monster.hp.toDouble(),
+      criticalStrike: monster.criticalStrike,
+      damage: 0,
+      attacks: monster.attacks,
+      damages: monster.damages,
+      resistances: monster.resistances,
+    );
+  }
+}
+
+// A private class to hold the results of one simulated fight.
+class _SingleFightResult {
+  final bool playerWin;
+  final int turns;
+  final double hpRemaining;
+
+  _SingleFightResult({
+    required this.playerWin,
+    required this.turns,
+    required this.hpRemaining,
+  });
 }

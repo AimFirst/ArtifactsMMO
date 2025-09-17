@@ -7,7 +7,7 @@ import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/item_extension.dart';
 import 'package:artifacts_mmo/extensions/item_type_extension.dart';
-import 'package:artifacts_mmo/models/combat_details.dart';
+import 'package:artifacts_mmo/models/combat_prediction.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/equipment_loadout_result.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
@@ -21,7 +21,7 @@ import 'package:drift/drift.dart';
 import 'package:collection/collection.dart';
 
 class LoadoutOptimizerService {
-  static const optimizationAlgorithmVersion = 1;
+  static const optimizationAlgorithmVersion = 2;
 
   final CombatService _combatService;
   final WorldDataProvider _worldDataProvider;
@@ -132,12 +132,12 @@ class LoadoutOptimizerService {
       case CombatGearEvaluationContext():
         return CombatEquipmentLoadoutResult(
           loadout: EquipmentLoadout(),
-          combatDetails: CombatDetails(
-            playerAvgDPT: 1,
-            monsterAvgDPT: 10,
-            playerStartHp: 1,
-            monsterStartHp: 100,
+          combatDetails: CombatPrediction(
+            winPercentage: 0,
+            averageTurnsToWin: 0,
+            averageHpRemaining: 0,
             haste: 0,
+            startHp: 0,
           ),
           itemsToUse: [],
         );
@@ -168,8 +168,8 @@ class LoadoutOptimizerService {
     EquipmentLoadoutResult result;
     switch (gearContext) {
       case CombatGearEvaluationContext():
-        final combatDetails = _combatService.getCombatDetails(
-            tempCharacter, gearContext.targetMonster);
+        final combatDetails = await _combatService.runSimulations(
+            character: tempCharacter, monster: gearContext.targetMonster);
         result = CombatEquipmentLoadoutResult(
             loadout: loadout, combatDetails: combatDetails, itemsToUse: []);
         break;
@@ -195,18 +195,21 @@ class LoadoutOptimizerService {
       return 0;
     }
 
-    // If one can win, but the other can't...
-    if (b.combatDetails.canWin != a.combatDetails.canWin) {
-      return b.combatDetails.canWin ? 1 : -1;
-    }
-
     // If neither can win, just return the one with the smallest item count
     // since there's no point trying to equip for this combat anyways.
-    if (!b.combatDetails.canWin) {
-      return b.loadout.items
-          .where((item) => item == null)
-          .length
-          .compareTo(a.loadout.items.where((item) => item == null).length);
+    final aItemCount = a.loadout.items
+        .fold(0, (initial, item) => initial + (item?.quantity ?? 0));
+    final bItemCount = b.loadout.items
+        .fold(0, (initial, item) => initial + (item?.quantity ?? 0));
+
+    if (!b.combatDetails.canWin && !a.combatDetails.canWin) {
+      return aItemCount.compareTo(bItemCount);
+    }
+
+    // Pick the one with the higher win percentage
+    if (b.combatDetails.winPercentage != a.combatDetails.winPercentage) {
+      return b.combatDetails.winPercentage
+          .compareTo(a.combatDetails.winPercentage);
     }
 
     // Prospecting gives more items, prioritize this in tie breakers.
@@ -238,11 +241,8 @@ class LoadoutOptimizerService {
       return bInventorySpace.compareTo(aInventorySpace);
     }
 
-    // Pick the one with the highest number of null items since there's no point to crafting/equipping extra items if they don't help us with this.
-    return b.loadout.items
-        .where((item) => item == null)
-        .length
-        .compareTo(a.loadout.items.where((item) => item == null).length);
+    // Pick the one with the lowest number of items since there's no point to crafting/equipping extra items if they don't help us with this.
+    return aItemCount.compareTo(bItemCount);
   }
 
   int _compareSkillLoadoutResults(
