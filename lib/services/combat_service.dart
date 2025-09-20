@@ -4,12 +4,42 @@ import 'package:artifacts_mmo/constants/element_enum.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/monster_extension.dart';
 import 'package:artifacts_mmo/models/combat_prediction.dart';
+import 'package:flutter/foundation.dart';
 
 class CombatService {
   final Random _random = Random();
 
+  Future<CombatPrediction> runSimulationsAsync({
+    required CharacterSchema character,
+    required MonsterSchema monster,
+    int simulationCount = 1000,
+  }) async {
+    // Package up the inputs.
+    final input = _SimulationInput(
+      character: character,
+      monster: monster,
+      simulationCount: simulationCount,
+    );
+
+    // Call compute, passing our top-level function and the inputs.
+    // Flutter handles all the background thread magic for us.
+    return compute(runCombatSimulationIsolate, input);
+  }
+
+  Future<CombatPrediction> runSimulationsSync({
+    required CharacterSchema character,
+    required MonsterSchema monster,
+    int simulationCount = 10,
+  }) async {
+    return await _runSimulationsInternal(
+      character: character,
+      monster: monster,
+      simulationCount: simulationCount,
+    );
+  }
+
   // The main public method.
-  Future<CombatPrediction> runSimulations({
+  Future<CombatPrediction> _runSimulationsInternal({
     required CharacterSchema character,
     required MonsterSchema monster,
     int simulationCount = 1000, // Run 1000 fights for a good statistical sample
@@ -79,7 +109,8 @@ class CombatService {
 
   // This performs a single attack, including crit chance.
   Future<void> _performAttack(
-      {required _CombatantState attacker, required _CombatantState defender}) async {
+      {required _CombatantState attacker,
+      required _CombatantState defender}) async {
     double totalDamage = 0;
 
     // Check for critical hit (this is the random element)
@@ -179,4 +210,28 @@ class _SingleFightResult {
     required this.turns,
     required this.hpRemaining,
   });
+}
+
+class _SimulationInput {
+  final CharacterSchema character;
+  final MonsterSchema monster;
+  final int simulationCount;
+
+  _SimulationInput({
+    required this.character,
+    required this.monster,
+    required this.simulationCount,
+  });
+}
+
+Future<CombatPrediction> runCombatSimulationIsolate(
+    _SimulationInput input) async {
+  // We create a new instance of the service inside the isolate.
+  final combatService = CombatService();
+  // We call the original, synchronous simulation method.
+  return combatService._runSimulationsInternal(
+    character: input.character,
+    monster: input.monster,
+    simulationCount: input.simulationCount,
+  );
 }

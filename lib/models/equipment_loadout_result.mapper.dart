@@ -42,7 +42,11 @@ class EquipmentLoadoutResultMapper
   };
 
   static EquipmentLoadoutResult _instantiate(DecodingData data) {
-    throw MapperException.missingConstructor('EquipmentLoadoutResult');
+    throw MapperException.missingSubclass(
+      'EquipmentLoadoutResult',
+      'type',
+      '${data.value['type']}',
+    );
   }
 
   @override

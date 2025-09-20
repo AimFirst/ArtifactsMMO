@@ -19,6 +19,7 @@ import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:drift/drift.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 
 class LoadoutOptimizerService {
   static const optimizationAlgorithmVersion = 2;
@@ -168,7 +169,7 @@ class LoadoutOptimizerService {
     EquipmentLoadoutResult result;
     switch (gearContext) {
       case CombatGearEvaluationContext():
-        final combatDetails = await _combatService.runSimulations(
+        final combatDetails = await _combatService.runSimulationsSync(
             character: tempCharacter, monster: gearContext.targetMonster);
         result = CombatEquipmentLoadoutResult(
             loadout: loadout, combatDetails: combatDetails, itemsToUse: []);
@@ -317,6 +318,17 @@ class LoadoutOptimizerService {
       case HealGearEvaluationContext():
         return _compareHealLoadoutResults(a, b, gearContext);
     }
+  }
+
+  Future<EquipmentLoadoutResult> bestGearOptionInternal(
+      {required CharacterSchema characterSchema,
+      required GearEvaluationContext gearContext,
+      required EquipmentLoadout loadout,
+      required Map<ItemSlot, List<QuantityItemSchema?>> gearOptions,
+      bool forceCalculate = false}) {
+    return _bestGearOption(
+        characterSchema, gearContext, loadout, gearOptions, 0,
+        forceCalculate: forceCalculate);
   }
 
   Future<EquipmentLoadoutResult> _bestGearOption(
@@ -658,6 +670,15 @@ class LoadoutOptimizerService {
     final bestGearOption = await _bestGearOption(
         newCharacter, gearContext, EquipmentLoadout(), gearOptions, 0,
         forceCalculate: forceCalculate);
+    // final bestGearOption = await startBackgroundCompute(
+    //     _CalculationInput(
+    //       loadoutOptimizerService: this,
+    //       character: character,
+    //       gearContext: gearContext,
+    //       loadout: EquipmentLoadout(),
+    //       gearOptions: gearOptions,
+    //       forceCalculate: forceCalculate,
+    //     ));
     // Find the best item combination
     final bestUseOption = await _bestUseOption(
         newCharacter, gearContext, itemsThisCharacterCanUse,
@@ -671,6 +692,10 @@ class LoadoutOptimizerService {
     // future runs.
     await _saveCachedResult(cacheKey, bestResult, true);
     return bestResult;
+  }
+
+  Future<EquipmentLoadoutResult> startBackgroundCompute(_CalculationInput input) {
+    return compute(calculatedLoadoutIsolate, input);
   }
 
   Future<EquipmentLoadoutResult> bestLoadoutOfAllItems(
@@ -729,4 +754,34 @@ class LoadoutOptimizerService {
       forceCalculate: forceCalculate,
     );
   }
+}
+
+Future<EquipmentLoadoutResult> calculatedLoadoutIsolate(
+    _CalculationInput input) {
+  final loadoutService = input.loadoutOptimizerService;
+
+  return loadoutService.bestGearOptionInternal(
+      characterSchema: input.character,
+      gearContext: input.gearContext,
+      loadout: input.loadout,
+      gearOptions: input.gearOptions,
+      forceCalculate: input.forceCalculate);
+}
+
+class _CalculationInput {
+  final LoadoutOptimizerService loadoutOptimizerService;
+  final CharacterSchema character;
+  final GearEvaluationContext gearContext;
+  final EquipmentLoadout loadout;
+  final Map<ItemSlot, List<QuantityItemSchema?>> gearOptions;
+  final bool forceCalculate;
+
+  _CalculationInput({
+    required this.loadoutOptimizerService,
+    required this.character,
+    required this.gearContext,
+    required this.loadout,
+    required this.gearOptions,
+    required this.forceCalculate,
+  });
 }

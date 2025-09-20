@@ -5,7 +5,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 part 'equipment_loadout_result.mapper.dart';
 
-@MappableClass()
+@MappableClass(discriminatorKey: 'type')
 sealed class EquipmentLoadoutResult with EquipmentLoadoutResultMappable {
   final EquipmentLoadout loadout;
   final List<QuantityItemSchema> itemsToUse;
@@ -13,7 +13,7 @@ sealed class EquipmentLoadoutResult with EquipmentLoadoutResultMappable {
   EquipmentLoadoutResult({required this.loadout, required this.itemsToUse});
 }
 
-@MappableClass(discriminatorKey: 'type', discriminatorValue: 'combat')
+@MappableClass(discriminatorValue: 'combat')
 final class CombatEquipmentLoadoutResult extends EquipmentLoadoutResult
     with CombatEquipmentLoadoutResultMappable {
   final CombatPrediction combatDetails;
@@ -26,14 +26,14 @@ final class CombatEquipmentLoadoutResult extends EquipmentLoadoutResult
   });
 }
 
-@MappableClass(discriminatorKey: 'type', discriminatorValue: 'skill')
+@MappableClass(discriminatorValue: 'skill')
 final class SkillEquipmentLoadoutResult extends EquipmentLoadoutResult
     with SkillEquipmentLoadoutResultMappable {
   SkillEquipmentLoadoutResult(
       {required super.loadout, required super.itemsToUse});
 }
 
-@MappableClass(discriminatorKey: 'type', discriminatorValue: 'heal')
+@MappableClass(discriminatorValue: 'heal')
 final class HealEquipmentLoadoutResult extends EquipmentLoadoutResult
     with HealEquipmentLoadoutResultMappable {
   HealEquipmentLoadoutResult(
