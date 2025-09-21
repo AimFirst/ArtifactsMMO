@@ -8,6 +8,11 @@ mixin class ServerTaskMixin {
   bool taskDone(CharacterState state, BankProvider bankProvider,
       {bool checkBank = true}) {
     bool hasItems = false;
+
+    if (!hasTask(state)) {
+      return false;
+    }
+
     if (state.character.taskType == TaskType.items.name) {
       final character = state.character;
       final targetItemName = character.task;

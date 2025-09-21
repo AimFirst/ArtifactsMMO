@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/extensions/inventory_extension.dart';
-import 'package:artifacts_mmo/extensions/item_extension.dart';
 import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
@@ -10,7 +9,6 @@ import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
-import 'package:artifacts_mmo/models/quantity_item_schema.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/log_provider.dart';
 import 'package:artifacts_mmo/providers/map_provider.dart';
@@ -189,41 +187,54 @@ abstract class AIGoal {
         continue;
       }
 
-      // Check to see if it's already equipped
-      if (currentLoadout.itemsBySlot[slot]?.item.code == item.item.code) {
+      var countNeeded = item.quantity;
+      // Check to see how much is already equipped
+      final equippedCount =
+          currentLoadout.itemsBySlot[slot]?.item.code == item.item.code
+              ? currentLoadout.itemsBySlot[slot]?.quantity ?? 0
+              : 0;
+      countNeeded -= equippedCount;
+      if (countNeeded <= 0) {
+        // Already equipped
         continue;
       }
 
-      bool foundOneToEquip = false;
       // Check to see if it's in our inventory
-      if ((state.character.inventory?.count(item.item.code) ?? 0) > 0) {
-        foundOneToEquip = true;
+      final inventoryCount =
+          state.character.inventory?.count(item.item.code) ?? 0;
+      var countToEquip = inventoryCount;
+      countNeeded -= inventoryCount;
+      if (countNeeded > 0) {
+        // Check to see if it's in the bank
+        final bankCount = bankProvider.count(item.item.code);
+        if (bankCount > 0) {
+          teamBrainProvider.completeRequest(
+              null,
+              _createEquipRequestKeyPrefix(slot),
+              item.item.code,
+              state.character.name);
+          teamProvider.queueBankWithdraw(
+              state.character,
+              BuiltList.of([
+                SimpleItemSchemaBuilder().fromCodeAndQuantity(
+                    item.item.code, min(countNeeded, bankCount))
+              ]));
+          countNeeded -= bankCount;
+          countToEquip += bankCount;
+        }
       }
 
-      // Check to see if it's in the bank
-      if (!foundOneToEquip && bankProvider.count(item.item.code) > 0) {
-        teamBrainProvider.completeRequest(
-            null,
-            _createEquipRequestKeyPrefix(slot),
-            item.item.code,
-            state.character.name);
-        teamProvider.queueBankWithdraw(
-            state.character,
-            BuiltList.of([
-              SimpleItemSchemaBuilder().fromCodeAndQuantity(item.item.code, 1)
-            ]));
-        foundOneToEquip = true;
-      }
+      countToEquip = min(item.quantity - equippedCount, countToEquip);
 
-      // We found one to equip, let's do it.
-      if (foundOneToEquip) {
+      // Equip the items
+      if (countToEquip > 0) {
         // Queue up an equip action
         teamProvider.queueAction(
             state.character.name,
             actionFactory.createEquipAction(
                 state.character.name,
                 SimpleItemSchemaBuilder()
-                    .fromCodeAndQuantity(item.item.code, 1),
+                    .fromCodeAndQuantity(item.item.code, countToEquip),
                 slot));
       }
     }

@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/constants/effect_enum.dart';
 import 'package:artifacts_mmo/data/database.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
-import 'package:artifacts_mmo/extensions/item_extension.dart';
 import 'package:artifacts_mmo/extensions/item_type_extension.dart';
 import 'package:artifacts_mmo/models/combat_prediction.dart';
 import 'package:artifacts_mmo/models/equipment_loadout.dart';
@@ -54,7 +54,7 @@ class LoadoutOptimizerService {
 
     // Use the list of item options as part of the key
     final itemOptionsKey = itemOptions
-        .map((item) => '${item?.item.code ?? 'null'}')
+        .map((item) => '${item?.item.code ?? 'null'}x${item?.quantity ?? 100}')
         .toList()
       ..sort((a, b) => a.compareTo(b));
 
@@ -361,8 +361,35 @@ class LoadoutOptimizerService {
     final options = gearOptions[itemSlot] ?? [];
     int itemIndex = 0;
     for (final item in options) {
-      final newLoadout = loadout.copyWithItem(itemSlot, item);
-      final newGearOptions = {...gearOptions}..[itemSlot] = [item];
+      // Create quantity adjusted item based on slot type
+      final adjustedItem = item == null
+          ? null
+          : QuantityItemSchema(
+              item.item,
+              itemSlot == ItemSlot.utility1 ||
+                      itemSlot == ItemSlot.utility2
+                  ? min(item.quantity, 100)
+                  : 1);
+
+      // Create new loadout with adjusted item
+      final newLoadout = loadout.copyWithItem(itemSlot, adjustedItem);
+
+      // Update quantities in gear options
+      final newGearOptions = {...gearOptions};
+      if (adjustedItem != null) {
+        // Update quantities across all slots
+        for (final slot in newGearOptions.keys) {
+          newGearOptions[slot] = newGearOptions[slot]!
+              .map((slotItem) => slotItem == null
+                  ? null
+                  : slotItem.item.code == adjustedItem.item.code
+                      ? QuantityItemSchema(slotItem.item,
+                          slotItem.quantity - adjustedItem.quantity)
+                      : slotItem)
+              .where((item) => item == null || item.quantity > 0)
+              .toList();
+        }
+      }
 
       if (index == 0) {
         LoggerService.instance.log(
@@ -611,13 +638,34 @@ class LoadoutOptimizerService {
     }
   }
 
+  List<QuantityItemSchema?> _combineQuantityItems(
+      List<QuantityItemSchema?> items) {
+    final Map<String, QuantityItemSchema> combinedItems = {};
+
+    for (final item in items) {
+      if (item == null) continue;
+
+      if (combinedItems.containsKey(item.item.code)) {
+        combinedItems[item.item.code] = QuantityItemSchema(
+            item.item, combinedItems[item.item.code]!.quantity + item.quantity);
+      } else {
+        combinedItems[item.item.code] = item;
+      }
+    }
+
+    return combinedItems.values.toList();
+  }
+
   Future<EquipmentLoadoutResult> _bestLoadout(
       CharacterSchema character,
       GearEvaluationContext gearContext,
       List<QuantityItemSchema?> allItemsToConsider,
       {bool forceCalculate = false}) async {
+    // Combine items with same code
+    allItemsToConsider = _combineQuantityItems(allItemsToConsider);
+
     // Filter items to what we can equip and use to help with this goal
-    final itemsThisCharacterCanEquip = allItemsToConsider
+    var itemsThisCharacterCanEquip = allItemsToConsider
         .where((item) => _filterEquipableItems(character, gearContext, item))
         .toSet()
         .toList()
@@ -627,6 +675,36 @@ class LoadoutOptimizerService {
         .toSet()
         .toList()
       ..sort(_sortItems);
+
+    // Get the equipable items split by slot.
+    Map<ItemSlot, List<QuantityItemSchema?>> gearOptions = {};
+    for (final slot in ItemSlot.values) {
+      final slotOptions = itemsThisCharacterCanEquip
+          .where((item) {
+            return (item?.item.canFitInSlot(slot) ?? false);
+          })
+          // Update the quantity to be the maximum # of item types we can use (like we can equip 2 rings at a time so only allow rings to have a max quantity of 2)
+          .map((itemQuantity) => itemQuantity == null
+              ? null
+              : QuantityItemSchema(
+                  itemQuantity.item,
+                  min(itemQuantity.quantity,
+                      slot.maxItemsForSlotTypeInLoadout)))
+          .toSet()
+          .toList();
+
+      // Get rid of options that are just worse than others (another item has
+      // the same effects but better)
+      slotOptions.removeWhere((item) =>
+          _hasBetterItem(item, _effectsToLookFor(gearContext), slotOptions));
+
+      // Add null as a valid choice in case no item is just as good as our
+      // "best" item. There's no point in crafting/equipping an item that isn't
+      // better than just having nothing there.
+      gearOptions[slot] = [...slotOptions, null];
+    }
+
+    itemsThisCharacterCanEquip = gearOptions.values.flattened.toSet().toList();
 
     final newCharacter =
         character.copyWithEquippedItems({}, _worldDataProvider);
@@ -644,27 +722,6 @@ class LoadoutOptimizerService {
     // Save a fake result to short term memory so we don't start multiple
     // calculations for the same gearContext.
     await _saveCachedResult(cacheKey, _getDefaultResult(gearContext), false);
-
-    // Get the equipable items split by slot.
-    Map<ItemSlot, List<QuantityItemSchema?>> gearOptions = {};
-    for (final slot in ItemSlot.values) {
-      final slotOptions = itemsThisCharacterCanEquip
-          .where((item) {
-            return (item?.item.canFitInSlot(slot) ?? false);
-          })
-          .toSet()
-          .toList();
-
-      // Get rid of options that are just worse than others (another item has
-      // the same effects but better)
-      slotOptions.removeWhere((item) =>
-          _hasBetterItem(item, _effectsToLookFor(gearContext), slotOptions));
-
-      // Add null as a valid choice in case no item is just as good as our
-      // "best" item. There's no point in crafting/equipping an item that isn't
-      // better than just having nothing there.
-      gearOptions[slot] = [...slotOptions, null];
-    }
 
     // Find the best gear combination
     final bestGearOption = await _bestGearOption(
@@ -694,7 +751,8 @@ class LoadoutOptimizerService {
     return bestResult;
   }
 
-  Future<EquipmentLoadoutResult> startBackgroundCompute(_CalculationInput input) {
+  Future<EquipmentLoadoutResult> startBackgroundCompute(
+      _CalculationInput input) {
     return compute(calculatedLoadoutIsolate, input);
   }
 
@@ -706,7 +764,9 @@ class LoadoutOptimizerService {
     return await _bestLoadout(
       character,
       gearContext,
-      worldDataProvider.allItems.map((item) => item.quantityItem).toList(),
+      worldDataProvider.allItems
+          .map((item) => QuantityItemSchema(item, 100))
+          .toList(),
       forceCalculate: forceCalculate,
     );
   }

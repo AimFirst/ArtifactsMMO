@@ -18,6 +18,23 @@ extension ItemSlotExtension on ItemSlot {
         return this.name;
     }
   }
+
+  int get maxItemsForSlotTypeInLoadout {
+    switch (this) {
+      case ItemSlot.artifact1:
+      case ItemSlot.artifact2:
+      case ItemSlot.artifact3:
+        return 3;
+      case ItemSlot.ring1:
+      case ItemSlot.ring2:
+        return 2;
+      case ItemSlot.utility1:
+      case ItemSlot.utility2:
+        return 100;
+      default:
+        return 1;
+    }
+  }
 }
 
 extension ItemSchemaExtension on ItemSchema {
