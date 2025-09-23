@@ -1,5 +1,6 @@
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
+import 'package:artifacts_mmo/ai/goals/intermediate_request_mixin.dart';
 import 'package:artifacts_mmo/extensions/inventory_extension.dart';
 import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
@@ -19,7 +20,7 @@ import 'package:artifacts_mmo/services/team_ai_service.dart';
 import 'package:collection/collection.dart';
 import 'package:built_collection/built_collection.dart';
 
-class FulfillTeamRequestGoal extends AIGoal {
+class FulfillTeamRequestGoal extends AIGoal with IntermediateRequestMixin {
   @override
   int get priority => 86;
 
@@ -39,9 +40,11 @@ class FulfillTeamRequestGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) async {
-    return teamBrainProvider.openRequests.any((request) =>
-        (state.character.inventory?.count(request.requestedItem.code) ?? 0) >=
-        request.requestedItem.quantity);
+    final remainingNeeds =
+        remainingNeededItems(teamBrainProvider, bankProvider);
+    return remainingNeeds.any((item) =>
+        item.quantity > 0 &&
+        (state.character.inventory?.count(item.code) ?? 0) >= item.quantity);
   }
 
   @override
@@ -57,10 +60,12 @@ class FulfillTeamRequestGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) async {
-    final request = teamBrainProvider.openRequests.firstWhereOrNull((request) =>
-        (state.character.inventory?.count(request.requestedItem.code) ?? 0) >=
-        request.requestedItem.quantity);
-    if (request == null) {
+    final remainingNeeds =
+        remainingNeededItems(teamBrainProvider, bankProvider);
+    final firstToDeposit = remainingNeeds.firstWhereOrNull((item) =>
+        item.quantity > 0 &&
+        (state.character.inventory?.count(item.code) ?? 0) >= item.quantity);
+    if (firstToDeposit == null) {
       LoggerService.instance.log("AI: Can't find a request to fulfill.",
           level: LogLevel.warning, character: state.character);
       return;
@@ -69,8 +74,8 @@ class FulfillTeamRequestGoal extends AIGoal {
     teamProvider.queueBankDeposit(
         state.character,
         BuiltList.of([
-          SimpleItemSchemaBuilder().fromCodeAndQuantity(
-              request.requestedItem.code, request.requestedItem.quantity)
+          SimpleItemSchemaBuilder()
+              .fromCodeAndQuantity(firstToDeposit.code, firstToDeposit.quantity)
         ]));
   }
 

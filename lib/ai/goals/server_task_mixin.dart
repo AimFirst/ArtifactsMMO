@@ -12,24 +12,7 @@ mixin class ServerTaskMixin {
     if (!hasTask(state)) {
       return false;
     }
-
-    if (state.character.taskType == TaskType.items.name) {
-      final character = state.character;
-      final targetItemName = character.task;
-      int targetQuantity = character.taskTotal - character.taskProgress;
-
-      // Check if we have enough items already
-      targetQuantity -= character.inventory?.count(targetItemName) ?? 0;
-      hasItems = targetQuantity <= 0;
-
-      // Check if we have enough in the bank
-      if (!hasItems && checkBank) {
-        targetQuantity -= bankProvider.count(targetItemName);
-        hasItems = targetQuantity <= 0;
-      }
-    }
-    return state.character.taskProgress >= state.character.taskTotal ||
-        hasItems;
+    return state.character.taskProgress >= state.character.taskTotal;
   }
 
   bool hasTask(CharacterState state) {

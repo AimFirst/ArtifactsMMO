@@ -347,6 +347,10 @@ extension CharacterExtensions on CharacterSchema {
   int get inventoryCount =>
       inventory?.fold(0, (sum, item) => ((sum ?? 0) + item.quantity)) ?? 0;
 
+  int get remainingInventorySpace => inventoryMaxItems - inventoryCount;
+
+  bool get isInventoryFull => remainingInventorySpace <= 0;
+
   Map<GatheringSkill, SkillLevel> get gatheringSkills => {
         GatheringSkill.mining:
             SkillLevel(level: miningLevel, xp: miningXp, maxXp: miningMaxXp),
