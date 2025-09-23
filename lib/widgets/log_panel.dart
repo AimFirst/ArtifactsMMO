@@ -89,10 +89,10 @@ class _LogPanelState extends State<LogPanel> {
                         style: const TextStyle(color: Colors.grey),
                       ),
                       if (entry.character != null)
-                      TextSpan(
-                        text: '[${entry.character?.name}]',
-                        style: const TextStyle(color: Colors.grey),
-                      ),
+                        TextSpan(
+                          text: '[${entry.character?.name}]',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
                       TextSpan(
                         text: entry.message,
                         style: TextStyle(
@@ -144,7 +144,7 @@ class _LogPanelState extends State<LogPanel> {
               // Character Filter Dropdown
               Expanded(
                 child: DropdownButtonFormField<String?>(
-                  value: _selectedCharacterName,
+                  initialValue: _selectedCharacterName,
                   isDense: true,
                   decoration: const InputDecoration(
                       labelText: 'Character', border: OutlineInputBorder()),
@@ -163,7 +163,7 @@ class _LogPanelState extends State<LogPanel> {
               // Log Level Filter Dropdown
               Expanded(
                 child: DropdownButtonFormField<LogLevel?>(
-                  value: _selectedLevel,
+                  initialValue: _selectedLevel,
                   isDense: true,
                   decoration: const InputDecoration(
                       labelText: 'Level', border: OutlineInputBorder()),

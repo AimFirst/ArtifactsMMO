@@ -12,16 +12,25 @@ part 'database.g.dart';
 // A table to store the results of our expensive loadout calculations
 class CachedLoadouts extends Table {
   IntColumn get algorithmVersion => integer()();
+
   TextColumn get contextType => text()();
+
   TextColumn get contextSubType => text()();
+
   IntColumn get contextLevel => integer()();
+
   TextColumn get optionsHash => text()();
+
   BlobColumn get loadoutResult => blob()();
 
   @override
-  Set<Column> get primaryKey => {algorithmVersion, contextType, contextSubType, contextLevel, optionsHash};
-
-
+  Set<Column> get primaryKey => {
+        algorithmVersion,
+        contextType,
+        contextSubType,
+        contextLevel,
+        optionsHash
+      };
 }
 
 // --- The Database Class ---

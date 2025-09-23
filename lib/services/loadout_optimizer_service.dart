@@ -366,8 +366,7 @@ class LoadoutOptimizerService {
           ? null
           : QuantityItemSchema(
               item.item,
-              itemSlot == ItemSlot.utility1 ||
-                      itemSlot == ItemSlot.utility2
+              itemSlot == ItemSlot.utility1 || itemSlot == ItemSlot.utility2
                   ? min(item.quantity, 100)
                   : 1);
 

@@ -84,9 +84,14 @@ class DefaultFightGoal extends AIGoal {
     final monsters = worldDataProvider.allMonsters
       ..sort((b, a) => a.level.compareTo(b.level));
     for (final monster in monsters) {
-      final idealLoadout = await loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(character,
-          CombatGearEvaluationContext(targetMonster: monster), worldDataProvider, bankProvider);
-      if (idealLoadout is CombatEquipmentLoadoutResult && idealLoadout.canWinFight) {
+      final idealLoadout =
+          await loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(
+              character,
+              CombatGearEvaluationContext(targetMonster: monster),
+              worldDataProvider,
+              bankProvider);
+      if (idealLoadout is CombatEquipmentLoadoutResult &&
+          idealLoadout.canWinFight) {
         return monster.code;
       }
     }

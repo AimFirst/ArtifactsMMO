@@ -18,7 +18,9 @@ class CharacterDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final worldDataProvider = context.watch<WorldDataProvider>();
     final character = characterState.character;
-    final inventory = character.inventory?.where((item) => item.quantity > 0).toList() ?? <InventorySlot>[];
+    final inventory =
+        character.inventory?.where((item) => item.quantity > 0).toList() ??
+            <InventorySlot>[];
 
     return Scaffold(
       appBar: AppBar(
@@ -46,21 +48,63 @@ class CharacterDetailsPage extends StatelessWidget {
                   const Divider(height: 24),
 
                   // Gathering Skills
-                  const Text('Gathering', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  const Text('Gathering',
+                      style: TextStyle(fontSize: 18, color: Colors.grey)),
                   const SizedBox(height: 8),
-                  SkillProgressWidget(skillName: 'Mining', icon: Icons.hardware, level: character.miningLevel, currentXp: character.miningXp, maxXp: character.miningMaxXp),
-                  SkillProgressWidget(skillName: 'Woodcutting', icon: Icons.park, level: character.woodcuttingLevel, currentXp: character.woodcuttingXp, maxXp: character.woodcuttingMaxXp),
-                  SkillProgressWidget(skillName: 'Fishing', icon: Icons.water_drop, level: character.fishingLevel, currentXp: character.fishingXp, maxXp: character.fishingMaxXp),
-                  SkillProgressWidget(skillName: 'Alchemy', icon: Icons.science, level: character.alchemyLevel, currentXp: character.alchemyXp, maxXp: character.alchemyMaxXp),
+                  SkillProgressWidget(
+                      skillName: 'Mining',
+                      icon: Icons.hardware,
+                      level: character.miningLevel,
+                      currentXp: character.miningXp,
+                      maxXp: character.miningMaxXp),
+                  SkillProgressWidget(
+                      skillName: 'Woodcutting',
+                      icon: Icons.park,
+                      level: character.woodcuttingLevel,
+                      currentXp: character.woodcuttingXp,
+                      maxXp: character.woodcuttingMaxXp),
+                  SkillProgressWidget(
+                      skillName: 'Fishing',
+                      icon: Icons.water_drop,
+                      level: character.fishingLevel,
+                      currentXp: character.fishingXp,
+                      maxXp: character.fishingMaxXp),
+                  SkillProgressWidget(
+                      skillName: 'Alchemy',
+                      icon: Icons.science,
+                      level: character.alchemyLevel,
+                      currentXp: character.alchemyXp,
+                      maxXp: character.alchemyMaxXp),
                   const Divider(height: 24),
 
                   // Crafting Skills
-                  const Text('Crafting', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  const Text('Crafting',
+                      style: TextStyle(fontSize: 18, color: Colors.grey)),
                   const SizedBox(height: 8),
-                  SkillProgressWidget(skillName: 'Weaponcrafting', icon: Icons.colorize, level: character.weaponcraftingLevel, currentXp: character.weaponcraftingXp, maxXp: character.weaponcraftingMaxXp),
-                  SkillProgressWidget(skillName: 'Gearcrafting', icon: Icons.build_circle, level: character.gearcraftingLevel, currentXp: character.gearcraftingXp, maxXp: character.gearcraftingMaxXp),
-                  SkillProgressWidget(skillName: 'Jewelrycrafting', icon: Icons.diamond, level: character.jewelrycraftingLevel, currentXp: character.jewelrycraftingXp, maxXp: character.jewelrycraftingMaxXp),
-                  SkillProgressWidget(skillName: 'Cooking', icon: Icons.local_dining, level: character.cookingLevel, currentXp: character.cookingXp, maxXp: character.cookingMaxXp),
+                  SkillProgressWidget(
+                      skillName: 'Weaponcrafting',
+                      icon: Icons.colorize,
+                      level: character.weaponcraftingLevel,
+                      currentXp: character.weaponcraftingXp,
+                      maxXp: character.weaponcraftingMaxXp),
+                  SkillProgressWidget(
+                      skillName: 'Gearcrafting',
+                      icon: Icons.build_circle,
+                      level: character.gearcraftingLevel,
+                      currentXp: character.gearcraftingXp,
+                      maxXp: character.gearcraftingMaxXp),
+                  SkillProgressWidget(
+                      skillName: 'Jewelrycrafting',
+                      icon: Icons.diamond,
+                      level: character.jewelrycraftingLevel,
+                      currentXp: character.jewelrycraftingXp,
+                      maxXp: character.jewelrycraftingMaxXp),
+                  SkillProgressWidget(
+                      skillName: 'Cooking',
+                      icon: Icons.local_dining,
+                      level: character.cookingLevel,
+                      currentXp: character.cookingXp,
+                      maxXp: character.cookingMaxXp),
                   // Add other crafting skills here if available in your character model
                 ],
               ),
@@ -74,12 +118,14 @@ class CharacterDetailsPage extends StatelessWidget {
               child: ListView(
                 children: [
                   // Equipment View
-                  const Text('Equipment', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  const Text('Equipment',
+                      style: TextStyle(fontSize: 18, color: Colors.grey)),
                   const SizedBox(height: 8),
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 100,
                       // Ensure the items are square.
                       childAspectRatio: 1.0,
@@ -91,7 +137,8 @@ class CharacterDetailsPage extends StatelessWidget {
                       final slot = ItemSlot.values.toList()[index];
                       // Find the equipped item for this slot, using the slot's name as key
                       final equippedItemCode = character.itemInSlot(slot);
-                      final equippedItem = worldDataProvider.getItemByCode(equippedItemCode);
+                      final equippedItem =
+                          worldDataProvider.getItemByCode(equippedItemCode);
                       return EquippedItemWidget(slot: slot, item: equippedItem);
                     },
                   ),
@@ -100,9 +147,12 @@ class CharacterDetailsPage extends StatelessWidget {
                   // Inventory View
                   Row(
                     children: [
-                      Text('Inventory (${character.inventoryCount} / ${character.inventoryMaxItems})', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      Text(
+                          'Inventory (${character.inventoryCount} / ${character.inventoryMaxItems})',
+                          style: TextStyle(fontSize: 18, color: Colors.grey)),
                       Spacer(),
-                      Image.network('https://artifactsmmo.com/images/items/gold.png',
+                      Image.network(
+                        'https://artifactsmmo.com/images/items/gold.png',
                         fit: BoxFit.cover,
                         width: 18,
                         height: 18,
@@ -121,7 +171,8 @@ class CharacterDetailsPage extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-                        child: Text('${character.gold}', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                        child: Text('${character.gold}',
+                            style: TextStyle(fontSize: 18, color: Colors.grey)),
                       ),
                     ],
                   ),
@@ -129,7 +180,8 @@ class CharacterDetailsPage extends StatelessWidget {
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 100,
                       // Ensure the items are square.
                       childAspectRatio: 1.0,

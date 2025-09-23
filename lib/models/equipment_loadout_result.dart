@@ -17,6 +17,7 @@ sealed class EquipmentLoadoutResult with EquipmentLoadoutResultMappable {
 final class CombatEquipmentLoadoutResult extends EquipmentLoadoutResult
     with CombatEquipmentLoadoutResultMappable {
   final CombatPrediction combatDetails;
+
   get canWinFight => combatDetails.canWin;
 
   CombatEquipmentLoadoutResult({

@@ -159,11 +159,11 @@ class TeamAIService {
   }
 
   Future<EquipmentLoadoutResult> bestLoadoutOfAvailableCharacterItems(
-    CharacterSchema character,
-    GearEvaluationContext gearContext,
-    WorldDataProvider worldDataProvider,
-    BankProvider bankProvider, {bool forceCalculate = false}
-  ) {
+      CharacterSchema character,
+      GearEvaluationContext gearContext,
+      WorldDataProvider worldDataProvider,
+      BankProvider bankProvider,
+      {bool forceCalculate = false}) {
     return _loadoutOptimizerService.bestLoadoutOfAvailableCharacterItems(
       character,
       gearContext,

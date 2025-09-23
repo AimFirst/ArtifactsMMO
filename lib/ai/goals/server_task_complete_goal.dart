@@ -1,11 +1,5 @@
-import 'dart:math';
-
-import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
 import 'package:artifacts_mmo/ai/goals/server_task_mixin.dart';
-import 'package:artifacts_mmo/extensions/character_extension.dart';
-import 'package:artifacts_mmo/extensions/inventory_extension.dart';
-import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/extensions/team_provider_actions.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
@@ -19,7 +13,6 @@ import 'package:artifacts_mmo/services/combat_service.dart';
 import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:artifacts_mmo/services/logger_service.dart';
 import 'package:artifacts_mmo/services/team_ai_service.dart';
-import 'package:built_collection/built_collection.dart';
 
 class ServerTaskCompleteGoal extends AIGoal with ServerTaskMixin {
   @override

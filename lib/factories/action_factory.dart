@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/extensions/character_extension.dart';
 import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
@@ -203,8 +201,16 @@ class ActionFactory {
     );
   }
 
-  QueuedAction createRecycleAction(String characterName, SimpleItemSchema item) {
-    return QueuedAction(actionName: 'Recycling $item', apiCall: () => _apiClient.myCharacters.actionRecyclingMyNameActionRecyclingPost(
-        name: characterName, recyclingSchema: (RecyclingSchemaBuilder()..code = item.code..quantity = item.quantity).build()));
+  QueuedAction createRecycleAction(
+      String characterName, SimpleItemSchema item) {
+    return QueuedAction(
+        actionName: 'Recycling $item',
+        apiCall: () =>
+            _apiClient.myCharacters.actionRecyclingMyNameActionRecyclingPost(
+                name: characterName,
+                recyclingSchema: (RecyclingSchemaBuilder()
+                      ..code = item.code
+                      ..quantity = item.quantity)
+                    .build()));
   }
 }

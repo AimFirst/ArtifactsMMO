@@ -5,11 +5,13 @@ sealed class GearEvaluationContext {
   GearEvaluationContext();
 
   String typeName();
+
   String subTypeName();
 }
 
 final class CombatGearEvaluationContext extends GearEvaluationContext {
   final MonsterSchema targetMonster;
+
   CombatGearEvaluationContext({required this.targetMonster});
 
   @override
@@ -30,6 +32,7 @@ final class CombatGearEvaluationContext extends GearEvaluationContext {
 
 final class SkillGearEvaluationContext extends GearEvaluationContext {
   final String skillType;
+
   SkillGearEvaluationContext({required this.skillType});
 
   @override
@@ -38,7 +41,7 @@ final class SkillGearEvaluationContext extends GearEvaluationContext {
   }
 
   @override
-  String typeName() =>'skill';
+  String typeName() => 'skill';
 
   @override
   String subTypeName() => skillType;
@@ -46,6 +49,7 @@ final class SkillGearEvaluationContext extends GearEvaluationContext {
 
 final class HealGearEvaluationContext extends GearEvaluationContext {
   final int hpToRestore;
+
   HealGearEvaluationContext({required this.hpToRestore});
 
   @override

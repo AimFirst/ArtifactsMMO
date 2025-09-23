@@ -124,7 +124,8 @@ class DefaultRecycleGoal extends AIGoal {
         ((state.character.inventoryMaxItems - state.character.inventoryCount) /
                 2)
             .ceil();
-    final amountToRecycle = min(maxToHaveInInventory, (inventoryCount + bankCount - countToNotRecycle));
+    final amountToRecycle = min(
+        maxToHaveInInventory, (inventoryCount + bankCount - countToNotRecycle));
 
     // We have room to pull some from the bank
     if (inventoryCount < maxToHaveInInventory && bankCount > 0) {

@@ -1,9 +1,4 @@
-import 'package:artifacts_api/artifacts_api.dart';
 import 'package:artifacts_mmo/ai/goals/ai_goal.dart';
-import 'package:artifacts_mmo/constants/effect_enum.dart';
-import 'package:artifacts_mmo/extensions/character_extension.dart';
-import 'package:artifacts_mmo/extensions/item_extension.dart';
-import 'package:artifacts_mmo/extensions/simple_item_schema_extension.dart';
 import 'package:artifacts_mmo/factories/action_factory.dart';
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/gear_evaluation_context.dart';
@@ -69,6 +64,7 @@ class HealGoal extends AIGoal {
       BankProvider bankProvider,
       TeamBrainProvider teamBrainProvider,
       List<CharacterState> characterStates) async {
-    return HealGearEvaluationContext(hpToRestore: state.character.maxHp - state.character.hp);
+    return HealGearEvaluationContext(
+        hpToRestore: state.character.maxHp - state.character.hp);
   }
 }

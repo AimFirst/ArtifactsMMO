@@ -20,7 +20,8 @@ class LogProvider with ChangeNotifier {
   // Use an UnmodifiableListView to prevent direct modification from the UI
   UnmodifiableListView<LogEntry> get logs => UnmodifiableListView(_logs);
 
-  void addLog(String message, {LogLevel level = LogLevel.info, CharacterSchema? character}) {
+  void addLog(String message,
+      {LogLevel level = LogLevel.info, CharacterSchema? character}) {
     // Add new logs to the beginning of the list to show them at the top
     _logs.insert(0, LogEntry(message, level: level, character: character));
     // To prevent the list from growing indefinitely, cap it at 200 entries

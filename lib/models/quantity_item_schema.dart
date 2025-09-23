@@ -10,6 +10,7 @@ part 'quantity_item_schema.mapper.dart';
 class QuantityItemSchema with QuantityItemSchemaMappable {
   final ItemSchema item;
   final int quantity;
+
   QuantityItemSchema(this.item, this.quantity);
 
   int totalEffect(EffectEnum effectType) {
@@ -17,6 +18,9 @@ class QuantityItemSchema with QuantityItemSchemaMappable {
   }
 
   SimpleItemSchema toSimpleItemSchema() {
-    return (SimpleItemSchemaBuilder()..code = item.code..quantity = quantity).build();
+    return (SimpleItemSchemaBuilder()
+          ..code = item.code
+          ..quantity = quantity)
+        .build();
   }
 }

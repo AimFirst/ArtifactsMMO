@@ -12,11 +12,19 @@ class CombatDetails with CombatDetailsMappable {
   final int monsterStartHp;
   final int haste;
 
-  CombatDetails({required this.playerAvgDPT, required this.monsterAvgDPT, required this.playerStartHp, required this.monsterStartHp, required this.haste,});
+  CombatDetails({
+    required this.playerAvgDPT,
+    required this.monsterAvgDPT,
+    required this.playerStartHp,
+    required this.monsterStartHp,
+    required this.haste,
+  });
 
-  int get turnsForPlayerToWin => playerAvgDPT == 0 ? 100000 : (monsterStartHp / playerAvgDPT).ceil();
+  int get turnsForPlayerToWin =>
+      playerAvgDPT == 0 ? 100000 : (monsterStartHp / playerAvgDPT).ceil();
 
-  int get turnsForMonsterToWin => monsterAvgDPT == 0 ? 100000 : (playerStartHp / monsterAvgDPT).ceil();
+  int get turnsForMonsterToWin =>
+      monsterAvgDPT == 0 ? 100000 : (playerStartHp / monsterAvgDPT).ceil();
 
   int get totalTurns => min(turnsForPlayerToWin, turnsForMonsterToWin);
 

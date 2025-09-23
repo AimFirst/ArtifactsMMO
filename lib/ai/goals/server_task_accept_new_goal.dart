@@ -22,8 +22,19 @@ class ServerTaskAcceptNewGoal extends AIGoal with ServerTaskMixin {
   int get priority => 87;
 
   @override
-  Future<bool> canRun(CharacterState state, TeamAIService aiService, CombatService combatService, LoadoutOptimizerService loadoutOptimizerService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates,) async {
-
+  Future<bool> canRun(
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  ) async {
     // If we don't have a server task, our goal is to get one.
     if (!hasTask(state)) {
       return true;
@@ -33,7 +44,19 @@ class ServerTaskAcceptNewGoal extends AIGoal with ServerTaskMixin {
   }
 
   @override
-  Future<void> execute(CharacterState state, TeamAIService aiService, CombatService combatService, LoadoutOptimizerService loadoutOptimizerService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates,) async {
+  Future<void> execute(
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  ) async {
     // If we don't have a server task, our goal is to get one.
     if (!hasTask(state)) {
       _getNewTask(state, aiService, mapProvider, teamProvider, actionFactory);
@@ -41,10 +64,21 @@ class ServerTaskAcceptNewGoal extends AIGoal with ServerTaskMixin {
   }
 
   @override
-  Future<GearEvaluationContext?> gearEvaluationContext(CharacterState state, TeamAIService aiService, CombatService combatService, LoadoutOptimizerService loadoutOptimizerService, WorldDataProvider worldDataProvider, ActionFactory actionFactory, MapProvider mapProvider, TeamProvider teamProvider, BankProvider bankProvider, TeamBrainProvider teamBrainProvider, List<CharacterState> characterStates,) async {
+  Future<GearEvaluationContext?> gearEvaluationContext(
+    CharacterState state,
+    TeamAIService aiService,
+    CombatService combatService,
+    LoadoutOptimizerService loadoutOptimizerService,
+    WorldDataProvider worldDataProvider,
+    ActionFactory actionFactory,
+    MapProvider mapProvider,
+    TeamProvider teamProvider,
+    BankProvider bankProvider,
+    TeamBrainProvider teamBrainProvider,
+    List<CharacterState> characterStates,
+  ) async {
     return null;
   }
-
 
   void _getNewTask(
       CharacterState state,
@@ -62,5 +96,4 @@ class ServerTaskAcceptNewGoal extends AIGoal with ServerTaskMixin {
     final acceptAction = actionFactory.createAcceptTaskAction(character.name);
     teamProvider.queueAction(character.name, acceptAction);
   }
-
 }

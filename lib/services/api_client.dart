@@ -12,12 +12,19 @@ class ApiClient {
   // Getter to expose the generated api classes
   // e.g., to access character-related endpoints
   CharactersApi get character => _api.getCharactersApi();
+
   MyCharactersApi get myCharacters => _api.getMyCharactersApi();
+
   MapsApi get maps => _api.getMapsApi();
+
   ResourcesApi get resources => _api.getResourcesApi();
+
   MyAccountApi get myAccount => _api.getMyAccountApi();
+
   ItemsApi get items => _api.getItemsApi();
+
   MonstersApi get monster => _api.getMonstersApi();
+
   NPCsApi get npcs => _api.getNPCsApi();
 
   // Add other getters for other API groups as needed, e.g., market, crafting, etc.
@@ -25,9 +32,9 @@ class ApiClient {
 
   ApiClient(String bearerToken)
       : _api = ArtifactsApi(
-    basePathOverride: 'https://api.artifactsmmo.com',
-    dio: _createDioClient(bearerToken),
-  );
+          basePathOverride: 'https://api.artifactsmmo.com',
+          dio: _createDioClient(bearerToken),
+        );
 
   // Private method to create and configure a Dio instance
   static Dio _createDioClient(String bearerToken) {
@@ -47,7 +54,8 @@ class ApiClient {
         },
         onError: (error, handler) {
           // You can add global error handling here
-          LoggerService.instance.log("API Client Error: ${error.message}", level: LogLevel.error);
+          LoggerService.instance
+              .log("API Client Error: ${error.message}", level: LogLevel.error);
           return handler.next(error);
         },
       ),

@@ -137,7 +137,8 @@ class _LoadoutSimulatorPageState extends State<LoadoutSimulatorPage> {
                         ))
                     .toList(),
                 onChanged: (String? value) {
-                  _selectedCharacter = characters.firstWhere((e) => e.name == value);
+                  _selectedCharacter =
+                      characters.firstWhere((e) => e.name == value);
                 }, /* ... for characters ... */
               )),
               const SizedBox(width: 8),

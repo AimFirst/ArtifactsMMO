@@ -193,7 +193,8 @@ class ServerTaskMakeProgressGoal extends AIGoal with ServerTaskMixin {
         break;
       case TaskType.items:
         final targetItemName = character.task;
-        var targetQuantityRemaining = character.taskTotal - character.taskProgress;
+        var targetQuantityRemaining =
+            character.taskTotal - character.taskProgress;
 
         // No more progress to make... we are ready for turn in.
         if (targetQuantityRemaining <= 0) {
@@ -212,10 +213,10 @@ class ServerTaskMakeProgressGoal extends AIGoal with ServerTaskMixin {
         final inBank = bankProvider.count(targetItemName);
         if (inBank >= targetQuantityRemaining) {
           final maxFreeSpaceInInventory = character.remainingInventorySpace;
-          final amountToPull = min(targetQuantityRemaining, maxFreeSpaceInInventory);
+          final amountToPull =
+              min(targetQuantityRemaining, maxFreeSpaceInInventory);
           final remainingItemSchema = (SimpleItemSchemaBuilder()
-              .fromCodeAndQuantity(targetItemName,
-                  amountToPull));
+              .fromCodeAndQuantity(targetItemName, amountToPull));
           teamProvider.queueBankWithdraw(
               character, BuiltList.of([remainingItemSchema]));
           return;

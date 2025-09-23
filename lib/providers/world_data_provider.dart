@@ -127,9 +127,12 @@ class WorldDataProvider with ChangeNotifier {
             }
 
             // Cache equipment
-            final itemSlot = ItemSlot.values.firstWhereOrNull((e) => e.type == item.type);
+            final itemSlot =
+                ItemSlot.values.firstWhereOrNull((e) => e.type == item.type);
             if (itemSlot != null) {
-              _itemsForSlotMap.putIfAbsent(itemSlot, () => <ItemSchema>[]).add(item);
+              _itemsForSlotMap
+                  .putIfAbsent(itemSlot, () => <ItemSchema>[])
+                  .add(item);
             }
           }
 
@@ -207,11 +210,12 @@ class WorldDataProvider with ChangeNotifier {
     try {
       // Use a do-while loop to ensure we make at least one call.
       do {
-        LoggerService.instance.log(
-            '📚 Fetching npc data, page $currentPage of $totalPages...');
+        LoggerService.instance
+            .log('📚 Fetching npc data, page $currentPage of $totalPages...');
 
         // Make the paginated API call.
-        final response = await _apiClient.npcs.getAllNpcsItemsNpcsItemsGet(page: currentPage);
+        final response = await _apiClient.npcs
+            .getAllNpcsItemsNpcsItemsGet(page: currentPage);
 
         if (response.statusCode == 200 && response.data != null) {
           final pageData = response.data!;
@@ -232,7 +236,7 @@ class WorldDataProvider with ChangeNotifier {
               'Failed to load npc item page ${currentPage - 1} with status ${response.statusCode}');
         }
       } while (
-      currentPage <= totalPages); // Continue until all pages are fetched.
+          currentPage <= totalPages); // Continue until all pages are fetched.
 
       LoggerService.instance.log(
           '📚 NPC Data loaded successfully! Found ${_npcItems.length} total npc items.');
@@ -280,7 +284,8 @@ class WorldDataProvider with ChangeNotifier {
   List<MonsterSchema> getMonstersByDropCode(String code) {
     List<MonsterSchema> monsters = [];
     final monsterCodes = _monstersThatDropItem[code];
-    monsterCodes?.sort((a,b) => b.drop.averageQuantity.compareTo(a.drop.averageQuantity));
+    monsterCodes?.sort(
+        (a, b) => b.drop.averageQuantity.compareTo(a.drop.averageQuantity));
     monsterCodes
         ?.map((drop) => getMonsterByCode(drop.monsterCode))
         .forEach((monster) {

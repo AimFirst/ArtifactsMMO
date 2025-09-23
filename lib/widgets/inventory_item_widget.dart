@@ -10,7 +10,8 @@ class InventoryItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Assumes item names like 'Iron Pickaxe' should be 'iron_pickaxe' in the URL
-    final imageUrl = 'https://client.artifactsmmo.com/images/items/${item.code}.png';
+    final imageUrl =
+        'https://client.artifactsmmo.com/images/items/${item.code}.png';
 
     return Tooltip(
       message: "${item.code}\nQuantity: ${item.quantity}",
@@ -24,7 +25,7 @@ class InventoryItemWidget extends StatelessWidget {
               imageUrl,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) =>
-              const Icon(Icons.question_mark, color: Colors.grey),
+                  const Icon(Icons.question_mark, color: Colors.grey),
             ),
             // Quantity Overlay
             Positioned(

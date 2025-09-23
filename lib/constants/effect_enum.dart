@@ -1,5 +1,6 @@
 enum EffectEnum {
-  alchemy('Reduces cooldown by -X% when a character harvest a plant.', negativeIsBetter: true),
+  alchemy('Reduces cooldown by -X% when a character harvest a plant.',
+      negativeIsBetter: true),
   antipoison(
       'At the beginning of the turn, if the character has at least one poison on him, removes x poison damage.'),
   attack_air('Adds X Air Attack to its stats when equipped.'),
@@ -26,9 +27,11 @@ enum EffectEnum {
   dmg_earth('Adds X% Earth Damage to its stats when equipped.'),
   dmg_fire('Adds X% Fire Damage to its stats when equipped.'),
   dmg_water('Adds X% Water Damage to its stats when equipped.'),
-  fishing('Reduces cooldown by -X% when a character is fishing.', negativeIsBetter: true),
+  fishing('Reduces cooldown by -X% when a character is fishing.',
+      negativeIsBetter: true),
   gold('Adds X gold in your inventory.'),
-  haste('Adds X Haste to its stats when equipped. The haste reduces the cooldown of a fight.'),
+  haste(
+      'Adds X Haste to its stats when equipped. The haste reduces the cooldown of a fight.'),
   heal('Heal X HP when the item is used.'),
   healing('Every 3 played turns, restores x% of HP at the start of the turn.'),
   hp('Adds X HP to its stats when equipped.'),
@@ -36,10 +39,12 @@ enum EffectEnum {
       'Adds X to the maximum number of items in the inventory when equipped.'),
   lifesteal(
       'Restores x% of the total attack of all elements in HP after a critical strike.'),
-  mining('Reduces cooldown by -X% when a character mines a resource.', negativeIsBetter: true),
+  mining('Reduces cooldown by -X% when a character mines a resource.',
+      negativeIsBetter: true),
   poison(
       'At the start of its first turn, applies a x poison to its opponent. Loses x HP per turn.'),
-  prospecting('Adds X Prospecting to its stats when equipped. Each PP increases your chance of obtaining drops in combat and with skills. (1% extra per 10 PP)'),
+  prospecting(
+      'Adds X Prospecting to its stats when equipped. Each PP increases your chance of obtaining drops in combat and with skills. (1% extra per 10 PP)'),
   reconstitution('At the beginning of the turn x, restores all HP.'),
   res_air('Adds X Air Resistance to its stats when equipped.'),
   res_earth('Adds X Earth Resistance to its stats when equipped.'),
@@ -48,7 +53,8 @@ enum EffectEnum {
   restore('Heals X HP when the player has lost 50% of their life.'),
   wisdom(
       'Adds X Wisdom to its stats when equipped. Each point of wisdom increases your xp in combat and with skills. (1% extra per 10 wisdom)'),
-  woodcutting('Reduces cooldown by -X% when a character logs a tree.', negativeIsBetter: true),
+  woodcutting('Reduces cooldown by -X% when a character logs a tree.',
+      negativeIsBetter: true),
   ;
 
   const EffectEnum(this.description, {this.negativeIsBetter = false});

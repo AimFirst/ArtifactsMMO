@@ -2,13 +2,10 @@ import 'package:artifacts_api/artifacts_api.dart' show CharacterSchema;
 import 'package:artifacts_mmo/models/character_state.dart';
 import 'package:artifacts_mmo/models/task_type.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
-import 'package:artifacts_mmo/extensions/inventory_extension.dart';
 
 mixin class ServerTaskMixin {
   bool taskDone(CharacterState state, BankProvider bankProvider,
       {bool checkBank = true}) {
-    bool hasItems = false;
-
     if (!hasTask(state)) {
       return false;
     }

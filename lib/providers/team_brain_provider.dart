@@ -15,7 +15,8 @@ class ItemRequest {
       childrenRequests; // Requests made as part of the process to get everything we need for this request.
 
   String get key {
-    return buildRequestKey(parentRequest, keyPrefix, requestedItem.code, requestedBy);
+    return buildRequestKey(
+        parentRequest, keyPrefix, requestedItem.code, requestedBy);
   }
 
   int get depthCount {
@@ -30,7 +31,8 @@ class ItemRequest {
     this.parentRequest,
   });
 
-  static String buildRequestKey(ItemRequest? parentRequest, String keyPrefix, String requestedItemCode, String requestedBy) {
+  static String buildRequestKey(ItemRequest? parentRequest, String keyPrefix,
+      String requestedItemCode, String requestedBy) {
     if (parentRequest == null) {
       return '${requestedBy}_${keyPrefix}_${requestedItemCode}';
     } else {
@@ -46,10 +48,8 @@ class TeamBrainProvider with ChangeNotifier {
 
   void postRequest(ItemRequest request) {
     // Remove any duplicate requests first.
-    final existingRequest = _requests.firstWhereOrNull(
-      (r) =>
-          r.key == request.key
-    );
+    final existingRequest =
+        _requests.firstWhereOrNull((r) => r.key == request.key);
     if (existingRequest != null) {
       _requests.remove(existingRequest);
     }
@@ -65,8 +65,10 @@ class TeamBrainProvider with ChangeNotifier {
         "REQUEST: ${request.requestedBy} posted a request for ${request.requestedItem.simpleName}.");
   }
 
-  bool hasRequest(ItemRequest? parentRequest, String keyPrefix, String requestedItemCode, String requestedBy) {
-    return _hasRequestKey(ItemRequest.buildRequestKey(parentRequest, keyPrefix, requestedItemCode, requestedBy));
+  bool hasRequest(ItemRequest? parentRequest, String keyPrefix,
+      String requestedItemCode, String requestedBy) {
+    return _hasRequestKey(ItemRequest.buildRequestKey(
+        parentRequest, keyPrefix, requestedItemCode, requestedBy));
   }
 
   bool _hasRequestKey(String key) {
@@ -77,7 +79,9 @@ class TeamBrainProvider with ChangeNotifier {
     // Find the request.
     final request = _requests.firstWhereOrNull((r) => r.key == key);
     if (request == null) {
-      LoggerService.instance.log('REQUEST: No request to complete found for key: $key', level: LogLevel.warning);
+      LoggerService.instance.log(
+          'REQUEST: No request to complete found for key: $key',
+          level: LogLevel.warning);
       return;
     }
 
@@ -94,7 +98,9 @@ class TeamBrainProvider with ChangeNotifier {
     }
   }
 
-  void completeRequest(ItemRequest? parentRequest, String keyPrefix, String requestedItemCode, String requestedBy) {
-    _completeRequestKey(ItemRequest.buildRequestKey(parentRequest, keyPrefix, requestedItemCode, requestedBy));
+  void completeRequest(ItemRequest? parentRequest, String keyPrefix,
+      String requestedItemCode, String requestedBy) {
+    _completeRequestKey(ItemRequest.buildRequestKey(
+        parentRequest, keyPrefix, requestedItemCode, requestedBy));
   }
 }

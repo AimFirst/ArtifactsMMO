@@ -10,9 +10,8 @@ class EquippedItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String slotName = slot.name[0].toUpperCase() + slot.name.substring(1);
-    final String tooltipMessage = item != null
-        ? "${slotName}: ${item!.name}"
-        : "${slotName}: Empty";
+    final String tooltipMessage =
+        item != null ? "${slotName}: ${item!.name}" : "${slotName}: Empty";
 
     // Default URL generation (adjust to your actual asset path if different)
     final String imageUrl = item != null
@@ -38,7 +37,8 @@ class EquippedItemWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.grey.shade600,
-                        fontStyle: item == null ? FontStyle.italic : FontStyle.normal,
+                        fontStyle:
+                            item == null ? FontStyle.italic : FontStyle.normal,
                       ),
                       textAlign: TextAlign.center,
                     ),

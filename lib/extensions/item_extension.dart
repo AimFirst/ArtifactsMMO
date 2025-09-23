@@ -11,6 +11,11 @@ extension ItemExtension on ItemSchema {
   QuantityItemSchema get quantityItem => QuantityItemSchema(this, 1);
 
   int totalEffect(EffectEnum effectType) {
-    return effects?.fold(0, (previousTotal, effect) => (previousTotal ?? 0) + (effect.code == effectType.name ? effect.value : 0)) ?? 0;
+    return effects?.fold(
+            0,
+            (previousTotal, effect) =>
+                (previousTotal ?? 0) +
+                (effect.code == effectType.name ? effect.value : 0)) ??
+        0;
   }
 }

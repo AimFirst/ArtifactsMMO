@@ -20,9 +20,11 @@ class LoggerService {
   }
 
   // The global log method
-  void log(String message, {LogLevel level = LogLevel.info, CharacterSchema? character}) {
+  void log(String message,
+      {LogLevel level = LogLevel.info, CharacterSchema? character}) {
     // Replace the old print() statements
-    debugPrint("[${level.name.toUpperCase()}] ${character == null ? '' : '[${character.name}]'} $message");
+    debugPrint(
+        "[${level.name.toUpperCase()}] ${character == null ? '' : '[${character.name}]'} $message");
 
     _logProvider?.addLog(message, level: level, character: character);
   }

@@ -2,7 +2,6 @@ import 'package:artifacts_mmo/loadout_simulator_page.dart';
 import 'package:artifacts_mmo/providers/bank_provider.dart';
 import 'package:artifacts_mmo/providers/team_provider.dart';
 import 'package:artifacts_mmo/providers/world_data_provider.dart';
-import 'package:artifacts_mmo/services/loadout_optimizer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -24,7 +23,8 @@ class _QuickSettingsPanelState extends State<QuickSettingsPanel> {
     final bankProvider = context.watch<BankProvider>();
 
     // Determine the label for the master pause/resume button.
-    final bool isAnyCharacterActive = teamProvider.characters.any((c) => !c.isPaused);
+    final bool isAnyCharacterActive =
+        teamProvider.characters.any((c) => !c.isPaused);
 
     return Container(
       width: 180, // Give the panel a fixed width
@@ -33,7 +33,8 @@ class _QuickSettingsPanelState extends State<QuickSettingsPanel> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Quick Settings", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text("Quick Settings",
+              style: TextStyle(fontWeight: FontWeight.bold)),
           const Divider(),
 
           // --- Keep Screen Awake Toggle ---
@@ -75,11 +76,12 @@ class _QuickSettingsPanelState extends State<QuickSettingsPanel> {
               label: const Text("Loadout Sim"),
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => LoadoutSimulatorPage(
-                    worldDataProvider: worldDataProvider,
-                    teamProvider: teamProvider,
-                    bankProvider: bankProvider,
-                  )),
+                  MaterialPageRoute(
+                      builder: (context) => LoadoutSimulatorPage(
+                            worldDataProvider: worldDataProvider,
+                            teamProvider: teamProvider,
+                            bankProvider: bankProvider,
+                          )),
                 );
               },
             ),

@@ -11,7 +11,7 @@ class ItemSchemaMapper extends SimpleMapper<ItemSchema> {
     String jsonString = value as String;
 
     // Deserialize the JSON string to a Map
-   final decodedJson = jsonDecode(jsonString);
+    final decodedJson = jsonDecode(jsonString);
 
     // Deserialise the Map to your built_value object
     return serializers.deserializeWith(ItemSchema.serializer, decodedJson)!;
@@ -20,10 +20,10 @@ class ItemSchemaMapper extends SimpleMapper<ItemSchema> {
   @override
   Object? encode(ItemSchema self) {
     // Serialize to Map
-    final serializedMap = serializers.serializeWith(ItemSchema.serializer, self);
+    final serializedMap =
+        serializers.serializeWith(ItemSchema.serializer, self);
 
     // Convert Map to JSON string
     return json.encode(serializedMap);
   }
-  
 }
