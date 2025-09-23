@@ -85,9 +85,9 @@ class ActionFactory {
     );
   }
 
-  QueuedAction createGatherAction(String characterName) {
+  QueuedAction createGatherAction(String characterName, String gatherItem) {
     return QueuedAction(
-      actionName: 'Gather',
+      actionName: 'Gather $gatherItem',
       apiCall: () =>
           _apiClient.myCharacters.actionGatheringMyNameActionGatheringPost(
         name: characterName,

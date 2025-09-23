@@ -119,8 +119,10 @@ class DefaultGatherGoal extends AIGoal {
     }
 
     teamProvider.queueMoveTo(state.character, location);
-    teamProvider.queueAction(state.character.name,
-        actionFactory.createGatherAction(state.character.name));
+    teamProvider.queueAction(
+        state.character.name,
+        actionFactory.createGatherAction(
+            state.character.name, resourceToGather.name));
   }
 
   GatheringSkill? _expertGatherer(

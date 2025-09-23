@@ -92,7 +92,7 @@ class IntermediateGatherTeamRequestGoal extends AIGoal
         }
         teamProvider.queueMoveTo(state.character, location);
         teamProvider.queueAction(state.character.name,
-            actionFactory.createGatherAction(state.character.name));
+            actionFactory.createGatherAction(state.character.name, item?.name ?? 'unknown'));
         return;
       }
     }
