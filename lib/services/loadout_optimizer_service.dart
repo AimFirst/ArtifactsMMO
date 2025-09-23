@@ -616,13 +616,13 @@ class LoadoutOptimizerService {
 
         final filteredOptions = (options.where((option) =>
             option != null &&
-            option.totalEffect(EffectEnum.healing) > 0 &&
-            option.totalEffect(EffectEnum.healing) <= missingHp)).toList()
+            option.totalEffect(EffectEnum.heal) > 0 &&
+            option.totalEffect(EffectEnum.heal) <= missingHp)).toList()
           ..sort((a, b) => b!
-              .totalEffect(EffectEnum.healing)
-              .compareTo(a!.totalEffect(EffectEnum.healing)));
+              .totalEffect(EffectEnum.heal)
+              .compareTo(a!.totalEffect(EffectEnum.heal)));
         for (final option in filteredOptions) {
-          final itemHealing = option!.totalEffect(EffectEnum.healing);
+          final itemHealing = option!.totalEffect(EffectEnum.heal);
           if (itemHealing > missingHp) {
             continue;
           }
